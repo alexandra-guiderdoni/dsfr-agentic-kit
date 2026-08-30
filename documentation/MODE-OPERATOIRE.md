@@ -40,7 +40,7 @@ par une donnée administrative inventée.
 | Composer plusieurs blocs depuis un brief | B — page assemblée | `page.json`, HTML, preuve |
 | Examiner une page existante | C — audit | rapport et fiches éventuelles |
 
-## Parcours A — page simple
+## Parcours 1 — page simple
 
 Demande type :
 
@@ -54,7 +54,7 @@ L’agent utilise `generate_page.py` depuis le dossier du skill. Vérifier au
 minimum : langue française, région `main`, titre principal, liens sans
 placeholder, structure de page et formulation de preuve bornée.
 
-## Parcours B — page assemblée
+## Parcours 2 — page assemblée
 
 1. Rédiger `brief.md` dans le projet.
 2. Demander à l’agent de produire un `page.json` conforme au schéma du skill.
