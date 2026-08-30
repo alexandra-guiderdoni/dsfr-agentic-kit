@@ -1,0 +1,242 @@
+{
+  "title": "Vibe coding et harnais agentique - Démo DSFR assemblée",
+  "description": "Page pédagogique générée par le builder DSFR assemblé pour distinguer vibe coding, agent et harnais agentique.",
+  "brand_mode": "neutral",
+  "assets_prefix": "assets/dsfr",
+  "header": {
+    "brand_mode": "neutral",
+    "service_title": "Harnais agentique",
+    "service_tagline": "Démo DSFR locale : brief, JSON, page et preuve",
+    "tools": [
+      {"label": "Preuves", "href": "#preuves"}
+    ],
+    "search": {"label": "Rechercher"},
+    "navigation": [
+      {"label": "Résumé", "href": "#resume", "active": true},
+      {"label": "Comparaison", "href": "#comparaison"},
+      {"label": "Harnais", "href": "#harnais"},
+      {"label": "Preuves", "href": "#preuves"}
+    ]
+  },
+  "footer": {
+    "brand_mode": "neutral",
+    "service_name": "Harnais agentique",
+    "content_desc": "Prototype local généré pour démontrer un parcours brief -> JSON -> HTML -> preuve.",
+    "content_links": [
+      {"label": "Schéma du builder assemblé", "href": "/.claude/skills/dsfr-components/schemas/generate_assembled_page.schema.json"},
+      {"label": "Guide de cadrage", "href": "/documentation/guides/cadrage-agentic-design-packs.md"}
+    ],
+    "bottom_links": [
+      {"label": "Plan du site", "href": "/plan-du-site"},
+      {"label": "Accessibilité : à vérifier", "href": "/accessibilite"},
+      {"label": "Données personnelles", "href": "/donnees-personnelles"}
+    ]
+  },
+  "sections": [
+    {
+      "block": "content",
+      "id": "resume",
+      "title": "Du code généré au système contrôlé",
+      "heading_level": 1,
+      "lead": "Le sujet n'est pas seulement d'aller plus vite. Le sujet est de savoir quand déléguer, quoi vérifier et où replacer l'humain.",
+      "body_structured": {
+        "paragraphs": [
+          "Le vibe coding produit vite une forme visible, mais il devient risqué quand le code n'est pas relu, testé ou replacé dans l'architecture.",
+          "Un agent va plus loin : il peut modifier, tester et itérer. Sans harnais, il reste pourtant guidé par un objectif trop vague ou par le contexte qu'il devine.",
+          "Le harnais agentique ajoute les règles, les outils, les preuves et les limites qui rendent la délégation exploitable."
+        ],
+        "links": [
+          {"label": "Comparer les trois niveaux", "href": "#comparaison"},
+          {"label": "Voir les preuves locales", "href": "#preuves"}
+        ]
+      }
+    },
+    {
+      "block": "notice",
+      "title": "Prototype local sans revendication de conformité",
+      "description": "Cette page utilise les assets DSFR locaux et le mode neutre. Le bloc marque République française reste hors périmètre sans droit d'usage établi.",
+      "variant": "info",
+      "link": {"label": "Lire les limites de preuve", "href": "#preuves"}
+    },
+    {
+      "block": "summary",
+      "title": "Sommaire",
+      "items": [
+        {"label": "Résumé", "href": "#resume"},
+        {"label": "Schéma de lecture", "href": "#schema"},
+        {"label": "Comparaison", "href": "#comparaison"},
+        {"label": "Ce que le harnais ajoute", "href": "#harnais"},
+        {"label": "Quand l'utiliser", "href": "#decision"},
+        {"label": "Preuves locales", "href": "#preuves"}
+      ]
+    },
+    {
+      "block": "image",
+      "section_id": "schema",
+      "heading": "Schéma de lecture",
+      "src": "schema-harnais.svg",
+      "alt": "Schéma comparant vibe coding, agent et harnais agentique.",
+      "caption": "Le SVG est local et volontairement sans ratio pour conserver sa géométrie naturelle."
+    },
+    {
+      "block": "tabs",
+      "id": "comparaison",
+      "heading": "Comparer les trois niveaux",
+      "tabs": [
+        {
+          "label": "Vibe coding",
+          "selected": true,
+          "content": {
+            "paragraphs": [
+              "Usage rapide orienté résultat visible. Il peut être utile pour un prototype, un script jetable ou une exploration à faible enjeu.",
+              "Le risque apparaît quand le comportement observé remplace la revue : dette invisible, sécurité oubliée, intégration fragile."
+            ],
+            "list": [
+              "Bon usage : explorer vite.",
+              "Limite : ne pas confondre démonstration et production."
+            ]
+          }
+        },
+        {
+          "label": "Agent",
+          "content": {
+            "paragraphs": [
+              "L'agent agit dans un environnement : il lit, modifie, lance des commandes et revient avec un diff ou un livrable.",
+              "Sans bornage, il peut optimiser ce qui est facile à changer plutôt que ce qui est réellement utile."
+            ],
+            "list": [
+              "Bon usage : déléguer une tâche bornée.",
+              "Limite : l'objectif, les droits et les preuves doivent être explicites."
+            ]
+          }
+        },
+        {
+          "label": "Harnais",
+          "content": {
+            "paragraphs": [
+              "Le harnais transforme la délégation en processus contrôlé : contexte vivant, règles, oracles, checks, mémoire et condition d'arrêt.",
+              "La valeur n'est pas dans le volume de code généré, mais dans la capacité à produire un diff utile et vérifiable."
+            ],
+            "list": [
+              "Bon usage : changement risqué, multi-fichiers ou difficile à relire.",
+              "Limite : le harnais coûte trop cher pour un micro-diff trivial relu à la main."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "block": "cards",
+      "id": "harnais",
+      "heading": "Ce que le harnais ajoute",
+      "columns": 4,
+      "items": [
+        {
+          "title": "Contexte",
+          "desc": "Le dépôt, les règles locales, les sources de vérité et les zones sensibles sont chargés au bon moment.",
+          "href": "#resume"
+        },
+        {
+          "title": "Outils",
+          "desc": "L'agent peut lire, modifier, générer, tester et revenir avec une preuve observable.",
+          "href": "#preuves"
+        },
+        {
+          "title": "Oracles",
+          "desc": "Les checks et régressions disent ce qui doit rester vrai, y compris les cas rouges avant verts.",
+          "href": "#decision"
+        },
+        {
+          "title": "Arrêt",
+          "desc": "La tâche se termine sur un critère explicite, pas sur une impression de fluidité.",
+          "href": "#preuves"
+        }
+      ]
+    },
+    {
+      "block": "columns",
+      "section_id": "decision",
+      "heading": "Choisir le bon niveau d'autonomie",
+      "columns": [
+        {
+          "span": 4,
+          "blocks": [
+            {
+              "block": "callout",
+              "title": "Prototype jetable",
+              "text": "Le vibe coding peut suffire si le périmètre est faible, temporaire et relu avant réutilisation.",
+              "color": "blue-cumulus"
+            }
+          ]
+        },
+        {
+          "span": 4,
+          "blocks": [
+            {
+              "block": "callout",
+              "title": "Tâche bornée",
+              "text": "Un agent est adapté quand le résultat attendu, les fichiers autorisés et la preuve de fin sont nommés.",
+              "color": "green-emeraude"
+            }
+          ]
+        },
+        {
+          "span": 4,
+          "blocks": [
+            {
+              "block": "callout",
+              "title": "Zone à risque",
+              "text": "Le harnais devient rentable quand les gates évitent une dérive, une fausse preuve ou un diff cosmétique.",
+              "color": "purple-glycine"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "block": "accordion",
+      "id": "risques",
+      "heading": "Points de vigilance",
+      "items": [
+        {
+          "title": "La productivité brute peut tromper",
+          "content": {
+            "paragraphs": [
+              "Produire plus vite ne garantit pas que l'équipe, le client ou l'architecture absorbent plus de changements utiles.",
+              "Les métriques doivent regarder la qualité livrée, la réduction des bugs, la maintenabilité et la satisfaction des équipes."
+            ]
+          }
+        },
+        {
+          "title": "Le harnais doit rester sobre",
+          "content": {
+            "paragraphs": [
+              "Un harnais trop lourd peut coûter plus cher que le problème. Il doit être réservé aux tâches où le bornage et les preuves changent vraiment le résultat."
+            ]
+          }
+        },
+        {
+          "title": "L'humain reste le décideur",
+          "content": {
+            "paragraphs": [
+              "L'agent peut mécaniser une partie de la revue, mais l'humain décide quand une question touche l'architecture, le métier, la sécurité ou la publication."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "block": "content",
+      "id": "preuves",
+      "title": "Preuves locales de cette page",
+      "lead": "La preuve attendue porte sur la génération et les invariants locaux, pas sur une conformité globale.",
+      "body_structured": {
+        "paragraphs": [
+          "Le JSON est validé par le schéma publié, la page est générée par le builder assemblé, les ancres locales sont résolues et le SVG local n'utilise pas de ratio.",
+          "La sortie ne contient pas de CDN DSFR grâce à assets_prefix réglé sur assets/dsfr.",
+          "Ce qui reste à vérifier avant un usage réel : contenu métier, droit d'usage éventuel du bloc marque, revue DSFR ciblée, accessibilité et comportement navigateur complet."
+        ]
+      }
+    }
+  ]
+}

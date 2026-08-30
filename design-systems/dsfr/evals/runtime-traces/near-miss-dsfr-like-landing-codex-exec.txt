@@ -1,0 +1,7 @@
+skill: dsfr-components
+case: near-miss-dsfr-like-landing
+profile: SKILL.md, DESIGN.md, tokens.yaml, model-trigger-smoke.md
+route: page complete / landing, avec garde DSFR-like et marque neutre
+expected_behavior: eviter la simple palette bleu-blanc-rouge, utiliser les composants DSFR existants, limiter ou justifier les icones custom, sans bloc Republique sauf droit etabli
+claim: structure inspiree des fondamentaux DSFR ; pas conforme DSFR/RGAA
+limits: Trace self-report Codex exec en lecture seule ; generation HTML et selection runtime non verifiees, pas une trace interne opaque du routeur.

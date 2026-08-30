@@ -1,0 +1,57 @@
+{
+  "title": "Régression collisions IDs",
+  "main_title": "Régression collisions IDs",
+  "sections": [
+    {
+      "block": "summary",
+      "title": "Premier sommaire",
+      "items": [
+        {
+          "label": "Contenu",
+          "href": "#contenu"
+        }
+      ]
+    },
+    {
+      "block": "summary",
+      "title": "Second sommaire",
+      "items": [
+        {
+          "label": "Contenu",
+          "href": "#contenu"
+        }
+      ]
+    },
+    {
+      "block": "form",
+      "title": "Premier formulaire",
+      "fields": [
+        {
+          "type": "input",
+          "label": "Nom",
+          "id": "premier-nom"
+        }
+      ]
+    },
+    {
+      "block": "form",
+      "title": "Second formulaire",
+      "fields": [
+        {
+          "type": "input",
+          "label": "Courriel",
+          "input_type": "email",
+          "id": "second-courriel"
+        }
+      ]
+    },
+    {
+      "block": "consent",
+      "site_name": "exemple.gouv.fr"
+    },
+    {
+      "block": "consent",
+      "site_name": "exemple.gouv.fr"
+    }
+  ]
+}

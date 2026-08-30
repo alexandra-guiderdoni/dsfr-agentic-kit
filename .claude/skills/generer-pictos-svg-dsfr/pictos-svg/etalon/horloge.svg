@@ -1,0 +1,25 @@
+<svg width="80px" height="80px" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		.fr-artwork-decorative {
+			fill: #ECECFF;
+		}
+		.fr-artwork-minor {
+			fill: #E1000F;
+		}
+		.fr-artwork-major {
+			fill: #000091;
+		}
+	</style>
+	<symbol id="artwork-decorative">
+		<path d="M11 10a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM67 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM9 70a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM69 71a1 1 0 1 0 2 0a1 1 0 1 0 -2 0Z"/>
+	</symbol>
+	<symbol id="artwork-minor">
+		<path d="M41 40L41 26a1 1 0 0 1 -2 0L39 40a1 1 0 0 1 2 0ZM40 41L60 41a1 1 0 0 1 0 -2L40 39a1 1 0 0 1 0 2ZM37 40a3 3 0 1 0 6 0a3 3 0 1 0 -6 0ZM38.6 40a1.4 1.4 0 1 1 2.8 0a1.4 1.4 0 1 1 -2.8 0Z"/>
+	</symbol>
+	<symbol id="artwork-major">
+		<path d="M68.98 32.24A30 30 0 1 1 55 14.02A1 1 0 0 1 54 15.75A28 28 0 1 0 67.05 32.75A1 1 0 0 1 68.98 32.24ZM39 15L39 20a1 1 0 0 1 2 0L41 15a1 1 0 0 1 -2 0ZM50.5 20.08a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM58.92 28.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM65 39L60 39a1 1 0 0 1 0 2L65 41a1 1 0 0 1 0 -2ZM58.92 51.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM50.5 59.92a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM41 65L41 60a1 1 0 0 1 -2 0L39 65a1 1 0 0 1 2 0ZM27.5 59.92a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM19.08 51.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM15 41L20 41a1 1 0 0 1 0 -2L15 39a1 1 0 0 1 0 2ZM19.08 28.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM27.5 20.08a1 1 0 1 0 2 0a1 1 0 1 0 -2 0Z"/>
+	</symbol>
+	<use class="fr-artwork-decorative" href="#artwork-decorative"/>
+	<use class="fr-artwork-minor" href="#artwork-minor"/>
+	<use class="fr-artwork-major" href="#artwork-major"/>
+</svg>

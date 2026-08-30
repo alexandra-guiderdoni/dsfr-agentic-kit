@@ -1,0 +1,126 @@
+{
+  "title": "Information de service - Prototype DSFR",
+  "description": "Prototype de page d'information générée avec le builder assemblé DSFR.",
+  "brand_mode": "neutral",
+  "header": {
+    "brand_mode": "neutral",
+    "service_title": "Information usagers",
+    "service_tagline": "Prototype de communication de service",
+    "navigation": [
+      {"label": "Synthèse", "href": "#synthese", "active": true},
+      {"label": "Impacts", "href": "#impacts"},
+      {"label": "Documents", "href": "#documents"}
+    ]
+  },
+  "footer": {
+    "brand_mode": "neutral",
+    "service_name": "Information usagers",
+    "content_desc": "Prototype d'information à relire avant publication.",
+    "content_links": [
+      {"label": "Centre d'aide", "href": "/aide"}
+    ],
+    "bottom_links": [
+      {"label": "Mentions légales", "href": "/mentions-legales"},
+      {"label": "Accessibilité : à vérifier", "href": "/accessibilite"}
+    ]
+  },
+  "sections": [
+    {
+      "block": "content",
+      "id": "synthese",
+      "title": "Évolution du service",
+      "heading_level": 1,
+      "lead": "Une nouvelle organisation améliore le traitement des demandes.",
+      "body_structured": {
+        "paragraphs": [
+          "Cette page présente les changements utiles pour les usagers et les prochaines échéances.",
+          "Les informations sont fournies comme exemple de structure, pas comme contenu administratif officiel."
+        ]
+      }
+    },
+    {
+      "block": "alert",
+      "type": "warning",
+      "heading_level": 2,
+      "title": "Publication à vérifier",
+      "text": "Les dates et liens doivent être confirmés par le service responsable avant mise en ligne."
+    },
+    {
+      "block": "columns",
+      "id": "impacts",
+      "heading": "Impacts principaux",
+      "columns": [
+        {
+          "span": 6,
+          "blocks": [
+            {"block": "callout", "title": "Traitement simplifié", "text": "Les demandes courantes sont orientées vers un parcours unique.", "color": "green-emeraude"},
+            {"block": "badges", "items": [
+              {"label": "À vérifier", "variant": "warning"},
+              {"label": "Prototype", "variant": "info"}
+            ]}
+          ]
+        },
+        {
+          "span": 6,
+          "blocks": [
+            {"block": "highlight", "text": "Le calendrier définitif doit rester sous contrôle humain avant publication.", "size": "sm"},
+            {"block": "tags", "items": [
+              {"label": "Démarches", "href": "/demarches"},
+              {"label": "Usagers", "href": "/usagers"},
+              {"label": "Support", "href": "/support"}
+            ]}
+          ]
+        }
+      ]
+    },
+    {
+      "block": "tabs",
+      "id": "details",
+      "heading": "Détails par situation",
+      "tabs": [
+        {
+          "label": "Particuliers",
+          "selected": true,
+          "content": {
+            "paragraphs": ["Les particuliers conservent leurs démarches principales dans le même espace."],
+            "links": [{"label": "Voir les démarches", "href": "/particuliers"}]
+          }
+        },
+        {
+          "label": "Associations",
+          "content": {
+            "blocks": [
+              {"type": "paragraph", "text": "Les associations doivent vérifier les justificatifs demandés."},
+              {"type": "links", "items": [{"label": "Guide associations", "href": "/associations"}]}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "block": "download",
+      "id": "documents",
+      "heading": "Documents",
+      "items": [
+        {"label": "Note d'information", "href": "/documents/note-information.pdf", "detail": "PDF - 180 ko"},
+        {"label": "Calendrier prévisionnel", "href": "/documents/calendrier.pdf", "detail": "PDF - 96 ko"}
+      ]
+    },
+    {
+      "block": "buttons",
+      "align": "inline-md",
+      "items": [
+        {"label": "Contacter le service", "href": "/contact"},
+        {"label": "Retour à la synthèse", "href": "#synthese", "variant": "secondary"}
+      ]
+    },
+    {
+      "block": "share",
+      "title": "Partager cette information",
+      "items": [
+        {"platform": "mail", "label": "Envoyer par courriel", "href": "mailto:?subject=Information%20de%20service"},
+        {"platform": "linkedin", "label": "Partager sur LinkedIn", "href": "https://www.linkedin.com/"}
+      ]
+    }
+  ]
+}

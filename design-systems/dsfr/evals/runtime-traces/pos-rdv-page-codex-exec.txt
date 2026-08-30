@@ -1,0 +1,7 @@
+skill: dsfr-components
+case: pos-rdv-page
+profile: DESIGN.md, tokens.yaml, SKILL.md
+route: page complete > type form
+expected_behavior: charger le profil DSFR, generer une page HTML statique de demarche rendez-vous, formulaire labellise, header/main/footer, aucun href="#", verification DSFR bornee
+claim: aligne DSFR avec limites
+limits: Trace self-report Codex exec en lecture seule ; aucun fichier HTML genere, aucun navigateur verifie, pas une trace interne opaque du routeur.

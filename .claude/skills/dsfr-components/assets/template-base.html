@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Titre du site - Nom du service</title>
+    <meta name="description" content="Description du site pour le référencement">
+
+    <!-- DSFR CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/manifest.webmanifest">
+</head>
+<body id="top">
+    <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+            <ul class="fr-skiplinks__list">
+                <li><a class="fr-link" href="#contenu">Contenu</a></li>
+                <li><a class="fr-link" href="#navigation">Menu</a></li>
+                <li><a class="fr-link" href="#footer">Pied de page</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- En-tête -->
+    <header role="banner" class="fr-header">
+        <div class="fr-header__body">
+            <div class="fr-container">
+                <div class="fr-header__body-row">
+                    <div class="fr-header__brand fr-enlarge-link">
+                        <div class="fr-header__brand-top">
+                            <div class="fr-header__navbar">
+                                <button type="button" id="button-menu" class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="modal-menu" aria-haspopup="menu" title="Menu">
+                                    Menu
+                                </button>
+                            </div>
+                        </div>
+                        <div class="fr-header__service">
+                            <a href="/" title="Accueil - Nom du service">
+                                <p class="fr-header__service-title">Nom du service</p>
+                            </a>
+                            <p class="fr-header__service-tagline">Baseline - organisme de rattachement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Menu modal -->
+        <div class="fr-header__menu fr-modal" id="modal-menu" aria-labelledby="button-menu">
+            <div class="fr-container">
+                <button type="button" class="fr-btn--close fr-btn" aria-controls="modal-menu" title="Fermer">
+                    Fermer
+                </button>
+                <nav class="fr-nav" id="navigation" role="navigation" aria-label="Menu principal">
+                    <ul class="fr-nav__list">
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="/" target="_self" aria-current="page">Accueil</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="/page-1" target="_self">Page 1</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="/page-2" target="_self">Page 2</a>
+                        </li>
+                        <li class="fr-nav__item">
+                            <a class="fr-nav__link" href="/page-3" target="_self">Page 3</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main id="contenu">
+        <div class="fr-container fr-py-8w">
+            <div class="fr-grid-row fr-grid-row--center">
+                <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+                    <!-- Fil d'Ariane -->
+                    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+                        <button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">
+                            Voir le fil d'Ariane
+                        </button>
+                        <div class="fr-collapse" id="breadcrumb">
+                            <ol class="fr-breadcrumb__list">
+                                <li>
+                                    <a class="fr-breadcrumb__link" href="/">Accueil</a>
+                                </li>
+                                <li>
+                                    <a class="fr-breadcrumb__link" aria-current="page">Page courante</a>
+                                </li>
+                            </ol>
+                        </div>
+                    </nav>
+
+                    <!-- Titre de la page -->
+                    <h1>Titre de la page</h1>
+
+                    <!-- Contenu -->
+                    <p class="fr-text--lead">
+                        Texte d'introduction qui présente le contenu de la page de manière concise et claire.
+                    </p>
+
+                    <p>
+                        Contenu principal de la page. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
+                    </p>
+
+                    <!-- Exemple de composants -->
+                    <div class="fr-callout fr-my-6w">
+                        <h2 class="fr-callout__title">Information importante</h2>
+                        <p class="fr-callout__text">
+                            Message à mettre en avant pour attirer l'attention de l'utilisateur.
+                        </p>
+                    </div>
+
+                    <div class="fr-btns-group">
+                        <button type="button" class="fr-btn">
+                            Action principale
+                        </button>
+                        <button type="button" class="fr-btn fr-btn--secondary">
+                            Action secondaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="fr-footer" role="contentinfo" id="footer">
+        <div class="fr-container">
+            <div class="fr-footer__body">
+                <div class="fr-footer__brand">
+                    <p>Nom du service</p>
+                </div>
+                <div class="fr-footer__content">
+                    <p class="fr-footer__content-desc">
+                        Description du service et informations complémentaires
+                    </p>
+                    <ul class="fr-footer__content-list">
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener external" title="legifrance.gouv.fr - nouvelle fenêtre" href="https://legifrance.gouv.fr">
+                                legifrance.gouv.fr
+                            </a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener external" title="gouvernement.fr - nouvelle fenêtre" href="https://gouvernement.fr">
+                                gouvernement.fr
+                            </a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener external" title="service-public.gouv.fr - nouvelle fenêtre" href="https://service-public.gouv.fr">
+                                service-public.gouv.fr
+                            </a>
+                        </li>
+                        <li class="fr-footer__content-item">
+                            <a class="fr-footer__content-link" target="_blank" rel="noopener external" title="data.gouv.fr - nouvelle fenêtre" href="https://data.gouv.fr">
+                                data.gouv.fr
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="fr-footer__bottom">
+                <ul class="fr-footer__bottom-list">
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/plan-du-site">
+                            Plan du site
+                        </a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/accessibilite">
+                            Accessibilité : non conforme
+                        </a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/mentions-legales">
+                            Mentions légales
+                        </a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/donnees-personnelles">
+                            Données personnelles
+                        </a>
+                    </li>
+                </ul>
+                <div class="fr-footer__bottom-copy">
+                    <p>
+                        Sauf mention contraire, tous les contenus de ce site sont sous
+                        <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener external" title="licence etalab-2.0 - nouvelle fenêtre">
+                            licence etalab-2.0
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript DSFR -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+{
+  "title": "Accompagnement numérique - Démo DSFR assemblée",
+  "description": "Démo du builder DSFR assemblé : brief, JSON, page HTML et preuve locale.",
+  "brand_mode": "neutral",
+  "header": {
+    "brand_mode": "neutral",
+    "service_title": "Accompagnement numérique",
+    "service_tagline": "Démo locale du builder DSFR assemblé",
+    "tools": [
+      {"label": "Aide", "href": "#questions"}
+    ],
+    "search": {"label": "Rechercher"},
+    "navigation": [
+      {"label": "Objectif", "href": "#objectif", "active": true},
+      {"label": "Parcours", "href": "#parcours"},
+      {"label": "Demande", "href": "#demande"},
+      {"label": "Preuve", "href": "#preuve"}
+    ]
+  },
+  "footer": {
+    "brand_mode": "neutral",
+    "service_name": "Accompagnement numérique",
+    "content_desc": "Démonstration locale à adapter avant tout usage réel.",
+    "content_links": [
+      {"label": "Guide d'installation", "href": "/documentation/guides/installer-agentic-design-pack.md"}
+    ],
+    "bottom_links": [
+      {"label": "Plan du site", "href": "/plan-du-site"},
+      {"label": "Accessibilité : à vérifier", "href": "/accessibilite"},
+      {"label": "Données personnelles", "href": "/donnees-personnelles"}
+    ]
+  },
+  "sections": [
+    {
+      "block": "content",
+      "id": "objectif",
+      "title": "Transformer un brief en page DSFR vérifiable",
+      "heading_level": 1,
+      "lead": "Cette démo montre le chemin minimal : brief, configuration JSON, HTML généré, preuve locale.",
+      "body_structured": {
+        "paragraphs": [
+          "Un agent externe peut partir du brief, lire le schéma JSON, générer la page puis contrôler les invariants locaux sans connaître l'historique du dépôt.",
+          "Le résultat est un prototype DSFR à inspecter, pas une preuve de conformité globale."
+        ],
+        "links": [
+          {"label": "Voir le parcours généré", "href": "#parcours"}
+        ]
+      }
+    },
+    {
+      "block": "notice",
+      "title": "Démo sans droit de marque",
+      "description": "Le mode neutre est utilisé par défaut. Le bloc marque République française reste hors périmètre sans droit d'usage établi.",
+      "variant": "info",
+      "link": {"label": "Lire les limites", "href": "#preuve"}
+    },
+    {
+      "block": "summary",
+      "title": "Sommaire",
+      "items": [
+        {"label": "Objectif", "href": "#objectif"},
+        {"label": "Parcours", "href": "#parcours"},
+        {"label": "Demande", "href": "#demande"},
+        {"label": "Questions fréquentes", "href": "#questions"},
+        {"label": "Preuve locale", "href": "#preuve"}
+      ]
+    },
+    {
+      "block": "cards",
+      "id": "parcours",
+      "heading": "Parcours agentique",
+      "columns": 3,
+      "items": [
+        {"title": "1. Lire le brief", "desc": "Identifier l'intention, les limites et les claims interdits.", "href": "/demo/brief"},
+        {"title": "2. Produire le JSON", "desc": "Composer la page avec les blocs autorisés par le schéma.", "href": "/demo/json"},
+        {"title": "3. Prouver la sortie", "desc": "Générer le HTML puis vérifier les invariants locaux.", "href": "/demo/preuve"}
+      ]
+    },
+    {
+      "block": "form",
+      "section_id": "demande",
+      "form_id": "demo-accompagnement-form",
+      "title": "Demander un accompagnement",
+      "action": "/accompagnement/envoyer",
+      "method": "post",
+      "deferred": true,
+      "fields": [
+        {"type": "field", "name": "nom-prenom", "config": {"id": "identite-demo", "legend": "Identité du demandeur"}},
+        {"type": "field", "name": "email", "config": {"id": "courriel-demo", "label": "Adresse électronique de contact"}},
+        {"type": "input", "label": "Numéro de dossier", "id": "numero-dossier", "input_type": "text", "hint": "Renseignez-le si vous avez déjà un dossier."},
+        {"type": "select", "label": "Besoin principal", "id": "besoin-principal", "name": "besoin", "hint": "Choisissez le sujet le plus proche.", "options": [
+          {"value": "demarche", "label": "Comprendre une démarche en ligne"},
+          {"value": "document", "label": "Préparer un document"},
+          {"value": "suivi", "label": "Suivre une demande"}
+        ]},
+        {"type": "textarea", "label": "Contexte utile", "id": "contexte-demande", "name": "contexte", "rows": 5, "hint": "Ne saisissez pas de donnée sensible inutile."},
+        {"type": "checkbox", "label": "J'ai compris que cette page est une démo locale", "id": "accord-demo", "name": "accord_demo", "required": true}
+      ],
+      "submit_label": "Envoyer la demande",
+      "reset_label": "Effacer"
+    },
+    {
+      "block": "accordion",
+      "id": "questions",
+      "heading": "Questions fréquentes",
+      "items": [
+        {
+          "title": "Pourquoi générer depuis JSON ?",
+          "content": {
+            "paragraphs": ["Le JSON donne à l'agent une surface structurée, validable et diffable avant génération HTML."],
+            "links": [{"label": "Lire le schéma", "href": "/.claude/skills/dsfr-components/schemas/generate_assembled_page.schema.json"}]
+          }
+        },
+        {
+          "title": "Que prouve cette démo ?",
+          "content": "Elle prouve que le builder sait générer et contrôler une page locale. Elle ne prouve pas une conformité DSFR ou RGAA complète."
+        }
+      ]
+    },
+    {
+      "block": "content",
+      "id": "preuve",
+      "title": "Preuve locale attendue",
+      "lead": "La commande de démo valide le schéma, exécute le builder et inspecte le HTML généré.",
+      "body_structured": {
+        "paragraphs": [
+          "La preuve couvre les invariants locaux : JSON valide, page générable, ancres résolues, main et footer présents, h1 unique dans le contenu principal.",
+          "Les audits de conformité, les contenus définitifs et le comportement navigateur complet restent hors périmètre de cette démo."
+        ]
+      }
+    }
+  ]
+}

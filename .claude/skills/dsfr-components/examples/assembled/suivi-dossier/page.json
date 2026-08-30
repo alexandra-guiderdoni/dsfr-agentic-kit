@@ -1,0 +1,112 @@
+{
+  "title": "Suivi de dossier - Prototype DSFR",
+  "description": "Prototype de page de suivi de dossier générée par le builder assemblé DSFR.",
+  "brand_mode": "neutral",
+  "header": {
+    "brand_mode": "neutral",
+    "service_title": "Suivi de dossier",
+    "service_tagline": "Prototype d'espace usager",
+    "tools": [
+      {"label": "Mon espace", "href": "/mon-espace"},
+      {"label": "Aide", "href": "/aide"}
+    ],
+    "navigation": [
+      {"label": "État", "href": "#etat", "active": true},
+      {"label": "Actions", "href": "#actions"},
+      {"label": "Assistance", "href": "#assistance"}
+    ]
+  },
+  "footer": {
+    "brand_mode": "neutral",
+    "service_name": "Suivi de dossier",
+    "content_desc": "Prototype de suivi à contrôler avant publication.",
+    "content_links": [
+      {"label": "Documentation usager", "href": "/documentation-usager"}
+    ],
+    "bottom_links": [
+      {"label": "Plan du site", "href": "/plan-du-site"},
+      {"label": "Confidentialité", "href": "/confidentialite"},
+      {"label": "Accessibilité : à vérifier", "href": "/accessibilite"}
+    ]
+  },
+  "sections": [
+    {
+      "block": "content",
+      "id": "etat",
+      "title": "Votre dossier est en cours d'instruction",
+      "heading_level": 1,
+      "lead": "Les informations principales sont regroupées pour faciliter le suivi.",
+      "body_structured": {
+        "paragraphs": [
+          "Ce prototype présente un état de dossier sans exposer de donnée personnelle réelle.",
+          "Les libellés et échéances doivent être confirmés avant tout usage public."
+        ]
+      }
+    },
+    {
+      "block": "cards",
+      "heading": "Repères",
+      "columns": 3,
+      "items": [
+        {"title": "Statut", "desc": "Instruction en cours.", "href": "/dossier/statut"},
+        {"title": "Prochaine étape", "desc": "Compléter les pièces manquantes.", "href": "/dossier/actions"},
+        {"title": "Délai indicatif", "desc": "Traitement estimé à dix jours ouvrés.", "href": "/dossier/delais"}
+      ]
+    },
+    {
+      "block": "tiles",
+      "id": "actions",
+      "heading": "Actions possibles",
+      "columns": 3,
+      "items": [
+        {"title": "Ajouter une pièce", "desc": "Déposer un document complémentaire.", "href": "/dossier/ajouter-piece", "orientation": "vertical"},
+        {"title": "Modifier un contact", "desc": "Mettre à jour les informations de notification.", "href": "/dossier/contact", "orientation": "vertical"},
+        {"title": "Demander un rappel", "desc": "Être recontacté par le service.", "href": "/dossier/rappel", "orientation": "vertical"}
+      ]
+    },
+    {
+      "block": "columns",
+      "heading": "Comprendre le traitement",
+      "columns": [
+        {
+          "span": 7,
+          "blocks": [
+            {
+              "block": "accordion",
+              "items": [
+                {"title": "Pourquoi une pièce est demandée ?", "content": "Le service peut demander une pièce pour confirmer une information nécessaire au traitement."},
+                {"title": "Quand serai-je prévenu ?", "content": {"paragraphs": ["Une notification est envoyée lorsque le dossier change d'état."], "links": [{"label": "Gérer mes notifications", "href": "/notifications"}]}}
+              ]
+            }
+          ]
+        },
+        {
+          "span": 5,
+          "blocks": [
+            {"block": "callout", "title": "Besoin d'aide ?", "text": "Un conseiller peut vous accompagner si la situation est bloquante."},
+            {"block": "buttons", "items": [
+              {"label": "Contacter l'assistance", "href": "/assistance"},
+              {"label": "Voir les délais", "href": "/delais", "variant": "secondary"}
+            ]}
+          ]
+        }
+      ]
+    },
+    {
+      "block": "transcription",
+      "id": "assistance",
+      "label": "Lire le script d'assistance téléphonique",
+      "content": "Bonjour, je souhaite obtenir des informations sur le suivi de mon dossier sans communiquer de donnée sensible dans ce prototype."
+    },
+    {
+      "block": "follow",
+      "newsletter_title": "Recevoir les mises à jour",
+      "newsletter_desc": "Inscription fictive pour illustrer le bloc de suivi.",
+      "newsletter_url": "/notifications/inscription",
+      "socials": [
+        {"platform": "linkedin", "label": "LinkedIn", "href": "https://www.linkedin.com/"},
+        {"platform": "twitter-x", "label": "X", "href": "https://x.com/"}
+      ]
+    }
+  ]
+}

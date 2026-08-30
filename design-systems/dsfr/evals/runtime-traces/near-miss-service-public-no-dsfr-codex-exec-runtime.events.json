@@ -1,0 +1,17 @@
+{
+  "case": "near-miss-service-public-no-dsfr",
+  "raw_sha256": "c6e232495d902392562099398030386963ca64c8f290ca28ac3782ae16e815ed",
+  "commands": [],
+  "final_messages": [
+    "Skill utilisé : non.\n\nDécision : routage seulement, aucune écriture. La demande simulée ne déclenche pas explicitement `dsfr-components` ni une référence DSFR : “service public” est un indice métier, pas une consigne DSFR.\n\nQuestion éventuelle : si implémentation réelle, demander “Souhaites-tu une page conforme DSFR/RGAA ou une page HTML générique ?”\n\nSources lues : aucune lecture de fichier ni skill ; uniquement les consignes présentes dans ce tour.\n\nClaim autorisé : je peux dire que le routage DSFR n’est pas déclenché explicitement ici.\n\nLimites : je n’ai pas validé de `AGENTS.md` local, pas lu de skill, pas chargé de référence DSFR, pas produit de fichier."
+  ],
+  "runtime_errors": [
+    "Skill descriptions were shortened to fit the 2% skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+  ],
+  "usage": {
+    "input_tokens": 24915,
+    "cached_input_tokens": 24448,
+    "output_tokens": 684,
+    "reasoning_output_tokens": 516
+  }
+}

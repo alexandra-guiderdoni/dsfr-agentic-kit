@@ -1,0 +1,23 @@
+# Usage local de DSFR Agentic Kit
+
+> Exemple à fusionner dans le `CLAUDE.md` du workspace pour Claude Code ou
+> Verdent. Ne pas écraser des instructions existantes. Remplacer les deux
+> chemins entre chevrons.
+
+- Pack en lecture seule : `<chemin-du-pack>`.
+- Projet autorisé en écriture : `<chemin-du-projet>`.
+- Placer tous les briefs, pages, preuves, rapports, tickets et corrections dans
+  le projet ; ne créer aucun livrable dans le pack.
+- La lecture directe des fichiers est le contrat portable ; la découverte des
+  skills et l’exécution de hooks dépendent de l’hôte.
+- Pour produire une page DSFR, lire d’abord
+  `<chemin-du-pack>/design-systems/dsfr/DESIGN.md`, puis `tokens.yaml` et le
+  `SKILL.md` de `dsfr-components`.
+- Pour auditer, lire seulement le `SKILL.md` RGAA ou WCAG correspondant au
+  périmètre demandé et écrire ses sorties dans le projet.
+- Résoudre `scripts/`, `references/` et `assets/` depuis le dossier du skill.
+- Distinguer résultats automatisés et vérifications humaines restantes.
+- Ne pas affirmer « conforme DSFR », « conforme RGAA » ou « prêt pour
+  publication » sans preuve dédiée.
+- À la fin, fournir les fichiers modifiés, les commandes exécutées, les
+  résultats observés, les limites et la prochaine commande de reprise.

@@ -1,0 +1,90 @@
+schema_version: 1
+name: dsfr-agentic-kit
+status: local-prototype
+purpose: >-
+  Router, contraindre, générer et vérifier des interfaces publiques françaises
+  sans confondre génération plausible et conformité prouvée.
+
+runtime:
+  language: fr-FR
+  python_minimum: "3.10"
+  node_minimum: "20"
+  dsfr_version: "1.15.2"
+  canonical_skill_root: ".claude/skills"
+  portable_usage: >-
+    Tout agent capable de lire des fichiers locaux peut suivre les SKILL.md ;
+    la découverte native des skills reste facultative.
+
+product:
+  skills:
+    - a11y-loop
+    - a11y-shared-references
+    - agentic-design-harness
+    - audit-a11y-complet
+    - audit-accessibilite-web
+    - audit-rgaa-dsfr
+    - dsfr-changelog
+    - dsfr-components
+    - fix-accessibilite
+    - generer-pictos-svg-dsfr
+    - pre-audit-rgaa-dsfr
+    - screen-reader-testing
+    - tests-conformite-wcag
+    - ticket-rgaa
+  required_paths:
+    - README.md
+    - DEMARRAGE-AGENT.md
+    - LICENSE
+    - CHANGELOG.md
+    - templates/AGENTS.md.exemple
+    - templates/CLAUDE.md.exemple
+    - documentation/INSTALLER-ET-TESTER.md
+    - documentation/MODE-OPERATOIRE.md
+    - design-systems/dsfr/DESIGN.md
+    - design-systems/dsfr/tokens.yaml
+    - design-systems/dsfr/references/index.md
+    - design-systems/dsfr/evals/negative-scenarios/README.md
+    - design-systems/scripts/check-dsfr-profile.py
+    - design-systems/scripts/check-dsfr-negative-scenarios.py
+    - design-systems/scripts/check-dsfr-runtime-trace.py
+    - design-systems/scripts/check-dsfr-fidelity.py
+    - scripts/check-agentic-design-pack.sh
+    - scripts/check-prerequisites.sh
+    - scripts/check-dsfr-design-system.sh
+    - scripts/demo-dsfr-assembled-page.sh
+    - scripts/demo-dsfr-vitrine.sh
+    - scripts/tests/check-standalone-install.sh
+
+validation:
+  product_tests:
+    - scripts/tests/check-prerequisites.sh
+    - scripts/tests/check-dsfr-design-router-load-when-needed.sh
+    - scripts/tests/check-dsfr-changelog-skill.sh
+    - scripts/tests/check-assembled-page-rejects-unsafe-href.sh
+    - scripts/tests/check-component-neutralises-unsafe-href.sh
+    - scripts/tests/check-dsfr-pictograms-doc.sh
+    - scripts/tests/check-dsfr-pictos-skill.sh
+    - scripts/tests/check-assembled-page-validates-schema-constraints.sh
+    - scripts/tests/check-assembled-page-traces-raw-html.sh
+    - scripts/tests/check-dsfr-fidelity-negative.sh
+    - scripts/tests/check-skills-paths-agnostic.sh
+    - scripts/tests/check-dsfr-component-registry.sh
+    - scripts/tests/check-standalone-install.sh
+  markdown:
+    - README.md
+    - DEMARRAGE-AGENT.md
+    - CHANGELOG.md
+    - documentation/INSTALLER-ET-TESTER.md
+    - documentation/MODE-OPERATOIRE.md
+    - templates/AGENTS.md.exemple
+    - templates/CLAUDE.md.exemple
+
+claims:
+  allowed:
+    - aligné DSFR avec limites
+    - prototype DSFR à vérifier avant publication
+    - composants DSFR utilisés selon les sources lues
+  forbidden_without_dedicated_proof:
+    - conforme DSFR
+    - conforme RGAA
+    - prêt pour publication

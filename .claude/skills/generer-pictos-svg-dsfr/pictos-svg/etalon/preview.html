@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prévisualisation des pictogrammes SVG DSFR</title>
+  <style>
+    :root { --text: #161616; --text-muted: #666; --text-summary: #3a3a3a; --surface: #fff; --border: #ddd; --border-light: #eee; --blue-france: #000091; --red-marianne: #e1000f; }
+    body { margin: 24px; font-family: system-ui, sans-serif; color: var(--text); background: var(--surface); }
+    h1 { margin: 0 0 16px; font-size: 24px; }
+    h2 { margin: 32px 0 12px; font-size: 20px; }
+    .summary { margin: 0 0 24px; color: var(--text-summary); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .card { border: 1px solid var(--border); padding: 16px; border-radius: 4px; }
+    .card h2, .card h3 { margin: 0 0 8px; font-size: 16px; }
+    .card p { margin: 0 0 16px; font-size: 12px; color: var(--text-muted); word-break: break-word; }
+    .reference-card { border-color: var(--blue-france); }
+    .previews { display: flex; align-items: flex-end; gap: 18px; min-height: 96px; }
+    .preview-size { display: grid; justify-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+    .caption { margin: 12px 0 0; font-size: 13px; color: var(--text); }
+    .caption .role { font-weight: 600; }
+    .caption .minor { color: var(--red-marianne); }
+    img { background: var(--surface); outline: 1px solid var(--border-light); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Prévisualisation des pictogrammes SVG DSFR</h1>
+    <p class="summary">1 SVG contrôlé aux tailles 80 px, 40 px, 24 px.</p>
+  </header>
+  <main>
+    <div class="grid">
+    <article class="card">
+  <h2>horloge</h2>
+  <p><code>horloge.svg</code></p>
+  <div class="previews">
+    <div class="preview-size"><img src="horloge.svg" width="80" height="80" alt="Horloge, 80 px"><span>80 px</span></div>
+<div class="preview-size"><img src="horloge.svg" width="40" height="40" alt="Horloge, 40 px"><span>40 px</span></div>
+<div class="preview-size"><img src="horloge.svg" width="24" height="24" alt="Horloge, 24 px"><span>24 px</span></div>
+  </div>
+  <p class="caption"><strong>Horloge</strong><br><span class="role">sujet :</span> cadran à anneau ouvert avec repères d’heures<br><span class="role minor">accent rouge :</span> aiguilles et axe évidé<br>Cadran d’horloge à trait de 2 px avec repères d’heures ; les aiguilles et l’axe sont en rouge.</p>
+</article>
+    </div>
+    <section class="comparison" aria-labelledby="comparison-title">
+    <h2 id="comparison-title">Comparaison avec les références officielles</h2>
+    <p class="summary">3 référence(s) officielle(s) à inspecter aux mêmes tailles.</p>
+    <div class="grid">
+      <article class="card reference-card">
+  <h3>map/compass</h3>
+  <p><code>map-compass.svg</code></p>
+  <div class="previews">
+    <div class="preview-size"><img src="../dsfr-officiels/map-compass.svg" width="80" height="80" alt="map/compass, référence officielle, 80 px"><span>80 px</span></div>
+<div class="preview-size"><img src="../dsfr-officiels/map-compass.svg" width="40" height="40" alt="map/compass, référence officielle, 40 px"><span>40 px</span></div>
+<div class="preview-size"><img src="../dsfr-officiels/map-compass.svg" width="24" height="24" alt="map/compass, référence officielle, 24 px"><span>24 px</span></div>
+  </div>
+</article>
+<article class="card reference-card">
+  <h3>system/success</h3>
+  <p><code>system-success.svg</code></p>
+  <div class="previews">
+    <div class="preview-size"><img src="../dsfr-officiels/system-success.svg" width="80" height="80" alt="system/success, référence officielle, 80 px"><span>80 px</span></div>
+<div class="preview-size"><img src="../dsfr-officiels/system-success.svg" width="40" height="40" alt="system/success, référence officielle, 40 px"><span>40 px</span></div>
+<div class="preview-size"><img src="../dsfr-officiels/system-success.svg" width="24" height="24" alt="system/success, référence officielle, 24 px"><span>24 px</span></div>
+  </div>
+</article>
+<article class="card reference-card">
+  <h3>digital/calendar</h3>
+  <p><code>digital-calendar.svg</code></p>
+  <div class="previews">
+    <div class="preview-size"><img src="../dsfr-officiels/digital-calendar.svg" width="80" height="80" alt="digital/calendar, référence officielle, 80 px"><span>80 px</span></div>
+<div class="preview-size"><img src="../dsfr-officiels/digital-calendar.svg" width="40" height="40" alt="digital/calendar, référence officielle, 40 px"><span>40 px</span></div>
+<div class="preview-size"><img src="../dsfr-officiels/digital-calendar.svg" width="24" height="24" alt="digital/calendar, référence officielle, 24 px"><span>24 px</span></div>
+  </div>
+</article>
+    </div>
+  </section>
+  </main>
+</body>
+</html>

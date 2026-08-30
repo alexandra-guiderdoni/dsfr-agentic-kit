@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">Vibe coding, agent et harnais agentique</title>
+  <desc id="desc">Trois colonnes comparent une génération rapide, un agent qui agit et un harnais qui borne la délégation par des preuves.</desc>
+  <rect width="960" height="360" fill="#f6f6f6"/>
+  <g font-family="Marianne, Arial, sans-serif">
+    <rect x="40" y="58" width="240" height="214" rx="8" fill="#ffffff" stroke="#000091" stroke-width="3"/>
+    <text x="70" y="108" font-size="28" font-weight="700" fill="#000091">Vibe coding</text>
+    <text x="70" y="154" font-size="18" fill="#3a3a3a">Résultat visible</text>
+    <text x="70" y="184" font-size="18" fill="#3a3a3a">Revue faible</text>
+    <text x="70" y="214" font-size="18" fill="#3a3a3a">Risque caché</text>
+    <rect x="360" y="58" width="240" height="214" rx="8" fill="#ffffff" stroke="#18753c" stroke-width="3"/>
+    <text x="390" y="108" font-size="28" font-weight="700" fill="#18753c">Agent</text>
+    <text x="390" y="154" font-size="18" fill="#3a3a3a">Lit et modifie</text>
+    <text x="390" y="184" font-size="18" fill="#3a3a3a">Teste et itère</text>
+    <text x="390" y="214" font-size="18" fill="#3a3a3a">Besoin borné</text>
+    <rect x="680" y="58" width="240" height="214" rx="8" fill="#ffffff" stroke="#6e445a" stroke-width="3"/>
+    <text x="710" y="108" font-size="28" font-weight="700" fill="#6e445a">Harnais</text>
+    <text x="710" y="154" font-size="18" fill="#3a3a3a">Règles et contexte</text>
+    <text x="710" y="184" font-size="18" fill="#3a3a3a">Oracles et preuves</text>
+    <text x="710" y="214" font-size="18" fill="#3a3a3a">Arrêt explicite</text>
+    <path d="M292 165 H348" stroke="#666666" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M612 165 H668" stroke="#666666" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+    <text x="92" y="310" font-size="18" fill="#666666">Explorer vite</text>
+    <text x="414" y="310" font-size="18" fill="#666666">Déléguer une tâche</text>
+    <text x="715" y="310" font-size="18" fill="#666666">Produire un diff vérifiable</text>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#666666"/>
+    </marker>
+  </defs>
+</svg>

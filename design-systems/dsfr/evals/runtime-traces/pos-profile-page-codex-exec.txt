@@ -1,0 +1,6 @@
+skill: dsfr-components
+case: pos-profile-page
+profile: DESIGN.md
+profile: tokens.yaml
+reason: Le prompt demande explicitement une page HTML statique DSFR, routée par le smoke positif du skill.
+limits: Test self-report Codex exec, fondé sur lectures locales, pas une trace interne opaque du routeur.

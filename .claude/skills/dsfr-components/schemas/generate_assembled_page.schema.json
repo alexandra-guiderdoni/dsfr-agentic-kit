@@ -1,0 +1,1887 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentic-design-packs.local/schemas/generate_assembled_page.schema.json",
+  "title": "generate_assembled_page.py config",
+  "description": "Configuration JSON pour composer une page HTML statique DSFR avec le builder assemblé local. Ce schéma décrit le contrat du générateur, pas une conformité DSFR ou RGAA.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "sections"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Titre de page utilisé pour le title HTML et le service."
+    },
+    "description": {
+      "type": "string",
+      "description": "Meta description optionnelle."
+    },
+    "main_title": {
+      "type": "string",
+      "description": "Titre h1 généré automatiquement si auto_h1 reste actif et qu'aucune section ne déclare de h1."
+    },
+    "auto_h1": {
+      "type": "boolean",
+      "default": true
+    },
+    "brand_mode": {
+      "$ref": "#/$defs/brandMode"
+    },
+    "dark": {
+      "type": "boolean",
+      "default": false
+    },
+    "assets_prefix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "header": {
+      "$ref": "#/$defs/header"
+    },
+    "footer": {
+      "$ref": "#/$defs/footer"
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/noticeBlock"
+          },
+          {
+            "$ref": "#/$defs/calloutBlock"
+          },
+          {
+            "$ref": "#/$defs/alertBlock"
+          },
+          {
+            "$ref": "#/$defs/highlightBlock"
+          },
+          {
+            "$ref": "#/$defs/cardsBlock"
+          },
+          {
+            "$ref": "#/$defs/tilesBlock"
+          },
+          {
+            "$ref": "#/$defs/accordionBlock"
+          },
+          {
+            "$ref": "#/$defs/tabsBlock"
+          },
+          {
+            "$ref": "#/$defs/formBlock"
+          },
+          {
+            "$ref": "#/$defs/stepperBlock"
+          },
+          {
+            "$ref": "#/$defs/badgesBlock"
+          },
+          {
+            "$ref": "#/$defs/tagsBlock"
+          },
+          {
+            "$ref": "#/$defs/quoteBlock"
+          },
+          {
+            "$ref": "#/$defs/contentBlock"
+          },
+          {
+            "$ref": "#/$defs/summaryBlock"
+          },
+          {
+            "$ref": "#/$defs/buttonsBlock"
+          },
+          {
+            "$ref": "#/$defs/breadcrumbBlock"
+          },
+          {
+            "$ref": "#/$defs/columnsBlock"
+          },
+          {
+            "$ref": "#/$defs/imageBlock"
+          },
+          {
+            "$ref": "#/$defs/transcriptionBlock"
+          },
+          {
+            "$ref": "#/$defs/downloadBlock"
+          },
+          {
+            "$ref": "#/$defs/shareBlock"
+          },
+          {
+            "$ref": "#/$defs/followBlock"
+          },
+          {
+            "$ref": "#/$defs/consentBlock"
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "brandMode": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "republique"
+      ],
+      "default": "neutral",
+      "description": "Utiliser republique seulement si le droit d'usage du bloc marque est établi."
+    },
+    "safeHref": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "enum": [
+          "#"
+        ]
+      },
+      "pattern": "^(?!//)(?:(?:https?|mailto|tel):|[^:/?#]*(?:[/?#]|$))",
+      "description": "Lien réel ou ancre locale ciblée : liste blanche http, https, mailto, tel, chemins et ancres. href=\"#\", les URL relatives au protocole (//hôte) et tout autre schéma (javascript:, data:, vbscript:…) sont refusés par le schéma puis par la pré-validation du builder."
+    },
+    "htmlId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "dsfrClassList": {
+      "type": "string",
+      "pattern": "^fr-[A-Za-z0-9_-]+(\\s+fr-[A-Za-z0-9_-]+)*$",
+      "default": "fr-py-6w"
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "href"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "title": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        }
+      }
+    },
+    "sectionBase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/htmlId"
+        },
+        "section_id": {
+          "$ref": "#/$defs/htmlId"
+        },
+        "id_prefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Préfixe optionnel pour les IDs internes des blocs répétés comme summary, accordion, tabs, breadcrumb, transcription ou consent. Si absent, le builder génère un préfixe unique."
+        },
+        "heading": {
+          "type": "string"
+        },
+        "container": {
+          "type": "boolean"
+        },
+        "spacing": {
+          "$ref": "#/$defs/dsfrClassList"
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "brand_mode": {
+          "$ref": "#/$defs/brandMode"
+        },
+        "service_title": {
+          "type": "string"
+        },
+        "service_tagline": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "name",
+              "href"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 2
+              },
+              "name": {
+                "type": "string"
+              },
+              "href": {
+                "$ref": "#/$defs/safeHref"
+              },
+              "active": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "search": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string"
+            }
+          }
+        },
+        "navigation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/navigationItem"
+          }
+        }
+      }
+    },
+    "navigationItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/navigationItem"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title"
+            ],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "links": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/link"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "brand_mode": {
+          "$ref": "#/$defs/brandMode"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "content_desc": {
+          "type": "string"
+        },
+        "content_links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "bottom_links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "copyright": {
+          "type": "string"
+        },
+        "partners": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Configuration passée au générateur footer."
+        }
+      }
+    },
+    "richLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "title": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        }
+      }
+    },
+    "richContent": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/richLink"
+              }
+            ]
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "paragraphs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "list": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/richLink"
+                  }
+                ]
+              }
+            },
+            "ordered": {
+              "type": "boolean"
+            },
+            "links": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/richLink"
+              }
+            },
+            "link": {
+              "$ref": "#/$defs/richLink"
+            },
+            "blocks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/richBlock"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "richBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "paragraph",
+            "p",
+            "heading",
+            "title",
+            "list",
+            "ul",
+            "ol",
+            "links",
+            "link"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "ordered": {
+          "type": "boolean"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/richLink"
+              }
+            ]
+          }
+        },
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "title": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        }
+      }
+    },
+    "noticeBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "title"
+          ],
+          "properties": {
+            "block": {
+              "const": "notice"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "desc": {
+              "type": "string"
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "info",
+                "warning",
+                "success",
+                "error"
+              ]
+            },
+            "link": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/link"
+                },
+                {
+                  "$ref": "#/$defs/safeHref"
+                }
+              ]
+            },
+            "closable": {
+              "type": "boolean"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "calloutBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "title",
+            "text"
+          ],
+          "properties": {
+            "block": {
+              "const": "callout"
+            },
+            "title": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "heading_level": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6,
+              "default": 3,
+              "description": "Niveau du titre (h1-h6). Par défaut h3 ; aligner sur le contexte pour ne pas sauter un niveau."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "alertBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "title"
+          ],
+          "properties": {
+            "block": {
+              "const": "alert"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "info",
+                "success",
+                "warning",
+                "error"
+              ]
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "info",
+                "success",
+                "warning",
+                "error"
+              ]
+            },
+            "title": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "closable": {
+              "type": "boolean"
+            },
+            "heading_level": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6,
+              "default": 3,
+              "description": "Niveau du titre (h1-h6). Par défaut h3 ; aligner sur le contexte pour ne pas sauter un niveau."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "highlightBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "text"
+          ],
+          "properties": {
+            "block": {
+              "const": "highlight"
+            },
+            "text": {
+              "type": "string"
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "sm",
+                "lead"
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "cardItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "href"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "image": {
+          "$ref": "#/$defs/safeSrc"
+        }
+      }
+    },
+    "cardsBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "cards"
+            },
+            "columns": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12,
+              "default": 3
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/cardItem"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "tileItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "href"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "horizontal",
+            "vertical"
+          ]
+        },
+        "image": {
+          "$ref": "#/$defs/safeSrc"
+        }
+      }
+    },
+    "tilesBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "tiles"
+            },
+            "columns": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12,
+              "default": 3
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/tileItem"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "accordionBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "accordion"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "content"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "content": {
+                    "$ref": "#/$defs/richContent"
+                  }
+                }
+              }
+            },
+            "heading_level": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 6,
+              "description": "Niveau de titre des sections de l'accordéon (3 par défaut), à placer dans la hiérarchie de la page."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "tabsBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "tabs"
+          ],
+          "properties": {
+            "block": {
+              "const": "tabs"
+            },
+            "tabs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "content"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "content": {
+                    "$ref": "#/$defs/richContent"
+                  },
+                  "selected": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "formBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "fields"
+          ],
+          "properties": {
+            "block": {
+              "const": "form"
+            },
+            "action": {
+              "$ref": "#/$defs/safeHref"
+            },
+            "method": {
+              "type": "string",
+              "enum": [
+                "get",
+                "post"
+              ]
+            },
+            "title": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/formField"
+              }
+            },
+            "submit_label": {
+              "type": "string"
+            },
+            "reset_label": {
+              "type": "string"
+            },
+            "deferred": {
+              "type": "boolean"
+            },
+            "form_id": {
+              "$ref": "#/$defs/htmlId",
+              "description": "Optionnel. Si absent, le builder génère un ID unique par formulaire assemblé."
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "formField": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/functionalField"
+        },
+        {
+          "$ref": "#/$defs/inputField"
+        },
+        {
+          "$ref": "#/$defs/selectField"
+        },
+        {
+          "$ref": "#/$defs/textareaField"
+        },
+        {
+          "$ref": "#/$defs/checkboxField"
+        },
+        {
+          "$ref": "#/$defs/radioField"
+        }
+      ]
+    },
+    "functionalField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "name"
+      ],
+      "properties": {
+        "type": {
+          "const": "field"
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "civilite",
+            "nom-prenom",
+            "email",
+            "date-unique",
+            "societe"
+          ]
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "inputField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "label"
+      ],
+      "properties": {
+        "type": {
+          "const": "input"
+        },
+        "label": {
+          "type": "string"
+        },
+        "input_type": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "id": {
+          "$ref": "#/$defs/htmlId",
+          "description": "Optionnel. Si absent, le builder génère un ID depuis le formulaire et le libellé, puis déduplique les homonymes."
+        },
+        "hint": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribut name du champ (identifiant technique par défaut)."
+        }
+      }
+    },
+    "selectField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "label",
+        "options"
+      ],
+      "properties": {
+        "type": {
+          "const": "select"
+        },
+        "label": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value",
+              "label"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "id": {
+          "$ref": "#/$defs/htmlId",
+          "description": "Optionnel. Si absent, le builder génère un ID depuis le formulaire et le libellé, puis déduplique les homonymes."
+        },
+        "hint": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "textareaField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "label"
+      ],
+      "properties": {
+        "type": {
+          "const": "textarea"
+        },
+        "label": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/htmlId",
+          "description": "Optionnel. Si absent, le builder génère un ID depuis le formulaire et le libellé, puis déduplique les homonymes."
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "hint": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "checkboxField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "label"
+      ],
+      "properties": {
+        "type": {
+          "const": "checkbox"
+        },
+        "label": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "id": {
+          "$ref": "#/$defs/htmlId",
+          "description": "Optionnel. Si absent, le builder génère un ID depuis le formulaire et le libellé, puis déduplique les homonymes."
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "radioField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "legend",
+        "items"
+      ],
+      "properties": {
+        "type": {
+          "const": "radio"
+        },
+        "legend": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "value"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "inline": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/htmlId"
+        }
+      }
+    },
+    "stepperBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "current",
+            "total",
+            "title"
+          ],
+          "properties": {
+            "block": {
+              "const": "stepper"
+            },
+            "current": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "title": {
+              "type": "string"
+            },
+            "next": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "badgeItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "sm": {
+          "type": "boolean"
+        }
+      }
+    },
+    "badgesBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "badges"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/badgeItem"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "tagItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "sm": {
+          "type": "boolean"
+        }
+      }
+    },
+    "tagsBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "tags"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/tagItem"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "quoteBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "text",
+            "author"
+          ],
+          "properties": {
+            "block": {
+              "const": "quote"
+            },
+            "text": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "cite": {
+              "$ref": "#/$defs/safeHref"
+            },
+            "image": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "contentBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "title"
+          ],
+          "properties": {
+            "block": {
+              "const": "content"
+            },
+            "title": {
+              "type": "string"
+            },
+            "lead": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string",
+              "description": "HTML éditorial brut maîtrisé. Requiert allow_raw_html: true. Préférer body_text ou body_structured pour une sortie LLM non relue."
+            },
+            "allow_raw_html": {
+              "type": "boolean",
+              "description": "Signal expert local au bloc content. Autorise body seulement si le HTML brut a été relu."
+            },
+            "body_text": {
+              "type": "string"
+            },
+            "body_structured": {
+              "$ref": "#/$defs/richContent"
+            },
+            "as_article": {
+              "type": "boolean"
+            },
+            "heading_level": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "summaryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "href"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/summaryItem"
+          }
+        }
+      }
+    },
+    "summaryBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "summary"
+            },
+            "title": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/summaryItem"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "buttonItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "variant": {
+          "type": "string",
+          "enum": [
+            "primary",
+            "secondary",
+            "tertiary",
+            "tertiary-no-outline"
+          ]
+        },
+        "icon": {
+          "type": "string"
+        },
+        "icon_position": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "size": {
+          "type": "string",
+          "enum": [
+            "sm",
+            "lg"
+          ]
+        }
+      }
+    },
+    "buttonsBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "buttons"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/buttonItem"
+              }
+            },
+            "align": {
+              "type": "string",
+              "enum": [
+                "inline-md",
+                "right",
+                "center"
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "breadcrumbBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "items"
+          ],
+          "properties": {
+            "block": {
+              "const": "breadcrumb"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "$ref": "#/$defs/safeHref"
+                  },
+                  "url": {
+                    "$ref": "#/$defs/safeHref"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "columnsBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "columns"
+          ],
+          "properties": {
+            "block": {
+              "const": "columns"
+            },
+            "columns": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "blocks"
+                    ],
+                    "properties": {
+                      "span": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 12
+                      },
+                      "blocks": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "$ref": "#/properties/sections/items"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "$ref": "#/properties/sections/items"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "imageBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "src",
+            "alt"
+          ],
+          "properties": {
+            "block": {
+              "const": "image"
+            },
+            "src": {
+              "$ref": "#/$defs/safeSrc"
+            },
+            "alt": {
+              "type": "string",
+              "description": "Texte alternatif, requis ; chaîne vide pour une image décorative (decorative: true en est la forme explicite, facultative)."
+            },
+            "caption": {
+              "type": "string"
+            },
+            "ratio": {
+              "type": "string",
+              "pattern": "^[0-9]+x[0-9]+$",
+              "description": "Réservé aux images matricielles. Le builder refuse ratio sur SVG pour éviter de rogner les schémas."
+            },
+            "decorative": {
+              "type": "boolean",
+              "description": "Image décorative : autorise alt vide."
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "src": {
+                "type": "string",
+                "pattern": "\\.[sS][vV][gG](?:[?#].*)?$"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "ratio"
+              ]
+            },
+            "description": "Un SVG ne doit pas déclarer ratio : le schéma doit conserver sa géométrie naturelle."
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "transcriptionBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block",
+            "content"
+          ],
+          "properties": {
+            "block": {
+              "const": "transcription"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "downloadItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "href"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/safeHref"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "downloadBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block"
+          ],
+          "properties": {
+            "block": {
+              "const": "download"
+            },
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "$ref": "#/$defs/safeHref"
+            },
+            "detail": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/downloadItem"
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "shareBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block"
+          ],
+          "properties": {
+            "block": {
+              "const": "share"
+            },
+            "title": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "platform",
+                  "label",
+                  "href"
+                ],
+                "properties": {
+                  "platform": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "href": {
+                    "$ref": "#/$defs/safeHref"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "followBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block"
+          ],
+          "properties": {
+            "block": {
+              "const": "follow"
+            },
+            "newsletter_title": {
+              "type": "string"
+            },
+            "newsletter_url": {
+              "$ref": "#/$defs/safeHref"
+            },
+            "newsletter_desc": {
+              "type": "string"
+            },
+            "socials": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "platform",
+                  "label"
+                ],
+                "properties": {
+                  "platform": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "$ref": "#/$defs/safeHref"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "consentBlock": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/sectionBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "block"
+          ],
+          "properties": {
+            "block": {
+              "const": "consent"
+            },
+            "site_name": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "safeSrc": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!//)(?:(?:https?|mailto|tel):|[^:/?#]*(?:[/?#]|$))",
+      "description": "Source d'image : chemin local ou URL http/https ; data: et les autres schémas sont refusés."
+    }
+  }
+}

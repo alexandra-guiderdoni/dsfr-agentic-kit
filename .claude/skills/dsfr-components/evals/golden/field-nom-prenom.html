@@ -1,0 +1,19 @@
+
+<fieldset class="fr-fieldset" id="name-fieldset" aria-labelledby="name-legend name-messages">
+    <legend class="fr-sr-only" id="name-legend">Demande de nom et prénom</legend>
+        <div class="fr-fieldset__element">
+            <div class="fr-input-group">
+                <label class="fr-label" for="name-given-name">Prénom</label>
+                <input class="fr-input" spellcheck="false" autocomplete="given-name" name="given-name" aria-describedby="name-given-name-messages" id="name-given-name" type="text">
+                <div class="fr-messages-group" id="name-given-name-messages" aria-live="polite"></div>
+            </div>
+        </div>
+        <div class="fr-fieldset__element">
+            <div class="fr-input-group">
+                <label class="fr-label" for="name-family-name">Nom</label>
+                <input class="fr-input" spellcheck="false" autocomplete="family-name" name="family-name" aria-describedby="name-family-name-messages" id="name-family-name" type="text">
+                <div class="fr-messages-group" id="name-family-name-messages" aria-live="polite"></div>
+            </div>
+        </div>
+    <div class="fr-messages-group" aria-live="polite" id="name-messages"></div>
+</fieldset>

@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0",
+  "id": "dsfr-pictogram-prompt-profile-v1",
+  "project": "Pictogrammes SVG DSFR-like",
+  "version": "1.3",
+  "source_corpus": "pictos-svg/dsfr-officiels",
+  "style": {
+    "genre": "dsfr-pictogram-svg",
+    "genre_description": "Pictogramme institutionnel DSFR en SVG autonome, construit en formes remplies sur un gabarit 80 x 80.",
+    "positioning": "stylisé institutionnel",
+    "tone": [
+      "sobre",
+      "lisible",
+      "administratif",
+      "non décoratif"
+    ]
+  },
+  "format": {
+    "width": "80px",
+    "height": "80px",
+    "viewBox": "0 0 80 80",
+    "grid_base_px": 2,
+    "preferred_spacing_px": [
+      4,
+      8
+    ],
+    "review_sizes_px": [
+      80,
+      40,
+      24
+    ]
+  },
+  "layers": {
+    "artwork-decorative": {
+      "role": "respiration périphérique",
+      "color": "#ECECFF",
+      "target_weight": "environ 10 %",
+      "must_not": "porter le sens principal"
+    },
+    "artwork-minor": {
+      "role": "accent sémantique unique, éventuellement composé de plusieurs sous-formes coordonnées",
+      "color": "#E1000F",
+      "target_weight": "environ 30 %, visible à 40 px",
+      "must_not": "devenir la couleur principale du sujet"
+    },
+    "artwork-major": {
+      "role": "sujet principal et détails structurants",
+      "color": "#000091",
+      "target_weight": "environ 60 %",
+      "must_not": "dépendre du rouge ou du décor pour rester lisible"
+    }
+  },
+  "prompt_core": "Créer un pictogramme SVG original DSFR-like 80x80 : trois symboles canoniques decorative/minor/major, uniquement des path remplis, sujet bleu dominant, signal rouge sémantique visible et coordonné, décor pâle périphérique, aucune primitive SVG ni stroke, official false.",
+  "visual_signature": [
+    "sujet major bleu dominant, lisible seul",
+    "traits apparents simulés par géométrie remplie proche de 2 px",
+    "accent minor rouge visible, réservé au sens, possiblement composé de plusieurs formes coordonnées",
+    "décor decorative pâle, discret et périphérique",
+    "occupation du carré proche des références officielles inspectées",
+    "emprunt de grammaire DSFR nommé pour chaque création originale",
+    "silhouette et accent rouge distincts pour chaque pictogramme d'une série",
+    "rendu haute fidélité construit depuis un archétype DSFR principal"
+  ],
+  "concept_specificity": {
+    "required_fields": [
+      "borrowed_grammar",
+      "concept_metaphor",
+      "unique_minor_accent",
+      "series_difference"
+    ],
+    "borrowed_grammar": "Nommer la référence officielle dont on reprend la logique visuelle : support, scène, occupation du carré, évidements, densité ou rôle du rouge.",
+    "concept_metaphor": "Remplacer les concepts abstraits par une scène ou un objet concret compatible avec les familles DSFR.",
+    "unique_minor_accent": "Donner au rouge une forme liée au concept, sans réutiliser une coche, une pastille ou un badge par défaut. Plusieurs formes rouges sont acceptées si elles renforcent un même signal sémantique.",
+    "series_difference": "Pour une série, expliquer ce qui change dans la silhouette principale, le support ou la scène entre deux pictogrammes proches."
+  },
+  "archetype_first": {
+    "required_fields": [
+      "primary_archetype",
+      "preserved_grammar",
+      "semantic_delta",
+      "path_edit_budget",
+      "visual_delta_check"
+    ],
+    "primary_archetype": "Choisir une référence officielle principale qui fixe l'occupation du carré, la densité et la logique de calques.",
+    "preserved_grammar": "Nommer ce qui reste hérité de l'archétype : support, masses, évidements, décor, rôle du rouge, niveau de détail.",
+    "semantic_delta": "Limiter la modification au plus petit changement qui porte le nouveau concept.",
+    "path_edit_budget": "Limiter volontairement les zones modifiées au lieu de reconstruire un pictogramme complet.",
+    "visual_delta_check": "Vérifier que le résultat paraît d'abord être une variante naturelle du corpus DSFR."
+  },
+  "png_reference_first": {
+    "purpose": "Utiliser une planche PNG comme référence de direction artistique quand le SVG direct reste trop loin du rendu DSFR attendu.",
+    "required_fields": [
+      "png_reference_role",
+      "selected_png_candidate",
+      "visual_features_to_preserve",
+      "raster_features_to_discard",
+      "native_svg_reconstruction"
+    ],
+    "png_reference_role": "Décrire ce que le PNG apporte : silhouette, masses, rythme, accent rouge, niveau de détail ou lisibilité.",
+    "selected_png_candidate": "Identifier le pictogramme PNG retenu dans la planche avant reconstruction.",
+    "visual_features_to_preserve": "Lister les caractéristiques visuelles à traduire dans un SVG DSFR natif.",
+    "raster_features_to_discard": "Écarter flou, ombre, texture, anti-crénelage visible et artefacts de génération.",
+    "native_svg_reconstruction": "Recréer le pictogramme en 80x80, trois symboles DSFR et path-only, sans autotrace comme livrable final.",
+    "allowed_review_artifact": "Un SVG conteneur avec PNG embarqué est autorisé seulement comme planche de revue explicitement nommée png-reference ou png-embarque.",
+    "must_not": "Ne jamais déclarer production un SVG qui dépend d'un PNG embarqué, d'une vectorisation automatique, d'un artefact raster ou d'une planche PNG sans vraies alternatives visuelles."
+  },
+  "output_statuses": {
+    "original-dsfr-like": "Création originale non officielle qui reprend la grammaire DSFR sans conserver fortement les chemins d'un SVG officiel.",
+    "dsfr-grammar-transplant": "Variante non officielle haute fidélité qui conserve fortement la grammaire ou des chemins d'un archétype officiel et documente un delta sémantique.",
+    "generated-legacy": "Ancien mode filaire 256x256, DSFR-inspired, non assimilable à un pictogramme DSFR officiel."
+  },
+  "production_maturity": {
+    "scale": "0 / 1 / 2 par critère, total sur 10",
+    "criteria": [
+      "dsfr_native_feel",
+      "semantic_delta_integration",
+      "red_accent_sobriety",
+      "small_size_legibility",
+      "standalone_usability"
+    ],
+    "statuses": {
+      "prototype": "moins de 6/10, ou au moins un critère à 0",
+      "review-needed": "6/10 ou 7/10, sans critère à 0",
+      "production-candidate": "au moins 8/10, sans critère à 0"
+    },
+    "must_not": "déclarer production un pictogramme sans score visuel et sans revue humaine"
+  },
+  "prompt_pipeline": {
+    "passes": [
+      "fidélité sémantique : comprendre le pictogramme demandé et prouver son absence officielle",
+      "traduction pictographique : convertir le concept en major, minor, decorative et composition 80x80",
+      "conformité DSFR : vérifier calques, palette, path-only, densité et références officielles",
+      "faisabilité SVG : vérifier que la forme peut être codée en path remplis lisibles à 80, 40 et 24 px"
+    ],
+    "prompt1_keys": [
+      "concept",
+      "official_status",
+      "official_references",
+      "major_subject",
+      "minor_accent",
+      "decorative_role",
+      "composition_80x80",
+      "path_strategy",
+      "density_targets",
+      "validation"
+    ],
+    "prompt2_guardrails": [
+      "enrichir seulement la scène pictographique, les calques et la densité",
+      "ne jamais ajouter un nouveau style visuel hors DSFR",
+      "ne jamais remplacer les références officielles par une bibliothèque d'icônes",
+      "utiliser le mode PNG référence d'abord seulement comme référence de rendu, puis reconstruire en SVG DSFR natif",
+      "ne jamais réutiliser le même squelette géométrique pour toute une série",
+      "ne jamais réutiliser le même motif rouge pour des concepts différents",
+      "ne jamais cumuler deux signaux rouges concurrents dans un même pictogramme ; accepter plusieurs formes rouges coordonnées si elles servent le même signal",
+      "ne jamais livrer un autotrace ou un PNG embarqué comme pictogramme SVG de production",
+      "ne jamais valider une planche PNG qui répète la même solution sous plusieurs variantes",
+      "ne jamais assembler librement des briques géométriques quand un archétype DSFR peut porter le concept",
+      "préserver l'occupation, la densité et le rythme d'un primary_archetype pour les créations haute fidélité",
+      "réduire les détails impossibles à lire à 24 px"
+    ],
+    "prompt3_must_start_with": "prompt_core"
+  },
+  "avoid": [
+    "stroke",
+    "stroke-width",
+    "line",
+    "rect",
+    "circle",
+    "polyline",
+    "polygon",
+    "fill direct sur un path",
+    "filtre",
+    "masque",
+    "dégradé",
+    "texte visible",
+    "logo",
+    "emblème officiel",
+    "icône de bibliothèque recolorée",
+    "objet rouge dominant",
+    "décor qui porte le sens",
+    "puce électronique générique",
+    "base de données générique",
+    "document générique sans emprunt DSFR",
+    "même squelette géométrique pour toute une série",
+    "motif rouge réutilisé",
+    "deux signaux rouges concurrents",
+    "planche PNG sans alternatives visuelles réelles",
+    "assemblage libre de formes compatibles DSFR",
+    "delta sémantique qui reconstruit toute la silhouette",
+    "création sans primary_archetype",
+    "autotrace comme livrable final",
+    "PNG embarqué présenté comme SVG vectoriel DSFR",
+    "artefact raster conservé dans le SVG final"
+  ],
+  "quality_checkpoints": {
+    "style_markers": [
+      "prompt_core utilisé en tête du prompt interne final",
+      "structure 80x80 avec trois symboles et trois use canoniques",
+      "symboles composés uniquement de path",
+      "palette limitée aux classes fr-artwork-*",
+      "proximité visuelle comparée à trois à cinq références officielles",
+      "primary_archetype utilisé comme patron de rendu haute fidélité",
+      "mode PNG référence d'abord utilisé seulement comme référence de direction artistique",
+      "semantic_delta limité et documenté",
+      "production_score renseigné pour les créations visant la production",
+      "dosage du rouge comparé aux références officielles inspectées"
+    ],
+    "semantic_markers": [
+      "le sujet demandé est identifiable sans le minor",
+      "le minor précise l'action, le statut ou le point focal",
+      "le decorative reste périphérique",
+      "les écarts avec les références sont explicités",
+      "borrowed_grammar est nommé dans la micro-spécification ou le manifeste",
+      "concept_metaphor transforme le concept abstrait en sujet concret",
+      "unique_minor_accent est propre au pictogramme",
+      "les sous-formes rouges éventuelles portent un même signal sémantique",
+      "series_difference distingue les pictogrammes d'une même série",
+      "preserved_grammar explique l'ADN repris de l'archétype",
+      "selected_png_candidate documente le candidat PNG retenu quand le mode PNG référence d'abord est utilisé",
+      "visual_delta_check confirme que la variante reste naturelle dans le corpus"
+    ],
+    "feasibility_risks": [
+      "concept trop abstrait sans métaphore pictographique",
+      "objet trop fin pour un codage path-only",
+      "accent rouge nécessaire mais susceptible de dominer",
+      "accent rouge trop discret par rapport aux références officielles",
+      "détails illisibles à 24 px",
+      "densité major ou minor sous les références inspectées"
+    ]
+  },
+  "worked_examples_note": "Micro-spécifications rétro-ingénierées de trois officiels annotés (manifest.json du corpus) et mesurés (dsfr-style-profile.json) ; elles calibrent le Prompt1 d’une création, elles n’autorisent pas à redessiner ces officiels.",
+  "worked_examples": [
+    {
+      "official_reference": "document/document-signature",
+      "concept": "document/document-signature",
+      "official_status": "official",
+      "major_subject": "document",
+      "minor_accent": "paraphe",
+      "decorative_role": "points périphériques",
+      "composition_80x80": "document vertical centré, légèrement décalé à gauche ; le paraphe rouge s’appuie sur le bas des lignes de texte ; boîte englobante major [19.0, 11.0, 63.0, 71.0], minor [35.0, 53.0, 53.0, 61.0]",
+      "path_strategy": "un chemin major pour le document et ses lignes de texte évidées ; un chemin minor pour le paraphe en trait rempli continu",
+      "density_targets": "major 81 commandes et 41.2 % du carré, minor 53 commandes et 2.2 % du carré, mesurés sur l’officiel",
+      "validation": "référence officielle, copiée par dsfr-replica ; sert de calibrage du Prompt1, pas de modèle à redessiner"
+    },
+    {
+      "official_reference": "digital/search",
+      "concept": "digital/search",
+      "official_status": "official",
+      "major_subject": "fenêtre de navigateur avec lignes de texte",
+      "minor_accent": "loupe",
+      "decorative_role": "points périphériques",
+      "composition_80x80": "fenêtre occupant le carré, loupe rouge en bas à droite qui déborde du cadre ; boîte englobante major [13.0, 17.0, 69.0, 65.0], minor [44.0, 36.0, 67.73, 67.39]",
+      "path_strategy": "un chemin major pour la fenêtre, sa barre et ses lignes ; un chemin minor pour la loupe, anneau et manche",
+      "density_targets": "major 93 commandes et 42.0 % du carré, minor 34 commandes et 11.6 % du carré, mesurés sur l’officiel",
+      "validation": "référence officielle, copiée par dsfr-replica ; sert de calibrage du Prompt1, pas de modèle à redessiner"
+    },
+    {
+      "official_reference": "system/warning",
+      "concept": "system/warning",
+      "official_status": "official",
+      "major_subject": "triangle",
+      "minor_accent": "point d’exclamation",
+      "decorative_role": "points périphériques",
+      "composition_80x80": "triangle centré occupant la hauteur du carré ; le point d’exclamation rouge centré ; boîte englobante major [12.0, 12.0, 70.0, 68.0], minor [38.0, 32.0, 42.0, 60.0]",
+      "path_strategy": "un chemin major pour le triangle à angles arrondis, évidé ; un chemin minor pour la barre et le point",
+      "density_targets": "major 39 commandes et 50.7 % du carré, minor 14 commandes et 1.8 % du carré, mesurés sur l’officiel",
+      "validation": "référence officielle, copiée par dsfr-replica ; sert de calibrage du Prompt1, pas de modèle à redessiner"
+    }
+  ]
+}

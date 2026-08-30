@@ -1,0 +1,318 @@
+name: DSFR tokens locaux
+version: "1.15"
+package_version_ref: "1.15.2"
+status: local-decision-token-subset
+source_checked_at: "2026-08-28"
+official_reference_check: "Références locales présentes dans @gouvfr/dsfr@1.15.2 ; exhaustivité officielle non revendiquée."
+local_scope: "Sélection de tokens de décision pour agents ; pas catalogue officiel complet du DSFR."
+design_md_projection:
+  google_format: "inspired_not_compliant"
+  projection_status: "local_decision_projection"
+  coverage_goal: "Couvrir les familles utiles à l'agent sans remplacer les tokens officiels DSFR."
+  coverage_reference: "references/tokens-coverage.md"
+  google_groups:
+    colors: "colors + semantic_usage"
+    typography: "typography + typography_roles"
+    spacing: "spacing"
+    rounded: "shapes"
+    components: "components.decision_tokens_meta + components.decision_tokens"
+    interaction: "interaction_states"
+    media_icons: "media_tokens"
+    page_regions: "components.required_page_regions + layout.page_regions"
+  token_reference_policy: "Les références ci-dessous pointent vers des tokens ou classes DSFR à confirmer ; elles ne sont ni des références Google `{...}`, ni une preuve d'existence officielle DSFR."
+  provenance_policy: "Utiliser `officiel_lu` ou `local_lu` seulement quand la classe, le token ou le composant a été retrouvé dans une source relue pendant l'exécution ; sinon garder `à_vérifier`."
+refresh_when: [nouvelle_version_dsfr, publication, token_absent, mode_sombre, portage_framework]
+provenance_rule_by_family: "Toute famille officiel_lu ou local_lu doit avoir une entrée evidence_by_family ; les familles inféré ou à_vérifier n'en portent pas, par définition."
+provenance_by_family: {colors: officiel_lu, typography: local_lu, spacing: local_lu, layout: officiel_lu, patterns: inféré, shapes_elevation: à_vérifier, media_icons: local_lu, components: local_lu, interaction_states: local_lu, claims: local_lu}
+evidence_by_family:
+  colors:
+    - "references/foundations.md#Couleurs"
+  typography:
+    - "references/foundations.md#Typographie"
+  spacing:
+    - "references/foundations.md#Espacements"
+  layout:
+    - "references/foundations.md#Grille et layout"
+  media_icons:
+    - "references/foundations.md#Médias, Icônes Et Pictogrammes"
+  components:
+    - "references/components-routing.md#Composants structurants"
+    - ".claude/skills/dsfr-components/SKILL.md#BRANCH-MAP"
+  interaction_states:
+    - "references/components-routing.md#Contrat de spécification"
+    - "references/verification.md#Checklist"
+  claims:
+    - "references/verification.md#Formulations"
+anti_misuse: ["ne pas utiliser colors.* comme palette décorative", "ne pas convertir les tokens $... en couleurs hex si le package DSFR est disponible", "ne pas utiliser Marianne ou blue-france comme preuve d'usage DSFR autorisé"]
+missing_is_not_absent: "Si un token manque, charger references/foundations.md puis la documentation officielle ou le package projet ; ne jamais conclure que le DSFR ne le prévoit pas depuis tokens.yaml seul."
+coverage_rule: "Si une famille utile manque, charger references/tokens-coverage.md ; ajouter dans tokens.yaml seulement un pointeur court ou un token de décision stable avec provenance."
+color_policy:
+  prefer: "DSFR decision tokens"
+  never_use_raw_palette_when_decision_token_exists: true
+  decision_token_pattern: "$<context>-<usage>-<variant?>-<color>"
+  contexts:
+    - background
+    - border
+    - text
+    - artwork
+  required_pairs:
+    - mode_clair
+    - mode_sombre
+colors:
+  backgrounds:
+    default: "$background-default-grey"
+    alt: "$background-alt-grey"
+    contrast: "$background-contrast-grey"
+    raised: "$background-raised-grey"
+    action_high: "$background-action-high-blue-france"
+    action_low: "$background-action-low-blue-france"
+    disabled: "$background-disabled-grey"
+    error: "$background-flat-error"
+    warning: "$background-flat-warning"
+    success: "$background-flat-success"
+    info: "$background-flat-info"
+  text:
+    default: "$text-default-grey"
+    title: "$text-title-grey"
+    title_brand: "$text-title-blue-france"
+    mention: "$text-mention-grey"
+    label: "$text-label-grey"
+    action_high: "$text-action-high-blue-france"
+    inverted: "$text-inverted-blue-france"
+  borders:
+    default: "$border-default-grey"
+    action_high: "$border-action-high-blue-france"
+    plain: "$border-plain-grey"
+  artwork:
+    major_brand: "$artwork-major-blue-france"
+    minor_brand: "$artwork-minor-blue-france"
+    decorative_rule: "aria-hidden=true si le texte adjacent porte le sens"
+semantic_usage:
+  page_surface:
+    background: "$background-default-grey"
+    text: "$text-default-grey"
+  alternate_section:
+    background: "$background-alt-grey"
+    text: "$text-default-grey"
+  raised_surface:
+    background: "$background-raised-grey"
+    border: "$border-default-grey"
+  primary_action:
+    background: "$background-action-high-blue-france"
+    text: "$text-inverted-blue-france"
+    border: "$border-action-high-blue-france"
+  secondary_action:
+    background: "$background-action-low-blue-france"
+    text: "$text-action-high-blue-france"
+  error_state:
+    background: "$background-flat-error"
+    text: "$text-default-grey"
+  warning_state:
+    background: "$background-flat-warning"
+    text: "$text-default-grey"
+  success_state:
+    background: "$background-flat-success"
+    text: "$text-default-grey"
+  info_state:
+    background: "$background-flat-info"
+    text: "$text-default-grey"
+  link_action:
+    text: "$text-action-high-blue-france"
+    rule: "utiliser un vrai href ; aucun href=\"#\" dans un livrable"
+  disabled_state:
+    background: "$background-disabled-grey"
+    text: "$text-disabled-grey"
+    rule: "ne pas simuler disabled par couleur seule"
+  focus_state:
+    rule: "conserver le focus DSFR ou système ; ne pas l'annuler en CSS custom"
+typography:
+  primary:
+    family: "Marianne"
+    fallback: "Arial"
+    usage: "Interface, navigation, formulaires, textes courants."
+  secondary:
+    family: "Spectral"
+    fallback: "Georgia"
+    usage: "Expressions éditoriales limitées, citations ou titres éditoriaux si le contexte le justifie."
+  base_rem_px: 16
+  title_margin_bottom: "6v"
+  paragraph_margin_bottom: "6v"
+typography_roles:
+  heading:
+    family: "Marianne"
+    usage: "Titres d'interface, titres de page, sections et composants."
+    candidate_classes: ["fr-h1", "fr-h2", "fr-h3", "fr-h4", "fr-h5", "fr-h6"]
+    class_provenance: "local_lu"
+    evidence: ["references/foundations.md#Typographie"]
+    provenance_rule: "Passer à `officiel_lu` seulement après confirmation dans une source DSFR relue pendant l'exécution."
+  body:
+    family: "Marianne"
+    usage: "Textes courants, aides, contenus administratifs et navigation."
+    candidate_classes: ["fr-text--sm", "fr-text--md", "fr-text--lg"]
+    class_provenance: "local_lu"
+    evidence: [".claude/skills/dsfr-components/references/utilities/typography.md"]
+    provenance_rule: "Passer à `officiel_lu` seulement après confirmation dans une source DSFR relue pendant l'exécution."
+  editorial:
+    family: "Spectral"
+    usage: "Usage éditorial limité quand le contexte le justifie."
+    provenance: "local_lu"
+    evidence: ["references/foundations.md#Typographie"]
+spacing:
+  base_grid_px: 8
+  margin_increment_px: 4
+  common_tokens:
+    "0": "0"
+    "1v": "4px"
+    "2v": "8px"
+    "3v": "12px"
+    "4v": "16px"
+    "6v": "24px"
+    "8v": "32px"
+    "12v": "48px"
+    "16v": "64px"
+    "24v": "96px"
+    "32v": "128px"
+  usage:
+    inline_gap: "2v"
+    compact_group: "4v"
+    title_to_body: "6v"
+    card_padding: "6v"
+    section_gap_mobile: "8v"
+    section_gap_desktop: "12v"
+    page_band_mobile: "12v"
+    page_band_desktop: "16v"
+  utility_examples:
+    margin_bottom_title: "fr-mb-6v"
+    grid_gutters: "fr-grid-row--gutters"
+    responsive_image: "fr-responsive-img"
+layout:
+  container_class: "fr-container"
+  fluid_container_class: "fr-container--fluid"
+  grid_row_class: "fr-grid-row"
+  grid_gutters_class: "fr-grid-row--gutters"
+  column_prefix: "fr-col"
+  breakpoints:
+    sm: "576px"
+    md: "768px"
+    lg: "992px"
+    xl: "1248px"
+  recommended_artboards:
+    mobile: "320px"
+    desktop: "1440px"
+  max_content_width_xl: "1200px"
+  patterns:
+    editorial:
+      container: "fr-container"
+      columns: "fr-col-12 fr-col-md-10 fr-col-lg-8"
+    dashboard:
+      container: "fr-container"
+      row: "fr-grid-row fr-grid-row--gutters"
+      columns: "fr-col-12 fr-col-md-6 fr-col-lg-4"
+    form:
+      container: "fr-container"
+      columns: "fr-col-12 fr-col-md-10 fr-col-lg-8"
+    two_columns:
+      row: "fr-grid-row fr-grid-row--gutters"
+      columns: "fr-col-12 fr-col-md-6"
+  page_regions:
+    skiplinks: "fr-skiplinks"
+    header: "fr-header"
+    breadcrumb: "fr-breadcrumb"
+    main: "main"
+    footer: "fr-footer"
+media_tokens:
+  image_responsive: "fr-responsive-img"
+  video_responsive: "fr-responsive-vid"
+  ratios: ["32:9", "16:9", "3:2", "4:3", "1:1", "3:4", "2:3"]
+  icon_pattern: "fr-icon-<name>-line|fill"
+  icon_decorative: "aria-hidden=true"
+  deprecated_icon_prefix: "fr-fi"
+elevation:
+  levels:
+    base: "$background-default-grey"
+    raised: "$background-raised-grey"
+    overlap: "$background-overlap-grey"
+  shadows:
+    raised: "--raised-shadow"
+    overlap: "--overlap-shadow"
+shapes:
+  button_radius: "4px"
+  input_radius: "4px top"
+  card_radius: "0"
+  tag_radius: "4px"
+  modal_radius: "8px top"
+components:
+  required_page_regions:
+    skiplinks: "fr-skiplinks"
+    header: "fr-header"
+    main: "main"
+    footer: "fr-footer"
+  family_routes:
+    navigation: ["breadcrumb", "nav", "sidemenu", "tabs", "pagination"]
+    forms: ["input", "select", "checkbox", "radio", "upload", "fieldset"]
+    feedback: ["alert", "notice", "badge", "tooltip"]
+    content: ["accordion", "card", "tile", "table", "download", "quote"]
+    service: ["franceconnect", "consent", "display", "language"]
+  decision_tokens_meta:
+    status: "local_decision_projection"
+    exhaustive: false
+    normative_source: false
+    not_google_references: true
+    promotion_rule: "Remplacer `à_vérifier` par `local_lu` seulement si la classe ou le composant est retrouvé dans une source locale relue."
+  decision_tokens:
+    button_primary:
+      backgroundColor: "$background-action-high-blue-france"
+      textColor: "$text-inverted-blue-france"
+      borderColor: "$border-action-high-blue-france"
+      rounded: "shapes.button_radius"
+      source: "fr-btn"
+      source_status: "local_lu"
+      provenance: "local_lu"
+      evidence: ["references/components-routing.md#Composants structurants", ".claude/skills/dsfr-components/SKILL.md#Génération"]
+    button_secondary:
+      backgroundColor: "$background-action-low-blue-france"
+      textColor: "$text-action-high-blue-france"
+      borderColor: "$border-action-high-blue-france"
+      rounded: "shapes.button_radius"
+      source: "fr-btn--secondary"
+      source_status: "local_lu"
+      provenance: "local_lu"
+      evidence: ["references/components-routing.md#Composants structurants", ".claude/skills/dsfr-components/SKILL.md#Génération"]
+    input_text:
+      backgroundColor: "$background-default-grey"
+      textColor: "$text-default-grey"
+      borderColor: "$border-default-grey"
+      rounded: "shapes.input_radius"
+      source: "fr-input"
+      source_status: "local_lu"
+      provenance: "local_lu"
+      evidence: ["references/components-routing.md#Composants structurants", ".claude/skills/dsfr-components/references/components/forms-services/forms/fields.md"]
+    card:
+      backgroundColor: "$background-default-grey"
+      textColor: "$text-default-grey"
+      rounded: "shapes.card_radius"
+      source: "fr-card"
+      source_status: "local_lu"
+      provenance: "local_lu"
+      evidence: ["references/components-routing.md#Composants structurants", ".claude/skills/dsfr-components/references/components/content-media/cards.md"]
+    alert_error:
+      backgroundColor: "$background-flat-error"
+      textColor: "$text-default-grey"
+      source: "fr-alert--error"
+      source_status: "local_lu"
+      provenance: "local_lu"
+      evidence: ["references/components-routing.md#Composants structurants", ".claude/skills/dsfr-components/references/components/feedback-actions/alerts.md"]
+interaction_states:
+  required_for_interactive:
+    - default
+    - focus
+    - hover
+    - active_when_applicable
+    - disabled_when_applicable
+  form_feedback:
+    - help
+    - error
+    - success
+  rule: "Ne jamais masquer le focus DSFR ; ne jamais signaler un état seulement par la couleur."
+verification_labels:
+  [officiel_lu, local_lu, inféré, à_vérifier, hors_périmètre]

@@ -1,0 +1,45 @@
+{
+  "official": false,
+  "source": "original-dsfr-like",
+  "status": "production-candidate",
+  "role": "etalon",
+  "references_inspected": [
+    "map/compass",
+    "system/success",
+    "digital/calendar"
+  ],
+  "icons": [
+    {
+      "name": "horloge",
+      "file": "horloge.svg",
+      "title": "Horloge",
+      "description": "Cadran d’horloge à trait de 2 px avec repères d’heures ; les aiguilles et l’axe sont en rouge.",
+      "reproduction": "original-dsfr-like",
+      "official": false,
+      "primary_archetype": "map/compass",
+      "borrowed_grammar": "anneau ouvert à trait de 2 px et terminaisons rondes de system/success ; accent rouge centré dans un cercle bleu et points décoratifs périphériques de map/compass",
+      "concept_metaphor": "cadran d’horloge : délai, horaire, temps de traitement",
+      "unique_minor_accent": "les deux aiguilles et l’axe évidé, seul signal rouge, portent le sens du temps qui passe",
+      "series_difference": "seul pictogramme circulaire à repères d’heures ; digital/calendar porte la date, map/compass la direction",
+      "preserved_grammar": "occupation du carré de 60 px centrée en (40, 40), trait de 2 px, points décoratifs à rayon 1",
+      "semantic_delta": "repères d’heures et aiguilles à la place de l’aiguille de boussole et de la rose des vents",
+      "path_edit_budget": "aucun chemin officiel copié ; construction programmatique dans build_horloge.py",
+      "visual_delta_check": "à 80, 40 et 24 px, se lit comme une horloge et reste dans la planche des références sans contraste de style",
+      "production_score": {
+        "dsfr_native_feel": 2,
+        "semantic_delta_integration": 2,
+        "red_accent_sobriety": 2,
+        "small_size_legibility": 1,
+        "standalone_usability": 2,
+        "total": "9/10",
+        "note": "à 24 px les repères d’heures fusionnent avec l’anneau ; lisible à 40 px"
+      },
+      "human_review": "validé par Alex le 2026-08-28 sur la planche preview.html (V2, anneau ouvert) ; statut production-candidate",
+      "major": "cadran à anneau ouvert avec repères d’heures",
+      "minor": "aiguilles et axe évidé",
+      "decorative": "points périphériques",
+      "version": "V2 : anneau ouvert après revue de la V1, jugée trop régulière face aux références",
+      "status": "production-candidate"
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="system">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Accompagnement numérique - Démo DSFR assemblée</title>
+
+    <meta name="description" content="Démo du builder DSFR assemblé : brief, JSON, page HTML et preuve locale.">
+
+    <!-- DSFR CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
+</head>
+<body id="top">
+
+    <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+            <ul class="fr-skiplinks__list">
+                <li><a class="fr-link" href="#contenu">Contenu</a></li>
+                <li><a class="fr-link" href="#navigation">Menu</a></li>
+                <li><a class="fr-link" href="#footer">Pied de page</a></li>
+            </ul>
+        </nav>
+    </div>
+    <header role="banner" class="fr-header">
+    <div class="fr-header__body">
+        <div class="fr-container">
+            <div class="fr-header__body-row">
+                <div class="fr-header__brand fr-enlarge-link">
+                    <div class="fr-header__brand-top">
+<div class="fr-header__navbar">
+                                <button id="header-search-button" class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="header-search" title="Rechercher" type="button">Rechercher</button>
+                                <button id="header-menu-button" class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="header-menu" aria-haspopup="menu" title="Menu" type="button">Menu</button>
+                            </div>
+                    </div>
+                    <div class="fr-header__service">
+                        <a href="/" title="Accueil - Accompagnement numérique">
+                            <p class="fr-header__service-title">Accompagnement numérique</p>
+                        </a>
+                        <p class="fr-header__service-tagline">Démo locale du builder DSFR assemblé</p>
+                    </div>
+                </div>
+            <div class="fr-header__tools">
+                <div class="fr-header__tools-links">
+                <a class="fr-btn fr-btn--tertiary" href="#questions">Aide</a>
+                </div>
+                <div class="fr-header__search fr-modal" id="header-search" aria-labelledby="header-search-button">
+                    <div class="fr-container fr-container-lg--fluid">
+                        <button class="fr-btn--close fr-btn" aria-controls="header-search" title="Fermer" type="button">
+                            Fermer
+                        </button>
+                        <form action="/recherche" method="get">
+                            <div class="fr-search-bar" id="header-search-bar" role="search">
+                                <label class="fr-label" for="header-search-input">
+                                    Rechercher
+                                </label>
+                                <input class="fr-input" type="search" id="header-search-input" name="search">
+                                <button type="submit" class="fr-btn" title="Rechercher">
+                                    Rechercher
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        <div class="fr-header__menu fr-modal" id="header-menu" aria-labelledby="header-menu-button">
+            <div class="fr-container">
+                <button class="fr-btn--close fr-btn" aria-controls="header-menu" title="Fermer" type="button">
+                    Fermer
+                </button>
+                <div class="fr-header__menu-links"></div>
+                <nav class="fr-nav" id="navigation" role="navigation" aria-label="Menu principal">
+    <ul class="fr-nav__list">
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="#objectif" target="_self" aria-current="page">Objectif</a>
+            </li>
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="#parcours" target="_self">Parcours</a>
+            </li>
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="#demande" target="_self">Demande</a>
+            </li>
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="#preuve" target="_self">Preuve</a>
+            </li>
+    </ul>
+</nav>
+            </div>
+        </div>
+</header>
+
+    <main id="contenu">
+                    <div id="objectif" class="fr-container fr-py-6w">
+            <div>
+    <h1>Transformer un brief en page DSFR vérifiable</h1>
+    <p class="fr-text--lead">Cette démo montre le chemin minimal : brief, configuration JSON, HTML généré, preuve locale.</p>
+    <p>Un agent externe peut partir du brief, lire le schéma JSON, générer la page puis contrôler les invariants locaux sans connaître l&#x27;historique du dépôt.</p>
+    <p>Le résultat est un prototype DSFR à inspecter, pas une preuve de conformité globale.</p>
+    <ul>
+        <li><a href="#parcours">Voir le parcours généré</a></li>
+    </ul>
+</div>
+            </div>
+
+
+<div class="fr-notice fr-notice--info">
+    <div class="fr-container">
+        <div class="fr-notice__body">
+            <p>
+                <span class="fr-notice__title">Démo sans droit de marque</span>
+                <span class="fr-notice__desc">Le mode neutre est utilisé par défaut. Le bloc marque République française reste hors périmètre sans droit d&#x27;usage établi.</span>
+                <a class="fr-notice__link" href="#preuve">Lire les limites</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+            <div class="fr-container fr-py-6w">
+            <nav class="fr-summary" role="navigation" aria-labelledby="summary-title">
+    <h2 class="fr-summary__title" id="summary-title">Sommaire</h2>
+    <ol>
+        <li>
+            <a class="fr-summary__link" href="#objectif">Objectif</a>
+        </li>
+        <li>
+            <a class="fr-summary__link" href="#parcours">Parcours</a>
+        </li>
+        <li>
+            <a class="fr-summary__link" href="#demande">Demande</a>
+        </li>
+        <li>
+            <a class="fr-summary__link" href="#questions">Questions fréquentes</a>
+        </li>
+        <li>
+            <a class="fr-summary__link" href="#preuve">Preuve locale</a>
+        </li>
+    </ol>
+</nav>
+            </div>
+
+            <div id="parcours" class="fr-container fr-py-6w">
+            <h2 class="fr-h3">Parcours agentique</h2>
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-12 fr-col-md-4">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/demo/brief">1. Lire le brief</a>
+            </h3>
+            <p class="fr-card__desc">Identifier l&#x27;intention, les limites et les claims interdits.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-4">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/demo/json">2. Produire le JSON</a>
+            </h3>
+            <p class="fr-card__desc">Composer la page avec les blocs autorisés par le schéma.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-4">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/demo/preuve">3. Prouver la sortie</a>
+            </h3>
+            <p class="fr-card__desc">Générer le HTML puis vérifier les invariants locaux.</p>
+        </div>
+    </div>
+</div>
+                </div>
+            </div>
+            </div>
+
+            <div id="demande" class="fr-container fr-py-6w">
+            <form id="demo-accompagnement-form" action="/accompagnement/envoyer" method="post" novalidate>
+        <fieldset class="fr-fieldset">
+            <legend class="fr-fieldset__legend">
+                <h2>Demander un accompagnement</h2>
+            </legend>
+            <div class="fr-fieldset__content">
+                            
+<fieldset class="fr-fieldset" id="identite-demo-fieldset" aria-labelledby="identite-demo-legend identite-demo-messages">
+    <legend class="fr-sr-only" id="identite-demo-legend">Identité du demandeur</legend>
+        <div class="fr-fieldset__element">
+            <div class="fr-input-group">
+                <label class="fr-label" for="identite-demo-given-name">Prénom</label>
+                <input class="fr-input" spellcheck="false" autocomplete="given-name" name="given-name" aria-describedby="identite-demo-given-name-messages" id="identite-demo-given-name" type="text">
+                <div class="fr-messages-group" id="identite-demo-given-name-messages" aria-live="polite"></div>
+            </div>
+        </div>
+        <div class="fr-fieldset__element">
+            <div class="fr-input-group">
+                <label class="fr-label" for="identite-demo-family-name">Nom</label>
+                <input class="fr-input" spellcheck="false" autocomplete="family-name" name="family-name" aria-describedby="identite-demo-family-name-messages" id="identite-demo-family-name" type="text">
+                <div class="fr-messages-group" id="identite-demo-family-name-messages" aria-live="polite"></div>
+            </div>
+        </div>
+    <div class="fr-messages-group" aria-live="polite" id="identite-demo-messages"></div>
+</fieldset>
+                            
+<div class="fr-input-group">
+    <label class="fr-label" for="courriel-demo">Adresse électronique de contact
+        <span class="fr-hint-text">Format attendu : nom@example.com</span>
+    </label>
+    <input class="fr-input" name="email" autocomplete="email" spellcheck="false" aria-describedby="courriel-demo-messages" id="courriel-demo" type="email">
+    <div class="fr-messages-group" id="courriel-demo-messages" aria-live="polite"></div>
+</div>
+                            
+<div class="fr-input-group">
+    <label class="fr-label" for="numero-dossier">
+        Numéro de dossier
+        <span class="fr-hint-text">Renseignez-le si vous avez déjà un dossier.</span>
+        
+    </label>
+    <input class="fr-input" type="text" id="numero-dossier" name="numero-dossier" />
+    
+</div>
+                            
+<div class="fr-select-group">
+    <label class="fr-label" for="besoin-principal">Besoin principal
+        <span class="fr-hint-text">Choisissez le sujet le plus proche.</span>
+    </label>
+    <select class="fr-select" id="besoin-principal" name="besoin">
+        <option value="" selected disabled>Sélectionnez une option</option>
+        <option value="demarche">Comprendre une démarche en ligne</option>
+        <option value="document">Préparer un document</option>
+        <option value="suivi">Suivre une demande</option>
+    </select>
+</div>
+                            <div class="fr-input-group">
+                                <label class="fr-label" for="contexte-demande">Contexte utile
+                                <span class="fr-hint-text">Ne saisissez pas de donnée sensible inutile.</span>
+                                </label>
+                                <textarea class="fr-input" id="contexte-demande" name="contexte" rows="5"></textarea>
+                            </div>
+                            
+<div class="fr-checkbox-group">
+    <input type="checkbox" id="accord-demo" name="accord_demo">
+    <label class="fr-label" for="accord-demo">J&#x27;ai compris que cette page est une démo locale</label>
+</div>
+                <div class="fr-btns-group">
+                    <button class="fr-btn" type="submit">Envoyer la demande</button>
+                            <button class="fr-btn fr-btn--secondary" type="reset">Effacer</button>
+                </div>
+            </div>
+        </fieldset>
+                    <script>
+                    (function () {
+                      var form = document.getElementById("demo-accompagnement-form");
+                      if (!form) return;
+                      var requiredFieldIds = ["accord-demo"];
+                      var fields = requiredFieldIds
+                        .map(function (id) { return document.getElementById(id); })
+                        .filter(function (field) { return Boolean(field); });
+
+                      function groupOf(field) {
+                        return field.closest('.fr-input-group, .fr-select-group, .fr-checkbox-group, .fr-password');
+                      }
+
+                      function errorId(field) {
+                        return field.id + '-error';
+                      }
+
+                      function messageFor(field) {
+                        var v = field.validity;
+                        if (v.valueMissing) {
+                          if (field.type === 'checkbox') return "Veuillez cocher cette case.";
+                          if (field.tagName === 'SELECT') return "Veuillez sélectionner une option.";
+                          return "Ce champ est obligatoire.";
+                        }
+                        if (v.typeMismatch && field.type === 'email') return "Format invalide (ex. : nom@domaine.fr).";
+                        if (v.badInput) return "La valeur saisie est invalide.";
+                        return "Ce champ est invalide.";
+                      }
+
+                      function applyClientConstraints() {
+                        fields.forEach(function (field) {
+                          field.required = true;
+                          field.setAttribute('aria-required', 'true');
+                        });
+                      }
+
+                      function setError(field, message) {
+                        var group = groupOf(field);
+                        var id = errorId(field);
+                        var err = document.getElementById(id);
+                        if (message) {
+                          field.setAttribute('aria-invalid', 'true');
+                          field.setAttribute('aria-describedby', id);
+                          if (field.classList.contains('fr-input')) field.classList.add('fr-input--error');
+                          if (group && group.classList.contains('fr-input-group')) group.classList.add('fr-input-group--error');
+                          if (group && group.classList.contains('fr-select-group')) group.classList.add('fr-select-group--error');
+                          if (!err) {
+                            err = document.createElement('p');
+                            err.id = id;
+                            err.className = 'fr-error-text';
+                            if (group) {
+                              group.appendChild(err);
+                            } else {
+                              field.insertAdjacentElement('afterend', err);
+                            }
+                          }
+                          err.textContent = message;
+                        } else {
+                          field.removeAttribute('aria-invalid');
+                          field.removeAttribute('aria-describedby');
+                          field.classList.remove('fr-input--error');
+                          if (group) group.classList.remove('fr-input-group--error', 'fr-select-group--error');
+                          if (err) err.remove();
+                        }
+                      }
+
+                      function validateField(field) {
+                        var valid = field.checkValidity();
+                        setError(field, valid ? '' : messageFor(field));
+                        return valid;
+                      }
+
+                      function dropClientConstraints() {
+                        fields.forEach(function (field) {
+                          field.required = false;
+                          field.removeAttribute('required');
+                          field.removeAttribute('aria-required');
+                        });
+                      }
+
+                      function clearClientConstraints() {
+                        dropClientConstraints();
+                        fields.forEach(function (field) { setError(field, ''); });
+                      }
+
+                      form.addEventListener('submit', function (event) {
+                        applyClientConstraints();
+                        var invalid = fields.filter(function (field) { return !validateField(field); });
+                        if (invalid.length) {
+                          event.preventDefault();
+                          form.reportValidity();
+                        }
+                      });
+
+                      fields.forEach(function (field) {
+                        field.addEventListener('input', function () {
+                          if (field.hasAttribute('required')) validateField(field);
+                        });
+                        field.addEventListener('change', function () {
+                          if (field.hasAttribute('required')) validateField(field);
+                        });
+                      });
+
+                      form.addEventListener('reset', clearClientConstraints);
+                      // Au chargement : aucune contrainte native au repos, mais les
+                      // messages d'erreur rendus côté serveur sont conservés.
+                      dropClientConstraints();
+                    })();
+                    </script>
+    </form>
+            </div>
+
+            <div id="questions" class="fr-container fr-py-6w">
+            <h2 class="fr-h3">Questions fréquentes</h2>
+            <div class="fr-accordions-group">
+
+    <section class="fr-accordion">
+        <h3 class="fr-accordion__title">
+            <button type="button" class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-1">
+                Pourquoi générer depuis JSON ?
+            </button>
+        </h3>
+        <div class="fr-collapse" id="accordion-1">
+            <p>Le JSON donne à l&#x27;agent une surface structurée, validable et diffable avant génération HTML.</p>
+    <ul>
+        <li><a href="/.claude/skills/dsfr-components/schemas/generate_assembled_page.schema.json">Lire le schéma</a></li>
+    </ul>
+        </div>
+    </section>
+    <section class="fr-accordion">
+        <h3 class="fr-accordion__title">
+            <button type="button" class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-2">
+                Que prouve cette démo ?
+            </button>
+        </h3>
+        <div class="fr-collapse" id="accordion-2">
+            <p>Elle prouve que le builder sait générer et contrôler une page locale. Elle ne prouve pas une conformité DSFR ou RGAA complète.</p>
+        </div>
+    </section>
+</div>
+            </div>
+
+            <div id="preuve" class="fr-container fr-py-6w">
+            <div>
+    <h2>Preuve locale attendue</h2>
+    <p class="fr-text--lead">La commande de démo valide le schéma, exécute le builder et inspecte le HTML généré.</p>
+    <p>La preuve couvre les invariants locaux : JSON valide, page générable, ancres résolues, main et footer présents, h1 unique dans le contenu principal.</p>
+    <p>Les audits de conformité, les contenus définitifs et le comportement navigateur complet restent hors périmètre de cette démo.</p>
+</div>
+            </div>
+    </main>
+
+    <footer class="fr-footer" role="contentinfo" id="footer">
+    <div class="fr-container">
+        <div class="fr-footer__body">
+            <div class="fr-footer__brand">
+                <p>Accompagnement numérique</p>
+            </div>
+            <div class="fr-footer__content">
+                <p class="fr-footer__content-desc">Démonstration locale à adapter avant tout usage réel.</p>
+                <ul class="fr-footer__content-list">
+                    <li class="fr-footer__content-item"><a class="fr-footer__content-link" href="/documentation/guides/installer-agentic-design-pack.md">Guide d&#x27;installation</a></li>
+                </ul>
+            </div>
+        </div>
+            <div class="fr-footer__bottom">
+                <ul class="fr-footer__bottom-list">
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/plan-du-site">Plan du site</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/accessibilite">Accessibilité : à vérifier</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/donnees-personnelles">Données personnelles</a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+</footer>
+
+    <!-- DSFR JS -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "title": "Cas invalide HTML brut",
+  "main_title": "Cas invalide HTML brut",
+  "sections": [
+    {
+      "block": "content",
+      "title": "Contenu non déclaré",
+      "body": "<p>HTML brut sans signal explicite.</p>"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyse de versions DSFR"
+  short_description: "Comparer deux versions DSFR par le dépôt réel"
+  default_prompt: "Utilise $dsfr-changelog pour analyser cette montée de version DSFR, vérifier les écarts entre dépôt et notes publiées, puis qualifier l’impact de migration avec des preuves."

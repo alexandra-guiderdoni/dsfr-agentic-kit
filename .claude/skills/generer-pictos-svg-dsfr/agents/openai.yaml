@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pictogrammes DSFR et originaux"
+  short_description: "Copier un picto officiel DSFR ou créer un original non officiel"
+  default_prompt: "Utilise $generer-pictos-svg-dsfr : generate_pictos_svg.py --source dsfr-replica si le nom existe, sinon NOT VERIFIED: source officielle absente ; création official: false auditée par audit_original_pictos.py --strict."

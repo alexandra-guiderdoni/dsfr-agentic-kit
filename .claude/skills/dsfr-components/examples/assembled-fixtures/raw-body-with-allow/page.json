@@ -1,0 +1,12 @@
+{
+  "title": "Cas expert HTML brut",
+  "main_title": "Cas expert HTML brut",
+  "sections": [
+    {
+      "block": "content",
+      "title": "Contenu relu",
+      "body": "<p>HTML brut relu et déclaré.</p>",
+      "allow_raw_html": true
+    }
+  ]
+}

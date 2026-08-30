@@ -1,0 +1,23 @@
+{
+  "title": "Régression IDs de champs automatiques",
+  "main_title": "Régression IDs de champs automatiques",
+  "sections": [
+    {
+      "block": "form",
+      "title": "Formulaire avec champs homonymes",
+      "deferred": true,
+      "fields": [
+        {
+          "type": "input",
+          "label": "Nom",
+          "required": true
+        },
+        {
+          "type": "input",
+          "label": "Nom",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

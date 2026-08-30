@@ -1,0 +1,31 @@
+
+<fieldset class="fr-fieldset" id="date-fieldset" aria-labelledby="date-legend date-messages">
+    <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="date-legend">Date de naissance
+        <span class="fr-hint-text">Texte de description additionnel</span>
+    </legend>
+        <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--number">
+            <div class="fr-input-group">
+                <label class="fr-label" for="date-day">Jour
+                    <span class="fr-hint-text">Exemple : 14</span>
+                </label>
+                <input class="fr-input" name="day" autocomplete="bday-day" id="date-day" type="text">
+            </div>
+        </div>
+        <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--number">
+            <div class="fr-input-group">
+                <label class="fr-label" for="date-month">Mois
+                    <span class="fr-hint-text">Exemple : 12</span>
+                </label>
+                <input class="fr-input" name="month" autocomplete="bday-month" id="date-month" type="text">
+            </div>
+        </div>
+        <div class="fr-fieldset__element fr-fieldset__element--inline fr-fieldset__element--inline-grow fr-fieldset__element--year">
+            <div class="fr-input-group">
+                <label class="fr-label" for="date-year">Année
+                    <span class="fr-hint-text">Exemple : 1984</span>
+                </label>
+                <input class="fr-input" name="year" autocomplete="bday-year" id="date-year" type="text">
+            </div>
+        </div>
+    <div class="fr-messages-group" id="date-messages" aria-live="polite"></div>
+</fieldset>

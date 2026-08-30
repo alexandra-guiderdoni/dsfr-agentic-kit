@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="system">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Laboratoire composants DSFR - Prototype de validation</title>
+  <meta name="description" content="Page de test DSFR couvrant les composants stables, les composants bêta et les limites de validation du harnais.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
+  <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/manifest.webmanifest" crossorigin="use-credentials">
+  <style>
+    .lab-band {
+      background: var(--background-alt-blue-france);
+    }
+
+    .lab-section {
+      border-top: 1px solid var(--border-default-grey);
+    }
+
+    .lab-component {
+      min-height: 100%;
+      padding: 1.5rem;
+      border: 1px solid var(--border-default-grey);
+      background: var(--background-default-grey);
+    }
+
+    .lab-component__title {
+      margin-bottom: 1rem;
+    }
+
+    .lab-panel {
+      padding: 1rem;
+      background: var(--background-alt-grey);
+    }
+
+    .lab-beta {
+      border-style: dashed;
+      background: var(--background-alt-yellow-tournesol);
+    }
+
+    .lab-consent-demo {
+      border-left: 4px solid var(--border-action-high-blue-france);
+      background: var(--background-alt-blue-france);
+    }
+
+    .lab-media {
+      display: grid;
+      place-items: center;
+      min-height: 12rem;
+      background:
+        linear-gradient(135deg, transparent 0 47%, var(--border-default-grey) 48% 52%, transparent 53%),
+        var(--background-alt-grey);
+    }
+
+    @media (max-width: 36em) {
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      .fr-header__navbar {
+        max-width: 100%;
+      }
+
+      .lab-component {
+        overflow-x: clip;
+      }
+
+      .fr-tabs {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      .fr-tabs__list {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .fr-tabs > .fr-tabs__panel:not(.fr-tabs__panel--selected) {
+        position: absolute !important;
+        inset-inline: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        pointer-events: none;
+        transform: none !important;
+        visibility: hidden !important;
+      }
+
+      .fr-tabs__panel:not(.fr-tabs__panel--selected) {
+        transform: none !important;
+      }
+
+      .lab-component .fr-grid-row--gutters {
+        margin-right: 0;
+        margin-left: 0;
+      }
+
+      .lab-component .fr-grid-row--gutters > [class^="fr-col"],
+      .lab-component .fr-grid-row--gutters > [class*=" fr-col"] {
+        padding-right: 0;
+        padding-left: 0;
+      }
+
+      .fr-table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto !important;
+      }
+
+      .fr-table table {
+        min-width: 100%;
+        width: max-content;
+      }
+
+      .fr-follow__social .fr-btns-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .fr-follow__social .fr-btns-group > li {
+        max-width: 100%;
+      }
+
+      .fr-follow__social .fr-btns-group .fr-btn {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="fr-skiplinks" data-component="skiplinks">
+    <nav class="fr-container" aria-label="Accès rapide">
+      <ul class="fr-skiplinks__list">
+        <li><a class="fr-link" href="#contenu">Aller au contenu</a></li>
+        <li><a class="fr-link" href="#navigation-principale">Aller au menu</a></li>
+        <li><a class="fr-link" href="#sommaire">Aller au sommaire</a></li>
+        <li><a class="fr-link" href="#footer">Aller au pied de page</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <header class="fr-header" data-component="header">
+    <div class="fr-header__body">
+      <div class="fr-container">
+        <div class="fr-header__body-row">
+          <div class="fr-header__brand fr-enlarge-link">
+            <div class="fr-header__brand-top">
+              <div class="fr-header__logo" data-component="logo">
+                <a href="#top" title="Accueil - Laboratoire composants DSFR">
+                  <p class="fr-logo">République<br>Française</p>
+                </a>
+              </div>
+              <div class="fr-header__navbar">
+                <button type="button" id="button-menu" class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="modal-menu" aria-haspopup="dialog" title="Menu">
+                  Menu
+                </button>
+              </div>
+            </div>
+            <div class="fr-header__service">
+              <a href="#top" title="Accueil - Laboratoire composants DSFR">
+                <p class="fr-header__service-title">Laboratoire composants DSFR</p>
+              </a>
+              <p class="fr-header__service-tagline">Prototype de validation du harnais et du DESIGN.md DSFR</p>
+            </div>
+          </div>
+          <div class="fr-header__tools">
+            <div class="fr-header__tools-links">
+              <ul class="fr-btns-group">
+                <li>
+                  <button type="button" class="fr-btn fr-icon-theme-fill fr-btn--icon-left" aria-controls="fr-theme-modal" data-fr-opened="false">
+                    Paramètres d'affichage
+                  </button>
+                </li>
+                <li>
+                  <a class="fr-btn fr-icon-account-circle-line fr-btn--icon-left" href="#connect">
+                    Se connecter
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fr-header__menu fr-modal" id="modal-menu" role="dialog" aria-labelledby="button-menu">
+      <div class="fr-container">
+        <button type="button" class="fr-btn--close fr-btn" aria-controls="modal-menu" title="Fermer le menu">Fermer</button>
+        <div class="fr-header__menu-links"></div>
+        <nav class="fr-nav" id="navigation-principale" aria-label="Menu principal" data-component="navigation">
+          <ul class="fr-nav__list">
+            <li class="fr-nav__item">
+              <a class="fr-nav__link" href="#fondations" aria-current="page">Fondations</a>
+            </li>
+            <li class="fr-nav__item">
+              <button type="button" class="fr-nav__btn" aria-expanded="false" aria-controls="menu-composants">Composants</button>
+              <div class="fr-collapse fr-menu" id="menu-composants">
+                <ul class="fr-menu__list">
+                  <li><a class="fr-nav__link" href="#navigation">Navigation</a></li>
+                  <li><a class="fr-nav__link" href="#actions">Actions</a></li>
+                  <li><a class="fr-nav__link" href="#formulaires">Formulaires</a></li>
+                  <li><a class="fr-nav__link" href="#contenus">Contenus</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="fr-nav__item">
+              <button type="button" class="fr-nav__btn" aria-expanded="false" aria-controls="mega-menu-validation">Validation</button>
+              <div class="fr-collapse fr-mega-menu" id="mega-menu-validation">
+                <div class="fr-container fr-container--fluid fr-container-lg">
+                  <button type="button" class="fr-btn--close fr-btn" aria-controls="mega-menu-validation" title="Fermer le menu Validation">Fermer</button>
+                  <div class="fr-grid-row fr-grid-row-lg--gutters">
+                    <div class="fr-col-12 fr-col-lg-4">
+                      <h5 class="fr-mega-menu__leader">Parcours de test</h5>
+                      <p class="fr-text--sm">La page sert de support d'itération : rendu, composants, accessibilité de surface, limites DSFR.</p>
+                      <a class="fr-link fr-icon-arrow-right-line fr-link--icon-right" href="#validation">Voir la matrice</a>
+                    </div>
+                    <div class="fr-col-12 fr-col-lg-4">
+                      <h6 class="fr-mega-menu__category">Composants stables</h6>
+                      <ul class="fr-mega-menu__list">
+                        <li><a class="fr-nav__link" href="#information">Information</a></li>
+                        <li><a class="fr-nav__link" href="#navigation">Navigation</a></li>
+                        <li><a class="fr-nav__link" href="#formulaires">Formulaires</a></li>
+                      </ul>
+                    </div>
+                    <div class="fr-col-12 fr-col-lg-4">
+                      <h6 class="fr-mega-menu__category">Composants bêta</h6>
+                      <ul class="fr-mega-menu__list">
+                        <li><a class="fr-nav__link" href="#beta">Voir les limites</a></li>
+                        <li><a class="fr-nav__link" href="#sources">Sources consultées</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <dialog id="fr-theme-modal" class="fr-modal" aria-labelledby="fr-theme-modal-title" data-component="display">
+    <div class="fr-container fr-container--fluid fr-container-md">
+      <div class="fr-grid-row fr-grid-row--center">
+        <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
+          <div class="fr-modal__body">
+            <div class="fr-modal__header">
+              <button type="button" class="fr-btn--close fr-btn" aria-controls="fr-theme-modal" title="Fermer les paramètres d'affichage">Fermer</button>
+            </div>
+            <div class="fr-modal__content">
+              <h1 id="fr-theme-modal-title" class="fr-modal__title">Paramètres d'affichage</h1>
+              <div id="fr-display" class="fr-display">
+                <fieldset class="fr-fieldset">
+                  <legend class="fr-fieldset__legend fr-text--regular">Choisissez un thème pour personnaliser l'apparence du site.</legend>
+                  <div class="fr-fieldset__element">
+                    <div class="fr-radio-group fr-radio-rich">
+                      <input value="light" type="radio" id="fr-radios-theme-light" name="fr-radios-theme">
+                      <label class="fr-label" for="fr-radios-theme-light">Thème clair</label>
+                    </div>
+                  </div>
+                  <div class="fr-fieldset__element">
+                    <div class="fr-radio-group fr-radio-rich">
+                      <input value="dark" type="radio" id="fr-radios-theme-dark" name="fr-radios-theme">
+                      <label class="fr-label" for="fr-radios-theme-dark">Thème sombre</label>
+                    </div>
+                  </div>
+                  <div class="fr-fieldset__element">
+                    <div class="fr-radio-group fr-radio-rich">
+                      <input value="system" type="radio" id="fr-radios-theme-system" name="fr-radios-theme" checked>
+                      <label class="fr-label" for="fr-radios-theme-system">Système</label>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <main id="contenu" tabindex="-1">
+    <div class="lab-band fr-py-6w">
+      <div class="fr-container">
+        <nav class="fr-breadcrumb" aria-label="vous êtes ici :" data-component="breadcrumb">
+          <button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d'Ariane</button>
+          <div class="fr-collapse" id="breadcrumb">
+            <ol class="fr-breadcrumb__list">
+              <li><a class="fr-breadcrumb__link" href="#top">Accueil</a></li>
+              <li><a class="fr-breadcrumb__link" aria-current="page">Laboratoire composants DSFR</a></li>
+            </ol>
+          </div>
+        </nav>
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+          <div class="fr-col-12 fr-col-lg-8">
+            <p class="fr-badge fr-badge--info fr-mb-2w">DSFR 1.15.2</p>
+            <h1>Page laboratoire pour valider le skill et le DESIGN.md DSFR</h1>
+            <p class="fr-text--lead">Cette page rassemble les composants DSFR stables, les composants bêta déclarés par la documentation officielle et les limites à vérifier avant publication.</p>
+          </div>
+          <div class="fr-col-12 fr-col-lg-4">
+            <div class="fr-callout fr-callout--blue-cumulus" data-component="version">
+              <h2 class="fr-callout__title">Statut du prototype</h2>
+              <p class="fr-callout__text">Prototype inspectable. Il ne revendique ni conformité RGAA, ni agrément de marque, ni publication prête.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fr-container fr-py-6w">
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <aside class="fr-col-12 fr-col-lg-3">
+          <nav class="fr-sidemenu fr-sidemenu--sticky" aria-label="Sections du laboratoire" data-component="sidemenu">
+            <div class="fr-sidemenu__inner">
+              <button type="button" class="fr-sidemenu__btn" aria-controls="sidemenu-lab" aria-expanded="false">Dans cette page</button>
+              <div class="fr-collapse" id="sidemenu-lab">
+                <div class="fr-sidemenu__title">Composants</div>
+                <ul class="fr-sidemenu__list">
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#fondations" aria-current="page">Fondations</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#navigation">Navigation</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#information">Information</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#actions">Actions</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#formulaires">Formulaires</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#contenus">Contenus</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#beta">Bêta</a></li>
+                  <li class="fr-sidemenu__item"><a class="fr-sidemenu__link" href="#validation">Validation</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </aside>
+
+        <div class="fr-col-12 fr-col-lg-9">
+          <section id="fondations" class="fr-mb-8w">
+            <div class="fr-summary" id="sommaire" data-component="summary">
+              <h2 class="fr-summary__title">Sommaire</h2>
+              <ol class="fr-summary__list">
+                <li><a class="fr-summary__link" href="#navigation">Navigation et enveloppe</a></li>
+                <li><a class="fr-summary__link" href="#information">Information et statuts</a></li>
+                <li><a class="fr-summary__link" href="#actions">Actions et liens</a></li>
+                <li><a class="fr-summary__link" href="#formulaires">Formulaires et saisie</a></li>
+                <li><a class="fr-summary__link" href="#contenus">Contenus et médias</a></li>
+                <li><a class="fr-summary__link" href="#beta">Composants bêta</a></li>
+              </ol>
+            </div>
+
+            <div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component">
+                  <h2 class="fr-h4 lab-component__title">Grille et espacements</h2>
+                  <p>La page utilise `fr-container`, `fr-grid-row`, `fr-col-*` et les espacements DSFR `fr-py-*`, `fr-mb-*`, `fr-mt-*`.</p>
+                  <div class="fr-grid-row fr-grid-row--gutters">
+                    <div class="fr-col-4"><div class="lab-panel">4 colonnes</div></div>
+                    <div class="fr-col-4"><div class="lab-panel">4 colonnes</div></div>
+                    <div class="fr-col-4"><div class="lab-panel">4 colonnes</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component">
+                  <h2 class="fr-h4 lab-component__title">Couverture</h2>
+                  <p>Les composants stables sont rendus dans la page. Les composants bêta sans code officiel stable sont isolés dans une section dédiée.</p>
+                  <ul class="fr-tags-group">
+                    <li><p class="fr-tag fr-tag--sm">51 entrées officielles</p></li>
+                    <li><p class="fr-tag fr-tag--sm">48 composants locaux</p></li>
+                    <li><p class="fr-tag fr-tag--sm">5 bêta à vérifier</p></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="navigation" class="lab-section fr-py-6w">
+            <h2>Navigation et enveloppe</h2>
+            <p class="fr-text--lead">Composants qui structurent la page, l'orientation et les parcours.</p>
+            <div class="fr-grid-row fr-grid-row--gutters">
+              <div class="fr-col-12">
+                <div class="lab-component">
+                  <h3 class="fr-h4 lab-component__title">Navigation principale avec menu et méga-menu</h3>
+                  <p>Le menu principal est rendu dans l'en-tête. Il couvre lien direct, menu déroulant de navigation et méga-menu DSFR.</p>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="tabs">
+                  <h3 class="fr-h4 lab-component__title">Onglets</h3>
+                  <div class="fr-tabs">
+                    <ul class="fr-tabs__list" role="tablist" aria-label="Exemple d'onglets">
+                      <li role="presentation">
+                        <button type="button" id="tab-panel-1" class="fr-tabs__tab" tabindex="0" role="tab" aria-selected="true" aria-controls="tab-panel-1-content">Vue</button>
+                      </li>
+                      <li role="presentation">
+                        <button type="button" id="tab-panel-2" class="fr-tabs__tab" tabindex="-1" role="tab" aria-selected="false" aria-controls="tab-panel-2-content">Données</button>
+                      </li>
+                      <li role="presentation">
+                        <button type="button" id="tab-panel-3" class="fr-tabs__tab fr-icon-settings-5-line fr-tabs__tab--icon-left" tabindex="-1" role="tab" aria-selected="false" aria-controls="tab-panel-3-content">Réglages</button>
+                      </li>
+                    </ul>
+                    <div id="tab-panel-1-content" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tab-panel-1" tabindex="0">
+                      <p>Vue synthétique du laboratoire.</p>
+                    </div>
+                    <div id="tab-panel-2-content" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tab-panel-2" tabindex="0">
+                      <p>Données de couverture et composants à revoir.</p>
+                    </div>
+                    <div id="tab-panel-3-content" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tab-panel-3" tabindex="0">
+                      <p>Réglages de validation du prototype.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="accordion">
+                  <h3 class="fr-h4 lab-component__title">Accordéons</h3>
+                  <div class="fr-accordions-group">
+                    <section class="fr-accordion">
+                      <h4 class="fr-accordion__title">
+                        <button type="button" class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-source">Sources lues</button>
+                      </h4>
+                      <div class="fr-collapse" id="accordion-source">
+                        <p>DESIGN.md DSFR, références locales, bibliothèque locale et page officielle des composants.</p>
+                      </div>
+                    </section>
+                    <section class="fr-accordion">
+                      <h4 class="fr-accordion__title">
+                        <button type="button" class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-limites">Limites</button>
+                      </h4>
+                      <div class="fr-collapse" id="accordion-limites">
+                        <p>Les composants bêta sont présentés comme éléments à vérifier, pas comme code stable.</p>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="pagination">
+                  <h3 class="fr-h4 lab-component__title">Pagination</h3>
+                  <nav class="fr-pagination" aria-label="Pagination de démonstration">
+                    <ul class="fr-pagination__list">
+                      <li><a class="fr-pagination__link fr-pagination__link--first" href="#navigation">Première page</a></li>
+                      <li><a class="fr-pagination__link fr-pagination__link--prev" href="#fondations">Page précédente</a></li>
+                      <li><a class="fr-pagination__link" href="#fondations">1</a></li>
+                      <li><a class="fr-pagination__link" aria-current="page" href="#navigation">2</a></li>
+                      <li><a class="fr-pagination__link" href="#information">3</a></li>
+                      <li><a class="fr-pagination__link fr-pagination__link--next" href="#information">Page suivante</a></li>
+                      <li><a class="fr-pagination__link fr-pagination__link--last" href="#validation">Dernière page</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="stepper">
+                  <h3 class="fr-h4 lab-component__title">Indicateur d'étapes</h3>
+                  <div class="fr-stepper">
+                    <h4 class="fr-stepper__title">Étape courante : vérifier le rendu</h4>
+                    <p class="fr-stepper__state">Étape 2 sur 4</p>
+                    <div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="4"></div>
+                    <p class="fr-stepper__details">
+                      <span class="fr-text--bold">Étape suivante :</span> itérer sur les écarts observés.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="back_to_top">
+                  <h3 class="fr-h4 lab-component__title">Retour haut de page</h3>
+                  <a class="fr-link fr-icon-arrow-up-fill fr-link--icon-left" href="#top">Haut de page</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="information" class="lab-section fr-py-6w">
+            <h2>Information, statuts et mise en avant</h2>
+            <div class="fr-grid-row fr-grid-row--gutters">
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="alert">
+                  <h3 class="fr-h4 lab-component__title">Alertes</h3>
+                  <div class="fr-alert fr-alert--success fr-mb-3w" role="status">
+                    <h4 class="fr-alert__title">Succès</h4>
+                    <p>Le composant stable est rendu avec titre et description.</p>
+                  </div>
+                  <div class="fr-alert fr-alert--warning fr-mb-3w" role="alert">
+                    <h4 class="fr-alert__title">Attention</h4>
+                    <p>Message d'avertissement avec rôle explicite.</p>
+                  </div>
+                  <div class="fr-alert fr-alert--error" role="alert">
+                    <h4 class="fr-alert__title">Erreur</h4>
+                    <p>Message d'erreur non signalé par la couleur seule.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="notice">
+                  <h3 class="fr-h4 lab-component__title">Bandeau d'information importante</h3>
+                  <div class="fr-notice fr-notice--info">
+                    <div class="fr-container">
+                      <div class="fr-notice__body">
+                        <p class="fr-notice__title">Bandeau prioritaire pour information temporaire.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="badge">
+                  <h3 class="fr-h4 lab-component__title">Badges</h3>
+                  <p>
+                    <span class="fr-badge">Neutre</span>
+                    <span class="fr-badge fr-badge--info">Information</span>
+                    <span class="fr-badge fr-badge--success">Succès</span>
+                    <span class="fr-badge fr-badge--warning">Attention</span>
+                    <span class="fr-badge fr-badge--error">Erreur</span>
+                    <span class="fr-badge fr-badge--new">Nouveau</span>
+                  </p>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="tag">
+                  <h3 class="fr-h4 lab-component__title">Tags</h3>
+                  <ul class="fr-tags-group">
+                    <li><p class="fr-tag">Simple</p></li>
+                    <li><a class="fr-tag" href="#actions">Cliquable</a></li>
+                    <li><button type="button" class="fr-tag fr-tag--dismiss" aria-label="Retirer le filtre DSFR">DSFR</button></li>
+                    <li><p class="fr-tag fr-icon-arrow-right-line fr-tag--icon-left">Avec icône</p></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="callout">
+                  <h3 class="fr-h4 lab-component__title">Mise en avant</h3>
+                  <div class="fr-callout fr-icon-information-line">
+                    <h4 class="fr-callout__title">Point d'attention</h4>
+                    <p class="fr-callout__text">Une mise en avant doit rester secondaire et aider la compréhension.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="highlight">
+                  <h3 class="fr-h4 lab-component__title">Mise en exergue</h3>
+                  <div class="fr-highlight">
+                    <p>La mise en exergue sert à mettre en évidence une information essentielle dans un contenu.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="tooltip">
+                  <h3 class="fr-h4 lab-component__title">Infobulle</h3>
+                  <p>
+                    Aide contextuelle
+                    <button class="fr-btn--tooltip fr-btn" type="button" aria-describedby="tooltip-lab">
+                      Information
+                    </button>
+                    <span class="fr-tooltip fr-placement" id="tooltip-lab" role="tooltip">Cette infobulle explique une information courte.</span>
+                  </p>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="quote">
+                  <h3 class="fr-h4 lab-component__title">Citation</h3>
+                  <figure class="fr-quote">
+                    <blockquote cite="https://www.systeme-de-design.gouv.fr/version-courante/fr">
+                      <p>Un composant de citation structure un extrait éditorial et son attribution.</p>
+                    </blockquote>
+                    <figcaption>
+                      <p class="fr-quote__author">Équipe prototype</p>
+                      <ul class="fr-quote__source">
+                        <li>Laboratoire DSFR</li>
+                      </ul>
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="actions" class="lab-section fr-py-6w">
+            <h2>Actions et liens</h2>
+            <div class="fr-grid-row fr-grid-row--gutters">
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="button">
+                  <h3 class="fr-h4 lab-component__title">Boutons</h3>
+                  <ul class="fr-btns-group fr-btns-group--inline-md">
+                    <li><button class="fr-btn" type="button">Primaire</button></li>
+                    <li><button class="fr-btn fr-btn--secondary" type="button">Secondaire</button></li>
+                    <li><button class="fr-btn fr-btn--tertiary" type="button">Tertiaire</button></li>
+                    <li><button class="fr-btn fr-btn--tertiary-no-outline" type="button">Sans contour</button></li>
+                    <li><button class="fr-btn fr-icon-add-line fr-btn--icon-left" type="button">Avec icône</button></li>
+                    <li><button class="fr-btn fr-icon-delete-line" type="button" title="Supprimer">Supprimer</button></li>
+                    <li><button class="fr-btn" type="button" disabled>Inactif</button></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="button_group">
+                  <h3 class="fr-h4 lab-component__title">Groupe de boutons</h3>
+                  <ul class="fr-btns-group fr-btns-group--inline-md fr-btns-group--right">
+                    <li><button class="fr-btn" type="button">Valider</button></li>
+                    <li><button class="fr-btn fr-btn--secondary" type="button">Enregistrer</button></li>
+                    <li><button class="fr-btn fr-btn--tertiary-no-outline" type="button">Annuler</button></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="link">
+                  <h3 class="fr-h4 lab-component__title">Liens</h3>
+                  <p><a class="fr-link" href="#sources">Lien simple</a></p>
+                  <p><a class="fr-link fr-icon-arrow-right-line fr-link--icon-right" href="#validation">Lien avec icône droite</a></p>
+                  <p><a class="fr-link fr-icon-download-line fr-link--icon-left" href="#download">Lien de téléchargement</a></p>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="modal">
+                  <h3 class="fr-h4 lab-component__title">Modale</h3>
+                  <button class="fr-btn" aria-controls="modal-lab" data-fr-opened="false" type="button">Ouvrir la modale</button>
+                  <dialog id="modal-lab" class="fr-modal" aria-labelledby="modal-lab-title">
+                    <div class="fr-container fr-container--fluid fr-container-md">
+                      <div class="fr-grid-row fr-grid-row--center">
+                        <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+                          <div class="fr-modal__body">
+                            <div class="fr-modal__header">
+                              <button type="button" class="fr-btn--close fr-btn" aria-controls="modal-lab" title="Fermer la modale">Fermer</button>
+                            </div>
+                            <div class="fr-modal__content">
+                              <h1 id="modal-lab-title" class="fr-modal__title">Modale de test</h1>
+                              <p>Contenu secondaire focalisé, avec fermeture explicite.</p>
+                            </div>
+                            <div class="fr-modal__footer">
+                              <ul class="fr-btns-group fr-btns-group--inline-md">
+                                <li><button class="fr-btn" type="button">Action principale</button></li>
+                                <li><button class="fr-btn fr-btn--secondary" type="button">Action secondaire</button></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </dialog>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component" data-component="share">
+                  <h3 class="fr-h4 lab-component__title">Partage</h3>
+                  <div class="fr-share">
+                    <p class="fr-share__title">Partager la page</p>
+                    <ul class="fr-share__group">
+                      <li><a class="fr-btn--facebook fr-btn" href="https://www.facebook.com/sharer/sharer.php" target="_blank" rel="noopener external" title="Partager sur Facebook - nouvelle fenêtre">Facebook</a></li>
+                      <li><a class="fr-btn--twitter-x fr-btn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener external" title="Partager sur X - nouvelle fenêtre">X</a></li>
+                      <li><a class="fr-btn--linkedin fr-btn" href="https://www.linkedin.com/shareArticle" target="_blank" rel="noopener external" title="Partager sur LinkedIn - nouvelle fenêtre">LinkedIn</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6" id="download">
+                <div class="lab-component" data-component="download">
+                  <h3 class="fr-h4 lab-component__title">Téléchargement</h3>
+                  <div class="fr-alert fr-alert--info fr-alert--sm fr-mb-3w">
+                    <p>La documentation actuelle marque ce composant comme obsolète et recommande les variantes carte, lien ou tuile.</p>
+                  </div>
+                  <a class="fr-link fr-icon-download-line fr-link--icon-left" href="component-lab.html" download>Télécharger cette page HTML</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="formulaires" class="lab-section fr-py-6w">
+            <h2>Formulaires et saisie</h2>
+            <p class="fr-text--lead">Les champs sont groupés, libellés, reliés à leurs aides et erreurs, avec autocomplétion quand c'est pertinent.</p>
+            <form action="#validation" method="get" data-component="form">
+              <fieldset class="fr-fieldset" aria-labelledby="fieldset-identite-legend">
+                <legend class="fr-fieldset__legend" id="fieldset-identite-legend">Identité et contact</legend>
+                <p class="fr-hint-text">Sauf mention contraire, tous les champs sont obligatoires.</p>
+                <div class="fr-grid-row fr-grid-row--gutters">
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group" data-component="input">
+                      <label class="fr-label" for="first-name">Prénom</label>
+                      <input class="fr-input" type="text" id="first-name" name="first-name" autocomplete="given-name" required>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                      <label class="fr-label" for="family-name">Nom</label>
+                      <input class="fr-input" type="text" id="family-name" name="family-name" autocomplete="family-name" required>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                      <label class="fr-label" for="email">Adresse électronique
+                        <span class="fr-hint-text">Format attendu : nom@example.fr</span>
+                      </label>
+                      <input class="fr-input" type="email" id="email" name="email" autocomplete="email" required>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group fr-input-group--error">
+                      <label class="fr-label" for="phone">Téléphone
+                        <span class="fr-hint-text">Format attendu : 0102030405</span>
+                      </label>
+                      <input class="fr-input fr-input--error" type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="phone-error" value="0102">
+                      <p id="phone-error" class="fr-error-text">Le numéro doit contenir dix chiffres.</p>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-select-group" data-component="select">
+                      <label class="fr-label" for="profile-select">Profil
+                        <span class="fr-hint-text">Choix unique parmi plusieurs options.</span>
+                      </label>
+                      <select class="fr-select" id="profile-select" name="profile-select">
+                        <option value="" selected disabled>Sélectionnez une option</option>
+                        <option value="designer">Designer</option>
+                        <option value="dev">Développeur</option>
+                        <option value="po">Responsable produit</option>
+                        <option value="audit">Auditeur</option>
+                        <option value="other">Autre</option>
+                        <option value="unknown">Je ne sais pas</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-input-group">
+                      <label class="fr-label" for="date">Date cible</label>
+                      <input class="fr-input" type="date" id="date" name="date">
+                    </div>
+                  </div>
+                  <div class="fr-col-12">
+                    <div class="fr-input-group">
+                      <label class="fr-label" for="message">Commentaire (optionnel)</label>
+                      <textarea class="fr-input" id="message" name="message" rows="4"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="fr-fieldset" aria-labelledby="fieldset-choix-legend">
+                <legend class="fr-fieldset__legend" id="fieldset-choix-legend">Choix et préférences</legend>
+                <div class="fr-grid-row fr-grid-row--gutters">
+                  <div class="fr-col-12 fr-col-md-6">
+                    <fieldset class="fr-fieldset" data-component="radio">
+                      <legend class="fr-fieldset__legend fr-text--regular">Mode de rendu préféré</legend>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline">
+                        <div class="fr-radio-group">
+                          <input type="radio" id="render-html" name="render-mode" value="html" checked>
+                          <label class="fr-label" for="render-html">HTML</label>
+                        </div>
+                      </div>
+                      <div class="fr-fieldset__element fr-fieldset__element--inline">
+                        <div class="fr-radio-group">
+                          <input type="radio" id="render-react" name="render-mode" value="react">
+                          <label class="fr-label" for="render-react">React</label>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <fieldset class="fr-fieldset" data-component="checkbox">
+                      <legend class="fr-fieldset__legend fr-text--regular">Points à vérifier</legend>
+                      <div class="fr-fieldset__element">
+                        <div class="fr-checkbox-group">
+                          <input type="checkbox" id="check-grid" name="check-grid" checked>
+                          <label class="fr-label" for="check-grid">Grille</label>
+                        </div>
+                      </div>
+                      <div class="fr-fieldset__element">
+                        <div class="fr-checkbox-group">
+                          <input type="checkbox" id="check-a11y" name="check-a11y" checked>
+                          <label class="fr-label" for="check-a11y">Accessibilité de surface</label>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <fieldset class="fr-segmented" data-component="segmented">
+                      <legend class="fr-segmented__legend">Contrôle segmenté
+                        <span class="fr-hint-text">Sélection d'une vue.</span>
+                      </legend>
+                      <div class="fr-segmented__elements">
+                        <div class="fr-segmented__element">
+                          <input value="cards" type="radio" id="segmented-cards" name="segmented-view" checked>
+                          <label class="fr-label fr-icon-layout-grid-line" for="segmented-cards">Cartes</label>
+                        </div>
+                        <div class="fr-segmented__element">
+                          <input value="table" type="radio" id="segmented-table" name="segmented-view">
+                          <label class="fr-label fr-icon-table-line" for="segmented-table">Tableau</label>
+                        </div>
+                        <div class="fr-segmented__element">
+                          <input value="list" type="radio" id="segmented-list" name="segmented-view">
+                          <label class="fr-label fr-icon-list-unordered" for="segmented-list">Liste</label>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-range fr-range--sm" data-component="range">
+                      <label class="fr-label" for="range-coverage">Niveau de couverture attendu</label>
+                      <input type="range" class="fr-range__input" id="range-coverage" name="range-coverage" min="0" max="100" value="90">
+                      <span class="fr-range__min" aria-hidden="true">0</span>
+                      <span class="fr-range__max" aria-hidden="true">100</span>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-toggle" data-component="toggle">
+                      <input type="checkbox" class="fr-toggle__input" aria-describedby="toggle-hint-text" id="toggle-proof" checked>
+                      <label class="fr-toggle__label" for="toggle-proof">Exiger une preuve observable</label>
+                      <p class="fr-hint-text" id="toggle-hint-text">Le contrôle reste côté prototype.</p>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-upload-group" data-component="upload">
+                      <label class="fr-label" for="file-upload">Ajouter une capture (optionnel)
+                        <span class="fr-hint-text">Taille maximale indicative : 500 Mo.</span>
+                      </label>
+                      <input class="fr-upload" type="file" id="file-upload" name="file-upload">
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-password" data-component="password">
+                      <label class="fr-label" for="password-input">Mot de passe de test</label>
+                      <div class="fr-input-wrap">
+                        <input class="fr-password__input fr-input" type="password" id="password-input" name="password-input" autocomplete="new-password">
+                      </div>
+                      <div class="fr-password__checkbox fr-checkbox-group fr-checkbox-group--sm">
+                        <input type="checkbox" id="password-show">
+                        <label class="fr-label" for="password-show">Afficher</label>
+                      </div>
+                      <p class="fr-hint-text">Au moins 12 caractères pour un usage réel.</p>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6">
+                    <div class="fr-search-bar fr-search-bar--lg" id="main-search" role="search" data-component="search">
+                      <label class="fr-label" for="main-search-input">Barre de recherche</label>
+                      <input class="fr-input" placeholder="Rechercher dans le laboratoire" type="search" id="main-search-input" name="main-search-input">
+                      <button type="button" class="fr-btn" title="Rechercher">Rechercher</button>
+                    </div>
+                  </div>
+                  <div class="fr-col-12 fr-col-md-6" id="connect">
+                    <div class="fr-connect-group" data-component="connect">
+                      <button class="fr-connect" type="button">
+                        <span class="fr-connect__login">S'identifier avec</span>
+                        <span class="fr-connect__brand">FranceConnect</span>
+                      </button>
+                      <p><a href="https://franceconnect.gouv.fr/" target="_blank" rel="noopener external" title="Qu'est-ce que FranceConnect ? - nouvelle fenêtre">Qu'est-ce que FranceConnect ?</a></p>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <ul class="fr-btns-group fr-btns-group--inline-md fr-btns-group--right">
+                <li><button class="fr-btn" type="submit">Tester le formulaire</button></li>
+                <li><button class="fr-btn fr-btn--secondary" type="reset">Réinitialiser</button></li>
+              </ul>
+            </form>
+          </section>
+
+          <section id="contenus" class="lab-section fr-py-6w">
+            <h2>Contenus, médias et surfaces</h2>
+            <div class="fr-grid-row fr-grid-row--gutters">
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="fr-card fr-enlarge-link" data-component="card">
+                  <div class="fr-card__body">
+                    <div class="fr-card__content">
+                      <h3 class="fr-card__title"><a href="#validation">Carte éditoriale</a></h3>
+                      <p class="fr-card__desc">Point d'entrée vers une page ou une section avec aperçu.</p>
+                      <div class="fr-card__start">
+                        <ul class="fr-tags-group">
+                          <li><p class="fr-tag">Prototype</p></li>
+                          <li><p class="fr-tag">DSFR</p></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="fr-tile fr-enlarge-link" data-component="tile">
+                  <div class="fr-tile__body">
+                    <div class="fr-tile__content">
+                      <h3 class="fr-tile__title"><a href="#sources">Tuile de ressource</a></h3>
+                      <p class="fr-tile__desc">Accès rapide vers les sources et limites consultées.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12">
+                <div class="fr-table fr-table--bordered" data-component="table">
+                  <table>
+                    <caption>Couverture de validation par famille</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Famille</th>
+                        <th scope="col">Exemples couverts</th>
+                        <th scope="col">Statut</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Navigation</td>
+                        <td>En-tête, menu, fil d'Ariane, sommaire, pagination</td>
+                        <td><span class="fr-badge fr-badge--success">Rendu</span></td>
+                      </tr>
+                      <tr>
+                        <td>Formulaire</td>
+                        <td>Champs, radio, cases à cocher, select, mot de passe, upload</td>
+                        <td><span class="fr-badge fr-badge--success">Rendu</span></td>
+                      </tr>
+                      <tr>
+                        <td>Bêta</td>
+                        <td>Combobox, dropdown, en-tête connectée, tabnav, composition</td>
+                        <td><span class="fr-badge fr-badge--warning">À vérifier</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <figure class="fr-content-media" data-component="content">
+                  <div class="fr-content-media__img">
+                    <div class="lab-media" role="img" aria-label="Emplacement média neutre pour test DSFR">Média 16:9</div>
+                  </div>
+                  <figcaption class="fr-content-media__caption">Exemple de contenu média avec légende.</figcaption>
+                </figure>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="fr-transcription" data-component="transcription">
+                  <button type="button" class="fr-transcription__btn" aria-expanded="false" aria-controls="transcription-collapse">Transcription</button>
+                  <div class="fr-collapse" id="transcription-collapse">
+                    <div class="fr-transcription__footer">
+                      <div class="fr-transcription__actions-group">
+                        <button type="button" class="fr-btn fr-btn--fullscreen" aria-controls="transcription-modal" data-fr-opened="false" title="Agrandir la transcription">Agrandir</button>
+                      </div>
+                    </div>
+                    <p>Transcription textuelle associée au média de démonstration.</p>
+                  </div>
+                </div>
+                <dialog id="transcription-modal" class="fr-modal" aria-labelledby="transcription-modal-title">
+                  <div class="fr-container fr-container--fluid fr-container-md">
+                    <div class="fr-grid-row fr-grid-row--center">
+                      <div class="fr-col-12 fr-col-md-10">
+                        <div class="fr-modal__body">
+                          <div class="fr-modal__header">
+                            <button type="button" class="fr-btn--close fr-btn" aria-controls="transcription-modal" title="Fermer la transcription">Fermer</button>
+                          </div>
+                          <div class="fr-modal__content">
+                            <h1 id="transcription-modal-title" class="fr-modal__title">Transcription</h1>
+                            <p>Transcription complète du média de démonstration.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </dialog>
+              </div>
+              <div class="fr-col-12">
+                <div class="fr-follow" data-component="follow">
+                  <div class="fr-container">
+                    <div class="fr-grid-row">
+                      <div class="fr-col-12 fr-col-md-8">
+                        <div class="fr-follow__newsletter">
+                          <div>
+                            <h3 class="fr-h5">Abonnement à la lettre d'information</h3>
+                            <p class="fr-text--sm">Recevoir les mises à jour du laboratoire.</p>
+                          </div>
+                          <div>
+                            <a class="fr-btn" href="#formulaires">S'abonner</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="fr-col-12 fr-col-md-4">
+                        <div class="fr-follow__social">
+                          <p class="fr-h5">Suivre</p>
+                          <ul class="fr-btns-group">
+                            <li><a class="fr-btn fr-btn--twitter-x" href="https://twitter.com" target="_blank" rel="noopener external" title="Suivre sur X - nouvelle fenêtre">X</a></li>
+                            <li><a class="fr-btn fr-btn--linkedin" href="https://www.linkedin.com" target="_blank" rel="noopener external" title="Suivre sur LinkedIn - nouvelle fenêtre">LinkedIn</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12">
+                <div class="fr-translate fr-nav" data-component="translate">
+                  <div class="fr-nav__item">
+                    <button type="button" class="fr-translate__btn fr-btn fr-btn--tertiary" aria-controls="translate-menu" aria-expanded="false" title="Sélectionner une langue">FR - Français</button>
+                    <div class="fr-collapse fr-translate__menu fr-menu" id="translate-menu">
+                      <ul class="fr-menu__list">
+                        <li><a class="fr-translate__language fr-nav__link" href="#contenus" hreflang="fr" lang="fr" aria-current="true">FR - Français</a></li>
+                        <li><a class="fr-translate__language fr-nav__link" href="#contenus" hreflang="en" lang="en">EN - English</a></li>
+                        <li><a class="fr-translate__language fr-nav__link" href="#contenus" hreflang="es" lang="es">ES - Español</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="beta" class="lab-section fr-py-6w">
+            <h2>Composants bêta et couverture incomplète</h2>
+            <p class="fr-text--lead">Ces composants existent dans la documentation officielle v1.15, mais la documentation indique pour certains qu'ils sont en bêta et sans code stable. Ils sont donc marqués à vérifier.</p>
+            <div class="fr-grid-row fr-grid-row--gutters">
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component lab-beta" data-component="combobox">
+                  <h3 class="fr-h4 lab-component__title">Liste déroulante riche - Combobox</h3>
+                  <div class="fr-input-group">
+                    <label class="fr-label" for="combobox-beta">Recherche dans une liste
+                      <span class="fr-hint-text">Bêta sans code officiel stable local : fallback sémantique avec `datalist`.</span>
+                    </label>
+                    <input class="fr-input" type="text" list="combobox-beta-list" id="combobox-beta" name="combobox-beta">
+                    <datalist id="combobox-beta-list">
+                      <option value="Accordéon"></option>
+                      <option value="Bouton"></option>
+                      <option value="Carte"></option>
+                    </datalist>
+                  </div>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component lab-beta" data-component="dropdown">
+                  <h3 class="fr-h4 lab-component__title">Menu déroulant</h3>
+                  <button class="fr-btn fr-btn--secondary" type="button" aria-expanded="false" aria-controls="dropdown-beta-menu">Actions</button>
+                  <div class="fr-collapse fr-menu" id="dropdown-beta-menu">
+                    <ul class="fr-menu__list">
+                      <li><a class="fr-nav__link" href="#actions">Action courte</a></li>
+                      <li><a class="fr-nav__link" href="#validation">Voir la validation</a></li>
+                    </ul>
+                  </div>
+                  <p class="fr-hint-text fr-mt-2w">Bêta : à vérifier dans Figma ou dans une future version codée.</p>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component lab-beta" data-component="user_header">
+                  <h3 class="fr-h4 lab-component__title">En-tête connectée</h3>
+                  <div class="fr-alert fr-alert--info fr-alert--sm">
+                    <p>La documentation décrit une variante d'en-tête avec menu usager connecté. Le code stable n'est pas disponible localement.</p>
+                  </div>
+                  <button class="fr-btn fr-icon-account-circle-line fr-btn--icon-left" type="button">Compte usager</button>
+                </div>
+              </div>
+              <div class="fr-col-12 fr-col-md-6">
+                <div class="lab-component lab-beta" data-component="tabnav">
+                  <h3 class="fr-h4 lab-component__title">Navigation tertiaire</h3>
+                  <nav aria-label="Navigation tertiaire de démonstration">
+                    <ul class="fr-tags-group">
+                      <li><a class="fr-tag" href="#beta" aria-current="page">Vue courante</a></li>
+                      <li><a class="fr-tag" href="#sources">Sources</a></li>
+                      <li><a class="fr-tag" href="#validation">Validation</a></li>
+                    </ul>
+                  </nav>
+                  <p class="fr-hint-text">Bêta : à utiliser seulement en complément du menu latéral.</p>
+                </div>
+              </div>
+              <div class="fr-col-12">
+                <div class="lab-component lab-beta" data-component="composition">
+                  <h3 class="fr-h4 lab-component__title">Zone d'expression visuelle</h3>
+                  <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+                    <div class="fr-col-12 fr-col-md-7">
+                      <p class="fr-text--lead">Zone riche de mise en avant, représentée ici par une composition sobre fondée sur grille, titre, texte et action.</p>
+                      <a class="fr-btn" href="#actions">Action de la zone</a>
+                    </div>
+                    <div class="fr-col-12 fr-col-md-5">
+                      <div class="lab-media" role="img" aria-label="Emplacement visuel de composition">Visuel</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="consentement" class="lab-section fr-py-6w">
+            <h2>Consentement</h2>
+            <div class="lab-component lab-consent-demo" data-component="consent">
+              <h3 class="fr-h6">Aperçu non intrusif du consentement</h3>
+              <div>
+                <p>Ce prototype ne dépose pas de cookie non essentiel. L'aperçu reste dans cette section pour éviter une bannière bloquante au chargement.</p>
+              </div>
+              <ul class="fr-btns-group fr-btns-group--inline-sm">
+                <li><button class="fr-btn" type="button" data-dismiss-consent-preview>Accepter</button></li>
+                <li><button class="fr-btn fr-btn--secondary" type="button" data-dismiss-consent-preview>Refuser</button></li>
+                <li><button class="fr-btn fr-btn--tertiary-no-outline" type="button" aria-controls="consent-modal" data-fr-opened="false">Personnaliser</button></li>
+              </ul>
+            </div>
+            <dialog id="consent-modal" class="fr-modal" aria-labelledby="consent-modal-title">
+              <div class="fr-container fr-container--fluid fr-container-md">
+                <div class="fr-grid-row fr-grid-row--center">
+                  <div class="fr-col-12 fr-col-md-8">
+                    <div class="fr-modal__body">
+                      <div class="fr-modal__header">
+                        <button type="button" class="fr-btn--close fr-btn" aria-controls="consent-modal" title="Fermer les préférences de consentement">Fermer</button>
+                      </div>
+                      <div class="fr-modal__content">
+                        <h1 id="consent-modal-title" class="fr-modal__title">Préférences de consentement</h1>
+                        <div class="fr-consent-service">
+                          <fieldset class="fr-fieldset">
+                            <legend class="fr-fieldset__legend fr-text--regular">Mesure d'audience fictive</legend>
+                            <div class="fr-fieldset__element">
+                              <div class="fr-radio-group fr-radio-group--sm">
+                                <input type="radio" id="audience-accept" name="audience-choice" value="accept">
+                                <label class="fr-label" for="audience-accept">Accepter</label>
+                              </div>
+                            </div>
+                            <div class="fr-fieldset__element">
+                              <div class="fr-radio-group fr-radio-group--sm">
+                                <input type="radio" id="audience-refuse" name="audience-choice" value="refuse" checked>
+                                <label class="fr-label" for="audience-refuse">Refuser</label>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </dialog>
+          </section>
+
+          <section id="sources" class="lab-section fr-py-6w">
+            <h2>Sources et limites</h2>
+            <div class="fr-alert fr-alert--info fr-mb-4w">
+              <h3 class="fr-alert__title">Claim limité</h3>
+              <p>Cette page est un prototype aligné DSFR avec limites. Elle ne prouve pas la conformité RGAA ni l'autorisation d'usage de la marque de l'État.</p>
+            </div>
+            <ul>
+              <li>Documentation officielle DSFR v1.15 : liste des composants.</li>
+              <li>Package utilisé : `@gouvfr/dsfr` 1.15.2 via CDN jsDelivr.</li>
+              <li>Références locales : `design-systems/dsfr/DESIGN.md`, `tokens.yaml` et `references/`.</li>
+              <li>Bibliothèque locale du skill `dsfr-components` : 48 composants et variantes.</li>
+            </ul>
+          </section>
+
+          <section id="validation" class="lab-section fr-py-6w">
+            <h2>Checklist de validation</h2>
+            <div class="fr-table">
+              <table>
+                <caption>Points à vérifier pendant les itérations</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Point</th>
+                    <th scope="col">Preuve attendue</th>
+                    <th scope="col">Statut initial</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Structure de page</td>
+                    <td>`head`, skiplinks, header, main, footer</td>
+                    <td><span class="fr-badge fr-badge--success">Présent</span></td>
+                  </tr>
+                  <tr>
+                    <td>Liens</td>
+                    <td>Aucun lien factice, liens internes inspectables</td>
+                    <td><span class="fr-badge fr-badge--success">À contrôler</span></td>
+                  </tr>
+                  <tr>
+                    <td>Composants JS</td>
+                    <td>Ouverture accordéon, onglets, modale, menus</td>
+                    <td><span class="fr-badge fr-badge--info">À tester au navigateur</span></td>
+                  </tr>
+                  <tr>
+                    <td>Responsive</td>
+                    <td>Capture mobile et desktop</td>
+                    <td><span class="fr-badge fr-badge--info">À tester au navigateur</span></td>
+                  </tr>
+                  <tr>
+                    <td>Bêta</td>
+                    <td>Vérification Figma ou doc officielle détaillée</td>
+                    <td><span class="fr-badge fr-badge--warning">Limite nommée</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="fr-footer" id="footer" data-component="footer">
+    <div class="fr-container">
+      <div class="fr-footer__body">
+        <div class="fr-footer__brand fr-enlarge-link">
+          <a href="#top" title="Retour à l'accueil du laboratoire">
+            <p class="fr-logo">République<br>Française</p>
+          </a>
+        </div>
+        <div class="fr-footer__content">
+          <p class="fr-footer__content-desc">Page locale de validation pour itérer sur le DESIGN.md DSFR et le skill de composants.</p>
+          <ul class="fr-footer__content-list">
+            <li class="fr-footer__content-item"><a class="fr-footer__content-link" target="_blank" rel="noopener external" href="https://www.systeme-de-design.gouv.fr/version-courante/fr">systeme-de-design.gouv.fr</a></li>
+            <li class="fr-footer__content-item"><a class="fr-footer__content-link" target="_blank" rel="noopener external" href="https://github.com/GouvernementFR/dsfr">github.com/GouvernementFR/dsfr</a></li>
+            <li class="fr-footer__content-item"><a class="fr-footer__content-link" target="_blank" rel="noopener external" href="https://service-public.fr">service-public.fr</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="fr-footer__bottom">
+        <ul class="fr-footer__bottom-list">
+          <li class="fr-footer__bottom-item"><a class="fr-footer__bottom-link" href="#sommaire">Plan de la page</a></li>
+          <li class="fr-footer__bottom-item"><a class="fr-footer__bottom-link" href="#validation">Accessibilité : non auditée</a></li>
+          <li class="fr-footer__bottom-item"><a class="fr-footer__bottom-link" href="#sources">Mentions de prototype</a></li>
+          <li class="fr-footer__bottom-item"><a class="fr-footer__bottom-link" href="#sources">Données personnelles</a></li>
+          <li class="fr-footer__bottom-item"><a class="fr-footer__bottom-link" href="#consentement">Gestion des cookies</a></li>
+          <li class="fr-footer__bottom-item"><button type="button" class="fr-footer__bottom-link fr-btn fr-btn--tertiary-no-outline" aria-controls="fr-theme-modal" data-fr-opened="false">Paramètres d'affichage</button></li>
+        </ul>
+        <div class="fr-footer__bottom-copy">
+          <p>Prototype local pour validation interne. Les contenus administratifs sont fictifs et ne doivent pas être publiés tels quels.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+  <script>
+    document.querySelectorAll('[data-dismiss-consent-preview]').forEach((button) => {
+      button.addEventListener('click', () => {
+        button.closest('[data-component="consent"]').hidden = true;
+      });
+    });
+  </script>
+</body>
+</html>

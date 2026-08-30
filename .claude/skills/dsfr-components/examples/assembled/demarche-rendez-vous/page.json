@@ -1,0 +1,125 @@
+{
+  "title": "Demande de rendez-vous - Prototype DSFR",
+  "description": "Prototype de page de prise de rendez-vous administratif générée par le builder assemblé DSFR.",
+  "brand_mode": "neutral",
+  "header": {
+    "brand_mode": "neutral",
+    "service_title": "Rendez-vous public",
+    "service_tagline": "Prototype de démarche locale",
+    "tools": [
+      {"label": "Se connecter", "href": "/connexion"}
+    ],
+    "search": {"label": "Rechercher"},
+    "navigation": [
+      {"label": "Accueil", "href": "#intro", "active": true},
+      {"label": "Formulaire", "href": "#formulaire"},
+      {"label": "Aide", "href": "#aide"}
+    ]
+  },
+  "footer": {
+    "brand_mode": "neutral",
+    "service_name": "Rendez-vous public",
+    "content_desc": "Prototype local à vérifier avant publication.",
+    "content_links": [
+      {"label": "Documentation du prototype", "href": "/documentation"}
+    ],
+    "bottom_links": [
+      {"label": "Plan du site", "href": "/plan-du-site"},
+      {"label": "Accessibilité : à vérifier", "href": "/accessibilite"},
+      {"label": "Données personnelles", "href": "/donnees-personnelles"}
+    ]
+  },
+  "sections": [
+    {
+      "block": "content",
+      "id": "intro",
+      "title": "Demander un rendez-vous",
+      "heading_level": 1,
+      "lead": "Préparez votre demande et choisissez le bon canal de contact.",
+      "body_structured": {
+        "paragraphs": [
+          "Cette page illustre une démarche simple : informer, vérifier les prérequis puis saisir une demande bornée.",
+          "Les champs requis restent neutres au repos ; la contrainte est posée seulement après tentative d'envoi."
+        ],
+        "links": [
+          {"label": "Aller au formulaire", "href": "#formulaire"}
+        ]
+      }
+    },
+    {
+      "block": "notice",
+      "title": "Avant de commencer",
+      "description": "Munissez-vous des informations nécessaires à votre demande.",
+      "variant": "info",
+      "link": {"label": "Voir les pièces utiles", "href": "#pieces"}
+    },
+    {
+      "block": "stepper",
+      "current": 1,
+      "total": 3,
+      "title": "Renseigner la demande",
+      "next": "Choisir un créneau"
+    },
+    {
+      "block": "summary",
+      "title": "Sommaire",
+      "items": [
+        {"label": "Présentation", "href": "#intro"},
+        {"label": "Pièces utiles", "href": "#pieces"},
+        {"label": "Formulaire", "href": "#formulaire"},
+        {"label": "Aide", "href": "#aide"}
+      ]
+    },
+    {
+      "block": "cards",
+      "id": "pieces",
+      "heading": "Pièces utiles",
+      "columns": 3,
+      "items": [
+        {"title": "Identité", "desc": "Préparez une pièce d'identité valide.", "href": "/pieces/identite"},
+        {"title": "Justificatif", "desc": "Ajoutez un justificatif si votre demande le nécessite.", "href": "/pieces/justificatif"},
+        {"title": "Contact", "desc": "Indiquez une adresse électronique consultée régulièrement.", "href": "/pieces/contact"}
+      ]
+    },
+    {
+      "block": "form",
+      "section_id": "formulaire",
+      "form_id": "rdv-form",
+      "title": "Votre demande",
+      "action": "/rendez-vous/envoyer",
+      "method": "post",
+      "deferred": true,
+      "fields": [
+        {"type": "field", "name": "nom-prenom", "config": {"id": "identite", "legend": "Identité du demandeur"}},
+        {"type": "field", "name": "email", "config": {"id": "courriel", "label": "Adresse électronique de contact"}},
+        {"type": "select", "label": "Objet du rendez-vous", "id": "objet-rdv", "name": "objet", "hint": "Choisissez le motif principal.", "options": [
+          {"value": "document", "label": "Document administratif"},
+          {"value": "famille", "label": "Démarche familiale"},
+          {"value": "autre", "label": "Autre demande"}
+        ]},
+        {"type": "textarea", "label": "Précisions utiles", "id": "precision-rdv", "name": "precision", "rows": 5, "hint": "Ne saisissez pas de donnée sensible inutile."},
+        {"type": "checkbox", "label": "J'ai vérifié les pièces nécessaires", "id": "pieces-ok", "name": "pieces_ok", "required": true}
+      ],
+      "submit_label": "Envoyer la demande",
+      "reset_label": "Effacer"
+    },
+    {
+      "block": "accordion",
+      "id": "aide",
+      "heading": "Aide",
+      "items": [
+        {
+          "title": "Puis-je modifier ma demande ?",
+          "content": {
+            "paragraphs": ["Oui, tant qu'un créneau n'a pas été confirmé."],
+            "links": [{"label": "Gérer mes demandes", "href": "/mes-demandes"}]
+          }
+        },
+        {
+          "title": "Que faire si aucun créneau n'est disponible ?",
+          "content": "Revenez plus tard ou utilisez le canal de contact indiqué par le service."
+        }
+      ]
+    }
+  ]
+}
