@@ -151,17 +151,85 @@ def parse_page(spec: str, index: int) -> dict[str, str]:
     return {"id": page_id, "name": name, "url": url, "type": page_type}
 
 
-def find_ay11(root: Path | None) -> Path | None:
+def version_tuple(value: str) -> tuple[int, ...]:
+    match = re.search(r"(?:\d+(?:\.\d+){0,3})", value)
+    if not match:
+        return ()
+    return tuple(int(part) for part in match.group(0).split("."))
+
+
+def version_gte(actual: str, expected: str) -> bool:
+    if not expected:
+        return True
+    actual_tuple = version_tuple(actual)
+    expected_tuple = version_tuple(expected)
+    if not actual_tuple:
+        return False
+    size = max(len(actual_tuple), len(expected_tuple))
+    actual_tuple += (0,) * (size - len(actual_tuple))
+    expected_tuple += (0,) * (size - len(expected_tuple))
+    return actual_tuple >= expected_tuple
+
+
+def detect_ay11_version(ay11: Path) -> str:
+    for argv in ([str(ay11), "--version"], [str(ay11), "version"]):
+        try:
+            process = subprocess.run(argv, text=True, capture_output=True, check=False, timeout=10)
+        except Exception:
+            continue
+        output = (process.stdout or process.stderr or "").strip()
+        if output:
+            return output.splitlines()[0].strip()
+    return ""
+
+
+def resolve_ay11_root(configured_root: str | None) -> Path | None:
+    if not configured_root:
+        return None
+    root = Path(configured_root).expanduser().resolve()
+    if not root.exists():
+        raise SystemExit(f"Le dossier --ay11-root est introuvable : {root}")
+    if not root.is_dir():
+        raise SystemExit(f"--ay11-root doit être un dossier : {root}")
+    candidates = (root / ".venv/bin/ay11", root / "venv/bin/ay11")
+    executable = next((path for path in candidates if path.is_file() and os.access(path, os.X_OK)), None)
+    if not executable:
+        raise SystemExit(f"Le dossier --ay11-root ne contient pas d’exécutable AY11 exécutable : {root}/.venv/bin/ay11 ou {root}/venv/bin/ay11")
+    return root
+
+
+def find_ay11(root: Path | None) -> tuple[Path | None, list[str]]:
     candidates: list[Path] = []
+    warnings: list[str] = []
     if root:
+        if not root.exists():
+            warnings.append(f"Répertoire --ay11-root introuvable : {root}")
+            return None, warnings
+        if not root.is_dir():
+            warnings.append(f"Répertoire --ay11-root invalide (pas un dossier) : {root}")
+            return None, warnings
         candidates.extend([root / ".venv/bin/ay11", root / "venv/bin/ay11"])
+        if not any(path.is_file() and os.access(path, os.X_OK) for path in candidates):
+            warnings.append(f"Aucun exécutable AY11 trouvé dans --ay11-root : {root}")
+    env_root = os.environ.get("AY11_ROOT")
+    if env_root:
+        candidate_root = Path(env_root).expanduser()
+        if not candidate_root.exists():
+            warnings.append(f"Répertoire AY11_ROOT introuvable : {candidate_root}")
+        elif not candidate_root.is_dir():
+            warnings.append(f"AY11_ROOT invalide (pas un dossier) : {candidate_root}")
+        else:
+            candidates.extend([candidate_root / ".venv/bin/ay11", candidate_root / "venv/bin/ay11"])
     env = os.environ.get("AY11_BIN")
     if env:
-        candidates.insert(0, Path(env))
+        candidates.append(Path(env))
     which = shutil.which("ay11")
     if which:
         candidates.append(Path(which))
-    return next((p.resolve() for p in candidates if p.is_file() and os.access(p, os.X_OK)), None)
+    resolved = next((p.resolve() for p in candidates if p.is_file() and os.access(p, os.X_OK)), None)
+    if not resolved and not warnings:
+        warnings.append("AY11 non résolu : définir --ay11-root, AY11_ROOT ou AY11_BIN, ou installer AY11 dans le PATH")
+    return resolved, warnings
 
 
 def find_python_for_ay11(ay11: Path | None) -> Path:
@@ -234,7 +302,7 @@ def init_campaign(args: argparse.Namespace) -> int:
     pages = [parse_page(spec, i + 1) for i, spec in enumerate(args.page or [])]
     if not pages:
         pages = [{"id": "P01", "name": "Accueil", "url": target, "type": "homepage"}]
-    ay11_root = Path(args.ay11_root).expanduser().resolve() if args.ay11_root else None
+    ay11_root = resolve_ay11_root(args.ay11_root)
     skills_roots = [str(Path(p).expanduser().resolve()) for p in (args.skills_root or [])]
     if str(KIT_ROOT / ".claude/skills") not in skills_roots:
         skills_roots.insert(0, str(KIT_ROOT / ".claude/skills"))
@@ -250,6 +318,9 @@ def init_campaign(args: argparse.Namespace) -> int:
             "kit_root": str(KIT_ROOT),
             "ay11_root": str(ay11_root) if ay11_root else "",
             "skills_roots": skills_roots,
+        },
+        "tooling_options": {
+            "ay11_version": os.environ.get("AY11_EXPECTED_VERSION", "").strip(),
         },
         "sample": pages,
         "phases": {"ay11": True, "browser_checks": True, "rgaa_checks": True, "dsfr_checks": True, "reports": True, "report_capture": False, "tickets": True},
@@ -368,7 +439,7 @@ preuves humaines. Ne jamais revendiquer un taux RGAA officiel.
 """
 
 
-def preflight(config: dict[str, Any], root: Path, state: dict[str, Any], dry_run: bool) -> bool:
+def preflight(config: dict[str, Any], root: Path, state: dict[str, Any], dry_run: bool, strict_ay11: bool = False) -> bool:
     errors: list[str] = []; warnings: list[str] = []
     try: validate_url(config.get("campaign", {}).get("target", ""))
     except ValueError as exc: errors.append(str(exc))
@@ -380,8 +451,26 @@ def preflight(config: dict[str, Any], root: Path, state: dict[str, Any], dry_run
         try: validate_url(page.get("url", ""))
         except ValueError: errors.append(f"URL invalide pour {page.get('id', '?')}")
     ay11_root_value = config.get("tooling", {}).get("ay11_root") or ""
-    ay11 = find_ay11(Path(ay11_root_value) if ay11_root_value else None)
-    if config.get("phases", {}).get("ay11", True) and not ay11: errors.append("Exécutable AY11 introuvable")
+    ay11, ay11_diagnostics = find_ay11(Path(ay11_root_value) if ay11_root_value else None)
+    expected_version = str((config.get("tooling_options", {}) or {}).get("ay11_version") or os.environ.get("AY11_EXPECTED_VERSION", "")).strip()
+    ay11_version = detect_ay11_version(ay11) if ay11 else ""
+    if config.get("phases", {}).get("ay11", True):
+        if ay11_diagnostics and strict_ay11:
+            errors.extend(ay11_diagnostics)
+        elif ay11_diagnostics:
+            warnings.extend(ay11_diagnostics)
+        if not ay11:
+            message = "Exécutable AY11 introuvable"
+            if strict_ay11:
+                errors.append(message)
+            else:
+                warnings.append(message)
+        elif expected_version and not version_gte(ay11_version, expected_version):
+            message = f"Version AY11 détectée '{ay11_version}' ; version minimale attendue : {expected_version}"
+            if strict_ay11:
+                errors.append(message)
+            else:
+                warnings.append(message)
     roots = [Path(p) for p in config.get("tooling", {}).get("skills_roots", [])]
     for skill in REQUIRED_SKILLS:
         if not any((candidate / skill / "SKILL.md").is_file() for candidate in roots): warnings.append(f"Skill non trouvé : {skill}")
@@ -393,7 +482,7 @@ def preflight(config: dict[str, Any], root: Path, state: dict[str, Any], dry_run
                     state.setdefault("pages", {}).setdefault(page["id"], {})["http_status"] = response.status
             except Exception as exc: warnings.append(f"{page['id']} non vérifiée : {exc}")
     status = "ECHEC" if errors else ("PARTIEL" if warnings else "OK")
-    record(state, "preflight", status, errors=errors, warnings=warnings, ay11=str(ay11) if ay11 else None)
+    record(state, "preflight", status, errors=errors, warnings=warnings, ay11=str(ay11) if ay11 else None, ay11_version=ay11_version or None, ay11_expected_version=expected_version or None)
     save_state(root, state)
     return not errors
 
@@ -443,9 +532,9 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
     resume = bool(args.resume)
     def skip(phase: str) -> bool: return phase not in selected or (resume and state.get("phases", {}).get(phase, {}).get("status") == "OK")
 
-    if not skip("preflight") and not preflight(config, root, state, args.dry_run):
+    if not skip("preflight") and not preflight(config, root, state, args.dry_run, strict_ay11=getattr(args, "strict_ay11", False)):
         print("[FAIL] Pré-vol en échec", file=sys.stderr); return 2
-    ay11_root_value = config.get("tooling", {}).get("ay11_root") or ""; ay11 = find_ay11(Path(ay11_root_value) if ay11_root_value else None)
+    ay11_root_value = config.get("tooling", {}).get("ay11_root") or ""; ay11, _ = find_ay11(Path(ay11_root_value) if ay11_root_value else None)
 
     if not skip("catalog"):
         if not ay11: record(state, "catalog", "IGNORÉ", reason="AY11 absent")
@@ -1441,8 +1530,8 @@ def parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
     init = sub.add_parser("init", help="Créer une campagne et ses contrats"); init.add_argument("target"); init.add_argument("--output"); init.add_argument("--name"); init.add_argument("--page", action="append", help="URL::Nom::type"); init.add_argument("--ay11-root"); init.add_argument("--skills-root", action="append"); init.add_argument("--allow-inside-kit", action="store_true", help=argparse.SUPPRESS); init.set_defaults(func=init_campaign)
     sample = sub.add_parser("sample", help="Proposer un échantillon depuis les liens de la cible"); sample.add_argument("campaign"); sample.add_argument("--max-pages", type=int, default=10); sample.add_argument("--timeout", type=int, default=20); sample.set_defaults(func=sample_campaign)
-    run = sub.add_parser("run", help="Exécuter les phases automatisées"); run.add_argument("campaign"); run.add_argument("--only", help="Liste de phases séparées par des virgules"); run.add_argument("--dry-run", action="store_true"); run.add_argument("--resume", action="store_true"); run.set_defaults(func=run_campaign)
-    resume = sub.add_parser("resume", help="Reprendre en ignorant les phases OK"); resume.add_argument("campaign"); resume.add_argument("--only"); resume.add_argument("--dry-run", action="store_true"); resume.set_defaults(func=run_campaign, resume=True)
+    run = sub.add_parser("run", help="Exécuter les phases automatisées"); run.add_argument("campaign"); run.add_argument("--only", help="Liste de phases séparées par des virgules"); run.add_argument("--dry-run", action="store_true"); run.add_argument("--resume", action="store_true"); run.add_argument("--strict-ay11", action="store_true"); run.set_defaults(func=run_campaign)
+    resume = sub.add_parser("resume", help="Reprendre en ignorant les phases OK"); resume.add_argument("campaign"); resume.add_argument("--only"); resume.add_argument("--dry-run", action="store_true"); resume.add_argument("--strict-ay11", action="store_true"); resume.set_defaults(func=run_campaign, resume=True)
     report = sub.add_parser("report", help="Régénérer matrice, rapports et tickets"); report.add_argument("campaign"); report.set_defaults(func=report_command)
     validate = sub.add_parser("validate", help="Vérifier la cohérence de la campagne"); validate.add_argument("campaign"); validate.set_defaults(func=validate_command)
     replan = sub.add_parser("replan", help="Accepter une configuration modifiée et invalider le plan"); replan.add_argument("campaign"); replan.set_defaults(func=replan_command)
@@ -1453,6 +1542,7 @@ def parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = parser().parse_args()
     if not hasattr(args, "resume"): args.resume = False
+    if not hasattr(args, "strict_ay11"): args.strict_ay11 = False
     return int(args.func(args))
 
 

@@ -30,7 +30,7 @@ l’utilisateur, jamais dans le kit.
    - `screen-reader-testing` ;
    - `pre-audit-rgaa-dsfr` ;
    - `ticket-rgaa`.
-3. Détecter AY11 via `--ay11-root`, `AY11_BIN` ou le `PATH`.
+3. Détecter AY11 via `--ay11-root`, `AY11_ROOT`, `AY11_BIN` ou le `PATH`.
 4. Ne jamais installer un outil ou modifier le site cible sans demande explicite.
 
 ## CLI portable
@@ -49,6 +49,11 @@ bash <kit>/scripts/audit-rgaa-creator.sh init https://example.gouv.fr \
   --ay11-root ../ay11-pre-audit \
   --skills-root ../dsfr-agentic-packs
 ```
+
+### Options d'exécution AY11
+
+- `--strict-ay11` sur `run` ou `resume` : arrêt immédiat si AY11 est attendu mais absent, ou si la version attendue n’est pas satisfaite.
+- Sans `--strict-ay11` : comportement tolérant (AY11 manquant ⇒ phases AY11 ignorées avec avertissement).
 
 Le dossier de sortie doit être vide et situé hors du kit.
 

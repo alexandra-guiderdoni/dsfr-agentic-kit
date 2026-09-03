@@ -30,6 +30,30 @@ bash "$KIT/scripts/audit-rgaa-creator.sh" sample "$AUDIT/campaign.yaml" --max-pa
 bash "$KIT/scripts/audit-rgaa-creator.sh" run "$AUDIT/campaign.yaml"
 ```
 
+## Arborescence recommandée
+
+Organisation de travail claire avec `ay11-pre-audit` en source externe :
+
+```text
+/Users/alex/Claude/
+├── git-hors-workflow/
+│   └── ay11-pre-audit/
+├── projets-heberges/
+    ├── dsfr-agentic-kit/
+    └── dsfr-agentic-packs/
+```
+
+Dans `dsfr-agentic-kit`, crée (ou adapte) `.env.local` :
+
+```bash
+cd /Users/alex/Claude/projets-heberges/dsfr-agentic-kit
+export AY11_ROOT="/Users/alex/Claude/git-hors-workflow/ay11-pre-audit"
+# Optionnel :
+export AY11_EXPECTED_VERSION="1.3.0"
+```
+
+Le runner charge automatiquement ce fichier au lancement (non versionné).
+
 Le `sample` est une proposition heuristique. Il faut conserver les gabarits et
 fonctionnalités représentatifs : accueil, plan, déclaration, contenus, tableau,
 formulaire, média, aide et parcours authentifié lorsqu’il est disponible.
@@ -65,6 +89,16 @@ précédente ne sont pas écrasées.
 bash "$KIT/scripts/audit-rgaa-creator.sh" status "$AUDIT/campaign.yaml" --json
 bash "$KIT/scripts/audit-rgaa-creator.sh" resume "$AUDIT/campaign.yaml"
 ```
+
+### Contrôle AY11 strict (optionnel)
+
+Mode bloquant pour l’absence d’AY11 ou une version inférieure à la version minimale attendue :
+
+```bash
+bash "$KIT/scripts/audit-rgaa-creator.sh" run "$AUDIT/campaign.yaml" --strict-ay11
+```
+
+Sans ce flag, AY11 reste non bloquant (phases AY11 ignorées avec avertissement si absent).
 
 Une campagne est verrouillée pendant son exécution. L’état est écrit
 atomiquement dans `.creator/state.json`.
