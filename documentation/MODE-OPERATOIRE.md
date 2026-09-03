@@ -84,6 +84,10 @@ Choisir le skill selon le résultat attendu :
 | Besoin | Skill |
 | --- | --- |
 | Page isolée et premières fiches | `pre-audit-rgaa-dsfr` |
+| Audit DSFR par règle et instance, avec code observé et attendu | `audit-dsfr-complet` |
+| Portail et rapports d’audit générés avec le builder DSFR | `audit-report-dsfr` |
+| Préqualification RGAA par test et instance avec revue des 258 tests | `audit-rgaa-complet` |
+| Campagne RGAA multi-pages avec vérification DSFR bornée sur le même échantillon | `audit-rgaa-creator` |
 | Audit RGAA cadré | `audit-rgaa-dsfr` |
 | Audit WCAG d’une URL ou d’un HTML | `audit-accessibilite-web` |
 | Orchestration de plusieurs phases | `audit-a11y-complet` |
@@ -102,6 +106,10 @@ si des critères applicables restent non testés.
 
 Une absence de violation automatisée n’est jamais une conformité. Les tests
 manuels non réalisés restent explicitement non vérifiés.
+
+Pour une campagne de 8 à 15 pages avec captures fraîches, reprise, matrice des
+106 critères et validation des livrables, suivre
+`documentation/AUDIT-RGAA-CREATOR.md`.
 
 ## Définition de fin
 

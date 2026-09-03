@@ -1,50 +1,39 @@
-# Partage (Share)
+# Partage
 
-Référence extraite de `../feedback-actions.md`.
+Référence vérifiée dans les exemples officiels DSFR 1.13.2 et 1.15.2 :
 
----
+- https://unpkg.com/@gouvfr/dsfr@1.13.2/example/component/share/index.html
+- https://unpkg.com/@gouvfr/dsfr@1.15.2/example/component/share/index.html
 
-## Boutons de partage
+## Boutons de partage par défaut
+
 ```html
 <div class="fr-share">
-    <p class="fr-share__title">Partager la page</p>
-    <ul class="fr-share__group">
-        <li>
-            <a class="fr-share__link fr-share__link--facebook" title="Partager sur Facebook - nouvelle fenêtre" href="https://www.facebook.com/sharer/sharer.php?u=[URL]" target="_blank" rel="noopener">
-                Partager sur Facebook
-            </a>
-        </li>
-        <li>
-            <a class="fr-share__link fr-share__link--twitter-x" title="Partager sur X (anciennement Twitter) - nouvelle fenêtre" href="https://x.com/intent/tweet?url=[URL]" target="_blank" rel="noopener">
-                Partager sur X (anciennement Twitter)
-            </a>
-        </li>
-        <li>
-            <a class="fr-share__link fr-share__link--linkedin" title="Partager sur LinkedIn - nouvelle fenêtre" href="https://www.linkedin.com/shareArticle?url=[URL]" target="_blank" rel="noopener">
-                Partager sur LinkedIn
-            </a>
-        </li>
-        <li>
-            <a class="fr-share__link fr-share__link--mail" title="Partager par email" href="mailto:?subject=[TITRE]&body=[URL]">
-                Partager par email
-            </a>
-        </li>
-        <li>
-            <button class="fr-share__link fr-share__link--copy" type="button" title="Copier dans le presse-papier">
-                Copier dans le presse-papier
-            </button>
-        </li>
-    </ul>
+  <p class="fr-share__title">Partager la page</p>
+  <ul class="fr-btns-group">
+    <li><a class="fr-btn fr-btn--facebook" href="https://example.test" target="_blank" rel="noopener external">Partager sur Facebook</a></li>
+    <li><a class="fr-btn fr-btn--mail" href="mailto:?subject=Titre&amp;body=URL">Partager par email</a></li>
+    <li><button class="fr-btn fr-btn--copy" type="button">Copier dans le presse-papier</button></li>
+  </ul>
 </div>
 ```
 
-**Règles** :
-- Les liens de partage utilisent `fr-share__link` et son modificateur de
-  plateforme, jamais `fr-btn` : le CSS du composant ne stylise que
-  `fr-share__link`
-- Modificateurs disponibles : `--facebook`, `--twitter`, `--twitter-x`,
-  `--linkedin`, `--mail`, `--bluesky`, `--mastodon`, `--threads`, `--copy`
-- Chaque lien ouvert en `target="_blank"` porte `rel="noopener"` et un `title`
-  suffixé par « - nouvelle fenêtre »
+## Version inactive
 
----
+```html
+<div class="fr-share">
+  <p class="fr-share__title">Partager la page</p>
+  <p class="fr-share__text">Veuillez autoriser le dépôt de cookies pour partager sur les réseaux sociaux.</p>
+  <ul class="fr-btns-group">
+    <li><a class="fr-btn fr-btn--facebook" aria-disabled="true" role="link">Partager sur Facebook</a></li>
+    <li><button class="fr-btn fr-btn--copy" type="button">Copier dans le presse-papier</button></li>
+  </ul>
+</div>
+```
+
+## Règles
+
+- Le groupe actuel utilise `fr-btns-group`.
+- Les actions utilisent `fr-btn` et un modificateur de plateforme ou d’action.
+- Les liens réellement ouverts dans une nouvelle fenêtre utilisent `target="_blank"` et `rel="noopener external"`.
+- La variante historique avec `fr-share__group` et `fr-share__link` est dépréciée dans les exemples 1.13.2 et 1.15.2.

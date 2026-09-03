@@ -88,7 +88,8 @@ proof_labels:
   - hors_périmètre
 claim_language:
   allowed:
-    - "aligné DSFR avec limites"
+    - "aucun écart observé sur les règles DSFR exécutées"
+    - "écarts DSFR observés à qualifier"
     - "prototype DSFR à vérifier avant publication"
     - "structure inspirée des fondamentaux DSFR"
     - "composants DSFR utilisés selon les sources lues"
@@ -241,7 +242,7 @@ Si le skill et ce profil divergent, suivre la source la plus proche du livrable 
 
 | Demande | Route | Formulation de sortie |
 |---|---|---|
-| Page DSFR statique | `dsfr-components` + `components-routing.md` + `page-shell.md` | `aligné DSFR avec limites` |
+| Page DSFR statique | `dsfr-components` + `components-routing.md` + `page-shell.md` | `composants DSFR utilisés selon les sources lues` |
 | Prototype ou maquette DSFR | `agentic-design-harness` + `figma-handoff.md` | `prototype DSFR à vérifier avant publication` |
 | Formulaire administratif | `forms-models.md` + `components-routing.md` | `composants DSFR utilisés selon les sources lues` |
 | Audit DSFR/RGAA | skill d'audit + `verification.md` | verdict seulement après preuves |

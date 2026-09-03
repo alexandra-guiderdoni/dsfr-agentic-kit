@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Signaux RGAA détaillés d’une page",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "page", "audited_at", "rules_executed", "signals", "evidence", "limits"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "page": {
+      "type": "object",
+      "required": ["id", "name", "url", "type"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^P[0-9]{2,3}$"},
+        "name": {"type": "string"},
+        "url": {"type": "string"},
+        "type": {"type": "string"}
+      }
+    },
+    "audited_at": {"type": "string"},
+    "rules_executed": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "rule_id", "criterion", "test", "component", "instance", "signal_status", "qualification_status", "severity", "title", "selector", "observed", "observed_code", "observed_origin", "expected", "expected_code", "failed_assertions", "impact", "source", "recommendation", "verification", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "rule_id": {"type": "string", "pattern": "^RGAA-[A-Z0-9-]+-[0-9]{3}$"},
+          "criterion": {"type": "string"},
+          "test": {"type": "string"},
+          "component": {"type": "string"},
+          "instance": {"type": "integer"},
+          "signal_status": {"enum": ["FAIL_CANDIDATE", "A_CONFIRMER", "CONTROLE_EN_ECHEC"]},
+          "qualification_status": {"enum": ["C_CONFIRMEE", "NC_CONFIRMEE", "NA_CONFIRMEE", "A_RETESTER", "NON_TESTE"]},
+          "severity": {"enum": ["Bloquant", "Majeur", "Mineur", "À qualifier"]},
+          "title": {"type": "string"},
+          "selector": {"type": "string"},
+          "observed": {"type": "string"},
+          "observed_code": {"type": "string"},
+          "observed_origin": {"enum": ["RENDERED_DOM", "ACCESSIBILITY_TREE", "KEYBOARD_TRACE", "MEASUREMENTS", "AXE_RESULT"]},
+          "expected": {"type": "string"},
+          "expected_code": {"type": "string"},
+          "failed_assertions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "impact": {"type": "string"},
+          "source": {"type": "string"},
+          "recommendation": {"type": "string"},
+          "verification": {"type": "string"},
+          "evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "qualification": {"type": "object"}
+        }
+      }
+    },
+    "passes": {"type": "array"},
+    "evidence": {
+      "type": "object",
+      "required": ["attempt", "raw", "screenshot"],
+      "properties": {
+        "attempt": {"type": "integer"},
+        "raw": {"type": "string"},
+        "screenshot": {"type": "string"}
+      }
+    },
+    "limits": {"type": "array", "items": {"type": "string"}}
+  }
+}

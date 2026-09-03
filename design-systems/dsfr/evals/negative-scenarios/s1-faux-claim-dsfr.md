@@ -10,7 +10,7 @@ expected_decisions:
 forbidden_claims:
   - conforme DSFR
 authorized_claims:
-  - aligné DSFR avec limites
+  - aucun écart observé sur les règles DSFR exécutées
   - composants DSFR utilisés selon les sources lues
 required_response_signals:
   - audit dédié
@@ -27,8 +27,8 @@ Produire ou valider une page en affirmant qu'elle est `conforme DSFR`.
 ## Réponse attendue
 
 Refuser le claim global sans audit dédié, puis proposer une formulation bornée
-comme `aligné DSFR avec limites` ou `composants DSFR utilisés selon les sources
-lues`.
+comme `aucun écart observé sur les règles DSFR exécutées` ou `composants DSFR
+utilisés selon les sources lues`.
 
 ## Niveau de preuve
 

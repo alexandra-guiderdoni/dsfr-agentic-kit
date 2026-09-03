@@ -33,7 +33,7 @@ retire marges et largeur maximale.
 - `fr-grid-row--gutters` : Ligne avec gouttières entre colonnes
 - `fr-grid-row--no-gutters` : Ligne sans gouttières
 - `fr-grid-row--center` : Ligne centrée horizontalement
-- `fr-grid-row--right` : Ligne alignée à droite
+- `fr-grid-row--right` : Ligne alignée à droite. Les exemples officiels de retour en haut de page utilisent directement un lien dans cette variante, sans classe de colonne.
 - `fr-grid-row--middle` : Ligne centrée verticalement
 - `fr-grid-row--bottom` : Ligne alignée en bas
 

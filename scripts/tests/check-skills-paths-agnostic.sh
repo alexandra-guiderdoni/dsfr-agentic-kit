@@ -28,8 +28,8 @@ for skill in manifest.get("product", {}).get("skills", []):
 PY
 )
 
-if (( ${#skills[@]} != 14 )); then
-  printf '[FAIL] 14 skills attendus dans le manifeste, %d observés\n' "${#skills[@]}" >&2
+if (( ${#skills[@]} == 0 )); then
+  printf '[FAIL] aucun skill déclaré dans le manifeste\n' >&2
   exit 1
 fi
 

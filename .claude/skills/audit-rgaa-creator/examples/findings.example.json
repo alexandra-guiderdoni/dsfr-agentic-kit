@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "findings": [
+    {
+      "id": "F001",
+      "pages": ["P01", "P02"],
+      "criterion": "8.2",
+      "test": "8.2.1",
+      "status": "NC-A",
+      "severity": "Majeur",
+      "title": "Identifiants HTML dupliqués",
+      "description": "Le même identifiant est utilisé par plusieurs éléments du gabarit.",
+      "impact": "Les références DOM et ARIA deviennent ambiguës.",
+      "evidence": ["findings/F001-preuve.json"],
+      "recommendation": "Attribuer un identifiant unique à chaque instance.",
+      "verification": "Rejouer le collecteur HTML et vérifier l’unicité des identifiants."
+    }
+  ]
+}

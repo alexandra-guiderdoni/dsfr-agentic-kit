@@ -168,8 +168,10 @@ détaillés dans `references/scripts-options.md`. `generate_assembled_page.py`
 compose une page riche depuis un JSON de sections (cf.
 `references/assembly.md`) ; son schéma vit dans
 `schemas/generate_assembled_page.schema.json` et les exemples complets dans
-`examples/assembled/`. Les blocs fonctionnels conservent la validation différée
-et les conventions de `references/patterns/`.
+`examples/assembled/`. Le bloc structuré `audit_report`, utilisé par
+`audit-report-dsfr`, rend métriques, causes racines, filtres et constats sans
+accepter de HTML arbitraire. Les blocs fonctionnels conservent la validation
+différée et les conventions de `references/patterns/`.
 
 Variantes riches des composants structurels : header `tools`/`languages`/
 `search`/`navigation`, navigation `categories` (mega-menu) + `align`, footer

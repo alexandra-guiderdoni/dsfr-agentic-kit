@@ -567,7 +567,7 @@ def block_content(s):
     if "body" in s and s.get("allow_raw_html"):
         print(
             f"Avertissement : allow_raw_html actif sur la section "
-            f"'{s.get('title', 'sans titre')}' — HTML brut inséré sans "
+            f"'{s.get('title', 'sans titre')}' - HTML brut inséré sans "
             "vérification, relecture humaine requise",
             file=sys.stderr,
         )
@@ -744,6 +744,116 @@ def block_consent(s):
     )
 
 
+def _audit_badge_class(status: str) -> str:
+    value = status.upper()
+    if any(token in value for token in ("NC_", "ECART_CONFIRME", "FAIL", "BLOQUANT")):
+        return "fr-badge--error"
+    if any(token in value for token in ("RETEST", "CONFIRMER", "NON_TESTE", "REFERENCE_INDISPONIBLE")):
+        return "fr-badge--warning"
+    if any(token in value for token in ("C_CONFIRMEE", "AUCUN_ECART", "PASS")):
+        return "fr-badge--success"
+    return "fr-badge--info"
+
+
+def _audit_link(href: str, label: str, css_class: str = "fr-link") -> str:
+    if href_is_unsafe(str(href)):
+        raise ValueError(f"schéma d’URL interdit dans un lien du rapport d’audit : {str(href)[:40]}")
+    return f'<a class="{css_class}" href="{esc(href)}">{esc(label)}</a>'
+
+
+def _audit_table(headers: list[str], rows: list[list[object]]) -> str:
+    head = "".join(f'<th scope="col">{esc(value)}</th>' for value in headers)
+    body = "".join("<tr>" + "".join(f"<td>{esc(value)}</td>" for value in row) + "</tr>" for row in rows)
+    if not body:
+        body = f'<tr><td colspan="{len(headers)}">Aucune donnée.</td></tr>'
+    return f'''<p class="fr-hint-text audit-table-hint">Le tableau peut défiler horizontalement.</p><div class="fr-table fr-table--bordered"><div class="fr-table__wrapper"><div class="fr-table__container" tabindex="0" aria-label="Tableau défilant horizontalement"><div class="fr-table__content"><table><caption>Causes racines du rapport d’audit</caption><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div></div></div></div>'''
+
+
+def block_audit_report(s):
+    """Rend un rapport d’audit structuré sans accepter de HTML arbitraire."""
+    prefix = _unique_prefix("audit", s)
+    report_type = str(s.get("report_type", "AUDIT"))
+    separate_criteria = "RGAA" in report_type.upper()
+    claim = str(s.get("claim", "Résultats bornés aux contrôles et qualifications documentés."))
+    if re.search(r"\bconforme\s+(?:au\s+)?(?:RGAA|DSFR)\b", claim, re.IGNORECASE) or re.search(r"\b(?:taux|conformité)\s+RGAA\s*[:=]?\s*\d+(?:[,.]\d+)?\s*%", claim, re.IGNORECASE):
+        raise ValueError("claim d’audit interdit : conformité globale ou taux RGAA officiel")
+    criterion_label = str(s.get("criterion_label", "Critère")); test_label = str(s.get("test_label", "Test"))
+    metrics = s.get("metrics", [])
+    links = s.get("links", [])
+    causes = s.get("root_causes", [])
+    findings = s.get("findings", [])
+    sample_pages = s.get("sample_pages", s.get("pages", []))
+    if not all(isinstance(value, list) for value in (metrics, links, causes, findings, sample_pages)):
+        raise ValueError("metrics, links, root_causes, findings et sample_pages doivent être des listes")
+    sample_cards = []
+    sample_column = "fr-col-12" if len(sample_pages) == 1 else "fr-col-12 fr-col-md-6 fr-col-lg-4"
+    for sample in sample_pages:
+        sample_links = list(sample.get("links", []))
+        if sample.get("href"): sample_links.insert(0, {"label": "Ouvrir le détail", "href": sample["href"]})
+        links_for_page = '<ul class="fr-btns-group fr-btns-group--inline-md fr-mt-3w">' + "".join(f'<li class="{"fr-ml-md-2w" if index else ""}">{_audit_link(item.get("href", "/"), item.get("label", "Ouvrir"), "fr-btn fr-btn--secondary")}</li>' for index, item in enumerate(sample_links)) + "</ul>" if sample_links else ""
+        audited_url = f'<strong>URL auditée :</strong> {_audit_link(sample["url"], sample["url"])}' if sample.get("url") else "URL non renseignée"
+        sample_cards.append(f'''<li class="{sample_column}"><div class="fr-card fr-card--shadow"><div class="fr-card__body"><div class="fr-card__content"><h3 class="fr-card__title">{esc(sample.get("id", "Page"))} - {esc(sample.get("name", "Page auditée"))}</h3><p class="fr-card__desc">{audited_url}</p><div class="fr-card__end">{links_for_page}</div></div></div></div></li>''')
+    sample_title = str(s.get("sample_title", "Pages de l’échantillon"))
+    sample_html = f'''<section id="{prefix}-sample" class="fr-mb-6w audit-sample"><h2>{esc(sample_title)}</h2><ul class="fr-grid-row fr-grid-row--gutters fr-raw-list">{"".join(sample_cards)}</ul></section>''' if sample_cards else ""
+    metric_html = "".join(
+        f'''<div class="fr-col-6 fr-col-md-3"><div class="fr-highlight fr-m-0"><p class="fr-h3 fr-mb-1w">{esc(item.get("value", "-"))}</p><p class="fr-mb-0">{esc(item.get("label", "Mesure"))}</p></div></div>'''
+        for item in metrics
+    )
+    links_html = '<ul class="fr-btns-group fr-btns-group--inline-sm">' + "".join(f'<li>{_audit_link(item.get("href", "/"), item.get("label", "Ouvrir"), "fr-btn fr-btn--secondary fr-btn--sm")}</li>' for item in links) + "</ul>" if links else ""
+    cause_rows = [[item.get("rule", "-"), item.get("criterion", "-"), item.get("test", "-"), item.get("severity", "-"), item.get("title", "-"), item.get("count", 0), item.get("confirmed", 0), ", ".join(item.get("pages", []))] for item in causes]
+    cause_table = _audit_table(["Règle", criterion_label, test_label, "Sévérité", "Cause", "Instances", "Confirmées", "Pages"], cause_rows)
+    grouped: dict[str, list[dict]] = {}
+    page_names: dict[str, str] = {}; page_hrefs: dict[str, str] = {}
+    for page_item in s.get("pages", []):
+        page_id = str(page_item.get("id", "GLOBAL")); grouped.setdefault(page_id, []); page_names[page_id] = str(page_item.get("name", page_id))
+        if page_item.get("href"): page_hrefs[page_id] = str(page_item["href"])
+    for item in findings:
+        page = str(item.get("page", "GLOBAL")); grouped.setdefault(page, []).append(item); page_names[page] = str(item.get("page_name", page))
+    page_sections = []
+    for page, items in grouped.items():
+        criterion_groups: dict[str, list[dict]] = {}
+        for item in items: criterion_groups.setdefault(str(item.get("criterion", "-")), []).append(item)
+        items = [item for group in criterion_groups.values() for item in group]
+        cards = []; previous_criterion = None
+        for item in items:
+            status = str(item.get("status", "A_CONFIRMER")); severity = str(item.get("severity", "À qualifier")); criterion = str(item.get("criterion", "-")); rule = str(item.get("rule", "-")); title = str(item.get("title", "Constat"))
+            assertions = "".join(f"<li>{esc(value)}</li>" for value in item.get("failed_assertions", []))
+            evidence = " · ".join(_audit_link(value.get("href", "/"), value.get("label", "Preuve")) for value in item.get("evidence", [])) or "Aucune preuve liée"
+            source = _audit_link(item.get("source", "/"), item.get("source_label", item.get("source", "Source"))) if item.get("source") else esc(item.get("source_label", "Source non renseignée"))
+            selector = str(item.get("selector", "-")); observed_code = str(item.get("observed_code", "")); expected_code = str(item.get("expected_code", "")); origin = str(item.get("origin", "PREUVE"))
+            origin_note = "Le DOM rendu n’est pas nécessairement le fichier source du dépôt." if origin == "RENDERED_DOM" else f"Origine de la preuve : {origin}. Elle ne constitue pas du code source applicatif."
+            card_html = f'''<article class="fr-card fr-card--no-border fr-mb-4w audit-finding" data-audit-status="{esc(status)}" data-audit-severity="{esc(severity)}" data-audit-criterion="{esc(criterion)}"><div class="fr-card__body"><div class="fr-card__content"><h3 class="fr-card__title">{esc(title)} - <code>{esc(rule)}</code></h3><div class="fr-card__desc"><p><span class="fr-badge {_audit_badge_class(status)}">{esc(status)}</span> <span class="fr-badge {_audit_badge_class(severity)}">{esc(severity)}</span> <span class="fr-badge fr-badge--info">{esc(criterion_label)} {esc(criterion)}</span> <span class="fr-badge fr-badge--info">{esc(test_label)} {esc(item.get("test", "-"))}</span></p><p><strong>Sélecteur :</strong> <code>{esc(selector)}</code></p><p><strong>Observation :</strong> {esc(item.get("observed", ""))}</p><ul>{assertions}</ul><details class="audit-code"><summary><strong>Comparer le code observé et attendu</strong></summary><div class="audit-code-grid"><div><h4 class="fr-h6">Preuve observée - {esc(origin)}</h4><pre><code>{esc(observed_code)}</code></pre></div><div><h4 class="fr-h6">Résultat attendu</h4><pre><code>{esc(expected_code)}</code></pre></div></div><p class="fr-text--sm">{esc(origin_note)}</p></details><p><strong>Impact :</strong> {esc(item.get("impact", ""))}</p><p><strong>Source :</strong> {source}</p><p><strong>Recommandation :</strong> {esc(item.get("recommendation", ""))}</p><p><strong>Contre-test :</strong> {esc(item.get("verification", ""))}</p><p><strong>Qualification :</strong> {esc(item.get("review", "Signal non encore qualifié."))}</p><p>{evidence}</p></div></div></div></article>'''
+            if separate_criteria and previous_criterion is not None and criterion != previous_criterion:
+                cards.append(f'<hr class="audit-finding-separator" data-audit-criterion-separator="{esc(criterion)}">')
+            cards.append(card_html); previous_criterion = criterion
+        page_href = items[0].get("page_href") if items and items[0].get("page_href") else page_hrefs.get(page)
+        page_link = _audit_link(page_href, "Ouvrir la page détaillée") if page_href else ""
+        cards_html = "".join(cards)
+        page_sections.append(f'<section id="{esc(page)}" class="fr-py-4w"><h2>{esc(page)} - {esc(page_names[page])}</h2><p>{len(items)} constat(s) dans ce rapport. {page_link}</p>{cards_html}</section>')
+    filters = ""
+    if findings and s.get("filters", True):
+        filters = f'''<div class="fr-callout audit-filters" role="group" aria-label="Filtres du rapport"><ul class="fr-btns-group fr-btns-group--inline-sm"><li><button class="fr-btn fr-btn--secondary fr-btn--sm" type="button" data-audit-filter="all" aria-pressed="true">Tous</button></li><li><button class="fr-btn fr-btn--secondary fr-btn--sm" type="button" data-audit-filter="confirmed" aria-pressed="false">Confirmés</button></li><li><button class="fr-btn fr-btn--secondary fr-btn--sm" type="button" data-audit-filter="review" aria-pressed="false">À revoir</button></li></ul><div class="fr-input-group fr-mt-2w"><label class="fr-label" for="{prefix}-search">Rechercher</label><input class="fr-input" id="{prefix}-search" type="search" data-audit-search></div><p class="fr-mt-2w" aria-live="polite" data-audit-count>{len(findings)} constat(s) affiché(s)</p></div>'''
+    style = '''<style>.audit-code-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}.audit-code pre{max-height:28rem;overflow:auto;padding:1rem;background:var(--background-contrast-grey)}.audit-filters{position:sticky;top:0;z-index:10}.audit-finding[hidden]{display:none!important}.audit-finding-separator{border:0;border-top:2px solid var(--border-default-grey);margin:3rem 0}.audit-report-container .fr-table table{width:100%;min-width:48rem;table-layout:auto}.audit-report-container .fr-table th,.audit-report-container .fr-table td{white-space:normal;overflow-wrap:anywhere}.audit-report-container .fr-table__container{overflow-x:scroll;scrollbar-gutter:stable;padding-bottom:.25rem}.audit-report-container .fr-table__container::-webkit-scrollbar{height:.75rem}.audit-report-container .fr-table__container::-webkit-scrollbar-track{background:var(--background-contrast-grey)}.audit-report-container .fr-table__container::-webkit-scrollbar-thumb{background:var(--border-action-high-blue-france);border-radius:.375rem}.audit-table-hint{margin-bottom:.5rem}@media(max-width:48em){.audit-code-grid{grid-template-columns:1fr}.audit-filters{position:static}}</style>'''
+    script = f'''<script>(()=>{{const root=document.querySelector('[data-audit-report="{prefix}"]');if(!root)return;const cards=[...root.querySelectorAll('.audit-finding')],search=root.querySelector('[data-audit-search]');let mode='all';const apply=()=>{{const q=(search?.value||'').toLowerCase();let visible=0;cards.forEach(card=>{{const status=(card.dataset.auditStatus||'').toUpperCase();const match=mode==='all'||(mode==='confirmed'&&['NC_CONFIRMEE','ECART_CONFIRME','C_CONFIRMEE'].includes(status))||(mode==='review'&&['A_RETESTER','A_CONFIRMER','NON_TESTE','REFERENCE_INDISPONIBLE'].includes(status));const show=match&&card.textContent.toLowerCase().includes(q);card.hidden=!show;if(show)visible++;}});root.querySelectorAll('.audit-finding-separator').forEach(separator=>separator.hidden=true);root.querySelectorAll('section[id]').forEach(section=>{{let previousCriterion=null;[...section.querySelectorAll('.audit-finding:not([hidden])')].forEach(card=>{{const criterion=card.dataset.auditCriterion||'';if(previousCriterion!==null&&criterion!==previousCriterion){{let node=card.previousElementSibling;while(node&&!node.matches('.audit-finding-separator'))node=node.previousElementSibling;if(node)node.hidden=false;}}previousCriterion=criterion;}});}});const count=root.querySelector('[data-audit-count]');if(count)count.textContent=`${{visible}} constat(s) affiché(s)`;}};root.querySelectorAll('[data-audit-filter]').forEach(button=>button.addEventListener('click',()=>{{mode=button.dataset.auditFilter;root.querySelectorAll('[data-audit-filter]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));apply();}}));search?.addEventListener('input',apply);}})();</script>'''
+    show_causes = s.get("show_root_causes", True)
+    causes_html = f'<section id="{prefix}-causes" class="fr-mt-6w"><h2>Causes racines</h2>{cause_table}</section>' if show_causes else ""
+    findings_content = "".join(page_sections) if page_sections else ("<p>Aucun constat détaillé dans cette vue.</p>" if s.get("show_empty_findings", True) else "")
+    findings_html = f'<div id="{prefix}-findings">{findings_content}</div>' if findings_content else ""
+    metrics_html = f'<section id="{prefix}-metrics" class="fr-mb-4w" aria-label="Indicateurs du rapport"><div class="fr-grid-row fr-grid-row--gutters">{metric_html}</div></section>' if metrics else ""
+    summary_items = []
+    if sample_cards: summary_items.append((f"#{prefix}-sample", sample_title))
+    summary_items.append((f"#{prefix}-scope", "Périmètre du rapport"))
+    if metrics: summary_items.append((f"#{prefix}-metrics", "Indicateurs"))
+    if show_causes: summary_items.append((f"#{prefix}-causes", "Causes racines"))
+    if findings_content: summary_items.append((f"#{prefix}-findings", "Constats détaillés"))
+    summary_html = ""
+    if sample_cards or metrics or page_sections:
+        summary_links = "".join(f'<li><a class="fr-summary__link" href="{href}">{esc(label)}</a></li>' for href, label in summary_items)
+        summary_html = f'<nav class="fr-summary fr-mb-6w" role="navigation" aria-labelledby="{prefix}-summary-title"><p class="fr-summary__title" id="{prefix}-summary-title">Sommaire</p><ol class="fr-summary__list">{summary_links}</ol></nav>'
+    back_top = '<p class="fr-mt-6w"><a class="fr-link fr-icon-arrow-up-fill fr-link--icon-left" href="#top">Haut de page</a></p>' if summary_html else ""
+    return f'''{style}<div data-audit-report="{prefix}" data-audit-builder="dsfr-components">{sample_html}{summary_html}<div id="{prefix}-scope" class="fr-alert fr-alert--info fr-mb-4w"><h2 class="fr-alert__title">Périmètre du rapport {esc(report_type)}</h2><p>{esc(claim)}</p></div>{metrics_html}{links_html}{filters}{causes_html}{findings_html}{back_top}</div>{script}'''
+
+
 BLOCK_BUILDERS = {
     "notice": block_notice,
     "callout": block_callout,
@@ -769,6 +879,7 @@ BLOCK_BUILDERS = {
     "share": block_share,
     "follow": block_follow,
     "consent": block_consent,
+    "audit_report": block_audit_report,
 }
 
 
@@ -816,7 +927,8 @@ def build_main(config) -> str:
                 section_id = gc._slug(section_id, "section")
         id_attr = f' id="{esc(section_id)}"' if section_id and wrap else ""
         if wrap:
-            parts.append(f'            <div{id_attr} class="fr-container {spacing}">{heading_html}\n            {fragment}\n            </div>')
+            container_class = "fr-container audit-report-container" if block == "audit_report" else "fr-container"
+            parts.append(f'            <div{id_attr} class="{container_class} {spacing}">{heading_html}\n            {fragment}\n            </div>')
         else:
             parts.append(f"{fragment}" if not heading_html else f"{heading_html}\n{fragment}")
     return "\n\n".join(parts)

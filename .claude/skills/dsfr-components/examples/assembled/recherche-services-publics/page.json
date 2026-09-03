@@ -1,0 +1,210 @@
+{
+  "title": "Résultats de recherche - Prototype DSFR",
+  "description": "Prototype accessible de résultats de recherche avec filtres en listes déroulantes et tags, généré avec le builder DSFR assemblé.",
+  "brand_mode": "neutral",
+  "header": {
+    "brand_mode": "neutral",
+    "service_title": "Recherche des services publics",
+    "service_tagline": "Prototype local — contenus d'exemple",
+    "tools": [
+      {"label": "Aide", "href": "/aide"},
+      {"label": "Mon espace", "href": "/mon-espace"}
+    ],
+    "search": {"label": "Rechercher sur le site"},
+    "navigation": [
+      {"label": "Accueil", "href": "/"},
+      {"label": "Résultats", "href": "#resultats", "active": true},
+      {"label": "Aide à la recherche", "href": "#aide-recherche"}
+    ]
+  },
+  "footer": {
+    "brand_mode": "neutral",
+    "service_name": "Recherche des services publics",
+    "content_desc": "Prototype local : les contenus et les routes sont fictifs et doivent être validés avant tout usage public.",
+    "content_links": [
+      {"label": "Comprendre le prototype", "href": "/a-propos-du-prototype"}
+    ],
+    "bottom_links": [
+      {"label": "Plan du site", "href": "/plan-du-site"},
+      {"label": "Accessibilité : non évaluée", "href": "/accessibilite"},
+      {"label": "Mentions légales", "href": "/mentions-legales"},
+      {"label": "Données personnelles", "href": "/donnees-personnelles"},
+      {"label": "Gestion des cookies", "href": "/gestion-des-cookies"}
+    ]
+  },
+  "sections": [
+    {
+      "block": "breadcrumb",
+      "items": [
+        {"label": "Accueil", "href": "/"},
+        {"label": "Recherche", "href": "/recherche"},
+        {"label": "Résultats pour logement"}
+      ],
+      "spacing": "fr-pt-2w"
+    },
+    {
+      "block": "content",
+      "id": "introduction",
+      "title": "Résultats pour « logement »",
+      "heading_level": 1,
+      "lead": "Trouvez une démarche, une aide ou un point de contact parmi les services proposés.",
+      "body_structured": {
+        "paragraphs": [
+          "Les résultats ci-dessous sont des exemples fictifs. Modifiez votre recherche dans l'en-tête ou utilisez les filtres pour préciser votre besoin."
+        ]
+      },
+      "spacing": "fr-pt-2w fr-pb-4w"
+    },
+    {
+      "block": "columns",
+      "id": "resultats",
+      "spacing": "fr-py-4w",
+      "columns": [
+        {
+          "span": 4,
+          "blocks": [
+            {
+              "block": "form",
+              "form_id": "filtres",
+              "title": "Filtrer les résultats",
+              "action": "/recherche",
+              "method": "get",
+              "fields": [
+                {
+                  "type": "select",
+                  "label": "Thématique",
+                  "id": "filtre-thematique",
+                  "name": "theme",
+                  "hint": "Choisissez le sujet principal.",
+                  "options": [
+                    {"value": "logement", "label": "Logement"},
+                    {"value": "famille", "label": "Famille"},
+                    {"value": "emploi", "label": "Emploi"},
+                    {"value": "transport", "label": "Transport"}
+                  ]
+                },
+                {
+                  "type": "select",
+                  "label": "Type de contenu",
+                  "id": "filtre-type",
+                  "name": "type",
+                  "hint": "Affinez selon la nature du résultat.",
+                  "options": [
+                    {"value": "demarche", "label": "Démarche"},
+                    {"value": "aide", "label": "Aide financière"},
+                    {"value": "annuaire", "label": "Point de contact"},
+                    {"value": "information", "label": "Information"}
+                  ]
+                },
+                {
+                  "type": "select",
+                  "label": "Public concerné",
+                  "id": "filtre-public",
+                  "name": "public",
+                  "hint": "Sélectionnez votre situation.",
+                  "options": [
+                    {"value": "particulier", "label": "Particulier"},
+                    {"value": "association", "label": "Association"},
+                    {"value": "entreprise", "label": "Entreprise"}
+                  ]
+                }
+              ],
+              "submit_label": "Appliquer les filtres",
+              "reset_label": "Réinitialiser"
+            },
+            {
+              "block": "content",
+              "title": "Filtres rapides",
+              "heading_level": 2,
+              "body_text": "Choisissez une proposition pour relancer la recherche."
+            },
+            {
+              "block": "tags",
+              "items": [
+                {"label": "Aides au logement", "href": "?q=logement&type=aide", "sm": true},
+                {"label": "Démarches en ligne", "href": "?q=logement&type=demarche", "sm": true},
+                {"label": "Points de contact", "href": "?q=logement&type=annuaire", "sm": true},
+                {"label": "Pour les particuliers", "href": "?q=logement&public=particulier", "sm": true}
+              ]
+            }
+          ]
+        },
+        {
+          "span": 8,
+          "blocks": [
+            {
+              "block": "content",
+              "title": "6 résultats trouvés",
+              "heading_level": 2,
+              "lead": "Résultats classés par pertinence.",
+              "body_text": "Chaque lien ouvre la fiche détaillée du service correspondant."
+            },
+            {
+              "block": "cards",
+              "columns": 1,
+              "items": [
+                {
+                  "title": "Demander une aide personnelle au logement",
+                  "desc": "Consultez les conditions générales et préparez les informations nécessaires à une demande d'aide au logement.",
+                  "href": "/services/aide-personnelle-logement"
+                },
+                {
+                  "title": "Rechercher un logement social",
+                  "desc": "Découvrez les principales étapes d'une recherche et les interlocuteurs à identifier selon votre situation.",
+                  "href": "/services/recherche-logement-social"
+                },
+                {
+                  "title": "Signaler un changement d'adresse",
+                  "desc": "Retrouvez les organismes susceptibles de devoir être informés après un déménagement.",
+                  "href": "/services/changement-adresse"
+                },
+                {
+                  "title": "Comprendre les règles d'un contrat de location",
+                  "desc": "Accédez à une présentation générale des documents et échanges utiles entre locataire et bailleur.",
+                  "href": "/services/contrat-location"
+                },
+                {
+                  "title": "Trouver un point d'information logement",
+                  "desc": "Recherchez un lieu d'accueil pouvant vous orienter dans vos démarches liées au logement.",
+                  "href": "/services/point-information-logement"
+                },
+                {
+                  "title": "Préparer un déménagement",
+                  "desc": "Parcourez une liste indicative de formalités à anticiper avant et après votre changement de domicile.",
+                  "href": "/services/preparer-demenagement"
+                }
+              ]
+            },
+            {
+              "block": "buttons",
+              "items": [
+                {
+                  "label": "Afficher les résultats suivants",
+                  "href": "?q=logement&page=2",
+                  "variant": "secondary"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "block": "callout",
+      "id": "aide-recherche",
+      "title": "Vous ne trouvez pas le bon service ?",
+      "text": "Essayez un terme plus général, retirez un filtre ou consultez l'aide à la recherche.",
+      "heading_level": 2,
+      "spacing": "fr-py-6w"
+    },
+    {
+      "block": "buttons",
+      "items": [
+        {"label": "Consulter l'aide à la recherche", "href": "/aide/recherche"},
+        {"label": "Revenir à l'accueil", "href": "/", "variant": "tertiary"}
+      ],
+      "spacing": "fr-pb-8w"
+    }
+  ]
+}
+

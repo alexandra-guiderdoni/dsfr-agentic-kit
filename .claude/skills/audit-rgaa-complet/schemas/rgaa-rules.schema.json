@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Catalogue des règles instrumentées RGAA",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "referential", "catalog_version", "claim", "rules"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "referential": {"const": "RGAA 4.1.2"},
+    "catalog_version": {"type": "string"},
+    "claim": {"type": "string"},
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "criterion", "test", "component", "severity", "automation", "title", "expected", "expected_code", "impact", "recommendation", "verification", "limitations"],
+        "properties": {
+          "rule_id": {"type": "string", "pattern": "^RGAA-[A-Z0-9-]+-[0-9]{3}$"},
+          "criterion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+          "test": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+          "component": {"type": "string"},
+          "severity": {"enum": ["Bloquant", "Majeur", "Mineur", "À qualifier"]},
+          "automation": {"enum": ["STATIC_DOM", "ACCESSIBLE_NAME", "ACCESSIBILITY_TREE", "INTERACTIVE", "MEASUREMENT", "LANGUAGE_HEURISTIC"]},
+          "title": {"type": "string", "minLength": 1},
+          "expected": {"type": "string", "minLength": 1},
+          "expected_code": {"type": "string", "minLength": 1},
+          "impact": {"type": "string", "minLength": 1},
+          "recommendation": {"type": "string", "minLength": 1},
+          "verification": {"type": "string", "minLength": 1},
+          "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

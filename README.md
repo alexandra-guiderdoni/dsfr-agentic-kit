@@ -63,7 +63,11 @@ avec les instructions existantes, jamais à écraser par-dessus elles.
 | Assembler une page depuis un brief | `brief.md`, puis `page.json` | HTML et preuve |
 | Produire ou intégrer un pictogramme | besoin d’asset explicite | SVG tracé ou pointeur |
 | Comparer deux versions DSFR | versions source et cible | analyse de migration |
+| Auditer l’intégration DSFR en détail | échantillon multi-pages | règles par instance, extraits du DOM rendu, qualification et rapport filtrable |
 | Pré-auditer une page publique | URL ou HTML isolé | constats et fiches candidates |
+| Créer une campagne RGAA + DSFR reproductible | URL, échantillon et chemins AY11/skills | campagne reprenable, matrices et rapports séparés RGAA/DSFR |
+| Rendre les audits avec le builder DSFR | résultats RGAA/DSFR structurés | portail commun, rapports complets et vues par page en `brand_mode: neutral` |
+| Approfondir un audit RGAA | campagne et preuves navigateur | règles par instance, code observé, qualification humaine et revue des 258 tests |
 | Auditer selon le RGAA | périmètre et échantillon | rapport borné aux tests réalisés |
 | Auditer selon WCAG 2.2 | URL ou HTML | rapport WCAG avec limites |
 | Corriger après audit | audit existant et code autorisé | correctifs puis vérification |
@@ -71,12 +75,22 @@ avec les instructions existantes, jamais à écraser par-dessus elles.
 Le point d’entrée DSFR est `design-systems/dsfr/DESIGN.md`. Chaque capacité
 spécialisée possède ensuite son propre `.claude/skills/<nom>/SKILL.md`.
 
+Pour une campagne multi-pages combinant RGAA, vérification DSFR bornée, AY11,
+Playwright et les skills, utiliser `scripts/audit-rgaa-creator.sh` et lire
+[`documentation/AUDIT-RGAA-CREATOR.md`](documentation/AUDIT-RGAA-CREATOR.md).
+Le skill `audit-dsfr-complet` porte le catalogue versionné de règles par
+instance. Ses rapports distinguent intégration et migration, citent le DOM
+rendu observé et la structure attendue, et n’emploient jamais une absence de
+signal comme claim de conformité globale. `audit-report-dsfr` adapte ensuite
+les JSON canoniques au builder DSFR pour produire le portail commun, les
+rapports complets et les vues détaillées par page.
+
 ## Ce que les contrôles vérifient
 
 Le check principal vérifie notamment :
 
 - l’absence de surfaces de fabrication ou de chemins personnels ;
-- la parité entre les 14 skills déclarés et les 14 dossiers livrés ;
+- la parité entre les skills déclarés dans le manifeste et les dossiers livrés ;
 - les chemins et références nécessaires à l’exécution ;
 - le routeur et les scénarios négatifs DSFR ;
 - les schémas de page assemblée, les liens sûrs, les identifiants et la trace

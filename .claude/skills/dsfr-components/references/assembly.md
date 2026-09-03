@@ -90,6 +90,7 @@ Les props principales de chaque block (toutes optionnelles sauf indication) ;
 
 | Block | Props principales |
 | --- | --- |
+| `audit_report` | bloc structuré de rendu d’audit : `report_type`, `claim`, `sample_pages`, `metrics`, `links`, `root_causes`, `findings`, `filters` ; `sample_pages` place l’échantillon en tête avec URL et liens de détail ; tous les extraits de code sont échappés, aucun HTML brut accepté |
 | `notice` | `title`, `description`, `variant` (info/warning/success/error), `link {label, href}`, `closable` |
 | `callout` | `title`, `text`, `color` (ex. green-emeraude), `icon` |
 | `alert` | `type` (info/success/warning/error), `title`, `text`, `closable` |

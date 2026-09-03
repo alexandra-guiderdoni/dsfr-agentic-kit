@@ -69,9 +69,6 @@ for label, values in (
     if len(values) != len(set(values)):
         errors.append(f"{label} contient des doublons")
 
-if len(skills) != 14:
-    errors.append(f"product.skills doit déclarer 14 skills, observé : {len(skills)}")
-
 for rel in [*required, *tests, *markdown]:
     if not (workspace / rel).is_file():
         errors.append(f"fichier déclaré absent : {rel}")

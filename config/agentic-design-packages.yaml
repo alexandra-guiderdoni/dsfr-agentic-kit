@@ -22,7 +22,11 @@ product:
     - agentic-design-harness
     - audit-a11y-complet
     - audit-accessibilite-web
+    - audit-dsfr-complet
+    - audit-report-dsfr
+    - audit-rgaa-complet
     - audit-rgaa-dsfr
+    - audit-rgaa-creator
     - dsfr-changelog
     - dsfr-components
     - fix-accessibilite
@@ -40,6 +44,28 @@ product:
     - templates/CLAUDE.md.exemple
     - documentation/INSTALLER-ET-TESTER.md
     - documentation/MODE-OPERATOIRE.md
+    - documentation/AUDIT-RGAA-CREATOR.md
+    - .claude/skills/audit-dsfr-complet/SKILL.md
+    - .claude/skills/audit-dsfr-complet/rules/dsfr-rules.json
+    - .claude/skills/audit-dsfr-complet/schemas/dsfr-rules.schema.json
+    - .claude/skills/audit-dsfr-complet/schemas/dsfr-findings.schema.json
+    - .claude/skills/audit-report-dsfr/SKILL.md
+    - .claude/skills/audit-rgaa-complet/SKILL.md
+    - .claude/skills/audit-rgaa-complet/rules/rgaa-rules.json
+    - .claude/skills/audit-rgaa-complet/schemas/rgaa-findings.schema.json
+    - .claude/skills/audit-rgaa-complet/schemas/rgaa-page.schema.json
+    - .claude/skills/audit-rgaa-complet/schemas/rgaa-rules.schema.json
+    - .claude/skills/audit-rgaa-creator/SKILL.md
+    - .claude/skills/audit-rgaa-creator/schemas/campaign.schema.json
+    - .claude/skills/audit-rgaa-creator/schemas/findings.schema.json
+    - .claude/skills/audit-rgaa-creator/schemas/state.schema.json
+    - .claude/skills/audit-rgaa-creator/scripts/audit_campaign.py
+    - .claude/skills/audit-rgaa-creator/scripts/audit_report_builder.py
+    - .claude/skills/audit-rgaa-creator/scripts/browser_checks.py
+    - .claude/skills/audit-rgaa-creator/scripts/dsfr_checks.py
+    - .claude/skills/audit-rgaa-creator/scripts/rgaa_checks.py
+    - .claude/skills/audit-rgaa-creator/examples/findings.example.json
+    - scripts/audit-rgaa-creator.sh
     - design-systems/dsfr/DESIGN.md
     - design-systems/dsfr/tokens.yaml
     - design-systems/dsfr/references/index.md
@@ -69,6 +95,7 @@ validation:
     - scripts/tests/check-dsfr-fidelity-negative.sh
     - scripts/tests/check-skills-paths-agnostic.sh
     - scripts/tests/check-dsfr-component-registry.sh
+    - scripts/tests/check-audit-rgaa-creator.sh
     - scripts/tests/check-standalone-install.sh
   markdown:
     - README.md
@@ -76,6 +103,7 @@ validation:
     - CHANGELOG.md
     - documentation/INSTALLER-ET-TESTER.md
     - documentation/MODE-OPERATOIRE.md
+    - documentation/AUDIT-RGAA-CREATOR.md
     - templates/AGENTS.md.exemple
     - templates/CLAUDE.md.exemple
 

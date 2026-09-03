@@ -28,7 +28,7 @@ La preuve doit être proportionnée au niveau de risque. Une capture montre un r
 
 Autorisées :
 
-- `aligné DSFR avec limites` ;
+- `aucun écart observé sur les règles DSFR exécutées` ou `écarts DSFR observés à qualifier` ;
 - `prototype DSFR à vérifier avant publication` ;
 - `structure inspirée des fondamentaux DSFR` ;
 - `composants DSFR utilisés selon les sources lues`.
@@ -62,12 +62,14 @@ claim.
 ## Routage accessibilité et RGAA
 
 Les skills d'accessibilité exécutent les vérifications. Ce profil DSFR ne remplace pas leurs workflows.
-
 | Situation | Skill ou source |
 |---|---|
 | audit WCAG d'une page ou d'un fichier | `audit-accessibilite-web` |
 | audit complet mêlant WCAG, RGAA, DSFR, clavier et arbre d'accessibilité | `audit-a11y-complet` |
-| audit RGAA avec taux, déclaration ou rapport réglementaire | `audit-rgaa-dsfr` |
+| audit DSFR par règle et instance avec DOM rendu, structure attendue et qualification | `audit-dsfr-complet` |
+| campagne multi-pages reprenable puis portail HTML via le builder DSFR | `audit-rgaa-creator` + `audit-report-dsfr` |
+| préqualification RGAA par test et instance avec revue des 258 tests | `audit-rgaa-complet` |
+| audit RGAA cadré ou rapport réglementaire | `audit-rgaa-dsfr` |
 | pré-audit RGAA, triage, fiches ou tickets | `pre-audit-rgaa-dsfr` |
 | reflow, zoom, focus, orientation, autocomplete, taille de cible | `tests-conformite-wcag` |
 | correction après rapport | `fix-accessibilite` ou `a11y-loop` |

@@ -10,6 +10,13 @@ Composant officiel « Paramètre d'affichage » : un bouton `fr-btn--display` qu
 ouvre une modale de choix de thème (clair, sombre, système). Nom générable :
 `display`.
 
+Références officielles relues :
+
+- DSFR 1.13.2 : https://unpkg.com/@gouvfr/dsfr@1.13.2/example/component/display/index.html
+- DSFR 1.15.2 : https://unpkg.com/@gouvfr/dsfr@1.15.2/example/component/display/index.html
+
+Les deux exemples utilisent le déclencheur `fr-btn--display fr-btn`. Cette structure est donc traitée comme indépendante de la migration entre ces deux versions.
+
 ## Structure
 
 Sortie de `generate_component.py display`, abrégée sur la grille de la modale.

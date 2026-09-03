@@ -1503,7 +1503,7 @@ def generate_header(brand_mode: str = "neutral", service_title: str = "Nom du se
                     service_tagline: str = "Baseline - précisions sur l'organisation",
                     tools: list | None = None, languages: list | None = None,
                     search: dict | None = None, navigation: list | None = None,
-                    translate_id: str = "header-translate-menu") -> str:
+                    translate_id: str = "header-translate-menu", home_url: str = "/") -> str:
     """Génère un en-tête DSFR (sans bloc marque en mode neutral).
 
     Variantes riches (PRD-140), optionnelles et opt-in :
@@ -1526,7 +1526,7 @@ def generate_header(brand_mode: str = "neutral", service_title: str = "Nom du se
     if search is True or (isinstance(search, dict) and not search):
         search = {"label": "Rechercher"}
     service_block = f"""                    <div class="fr-header__service">
-                        <a href="/" title="Accueil - {esc(service_title)}">
+                        <a href="{esc_href(home_url)}" title="Accueil - {esc(service_title)}">
                             <p class="fr-header__service-title">{esc(service_title)}</p>
                         </a>
                         <p class="fr-header__service-tagline">{esc(service_tagline)}</p>

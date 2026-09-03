@@ -30,7 +30,7 @@ skill.
 | Faire | choisir le type de page, générer, remplacer les textes et liens factices |
 | Ne pas faire | publier, certifier ou utiliser le bloc marque sans preuve de périmètre |
 | Preuve | `html lang="fr"`, `header`, `main`, `footer`, absence de `href="#"`, version nommée |
-| Claim | `aligné DSFR avec limites` ou `prototype DSFR à vérifier avant publication` |
+| Claim | `composants DSFR utilisés selon les sources lues` ou `prototype DSFR à vérifier avant publication` |
 
 ## Composant isolé
 

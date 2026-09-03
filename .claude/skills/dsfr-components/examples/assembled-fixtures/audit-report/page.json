@@ -1,0 +1,48 @@
+{
+  "title": "Rapport d’audit instrumenté",
+  "main_title": "Rapport d’audit RGAA et DSFR",
+  "brand_mode": "neutral",
+  "sections": [
+    {
+      "block": "audit_report",
+      "section_id": "rapport",
+      "report_type": "RGAA + DSFR",
+      "claim": "Préqualification instrumentée, sans taux officiel.",
+      "metrics": [
+        {"label": "Pages", "value": 1},
+        {"label": "Constats", "value": 1}
+      ],
+      "links": [
+        {"label": "Ouvrir la preuve", "href": "preuves/P01.json"}
+      ],
+      "root_causes": [
+        {"rule": "RGAA-8-2-ID-UNIQUE-001", "criterion": "8.2", "test": "8.2.1", "severity": "Majeur", "title": "Identifiant dupliqué", "count": 1, "confirmed": 1, "pages": ["P01"]}
+      ],
+      "findings": [
+        {
+          "id": "P01-RGAA-8-2-001",
+          "page": "P01",
+          "page_name": "Accueil",
+          "rule": "RGAA-8-2-ID-UNIQUE-001",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "status": "NC_CONFIRMEE",
+          "severity": "Majeur",
+          "title": "Identifiant HTML dupliqué",
+          "selector": "#duplicate",
+          "observed": "Deux occurrences",
+          "observed_code": "<button id=\"duplicate\"><script>alert(1)</script></button>",
+          "origin": "RENDERED_DOM",
+          "expected_code": "<button id=\"unique\">…</button>",
+          "failed_assertions": ["L’identifiant n’est pas unique."],
+          "impact": "Les relations deviennent ambiguës.",
+          "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#8.2.1",
+          "recommendation": "Rendre l’identifiant unique.",
+          "verification": "Recompter les occurrences.",
+          "review": "Décision confirmée avec preuve.",
+          "evidence": [{"label": "Preuve JSON", "href": "preuves/P01.json"}]
+        }
+      ]
+    }
+  ]
+}

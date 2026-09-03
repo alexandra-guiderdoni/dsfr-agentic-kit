@@ -92,8 +92,8 @@ manifest = yaml.safe_load(Path(os.environ["MANIFEST"]).read_text(encoding="utf-8
 expected = manifest.get("product", {}).get("skills", [])
 actual = sorted(path.name for path in (workspace / ".claude/skills").iterdir() if path.is_dir())
 
-if len(expected) != 14:
-    print(f"[FAIL] manifeste : 14 skills attendus, {len(expected)} déclarés", file=sys.stderr)
+if not expected:
+    print("[FAIL] manifeste : aucun skill déclaré", file=sys.stderr)
     raise SystemExit(1)
 if len(expected) != len(set(expected)):
     print("[FAIL] manifeste : skills dupliqués", file=sys.stderr)
@@ -101,7 +101,7 @@ if len(expected) != len(set(expected)):
 if sorted(expected) != actual:
     print(f"[FAIL] parité skills : attendu={sorted(expected)} réel={actual}", file=sys.stderr)
     raise SystemExit(1)
-print("[OK] parité exacte des 14 skills produit")
+print(f"[OK] parité exacte des {len(expected)} skills produit")
 PY
   then
     ok "inventaire consommateur piloté par le manifeste"

@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "referential": "RGAA 4.1.2",
+  "catalog_version": "2026-09-02",
+  "claim": "Règles de préqualification par instance ; aucun verdict de conformité automatique.",
+  "rules": [
+    {
+      "rule_id": "RGAA-1-1-IMAGE-ALT-001", "criterion": "1.1", "test": "1.1.1", "component": "image", "severity": "Bloquant", "automation": "STATIC_DOM", "title": "Image sans alternative déclarée",
+      "expected": "Chaque image informative possède une alternative ; le rôle et la pertinence restent humains.", "expected_code": "<img src=\"…\" alt=\"Alternative à valider\">", "impact": "L’information portée par l’image peut être absente de la restitution vocale.", "recommendation": "Ajouter une alternative puis faire valider sa pertinence éditoriale.", "verification": "Inspecter l’alternative calculée et comparer son sens au contenu visuel.", "limitations": ["La présence de alt ne prouve pas sa pertinence."]
+    },
+    {
+      "rule_id": "RGAA-1-2-DECORATIVE-SVG-002", "criterion": "1.2", "test": "1.2.4", "component": "image", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Image SVG décorative encore nommée",
+      "expected": "Une image SVG décorative masquée avec aria-hidden=true ne possède ni aria-label, ni aria-labelledby, ni title accessible.", "expected_code": "<svg aria-hidden=\"true\" focusable=\"false\">…</svg>", "impact": "Une image décorative peut être restituée inutilement et ajouter du bruit à la navigation.", "recommendation": "Conserver aria-hidden=true et retirer les mécanismes de nommage accessibles de la racine décorative.", "verification": "Contrôler l’absence de l’image dans l’arbre d’accessibilité.", "limitations": ["Le caractère réellement décoratif de l’image reste à confirmer visuellement."]
+    },
+    {
+      "rule_id": "RGAA-2-1-IFRAME-TITLE-001", "criterion": "2.1", "test": "2.1.1", "component": "iframe", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Cadre sans titre",
+      "expected": "Chaque iframe possède un attribut title pertinent.", "expected_code": "<iframe title=\"Description du contenu embarqué\" …></iframe>", "impact": "La fonction du cadre n’est pas identifiable avant d’y entrer.", "recommendation": "Ajouter un title puis vérifier sa pertinence.", "verification": "Contrôler le nom calculé du cadre dans l’arbre d’accessibilité.", "limitations": ["La présence du title ne prouve pas sa pertinence."]
+    },
+    {
+      "rule_id": "RGAA-6-2-LINK-NAME-001", "criterion": "6.2", "test": "6.2.1", "component": "link", "severity": "Bloquant", "automation": "ACCESSIBLE_NAME", "title": "Lien sans intitulé accessible",
+      "expected": "Chaque lien possède un nom accessible non vide.", "expected_code": "<a href=\"/destination\">Intitulé explicite</a>", "impact": "La destination ou la fonction du lien ne peut pas être comprise.", "recommendation": "Ajouter un intitulé visible ou un nom accessible équivalent.", "verification": "Parcourir la liste des liens avec un lecteur d’écran.", "limitations": ["Un nom non vide ne prouve pas sa pertinence en contexte."]
+    },
+    {
+      "rule_id": "RGAA-7-1-DIALOG-NAME-001", "criterion": "7.1", "test": "7.1.1", "component": "dialog", "severity": "Bloquant", "automation": "STATIC_DOM", "title": "Dialogue dont la référence de nom est absente",
+      "expected": "aria-labelledby référence un titre présent ou aria-label fournit un nom pertinent.", "expected_code": "<dialog aria-labelledby=\"dialog-title\"><h2 id=\"dialog-title\">…</h2></dialog>", "impact": "Le contexte et la fonction de la fenêtre peuvent ne pas être annoncés.", "recommendation": "Créer la cible référencée ou corriger le mécanisme de nommage.", "verification": "Ouvrir le dialogue et contrôler son nom avec un lecteur d’écran.", "limitations": ["Le comportement et la pertinence du nom restent à tester."]
+    },
+    {
+      "rule_id": "RGAA-7-1-ARIA-REFERENCE-002", "criterion": "7.1", "test": "7.1.1", "component": "script", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Référence ARIA absente",
+      "expected": "Chaque identifiant cité par un attribut de relation ARIA correspond à un élément présent dans le document.", "expected_code": "<div aria-describedby=\"description\"><p id=\"description\">…</p></div>", "impact": "Le nom, la description, l’état ou la relation attendue par une technologie d’assistance peut être incomplet.", "recommendation": "Créer la cible référencée ou retirer la référence obsolète après analyse du composant.", "verification": "Exercer le composant puis contrôler ses nom, description et relations dans l’arbre d’accessibilité.", "limitations": ["Une référence valide ne prouve pas la compatibilité complète du composant avec les technologies d’assistance."]
+    },
+    {
+      "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003", "criterion": "7.1", "test": "7.1.1", "component": "script", "severity": "Bloquant", "automation": "INTERACTIVE", "title": "Composant scripté visible mais masqué aux technologies d’assistance",
+      "expected": "Un composant rendu visible par script retire aria-hidden avant d’exposer et de focaliser ses contrôles.", "expected_code": "<div role=\"dialog\"><form role=\"search\">…</form></div>", "impact": "Les contrôles visibles et focalisables peuvent ne plus exposer leur nom, rôle ou valeur aux API d’accessibilité.", "recommendation": "Synchroniser aria-hidden avec l’état visible avant le déplacement du focus.", "verification": "Ouvrir le composant au clavier puis contrôler simultanément le focus, le DOM et l’arbre d’accessibilité.", "limitations": ["La compatibilité complète doit être confirmée avec une technologie d’assistance réelle."]
+    },
+    {
+      "rule_id": "RGAA-8-1-DOCTYPE-001", "criterion": "8.1", "test": "8.1.1", "component": "document", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Type de document absent ou invalide",
+      "expected": "Le document déclare un doctype HTML.", "expected_code": "<!doctype html>", "impact": "Le navigateur peut utiliser un mode de compatibilité non attendu.", "recommendation": "Déclarer le doctype HTML en première ligne.", "verification": "Inspecter document.doctype et la réponse HTML.", "limitations": ["Le DOM rendu ne remplace pas la validation complète du code source."]
+    },
+    {
+      "rule_id": "RGAA-8-1-DOCTYPE-VALID-002", "criterion": "8.1", "test": "8.1.2", "component": "document", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Doctype HTML invalide",
+      "expected": "Le document utilise un doctype HTML valide.", "expected_code": "<!doctype html>", "impact": "Le navigateur peut appliquer un mode de compatibilité et modifier l’interprétation du document.", "recommendation": "Déclarer <!doctype html> sans identifiant public ou système obsolète.", "verification": "Contrôler le doctype dans le code source généré et le mode de rendu du navigateur.", "limitations": ["Le contrôle porte sur le document rendu capturé."]
+    },
+    {
+      "rule_id": "RGAA-8-1-DOCTYPE-POSITION-003", "criterion": "8.1", "test": "8.1.3", "component": "document", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Doctype placé après l’élément html",
+      "expected": "La déclaration de type précède l’élément html dans le document.", "expected_code": "<!doctype html><html lang=\"fr\">…</html>", "impact": "Le mode d’interprétation du document peut devenir imprévisible.", "recommendation": "Placer le doctype avant l’élément html.", "verification": "Inspecter l’ordre des nœuds racine du document généré.", "limitations": ["Les commentaires autorisés autour du doctype ne sont pas considérés comme un échec."]
+    },
+    {
+      "rule_id": "RGAA-8-2-ID-UNIQUE-001", "criterion": "8.2", "test": "8.2.1", "component": "html", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Identifiant HTML dupliqué",
+      "expected": "Chaque attribut id est unique dans le document.", "expected_code": "<!-- Un identifiant unique par élément -->", "impact": "Les relations de formulaire, ancres, scripts et références ARIA deviennent ambiguës.", "recommendation": "Rendre l’identifiant unique et mettre à jour ses références.", "verification": "Compter chaque id dans le DOM rendu.", "limitations": ["La règle ne valide pas toute la conformité HTML du critère 8.2."]
+    },
+    {
+      "rule_id": "RGAA-8-2-ANCHOR-TYPE-002", "criterion": "8.2", "test": "8.2.1", "component": "html", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Valeur type invalide sur un lien",
+      "expected": "Lorsqu’un élément a possède un attribut type, sa valeur est un type MIME valide.", "expected_code": "<a href=\"/document\" type=\"text/html\">Document</a>", "impact": "Une valeur HTML invalide dégrade la robustesse et peut produire des interprétations imprévisibles.", "recommendation": "Supprimer l’attribut type inutile ou utiliser un type MIME valide correspondant à la ressource.", "verification": "Valider le DOM rendu et contrôler chaque attribut type porté par un élément a.", "limitations": ["La règle vérifie la syntaxe MIME de type sur a et ne remplace pas un validateur HTML complet."]
+    },
+    {
+      "rule_id": "RGAA-8-3-DOCUMENT-LANG-001", "criterion": "8.3", "test": "8.3.1", "component": "document", "severity": "Bloquant", "automation": "STATIC_DOM", "title": "Langue principale absente",
+      "expected": "html possède une langue principale valide.", "expected_code": "<html lang=\"fr\">", "impact": "La synthèse vocale peut appliquer une prononciation incorrecte.", "recommendation": "Déclarer la langue principale du document.", "verification": "Contrôler l’attribut lang et sa validité.", "limitations": ["Le code de langue ne prouve pas la langue réelle du contenu."]
+    },
+    {
+      "rule_id": "RGAA-8-5-DOCUMENT-TITLE-001", "criterion": "8.5", "test": "8.5.1", "component": "document", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Titre de page absent",
+      "expected": "Le document possède un title non vide ; sa pertinence reste humaine.", "expected_code": "<title>Titre pertinent de la page</title>", "impact": "La page est difficile à identifier dans l’historique ou les onglets.", "recommendation": "Ajouter un titre puis vérifier sa pertinence.", "verification": "Comparer le title au sujet principal de la page.", "limitations": ["Un title non vide ne prouve pas sa pertinence."]
+    },
+    {
+      "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001", "criterion": "8.7", "test": "8.7.1", "component": "language", "severity": "Majeur", "automation": "LANGUAGE_HEURISTIC", "title": "Changement de langue non indiqué",
+      "expected": "Tout passage ou nom accessible dans une langue différente de la langue principale possède une indication de langue adaptée.", "expected_code": "<div lang=\"en\" aria-label=\"English accessible name\">…</div>", "impact": "La synthèse vocale peut prononcer le passage avec les règles de la langue principale.", "recommendation": "Traduire l’intitulé ou déclarer la langue étrangère avec un attribut lang pertinent.", "verification": "Contrôler le passage dans le DOM rendu puis écouter sa restitution avec un lecteur d’écran.", "limitations": ["La détection lexicale est une heuristique et chaque signal exige une qualification humaine."]
+    },
+    {
+      "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001", "criterion": "8.9", "test": "8.9.1", "component": "html", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Paragraphe vide utilisé pour créer un espacement",
+      "expected": "Les éléments sémantiques ne sont pas utilisés uniquement pour produire une marge ou un espacement visuel.", "expected_code": "<!-- Utiliser les marges CSS du conteneur plutôt qu’un paragraphe vide -->", "impact": "La structure restituée contient des éléments sans contenu et la présentation dépend d’un balisage non sémantique.", "recommendation": "Supprimer le paragraphe vide et reporter l’espacement sur le composant ou son contenu avec CSS.", "verification": "Désactiver les styles puis contrôler que les éléments vides ne structurent plus artificiellement la présentation.", "limitations": ["Un élément vide sans effet de présentation n’est pas signalé par cette règle."]
+    },
+    {
+      "rule_id": "RGAA-9-1-HEADING-H1-001", "criterion": "9.1", "test": "9.1.1", "component": "heading", "severity": "À qualifier", "automation": "STATIC_DOM", "title": "Titre principal absent",
+      "expected": "La page possède une hiérarchie de titres cohérente avec un titre principal.", "expected_code": "<h1>Titre principal de la page</h1>", "impact": "Le sujet principal et la navigation par titres sont moins compréhensibles.", "recommendation": "Analyser la structure éditoriale avant d’ajouter ou modifier un h1.", "verification": "Naviguer par titres avec une technologie d’assistance.", "limitations": ["L’absence de h1 ne suffit pas seule à conclure le critère 9.1."]
+    },
+    {
+      "rule_id": "RGAA-9-1-HEADING-ORDER-002", "criterion": "9.1", "test": "9.1.1", "component": "heading", "severity": "À qualifier", "automation": "STATIC_DOM", "title": "Saut de niveau de titre à confirmer",
+      "expected": "Les niveaux de titres reflètent l’organisation du contenu sans saut incohérent.", "expected_code": "<h2>Section</h2><h3>Sous-section</h3>", "impact": "La structure du contenu peut être difficile à comprendre.", "recommendation": "Revoir la structure éditoriale avant de modifier le niveau du titre.", "verification": "Comparer l’ordre du DOM, le rendu et la structure éditoriale.", "limitations": ["Un saut numérique n’est pas automatiquement une non-conformité."]
+    },
+    {
+      "rule_id": "RGAA-10-1-PRESENTATIONAL-TAG-001", "criterion": "10.1", "test": "10.1.1", "component": "html", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Balise de présentation dans le code source généré",
+      "expected": "Les balises basefont, big, blink, center, font, marquee, s, strike et tt sont absentes du code source généré.", "expected_code": "<p class=\"texte-centre\">Contenu</p>", "impact": "La présentation est mêlée à la structure HTML et résiste aux adaptations utilisateur.", "recommendation": "Remplacer la balise de présentation par un élément sémantique approprié et une règle CSS.", "verification": "Inspecter le DOM rendu et confirmer l’absence des balises de présentation du test 10.1.1.", "limitations": ["L’élément u dépend du doctype et doit être contrôlé séparément hors HTML5."]
+    },
+    {
+      "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002", "criterion": "10.1", "test": "10.1.2", "component": "html", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Attribut de présentation dans le code source généré",
+      "expected": "Les attributs de présentation sont absents du code source généré. La politique d’audit HTML moderne admet width et height sur source enfant direct de picture, ainsi que sur img, object, embed, canvas et svg.", "expected_code": "<picture><source srcset=\"image.webp\" width=\"942\" height=\"529\" type=\"image/webp\"><img src=\"image.jpg\" width=\"942\" height=\"529\" alt=\"…\"></picture>", "impact": "Un attribut réellement dédié à la présentation peut résister aux adaptations utilisateur.", "recommendation": "Retirer uniquement les attributs de présentation non admis. Conserver les dimensions intrinsèques valides des médias responsives.", "verification": "Inspecter le DOM rendu, contrôler le contexte picture des éléments source et vérifier que les dimensions sont des entiers non négatifs cohérents avec l’image finale.", "limitations": ["Cette exception source est une qualification méthodologique fondée sur le standard HTML moderne. La liste littérale historique du test RGAA 10.1.2 ne cite pas source."]
+    },
+    {
+      "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001", "criterion": "10.8", "test": "10.8.1", "component": "focus", "severity": "Bloquant", "automation": "INTERACTIVE", "title": "Élément focalisable dans un contenu aria-hidden",
+      "expected": "Aucun élément d’un sous-arbre aria-hidden=true ne reçoit le focus.", "expected_code": "<!-- Retirer du parcours clavier quand aria-hidden=true -->", "impact": "Le focus atteint un contrôle absent de la restitution des technologies d’assistance.", "recommendation": "Désactiver le focus dans l’état masqué puis retirer aria-hidden avant l’ouverture.", "verification": "Rejouer la tabulation et contrôler simultanément focus et arbre d’accessibilité.", "limitations": ["Seul le parcours de tabulation configuré est exercé."]
+    },
+    {
+      "rule_id": "RGAA-10-11-REFLOW-001", "criterion": "10.11", "test": "10.11.1", "component": "viewport", "severity": "Majeur", "automation": "MEASUREMENT", "title": "Défilement horizontal à 320 pixels",
+      "expected": "Le contenu se redistribue sans défilement horizontal du document à 320 px.", "expected_code": "<!-- scrollWidth <= viewport à 320 px -->", "impact": "Les utilisateurs à fort zoom doivent faire défiler dans deux directions.", "recommendation": "Corriger l’élément débordant et ses contraintes de largeur.", "verification": "Tester à 320 CSS px et à 400 % selon le protocole RGAA.", "limitations": ["La mesure initiale ne couvre pas tous les états interactifs."]
+    },
+    {
+      "rule_id": "RGAA-11-1-FIELD-LABEL-001", "criterion": "11.1", "test": "11.1.1", "component": "form", "severity": "Bloquant", "automation": "ACCESSIBLE_NAME", "title": "Champ visible sans étiquette accessible",
+      "expected": "Chaque champ visible possède une étiquette associée.", "expected_code": "<label for=\"field\">Étiquette</label><input id=\"field\">", "impact": "La donnée attendue dans le champ n’est pas identifiable.", "recommendation": "Associer une étiquette persistante et pertinente.", "verification": "Contrôler le nom accessible et l’intitulé visible du champ.", "limitations": ["La présence d’un nom ne prouve pas la pertinence de l’étiquette."]
+    },
+    {
+      "rule_id": "RGAA-11-1-LABEL-FOR-002", "criterion": "11.1", "test": "11.1.2", "component": "form", "severity": "Bloquant", "automation": "STATIC_DOM", "title": "Étiquette for sans champ correspondant",
+      "expected": "Chaque attribut for d’un label correspond à l’identifiant unique d’un champ présent.", "expected_code": "<label for=\"recherche\">Rechercher</label><input id=\"recherche\">", "impact": "L’activation de l’étiquette et l’association accessible avec le champ peuvent échouer.", "recommendation": "Corriger for ou l’identifiant du champ et garantir son unicité.", "verification": "Activer chaque étiquette puis contrôler le champ ciblé et son nom accessible.", "limitations": ["La résolution de for ne prouve pas la pertinence de l’étiquette."]
+    },
+    {
+      "rule_id": "RGAA-11-5-RADIO-GROUP-001", "criterion": "11.5", "test": "11.5.1", "component": "form", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Boutons radio de même nature non regroupés",
+      "expected": "Chaque ensemble de boutons radio partageant un nom est contenu dans un même fieldset ou groupe nommé.", "expected_code": "<fieldset><legend>Choix</legend><input type=\"radio\" name=\"choix\">…</fieldset>", "impact": "Le contexte commun des choix peut ne pas être annoncé aux technologies d’assistance.", "recommendation": "Regrouper les boutons radio de même nature dans un fieldset avec une légende pertinente.", "verification": "Naviguer dans le groupe avec une technologie d’assistance et contrôler l’annonce du contexte commun.", "limitations": ["La pertinence de la légende relève des tests 11.6 et 11.7."]
+    },
+    {
+      "rule_id": "RGAA-11-6-FIELDSET-LEGEND-002", "criterion": "11.6", "test": "11.6.1", "component": "form", "severity": "Majeur", "automation": "STATIC_DOM", "title": "Regroupement de champs sans légende",
+      "expected": "Chaque fieldset regroupant des champs possède un élément legend direct et non vide.", "expected_code": "<fieldset><legend>Choix du thème</legend>…</fieldset>", "impact": "La nature commune des champs peut ne pas être annoncée aux technologies d’assistance.", "recommendation": "Ajouter une légende pertinente comme premier enfant du fieldset.", "verification": "Parcourir les champs avec une technologie d’assistance et contrôler l’annonce de leur regroupement.", "limitations": ["La présence d’une légende ne prouve pas sa pertinence, qui relève du test 11.7.1."]
+    },
+    {
+      "rule_id": "RGAA-12-7-SKIPLINK-001", "criterion": "12.7", "test": "12.7.1", "component": "skiplink", "severity": "Bloquant", "automation": "INTERACTIVE", "title": "Lien d’évitement sans cible",
+      "expected": "Le lien vers le contenu vise une cible présente et atteignable.", "expected_code": "<a href=\"#content\">Contenu</a><main id=\"content\">…</main>", "impact": "Les utilisateurs clavier ne peuvent pas atteindre rapidement le contenu principal.", "recommendation": "Créer la cible ou corriger le fragment, puis gérer le focus si nécessaire.", "verification": "Activer le lien au clavier et observer la destination et le focus.", "limitations": ["La présence de la cible ne prouve pas seule le transfert de focus."]
+    }
+  ]
+}

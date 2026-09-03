@@ -10,8 +10,10 @@
 - Pour produire une page DSFR, lire d’abord
   `<chemin-du-pack>/design-systems/dsfr/DESIGN.md`, puis `tokens.yaml` et le
   `SKILL.md` de `dsfr-components`.
-- Pour auditer, lire seulement le `SKILL.md` RGAA ou WCAG correspondant au
-  périmètre demandé et écrire ses sorties dans le projet.
+- Pour une campagne RGAA multi-pages reprenable, lire le `SKILL.md` de
+  `audit-rgaa-creator` et écrire toute la campagne dans le projet.
+- Pour un audit isolé, lire seulement le `SKILL.md` RGAA ou WCAG correspondant
+  au périmètre demandé.
 - Résoudre `scripts/`, `references/` et `assets/` depuis le dossier du skill.
 - Distinguer résultats automatisés et vérifications humaines restantes.
 - Ne pas affirmer « conforme DSFR », « conforme RGAA » ou « prêt pour

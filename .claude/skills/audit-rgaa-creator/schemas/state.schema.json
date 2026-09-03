@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "État Audit RGAA Creator",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "updated_at", "campaign_digest", "phases", "pages"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "campaign_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "phases": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status", "updated_at"],
+        "properties": {
+          "status": {"enum": ["OK", "PARTIEL", "ECHEC", "IGNORÉ", "BLOQUÉ"]},
+          "updated_at": {"type": "string"}
+        }
+      }
+    },
+    "pages": {"type": "object"}
+  }
+}

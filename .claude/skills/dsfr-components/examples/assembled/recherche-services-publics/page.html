@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="system">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Résultats de recherche - Prototype DSFR</title>
+
+    <meta name="description" content="Prototype accessible de résultats de recherche avec filtres en listes déroulantes et tags, généré avec le builder DSFR assemblé.">
+
+    <!-- DSFR CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
+</head>
+<body id="top">
+
+    <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+            <ul class="fr-skiplinks__list">
+                <li><a class="fr-link" href="#contenu">Contenu</a></li>
+                <li><a class="fr-link" href="#navigation">Menu</a></li>
+                <li><a class="fr-link" href="#footer">Pied de page</a></li>
+            </ul>
+        </nav>
+    </div>
+    <header role="banner" class="fr-header">
+    <div class="fr-header__body">
+        <div class="fr-container">
+            <div class="fr-header__body-row">
+                <div class="fr-header__brand fr-enlarge-link">
+                    <div class="fr-header__brand-top">
+<div class="fr-header__navbar">
+                                <button id="header-search-button" class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="header-search" title="Rechercher" type="button">Rechercher</button>
+                                <button id="header-menu-button" class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="header-menu" aria-haspopup="menu" title="Menu" type="button">Menu</button>
+                            </div>
+                    </div>
+                    <div class="fr-header__service">
+                        <a href="/" title="Accueil - Recherche des services publics">
+                            <p class="fr-header__service-title">Recherche des services publics</p>
+                        </a>
+                        <p class="fr-header__service-tagline">Prototype local — contenus d&#x27;exemple</p>
+                    </div>
+                </div>
+            <div class="fr-header__tools">
+                <div class="fr-header__tools-links">
+                <ul class="fr-btns-group">
+                    <li><a class="fr-btn fr-btn--tertiary" href="/aide">Aide</a></li>
+                    <li><a class="fr-btn fr-btn--tertiary" href="/mon-espace">Mon espace</a></li>
+                </ul>
+                </div>
+                <div class="fr-header__search fr-modal" id="header-search" aria-labelledby="header-search-button">
+                    <div class="fr-container fr-container-lg--fluid">
+                        <button class="fr-btn--close fr-btn" aria-controls="header-search" title="Fermer" type="button">
+                            Fermer
+                        </button>
+                        <form action="/recherche" method="get">
+                            <div class="fr-search-bar" id="header-search-bar" role="search">
+                                <label class="fr-label" for="header-search-input">
+                                    Rechercher sur le site
+                                </label>
+                                <input class="fr-input" type="search" id="header-search-input" name="search">
+                                <button type="submit" class="fr-btn" title="Rechercher sur le site">
+                                    Rechercher sur le site
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        <div class="fr-header__menu fr-modal" id="header-menu" aria-labelledby="header-menu-button">
+            <div class="fr-container">
+                <button class="fr-btn--close fr-btn" aria-controls="header-menu" title="Fermer" type="button">
+                    Fermer
+                </button>
+                <div class="fr-header__menu-links"></div>
+                <nav class="fr-nav" id="navigation" role="navigation" aria-label="Menu principal">
+    <ul class="fr-nav__list">
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="/" target="_self">Accueil</a>
+            </li>
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="#resultats" target="_self" aria-current="page">Résultats</a>
+            </li>
+            <li class="fr-nav__item">
+                <a class="fr-nav__link" href="#aide-recherche" target="_self">Aide à la recherche</a>
+            </li>
+    </ul>
+</nav>
+            </div>
+        </div>
+</header>
+
+    <main id="contenu">
+                    <div class="fr-container fr-pt-2w">
+            
+<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+    <button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d'Ariane</button>
+    <div class="fr-collapse" id="breadcrumb">
+        <ol class="fr-breadcrumb__list">
+            <li>
+                <a class="fr-breadcrumb__link" href="/">Accueil</a>
+            </li>
+            <li>
+                <a class="fr-breadcrumb__link" href="/recherche">Recherche</a>
+            </li>
+            <li>
+                <a class="fr-breadcrumb__link" aria-current="page">Résultats pour logement</a>
+            </li>
+        </ol>
+    </div>
+</nav>
+            </div>
+
+            <div id="introduction" class="fr-container fr-pt-2w fr-pb-4w">
+            <div>
+    <h1>Résultats pour « logement »</h1>
+    <p class="fr-text--lead">Trouvez une démarche, une aide ou un point de contact parmi les services proposés.</p>
+    <p>Les résultats ci-dessous sont des exemples fictifs. Modifiez votre recherche dans l&#x27;en-tête ou utilisez les filtres pour préciser votre besoin.</p>
+</div>
+            </div>
+
+            <div id="resultats" class="fr-container fr-py-4w">
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-12 fr-col-md-4">
+<form id="filtres" action="/recherche" method="get" novalidate>
+        <fieldset class="fr-fieldset">
+            <legend class="fr-fieldset__legend">
+                <h2>Filtrer les résultats</h2>
+            </legend>
+            <div class="fr-fieldset__content">
+                            
+<div class="fr-select-group">
+    <label class="fr-label" for="filtre-thematique">Thématique
+        <span class="fr-hint-text">Choisissez le sujet principal.</span>
+    </label>
+    <select class="fr-select" id="filtre-thematique" name="theme">
+        <option value="" selected disabled>Sélectionnez une option</option>
+        <option value="logement">Logement</option>
+        <option value="famille">Famille</option>
+        <option value="emploi">Emploi</option>
+        <option value="transport">Transport</option>
+    </select>
+</div>
+                            
+<div class="fr-select-group">
+    <label class="fr-label" for="filtre-type">Type de contenu
+        <span class="fr-hint-text">Affinez selon la nature du résultat.</span>
+    </label>
+    <select class="fr-select" id="filtre-type" name="type">
+        <option value="" selected disabled>Sélectionnez une option</option>
+        <option value="demarche">Démarche</option>
+        <option value="aide">Aide financière</option>
+        <option value="annuaire">Point de contact</option>
+        <option value="information">Information</option>
+    </select>
+</div>
+                            
+<div class="fr-select-group">
+    <label class="fr-label" for="filtre-public">Public concerné
+        <span class="fr-hint-text">Sélectionnez votre situation.</span>
+    </label>
+    <select class="fr-select" id="filtre-public" name="public">
+        <option value="" selected disabled>Sélectionnez une option</option>
+        <option value="particulier">Particulier</option>
+        <option value="association">Association</option>
+        <option value="entreprise">Entreprise</option>
+    </select>
+</div>
+                <div class="fr-btns-group">
+                    <button class="fr-btn" type="submit">Appliquer les filtres</button>
+                            <button class="fr-btn fr-btn--secondary" type="reset">Réinitialiser</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+<div>
+    <h2>Filtres rapides</h2>
+    <p>Choisissez une proposition pour relancer la recherche.</p>
+</div>
+<ul class="fr-tags-group">
+                    <li><a class="fr-tag fr-tag--sm" href="?q=logement&amp;type=aide">Aides au logement</a></li>
+                    <li><a class="fr-tag fr-tag--sm" href="?q=logement&amp;type=demarche">Démarches en ligne</a></li>
+                    <li><a class="fr-tag fr-tag--sm" href="?q=logement&amp;type=annuaire">Points de contact</a></li>
+                    <li><a class="fr-tag fr-tag--sm" href="?q=logement&amp;public=particulier">Pour les particuliers</a></li>
+            </ul>
+                </div>
+                <div class="fr-col-12 fr-col-md-8">
+<div>
+    <h2>6 résultats trouvés</h2>
+    <p class="fr-text--lead">Résultats classés par pertinence.</p>
+    <p>Chaque lien ouvre la fiche détaillée du service correspondant.</p>
+</div>
+<div class="fr-grid-row fr-grid-row--gutters">
+                <div class="fr-col-12 fr-col-md-12">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/services/aide-personnelle-logement">Demander une aide personnelle au logement</a>
+            </h3>
+            <p class="fr-card__desc">Consultez les conditions générales et préparez les informations nécessaires à une demande d&#x27;aide au logement.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-12">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/services/recherche-logement-social">Rechercher un logement social</a>
+            </h3>
+            <p class="fr-card__desc">Découvrez les principales étapes d&#x27;une recherche et les interlocuteurs à identifier selon votre situation.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-12">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/services/changement-adresse">Signaler un changement d&#x27;adresse</a>
+            </h3>
+            <p class="fr-card__desc">Retrouvez les organismes susceptibles de devoir être informés après un déménagement.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-12">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/services/contrat-location">Comprendre les règles d&#x27;un contrat de location</a>
+            </h3>
+            <p class="fr-card__desc">Accédez à une présentation générale des documents et échanges utiles entre locataire et bailleur.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-12">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/services/point-information-logement">Trouver un point d&#x27;information logement</a>
+            </h3>
+            <p class="fr-card__desc">Recherchez un lieu d&#x27;accueil pouvant vous orienter dans vos démarches liées au logement.</p>
+        </div>
+    </div>
+</div>
+                </div>
+                <div class="fr-col-12 fr-col-md-12">
+<div class="fr-card">
+    <div class="fr-card__body">
+        <div class="fr-card__content">
+            <h3 class="fr-card__title">
+                <a href="/services/preparer-demenagement">Préparer un déménagement</a>
+            </h3>
+            <p class="fr-card__desc">Parcourez une liste indicative de formalités à anticiper avant et après votre changement de domicile.</p>
+        </div>
+    </div>
+</div>
+                </div>
+            </div>
+<ul class="fr-btns-group">
+                    <li><a class="fr-btn fr-btn--secondary" href="?q=logement&amp;page=2">Afficher les résultats suivants</a></li>
+                </ul>
+                </div>
+            </div>
+            </div>
+
+            <div id="aide-recherche" class="fr-container fr-py-6w">
+            
+<div class="fr-callout">
+    <h2 class="fr-callout__title">Vous ne trouvez pas le bon service ?</h2>
+    <p class="fr-callout__text">Essayez un terme plus général, retirez un filtre ou consultez l&#x27;aide à la recherche.</p>
+</div>
+            </div>
+
+            <div class="fr-container fr-pb-8w">
+            <ul class="fr-btns-group">
+                    <li><a class="fr-btn" href="/aide/recherche">Consulter l&#x27;aide à la recherche</a></li>
+                    <li><a class="fr-btn fr-btn--tertiary" href="/">Revenir à l&#x27;accueil</a></li>
+                </ul>
+            </div>
+    </main>
+
+    <footer class="fr-footer" role="contentinfo" id="footer">
+    <div class="fr-container">
+        <div class="fr-footer__body">
+            <div class="fr-footer__brand">
+                <p>Recherche des services publics</p>
+            </div>
+            <div class="fr-footer__content">
+                <p class="fr-footer__content-desc">Prototype local : les contenus et les routes sont fictifs et doivent être validés avant tout usage public.</p>
+                <ul class="fr-footer__content-list">
+                    <li class="fr-footer__content-item"><a class="fr-footer__content-link" href="/a-propos-du-prototype">Comprendre le prototype</a></li>
+                </ul>
+            </div>
+        </div>
+            <div class="fr-footer__bottom">
+                <ul class="fr-footer__bottom-list">
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/plan-du-site">Plan du site</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/accessibilite">Accessibilité : non évaluée</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/mentions-legales">Mentions légales</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/donnees-personnelles">Données personnelles</a>
+                    </li>
+                    <li class="fr-footer__bottom-item">
+                        <a class="fr-footer__bottom-link" href="/gestion-des-cookies">Gestion des cookies</a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+</footer>
+
+    <!-- DSFR JS -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+</body>
+</html>
