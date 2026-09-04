@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NC-P06-002 — Champ entreprise optionnel annoncé comme obligatoire</title>
+  <meta name="description" content="Ticket RGAA unitaire : Champ entreprise optionnel annoncé comme obligatoire">
+  <style>
+:root{--blue:#000091;--red:#ce0500;--orange:#b34000;--grey:#f6f6f6;--border:#ddd;--text:#161616}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font:1rem/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#fff}
+a{color:var(--blue);text-underline-offset:.18em}a:hover{text-decoration-thickness:.16em}a:focus-visible,button:focus-visible{outline:3px solid #0a76f6;outline-offset:3px}
+.skip-link{position:absolute;left:-999rem;top:.5rem;background:#fff;padding:.75rem 1rem;z-index:10}.skip-link:focus{left:.5rem}.container{width:min(76rem,calc(100% - 2rem));margin:auto}
+header{border-top:6px solid var(--blue);border-bottom:1px solid var(--border);padding:1.5rem 0}header p{max-width:68rem}.back{display:inline-block;margin-bottom:1rem}
+main{padding:2rem 0 4rem}h1{font-size:clamp(2rem,4vw,3rem);line-height:1.15}h2{margin-top:3rem;border-top:2px solid var(--border);padding-top:1.25rem}h3{margin-top:2rem}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#eee;padding:.08em .25em;border-radius:.15rem}
+pre{overflow:auto;padding:1rem;background:#1e1e1e;color:#f8f8f2;border-radius:.25rem;white-space:pre;tab-size:2}pre code{background:transparent;padding:0;color:inherit}.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.5rem 1.5rem;padding:1rem;background:var(--grey);border-left:4px solid var(--blue)}.meta p{margin:.2rem 0}
+.alert{padding:1rem;border-left:6px solid var(--orange);background:#fff4e5;margin:1.5rem 0}.warning{padding:1rem;border-left:6px solid #e4794a;background:#fff4e5}.badge{display:inline-block;padding:.2rem .55rem;border-radius:1rem;background:#eee;font-weight:700}.badge.blocking{background:#ffe9e9;color:#8f0000}.badge.major{background:#fff4e5;color:#6a3a00}
+.table-wrap{overflow-x:auto;margin:1rem 0}table{border-collapse:collapse;width:100%;min-width:45rem}th,td{border:1px solid #bbb;padding:.65rem;text-align:left;vertical-align:top}th{background:#eee}tbody tr:nth-child(even){background:#fafafa}.inventory td:nth-child(2),.inventory td:nth-child(4){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88rem;overflow-wrap:anywhere}
+.solution{border-left:4px solid var(--blue);padding-left:1rem;margin:2rem 0}.checklist{list-style:none;padding-left:0}.checklist li{margin:.65rem 0;padding-left:1.8rem;position:relative}.checklist li::before{content:"☐";position:absolute;left:0;font-size:1.2rem}footer{border-top:1px solid var(--border);padding:2rem 0;background:var(--grey)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:1rem}.card{border:1px solid var(--border);padding:1rem}.card h2,.card h3{border:0;margin-top:0;padding-top:0}.count{font-size:2rem;font-weight:700;color:var(--blue)}
+@media(max-width:45rem){.container{width:min(100% - 1rem,76rem)}header,main{padding-left:.25rem;padding-right:.25rem}table{min-width:38rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.skip-link,.back{display:none}.container{width:100%}body{font-size:10pt}a{color:#000}pre{white-space:pre-wrap;color:#000;background:#f5f5f5;border:1px solid #aaa}h2{break-after:avoid}.solution,pre,table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<header>
+  <div class="container">
+    <a class="back" href="../INDEX-TICKETS-RGAA.html">← Index des tickets RGAA</a>
+    <h1>NC-P06-002 — Champ entreprise optionnel annoncé comme obligatoire</h1>
+    <div class="meta">
+      <p><strong>Statut :</strong> Préqualification — NC confirmée dans les rapports sources</p>
+      <p><strong>Référentiel :</strong> RGAA 4.1.2</p>
+      <p><strong>Sévérité :</strong> <span class="badge major">Majeur</span></p>
+      <p><strong>Date :</strong> 2026-09-04</p>
+      <p><strong>Composant / gabarit :</strong> Champ de saisie</p>
+      <p><strong>Portée :</strong> Locale — P06</p>
+      <p><strong>Pages :</strong> P06</p>
+      <p><strong>Constats sources regroupés :</strong> 1</p>
+    </div>
+    <p><strong>Justification de sévérité :</strong> La personne peut croire à tort qu’elle doit fournir le nom de son entreprise, ce qui augmente la charge de saisie et peut conduire à communiquer une donnée non requise.</p>
+    <div class="warning" role="note"><strong>Limite :</strong> préqualification instrumentée, sans taux RGAA officiel ni validation après correction.</div>
+    <div class="alert" role="note"><strong>Alerte méthodologique :</strong> La note technique du critère 11.10 autorise l’instruction globale « tous les champs sont obligatoires sauf… » uniquement si chaque champ facultatif porte une mention visible dans son libellé ou sa légende, et si les autres champs conservent required ou aria-required=true.</div>
+  </div>
+</header>
+<main id="contenu" class="container">
+  <h2>Pages et rapports sources</h2>
+  <div class="table-wrap"><table class=""><thead><tr><th scope="col">Page</th><th scope="col">Nom</th><th scope="col">URL</th><th scope="col">Rapport RGAA</th></tr></thead><tbody><tr><td>P06</td><td>Formulaire Écrivez-nous</td><td><a href="https://moa.douane.gouv.fr/formulaire-infos-douane-service">https://moa.douane.gouv.fr/formulaire-infos-douane-service</a></td><td><a href="../../RGAA/P06-RGAA.html">Rapport P06</a></td></tr></tbody></table></div>
+  <h2>Références RGAA</h2>
+  <ul><li><strong>Critère 11.10</strong> — Dans chaque formulaire, le contrôle de saisie est-il utilisé de manière pertinente (hors cas particuliers) ?</li><li><strong>Test 11.10.1</strong> — Les indications du caractère obligatoire de la saisie des champs vérifient-elles une de ces conditions (hors cas particuliers) ? Une indication de champ obligatoire est visible et permet d’identifier nommément le champ concerné préalablement à la validation du formulaire ; Le champ obligatoire dispose de l’attribut <code>aria-required=&quot;true&quot;</code> ou <code>required</code> préalablement à la validation du formulaire.</li></ul>
+  <h2>Code source constaté</h2>
+  <h3>P06 — champ Société et état interactif mesuré</h3><pre><code>&lt;input class=&quot;fr-input form-text&quot; style=&quot;display: none&quot; data-drupal-selector=&quot;edit-societe&quot; type=&quot;text&quot; id=&quot;edit-societe&quot; name=&quot;Societe&quot; value=&quot;&quot; size=&quot;40&quot; maxlength=&quot;128&quot;&gt;
+&lt;!-- État interactif mesuré après sélection « Un professionnel » :
+     instruction globale : « Sauf mention contraire, tous les champs sont obligatoires. » ;
+     visible=true ; required=false ; aria-required absent ;
+     valeur vide acceptée ; aucune mention « optionnel ». --&gt;</code></pre>
+  <h2>Inventaire des constats sources</h2>
+  <div class="table-wrap"><table class="inventory"><thead><tr><th scope="col">Page</th><th scope="col">Identifiant source</th><th scope="col">Critère / test</th><th scope="col">Sélecteur</th><th scope="col">Observation</th><th scope="col">Provenance</th><th scope="col">Preuve principale</th></tr></thead><tbody><tr><td>P06</td><td><code>RGAA-P06-Q-013</code></td><td>11.10 / 11.10.1</td><td><code>#edit-societe</code></td><td>L’instruction annonce que tous les champs sont obligatoires sauf mention contraire. Dans la variante Un professionnel, Société est visible, accepte une valeur vide et ne porte aucune mention optionnel.</td><td>MEASUREMENTS</td><td><code>preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json</code></td></tr></tbody></table></div>
+  <h2>Analyse du défaut</h2>
+  <p>L’instruction générale annonce que tous les champs sont obligatoires sauf mention contraire. Dans la variante « Un professionnel », le champ « Nom de l’entreprise » est visible, accepte une valeur vide et ne porte aucune mention « optionnel ». L’information donnée avant la saisie est donc contradictoire avec la validation réelle du formulaire.</p>
+  <h2>Impact utilisateur</h2>
+  <p>La personne peut croire à tort qu’elle doit fournir le nom de son entreprise, ce qui augmente la charge de saisie et peut conduire à communiquer une donnée non requise.</p>
+  <h2>Recommandations</h2>
+  <section class="solution"><h3>Solution 1 — Indiquer explicitement que le champ est optionnel (recommandée)</h3><p>Conserver le comportement métier actuel et ajouter une mention visible dans l’étiquette du champ.</p><pre><code>&lt;label class=&quot;fr-label&quot; for=&quot;edit-societe&quot;&gt;
+  Nom de l’entreprise
+  &lt;span class=&quot;fr-hint-text&quot;&gt;Optionnel&lt;/span&gt;
+&lt;/label&gt;
+&lt;input class=&quot;fr-input&quot; id=&quot;edit-societe&quot; name=&quot;Societe&quot; type=&quot;text&quot;&gt;</code></pre></section><section class="solution"><h3>Solution 2 — Rendre le champ réellement obligatoire après décision métier</h3><p>Si la donnée est indispensable, ajouter l’indication visible et l’attribut <code>required</code>. Ne pas appliquer cette option sans validation métier.</p><pre><code>&lt;label class=&quot;fr-label&quot; for=&quot;edit-societe&quot;&gt;
+  Nom de l’entreprise &lt;span aria-hidden=&quot;true&quot;&gt;*&lt;/span&gt;
+&lt;/label&gt;
+&lt;input class=&quot;fr-input&quot; id=&quot;edit-societe&quot; name=&quot;Societe&quot;
+       type=&quot;text&quot; required&gt;</code></pre></section>
+  <h2 id="comparaison-dsfr">Comparaison avec le composant DSFR</h2><p><strong>Composant concerné :</strong> Champ de saisie</p><div class="table-wrap"><table class=""><thead><tr><th scope="col">Point contrôlé</th><th scope="col">DSFR / comportement attendu</th><th scope="col">Site audité</th></tr></thead><tbody><tr><td>Information avant saisie</td><td>Caractère obligatoire ou optionnel cohérent</td><td>Instruction globale inexacte</td></tr><tr><td>Validation native</td><td>Cohérente avec l’indication visible</td><td>Le champ accepte une valeur vide</td></tr><tr><td>Cause attribuée</td><td>Libellé paramétrable</td><td>Règle métier / template du formulaire</td></tr></tbody></table></div><p>Le constat est attribué à l’intégration observée. La présence de classes <code>fr-*</code> ne suffit pas à attribuer le défaut au DSFR natif.</p>
+  <h2>Vérification après correction</h2>
+  <ul class="checklist"><li>Sélectionner la variante « Un professionnel ».</li><li>Vérifier que le caractère optionnel ou obligatoire est visible avant la saisie.</li><li>Soumettre le formulaire sans valeur après validation métier et contrôler la cohérence du comportement.</li></ul>
+  <p><strong>Condition de clôture :</strong> produire une nouvelle preuve et faire recontrôler la correction humainement.</p>
+  <h2>Références</h2>
+  <ul><li><a href="https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.1">RGAA 4.1.2 — test 11.10.1</a></li><li><a href="https://github.com/GouvernementFR/dsfr/tree/v1.15.2/src/dsfr/component/input">DSFR 1.15.2 — composant input</a></li><li>Source factuelle : rapports HTML RGAA livrés et constats <code>NC_CONFIRMEE</code> correspondants.</li></ul>
+</main>
+<footer><div class="container"><p>Échantillon Douane — tickets RGAA P01 à P09.</p></div></footer>
+</body>
+</html>

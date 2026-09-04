@@ -1,0 +1,37 @@
+{
+  "valid": true,
+  "generation_state": "COMPLETE",
+  "checksum_verification": "PASSED",
+  "validation_scope": "Intégrité des fichiers générés, structure, liens internes générés, comptages et traçabilité. Les liens internes des 18 rapports sources byte-identiques sont explicitement exclus.",
+  "client_transmission_ready": false,
+  "validation_file_hashed": false,
+  "methodological_arbitrations_required": 6,
+  "source_methodological_arbitrations_required": 4,
+  "supplemental_arbitrations_required": 2,
+  "copied_report_links_validated": false,
+  "checked_at": "2026-09-04",
+  "errors": [],
+  "warnings": [
+    "Les 18 rapports RGAA/DSFR sont des copies sources byte-identiques : leurs liens relatifs vers les portails et preuves d’archive ne sont pas embarqués ni inclus dans la validation de liens.",
+    "Quatre groupes de constats sources sont isolés en fiches à requalifier : target=_blank/13.2.1, références aria-describedby orphelines et libellés French Customs susceptibles de relever de l’exception des noms propres.",
+    "Le complément P06 ajoute deux requalifications : 11.10.2, publié conforme, pour les indications de champs obligatoires, et 7.5.2, publié NA, pour les messages dynamiques."
+  ],
+  "counts": {
+    "pages": 9,
+    "source_confirmed_findings": 145,
+    "source_rule_ids": 14,
+    "root_cause_files": 19,
+    "nc_tickets": 15,
+    "requalification_files": 4,
+    "p06_form_tests": 34,
+    "supplemental_candidate_tickets": 2,
+    "supplement_bundled_archive_evidence_files": 2,
+    "copied_report_files": 18,
+    "markdown_files": 19,
+    "html_files": 19,
+    "archive_evidence_references": 54,
+    "missing_archive_evidence": 0,
+    "bundled_evidence_files": 0,
+    "hashed_files": 75
+  }
+}

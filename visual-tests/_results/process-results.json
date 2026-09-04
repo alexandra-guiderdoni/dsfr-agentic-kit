@@ -1,0 +1,298 @@
+{
+  "repo": "dsfr-agentic-kit",
+  "timestamp": "2026-09-03T22:16:05Z",
+  "mode": "hybrid",
+  "base_ref": "session baseline; implementation paths were untracked and no commit-addressable before state exists",
+  "head_ref": "working tree at 4fd1858e5e528d925daab466e780eaaa3506bcc7",
+  "summary": {
+    "units_checked": 5,
+    "behavior_changes": 5,
+    "new_errors": 0,
+    "surprises": 0,
+    "evidence_mix": {
+      "reasoned": 0,
+      "measured": 15
+    },
+    "by_verdict": {
+      "unchanged": 0,
+      "behavior-changed": 5,
+      "new-error": 0
+    }
+  },
+  "units": [
+    {
+      "id": "u01",
+      "kind": "pipeline-stage",
+      "ref": "scripts/retest-p06-form-safe.py",
+      "file": "scripts/retest-p06-form-safe.py",
+      "verdict": "behavior-changed",
+      "impacted_backend": {
+        "endpoint": "P06 safe browser evidence pipeline",
+        "reason": "guarded Playwright campaign publishes source-bound schema-v2 evidence",
+        "severity": "low"
+      },
+      "actions": [
+        {
+          "seed": 1,
+          "input_summary": "empty form and invalid synthetic email",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["Chromium headless represents only the tested browser"],
+          "before": {"outcome": "ok", "output": "no current schema-v2 complement proof", "effects": "none"},
+          "after": {"outcome": "ok", "output": "focus and native-validation states plus versioned screenshots", "effects": "GET/HEAD/OPTIONS only"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "The published run records focus on edit-nom and edit-adressemail without form submission."
+        },
+        {
+          "seed": 2,
+          "input_summary": "one synthetic forbidden-extension file and five synthetic PNG files",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["Playwright route.abort completed before the request could leave the browser context"],
+          "before": {"outcome": "ok", "output": "server branch not safely isolated", "effects": "none"},
+          "after": {"outcome": "ok", "output": "client error captured; server result explicitly unavailable", "effects": "one correlated multipart AJAX POST containing five synthetic names aborted; zero unsafe requests completed"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "The approved no-submission boundary is preserved; the concurrent Drupal.AjaxError is exposed with causality unproven, and the server-only gap remains open."
+        },
+        {
+          "seed": 3,
+          "input_summary": "P01-P09 multipage control inventory",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["title and main-h1 markers identify the expected page versions"],
+          "before": {"outcome": "ok", "output": "no source-bound nine-page comparison", "effects": "none"},
+          "after": {"outcome": "ok", "output": "9/9 pages identified and four expected DOM candidates complete and concordant", "effects": "read-only navigation"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "The result is explicitly a DOM candidate comparison, not a normative accessible-name verdict."
+        }
+      ]
+    },
+    {
+      "id": "u02",
+      "kind": "pipeline-stage",
+      "ref": "scripts/generate-p06-form-annex.py",
+      "file": "scripts/generate-p06-form-annex.py",
+      "verdict": "behavior-changed",
+      "impacted_backend": {
+        "endpoint": "P06 form annex generation",
+        "reason": "deterministic 34-test matrix, source-bound proof validation and two candidate tickets",
+        "severity": "low"
+      },
+      "actions": [
+        {
+          "seed": 1,
+          "input_summary": "current schema-v2 evidence plus archived 258-test source matrix",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["the local RGAA 4.1.2 normalized reference is authoritative"],
+          "before": {"outcome": "ok", "output": "no complete P06 Formulaires annex", "effects": "none"},
+          "after": {"outcome": "ok", "output": "34 unique tests with an exact six-bucket partition", "effects": "writes only under virginie-livrables/P06-FORMULAIRES"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "Counts are 3 technical C, 3 supported NC, 5 conditional DOM NA, 17 human, 4 server, and 2 business confirmations."
+        },
+        {
+          "seed": 2,
+          "input_summary": "published 11.10.2 and 7.5.2 decisions",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "ok", "output": "11.10.2 published C_CONFIRMEE and 7.5.2 published NA_CONFIRMEE", "effects": "none"},
+          "after": {"outcome": "ok", "output": "two separate HTML/Markdown candidate tickets with NON_CONFORME_ETAYE status", "effects": "annex/index links added"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "Nine required controls lack an indication in their label or associated passage; the dynamic error region lacks role/atomic semantics."
+        },
+        {
+          "seed": 3,
+          "input_summary": "stale, unsafe, incomplete or source-mismatched evidence",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "ok", "output": "older proof could be rendered without the final v2 contract", "effects": "potential stale output"},
+          "after": {"outcome": "error", "output": "generation rejects wrong schema/hash, unsafe completion, incoherent pages, bad screenshots, or incomplete classification", "effects": "package validation is invalidated before changed outputs are published"},
+          "delta": "now-errors",
+          "surprise": false,
+          "observation": "Identical inputs keep annex payload bytes stable; every invocation still invalidates the package before fallible validation by design."
+        }
+      ]
+    },
+    {
+      "id": "u03",
+      "kind": "pipeline-stage",
+      "ref": "scripts/generate-virginie-rgaa-tickets.py",
+      "file": "scripts/generate-virginie-rgaa-tickets.py",
+      "verdict": "behavior-changed",
+      "impacted_backend": {
+        "endpoint": "Virginie delivery package generation",
+        "reason": "the package now exposes and validates both P06 candidate tickets",
+        "severity": "low"
+      },
+      "actions": [
+        {
+          "seed": 1,
+          "input_summary": "existing 19 root-cause files and current P06 supplement",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["the P06 annex is generated first"],
+          "before": {"outcome": "ok", "output": "indexes did not expose both P06 requalifications", "effects": "existing package only"},
+          "after": {"outcome": "ok", "output": "root card and ticket index link both candidate tickets", "effects": "static HTML and README regenerated"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "The index distinguishes four source arbitration files from two supplemental candidates."
+        },
+        {
+          "seed": 2,
+          "input_summary": "package missing either candidate or requalification record",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "ok", "output": "single-candidate supplement contract", "effects": "none"},
+          "after": {"outcome": "error", "output": "validator requires 34 exact unique tests, the exact four server retests, two coherent requalifications, and the current collector/evidence/matrix/screenshot hash chain", "effects": "generation stays non-green"},
+          "delta": "now-errors",
+          "surprise": false,
+          "observation": "Ten injected counterexamples were rejected; the valid integrated count is six methodological arbitrations: four source plus two supplemental."
+        },
+        {
+          "seed": 3,
+          "input_summary": "successful package lifecycle",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "ok", "output": "validation lifecycle did not cover the final P06 set", "effects": "prior checksums"},
+          "after": {"outcome": "ok", "output": "the old ticket root is removed under lock; IN_PROGRESS precedes fallible validation; COMPLETE/PASSED is written only after checksum verification", "effects": "validation file remains deliberately outside its own checksum set"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "A shared exclusive file lock serialized two competing writer processes; client_transmission_ready remains false independently of technical validity."
+        }
+      ]
+    },
+    {
+      "id": "u04",
+      "kind": "pipeline-stage",
+      "ref": "delivery integrity validation",
+      "file": "virginie-livrables/TICKETS-RGAA/VALIDATION-TICKETS-RGAA.json",
+      "verdict": "behavior-changed",
+      "impacted_backend": {
+        "endpoint": "Virginie delivery integrity validation",
+        "reason": "current proof, annex, tickets and indexes are covered by final checks",
+        "severity": "low"
+      },
+      "actions": [
+        {
+          "seed": 1,
+          "input_summary": "75 checksum targets",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "ok", "output": "prior smaller checksum scope", "effects": "read-only verification"},
+          "after": {"outcome": "ok", "output": "75/75 SHA-256 entries verify", "effects": "read-only shasum verification"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "The authoritative v2 run contains five screenshot hashes and a matching collector hash."
+        },
+        {
+          "seed": 2,
+          "input_summary": "24 generated/integrated HTML pages and local anchors",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["byte-identical copied source reports are outside this link scope"],
+          "before": {"outcome": "ok", "output": "no final two-ticket navigation", "effects": "none"},
+          "after": {"outcome": "ok", "output": "243 local links/fragments checked; zero broken", "effects": "read-only parse"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "The validation scope does not claim that archive-relative links inside copied source reports resolve."
+        },
+        {
+          "seed": 3,
+          "input_summary": "two bundled archived JSON evidence files",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "ok", "output": "archive paths only", "effects": "none"},
+          "after": {"outcome": "ok", "output": "byte-identical bundled copies with source SHA-256 recorded", "effects": "read-only hash comparison"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "No file under archives was modified."
+        }
+      ]
+    },
+    {
+      "id": "u05",
+      "kind": "pipeline-stage",
+      "ref": "local Chromium delivery rendering",
+      "file": "virginie-livrables/INDEX-LIVRABLES.html",
+      "verdict": "behavior-changed",
+      "impacted_backend": {
+        "endpoint": "file:// delivery presentation",
+        "reason": "new P06 annex and candidate-ticket interfaces",
+        "severity": "low"
+      },
+      "actions": [
+        {
+          "seed": 1,
+          "input_summary": "five entry pages at 1440x1000",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["local file rendering represents the delivered static files"],
+          "before": {"outcome": "ok", "output": "no final two-ticket presentation", "effects": "none"},
+          "after": {"outcome": "ok", "output": "root, annex, both candidates and ticket index render", "effects": "read-only file navigation"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "Every inspected page had one main and one h1 with no page exception."
+        },
+        {
+          "seed": 2,
+          "input_summary": "same five entry pages at 390x844",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": ["390px is the selected mobile viewport"],
+          "before": {"outcome": "ok", "output": "no final mobile candidates", "effects": "none"},
+          "after": {"outcome": "ok", "output": "five mobile layouts render without horizontal overflow", "effects": "read-only file navigation"},
+          "delta": "output-changed",
+          "surprise": false,
+          "observation": "All ten viewport screenshots were visually inspected."
+        },
+        {
+          "seed": 3,
+          "input_summary": "formal ShipGuard visual-run preflight",
+          "evidence": "measured",
+          "confidence": "high",
+          "assumptions": [],
+          "before": {"outcome": "error", "output": "visual-tests/_config.yaml absent", "effects": "none"},
+          "after": {"outcome": "error", "output": "formal manifest runner remains unavailable; direct Playwright checks are the evidence used", "effects": "none"},
+          "delta": "identical",
+          "surprise": false,
+          "observation": "No formal visual PASS is claimed; the measured evidence is the direct local Chromium campaign."
+        }
+      ]
+    }
+  ],
+  "impacted_backend": [
+    {"endpoint": "P06 safe browser evidence pipeline", "reason": "schema-v2 guarded evidence collection", "severity": "low"},
+    {"endpoint": "P06 form annex generation", "reason": "34-test matrix and two candidates", "severity": "low"},
+    {"endpoint": "Virginie delivery package generation", "reason": "two supplemental arbitration records", "severity": "low"},
+    {"endpoint": "Virginie delivery integrity validation", "reason": "75-file checksum scope", "severity": "low"}
+  ],
+  "impacted_ui_routes": [
+    {"route": "virginie-livrables/INDEX-LIVRABLES.html", "reason": "P06 supplement card", "severity": "low"},
+    {"route": "virginie-livrables/P06-FORMULAIRES/INDEX-P06-FORMULAIRES.html", "reason": "34-test annex", "severity": "low"},
+    {"route": "virginie-livrables/P06-FORMULAIRES/TICKET-CANDIDAT-RGAA-11.10.2.html", "reason": "required-field candidate", "severity": "low"},
+    {"route": "virginie-livrables/P06-FORMULAIRES/TICKET-CANDIDAT-RGAA-7.5.2.html", "reason": "dynamic-message candidate", "severity": "low"},
+    {"route": "virginie-livrables/TICKETS-RGAA/INDEX-TICKETS-RGAA.html", "reason": "six-arbitration notice", "severity": "low"}
+  ],
+  "skipped": [
+    {"file": "virginie-livrables/RGAA/*.html", "reason": "byte-identical source copies; their unresolved archive-relative links are intentionally outside generated-link validation"},
+    {"file": "virginie-livrables/DSFR/*.html", "reason": "byte-identical source copies; their unresolved archive-relative links are intentionally outside generated-link validation"}
+  ],
+  "uncovered": [
+    "True server response for tests 11.10.6, 11.10.7, 11.11.1 and 11.11.2 — intentionally blocked by the approved no-submission mode.",
+    "Human semantic, visual and business qualification for the conditional/human buckets.",
+    "Real NVDA, JAWS or VoiceOver announcement behavior.",
+    "Committed before/after Git comparison — implementation paths are untracked at HEAD 4fd1858e5e528d925daab466e780eaaa3506bcc7.",
+    "Formal ShipGuard manifest execution — visual-tests/_config.yaml is absent; direct Playwright rendering was used instead."
+  ]
+}

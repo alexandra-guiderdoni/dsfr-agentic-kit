@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NC-TRANSVERSE-008 — Valeur type=link invalide sur un lien</title>
+  <meta name="description" content="Ticket RGAA unitaire : Valeur type=link invalide sur un lien">
+  <style>
+:root{--blue:#000091;--red:#ce0500;--orange:#b34000;--grey:#f6f6f6;--border:#ddd;--text:#161616}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font:1rem/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#fff}
+a{color:var(--blue);text-underline-offset:.18em}a:hover{text-decoration-thickness:.16em}a:focus-visible,button:focus-visible{outline:3px solid #0a76f6;outline-offset:3px}
+.skip-link{position:absolute;left:-999rem;top:.5rem;background:#fff;padding:.75rem 1rem;z-index:10}.skip-link:focus{left:.5rem}.container{width:min(76rem,calc(100% - 2rem));margin:auto}
+header{border-top:6px solid var(--blue);border-bottom:1px solid var(--border);padding:1.5rem 0}header p{max-width:68rem}.back{display:inline-block;margin-bottom:1rem}
+main{padding:2rem 0 4rem}h1{font-size:clamp(2rem,4vw,3rem);line-height:1.15}h2{margin-top:3rem;border-top:2px solid var(--border);padding-top:1.25rem}h3{margin-top:2rem}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#eee;padding:.08em .25em;border-radius:.15rem}
+pre{overflow:auto;padding:1rem;background:#1e1e1e;color:#f8f8f2;border-radius:.25rem;white-space:pre;tab-size:2}pre code{background:transparent;padding:0;color:inherit}.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.5rem 1.5rem;padding:1rem;background:var(--grey);border-left:4px solid var(--blue)}.meta p{margin:.2rem 0}
+.alert{padding:1rem;border-left:6px solid var(--orange);background:#fff4e5;margin:1.5rem 0}.warning{padding:1rem;border-left:6px solid #e4794a;background:#fff4e5}.badge{display:inline-block;padding:.2rem .55rem;border-radius:1rem;background:#eee;font-weight:700}.badge.blocking{background:#ffe9e9;color:#8f0000}.badge.major{background:#fff4e5;color:#6a3a00}
+.table-wrap{overflow-x:auto;margin:1rem 0}table{border-collapse:collapse;width:100%;min-width:45rem}th,td{border:1px solid #bbb;padding:.65rem;text-align:left;vertical-align:top}th{background:#eee}tbody tr:nth-child(even){background:#fafafa}.inventory td:nth-child(2),.inventory td:nth-child(4){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88rem;overflow-wrap:anywhere}
+.solution{border-left:4px solid var(--blue);padding-left:1rem;margin:2rem 0}.checklist{list-style:none;padding-left:0}.checklist li{margin:.65rem 0;padding-left:1.8rem;position:relative}.checklist li::before{content:"☐";position:absolute;left:0;font-size:1.2rem}footer{border-top:1px solid var(--border);padding:2rem 0;background:var(--grey)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:1rem}.card{border:1px solid var(--border);padding:1rem}.card h2,.card h3{border:0;margin-top:0;padding-top:0}.count{font-size:2rem;font-weight:700;color:var(--blue)}
+@media(max-width:45rem){.container{width:min(100% - 1rem,76rem)}header,main{padding-left:.25rem;padding-right:.25rem}table{min-width:38rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.skip-link,.back{display:none}.container{width:100%}body{font-size:10pt}a{color:#000}pre{white-space:pre-wrap;color:#000;background:#f5f5f5;border:1px solid #aaa}h2{break-after:avoid}.solution,pre,table{break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<header>
+  <div class="container">
+    <a class="back" href="../INDEX-TICKETS-RGAA.html">← Index des tickets RGAA</a>
+    <h1>NC-TRANSVERSE-008 — Valeur type=link invalide sur un lien</h1>
+    <div class="meta">
+      <p><strong>Statut :</strong> Préqualification — NC confirmée dans les rapports sources</p>
+      <p><strong>Référentiel :</strong> RGAA 4.1.2</p>
+      <p><strong>Sévérité :</strong> <span class="badge major">Majeur</span></p>
+      <p><strong>Date :</strong> 2026-09-04</p>
+      <p><strong>Composant / gabarit :</strong> Navigation</p>
+      <p><strong>Portée :</strong> Transverse — P05, P06, P07, P08, P09</p>
+      <p><strong>Pages :</strong> P05, P06, P07, P08, P09</p>
+      <p><strong>Constats sources regroupés :</strong> 5</p>
+    </div>
+    <p><strong>Justification de sévérité :</strong> Le code source généré n’est pas valide. Cette erreur réduit la robustesse d’interprétation et peut perturber des outils qui exploitent le type déclaré de la ressource.</p>
+    <div class="warning" role="note"><strong>Limite :</strong> préqualification instrumentée, sans taux RGAA officiel ni validation après correction.</div>
+    
+  </div>
+</header>
+<main id="contenu" class="container">
+  <h2>Pages et rapports sources</h2>
+  <div class="table-wrap"><table class=""><thead><tr><th scope="col">Page</th><th scope="col">Nom</th><th scope="col">URL</th><th scope="col">Rapport RGAA</th></tr></thead><tbody><tr><td>P05</td><td>Données personnelles</td><td><a href="https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles">https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles</a></td><td><a href="../../RGAA/P05-RGAA.html">Rapport P05</a></td></tr><tr><td>P06</td><td>Formulaire Écrivez-nous</td><td><a href="https://moa.douane.gouv.fr/formulaire-infos-douane-service">https://moa.douane.gouv.fr/formulaire-infos-douane-service</a></td><td><a href="../../RGAA/P06-RGAA.html">Rapport P06</a></td></tr><tr><td>P07</td><td>Voyages à l’étranger</td><td><a href="https://moa.douane.gouv.fr/particuliers/voyages-letranger">https://moa.douane.gouv.fr/particuliers/voyages-letranger</a></td><td><a href="../../RGAA/P07-RGAA.html">Rapport P07</a></td></tr><tr><td>P08</td><td>Commerce international</td><td><a href="https://moa.douane.gouv.fr/professionnels/commerce-international">https://moa.douane.gouv.fr/professionnels/commerce-international</a></td><td><a href="../../RGAA/P08-RGAA.html">Rapport P08</a></td></tr><tr><td>P09</td><td>Actualité DELTA IE</td><td><a href="https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026">https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026</a></td><td><a href="../../RGAA/P09-RGAA.html">Rapport P09</a></td></tr></tbody></table></div>
+  <h2>Références RGAA</h2>
+  <ul><li><strong>Critère 8.2</strong> — Pour chaque page web, le code source généré est-il valide selon le type de document spécifié ?</li><li><strong>Test 8.2.1</strong> — Pour chaque déclaration de type de document, le code source généré de la page vérifie-t-il ces conditions ? Les balises, attributs et valeurs d’attributs respectent les règles d’écriture ; L’imbrication des balises est conforme ; L’ouverture et la fermeture des balises sont conformes ; Les valeurs d’attribut id sont uniques dans la page ; Les attributs ne sont pas doublés sur un même élément.</li></ul>
+  <h2>Code source constaté</h2>
+  <h3>Lien de navigation observé</h3><pre><code>&lt;a id=&quot;menu-nous-rejoindre&quot; type=&quot;link&quot; href=&quot;/devenir-douanier&quot; class=&quot;fr-nav__link&quot;&gt;Nous rejoindre&lt;/a&gt;</code></pre>
+  <h2>Inventaire des constats sources</h2>
+  <div class="table-wrap"><table class="inventory"><thead><tr><th scope="col">Page</th><th scope="col">Identifiant source</th><th scope="col">Critère / test</th><th scope="col">Sélecteur</th><th scope="col">Observation</th><th scope="col">Provenance</th><th scope="col">Preuve principale</th></tr></thead><tbody><tr><td>P05</td><td><code>P05-RGAA-8-2-ANCHOR-TYPE-002-005</code></td><td>8.2 / 8.2.1</td><td><code>#menu-nous-rejoindre</code></td><td>type=&#x27;link&#x27; n’est pas un type MIME valide sur a</td><td>RENDERED_DOM</td><td><code>rgaa/preuves/P05/attempt-002/raw-dom.json</code></td></tr><tr><td>P06</td><td><code>P06-RGAA-8-2-ANCHOR-TYPE-002-007</code></td><td>8.2 / 8.2.1</td><td><code>#menu-nous-rejoindre</code></td><td>type=&#x27;link&#x27; n’est pas un type MIME valide sur a</td><td>RENDERED_DOM</td><td><code>rgaa/preuves/P06/attempt-004/raw-dom.json</code></td></tr><tr><td>P07</td><td><code>P07-RGAA-8-2-ANCHOR-TYPE-002-005</code></td><td>8.2 / 8.2.1</td><td><code>#menu-nous-rejoindre</code></td><td>type=&#x27;link&#x27; n’est pas un type MIME valide sur a</td><td>RENDERED_DOM</td><td><code>rgaa/preuves/P07/attempt-002/raw-dom.json</code></td></tr><tr><td>P08</td><td><code>P08-RGAA-8-2-ANCHOR-TYPE-002-005</code></td><td>8.2 / 8.2.1</td><td><code>#menu-nous-rejoindre</code></td><td>type=&#x27;link&#x27; n’est pas un type MIME valide sur a</td><td>RENDERED_DOM</td><td><code>rgaa/preuves/P08/attempt-001/raw-dom.json</code></td></tr><tr><td>P09</td><td><code>P09-RGAA-8-2-ANCHOR-TYPE-002-006</code></td><td>8.2 / 8.2.1</td><td><code>#menu-nous-rejoindre</code></td><td>type=&#x27;link&#x27; n’est pas un type MIME valide sur a</td><td>RENDERED_DOM</td><td><code>rgaa/preuves/P09/attempt-001/raw-dom.json</code></td></tr></tbody></table></div>
+  <h2>Analyse du défaut</h2>
+  <p>Le lien « Nous rejoindre » porte <code>type=&quot;link&quot;</code> sur P05 à P09. Pour un élément <code>a</code>, l’attribut <code>type</code> décrit le type MIME de la ressource cible ; la valeur <code>link</code> n’est pas un type MIME. L’attribut est inutile pour donner le rôle de lien, déjà fourni par la balise et son <code>href</code>.</p>
+  <h2>Impact utilisateur</h2>
+  <p>Le code source généré n’est pas valide. Cette erreur réduit la robustesse d’interprétation et peut perturber des outils qui exploitent le type déclaré de la ressource.</p>
+  <h2>Recommandations</h2>
+  <section class="solution"><h3>Solution 1 — Supprimer l’attribut type (recommandée)</h3><p>La ressource étant une page HTML ordinaire, supprimer l’attribut ajouté par le template de navigation.</p><pre><code>&lt;a id=&quot;menu-nous-rejoindre&quot;
+   href=&quot;/devenir-douanier&quot;
+   class=&quot;fr-nav__link&quot;&gt;
+  Nous rejoindre
+&lt;/a&gt;</code></pre></section><section class="solution"><h3>Solution 2 — Déclarer un type MIME réel uniquement si nécessaire</h3><p>Si la cible possède un type utile et connu, employer une valeur MIME valide telle que <code>application/pdf</code>.</p><pre><code>&lt;a href=&quot;/document.pdf&quot; type=&quot;application/pdf&quot;&gt;Télécharger le document&lt;/a&gt;</code></pre></section>
+  <h2 id="comparaison-dsfr">Comparaison avec le composant DSFR</h2><p><strong>Composant concerné :</strong> Navigation</p><div class="table-wrap"><table class=""><thead><tr><th scope="col">Point contrôlé</th><th scope="col">DSFR / comportement attendu</th><th scope="col">Site audité</th></tr></thead><tbody><tr><td>Rôle du lien</td><td>Fourni par a[href]</td><td>Attribut type=link ajouté</td></tr><tr><td>Attribut type</td><td>Absent ou type MIME valide</td><td>Valeur non MIME</td></tr><tr><td>Cause attribuée</td><td>Lien HTML standard</td><td>Template de navigation intégré</td></tr></tbody></table></div><p>Le constat est attribué à l’intégration observée. La présence de classes <code>fr-*</code> ne suffit pas à attribuer le défaut au DSFR natif.</p>
+  <h2>Vérification après correction</h2>
+  <ul class="checklist"><li>Rechercher <code>a[type]</code> dans le DOM rendu de P05 à P09.</li><li>Supprimer <code>type=&quot;link&quot;</code> et valider le code HTML généré.</li><li>Vérifier que le lien « Nous rejoindre » conserve son fonctionnement.</li></ul>
+  <p><strong>Condition de clôture :</strong> produire une nouvelle preuve et faire recontrôler la correction humainement.</p>
+  <h2>Références</h2>
+  <ul><li><a href="https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#8.2.1">RGAA 4.1.2 — test 8.2.1</a></li><li><a href="https://github.com/GouvernementFR/dsfr/tree/v1.15.2/src/dsfr/component/navigation">DSFR 1.15.2 — composant navigation</a></li><li>Source factuelle : rapports HTML RGAA livrés et constats <code>NC_CONFIRMEE</code> correspondants.</li></ul>
+</main>
+<footer><div class="container"><p>Échantillon Douane — tickets RGAA P01 à P09.</p></div></footer>
+</body>
+</html>

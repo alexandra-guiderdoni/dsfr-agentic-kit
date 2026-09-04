@@ -1,0 +1,579 @@
+{
+  "schema_version": 1,
+  "page": {
+    "id": "P06",
+    "name": "Formulaire Écrivez-nous",
+    "url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
+  },
+  "audited_at": "2026-09-02T21:06:19+00:00",
+  "server_error_state": {
+    "url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+    "focus": "body",
+    "errors": [
+      {
+        "tag": "div",
+        "id": "data-perso-fieldset-messages",
+        "class": "fr-alert--error fr-alert",
+        "text": "Un problème est survenu lors de la soumission du formulaire. Merci d'attendre 11 secondes et d'essayer à nouveau.\n\nMasquer le message",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgba(0, 0, 0, 0)",
+        "rect": {
+          "x": 0,
+          "y": 388,
+          "width": 1440,
+          "height": 56
+        },
+        "describedby": null,
+        "html": "<div class=\"fr-alert--error fr-alert\" id=\"data-perso-fieldset-messages\" aria-live=\"polite\">\n\t\t<p>Un problème est survenu lors de la soumission du formulaire. Merci d'attendre 11 secondes et d'essayer à nouveau.</p>\n\t\t<button title=\"Masquer le message\" type=\"button\" class=\"fr-btn--close fr-btn\">Masquer le message</button>\n\t</div>",
+        "parentHtml": "<div class=\"fr-pb-8v alerts-forms-espace-perso\">\n\t<div class=\"fr-alert--error fr-alert\" id=\"data-perso-fieldset-messages\" aria-live=\"polite\">\n\t\t<p>Un problème est survenu lors de la soumission du formulaire. Merci d'attendre 11 secondes et d'essayer à nouveau.</p>\n\t\t<button title=\"Masquer le message\" type=\"button\" class=\"fr-btn--close fr-btn\">Masquer le message</button>\n\t</div>\n</div>"
+      },
+      {
+        "tag": "input",
+        "id": "edit-nom",
+        "class": "fr-input form-text required error",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgb(238, 238, 238)",
+        "rect": {
+          "x": 352,
+          "y": 1612,
+          "width": 736,
+          "height": 40
+        },
+        "describedby": "Nom-input-errors-messages",
+        "html": "<input aria-describedby=\"Nom-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"family-name\" data-drupal-selector=\"edit-nom\" type=\"text\" id=\"edit-nom\" name=\"Nom\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+        "parentHtml": "<div class=\"fr-input-group--error fr-input-group\">\n\t\t\t\t\t<label class=\"fr-label js-form-required form-required\" for=\"edit-nom\">Nom</label>\n\t\t\t\t\t\t\t\t<input aria-describedby=\"Nom-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"family-name\" data-drupal-selector=\"edit-nom\" type=\"text\" id=\"edit-nom\" name=\"Nom\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">\n\n\t\t\t\t\t\t\t\t\t<div class=\"fr-messages-group\" id=\"Nom-input-errors-messages\" aria-live=\"polite\"><p class=\"fr-message fr-message--error\"><span>Le champ Nom est requis.</span></p></div>\n\t\t\t</div>"
+      },
+      {
+        "tag": "input",
+        "id": "edit-prenom",
+        "class": "fr-input form-text required error",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgb(238, 238, 238)",
+        "rect": {
+          "x": 352,
+          "y": 1736,
+          "width": 736,
+          "height": 40
+        },
+        "describedby": "Prenom-input-errors-messages",
+        "html": "<input aria-describedby=\"Prenom-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"given-name\" data-drupal-selector=\"edit-prenom\" type=\"text\" id=\"edit-prenom\" name=\"Prenom\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+        "parentHtml": "<div class=\"fr-input-group--error fr-input-group\">\n\t\t\t\t\t<label class=\"fr-label js-form-required form-required\" for=\"edit-prenom\">Prénom</label>\n\t\t\t\t\t\t\t\t<input aria-describedby=\"Prenom-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"given-name\" data-drupal-selector=\"edit-prenom\" type=\"text\" id=\"edit-prenom\" name=\"Prenom\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">\n\n\t\t\t\t\t\t\t\t\t<div class=\"fr-messages-group\" id=\"Prenom-input-errors-messages\" aria-live=\"polite\"><p class=\"fr-message fr-message--error\"><span>Le champ Prénom est requis.</span></p></div>\n\t\t\t</div>"
+      },
+      {
+        "tag": "input",
+        "id": "edit-pays",
+        "class": "fr-input form-text required error",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgb(238, 238, 238)",
+        "rect": {
+          "x": 352,
+          "y": 1860,
+          "width": 542,
+          "height": 40
+        },
+        "describedby": "Pays-input-errors-messages",
+        "html": "<input aria-describedby=\"Pays-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"country-name\" data-drupal-selector=\"edit-pays\" type=\"text\" id=\"edit-pays\" name=\"Pays\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+        "parentHtml": "<div class=\"fr-input-group--error fr-input-group\">\n\t\t\t\t\t<label class=\"fr-label js-form-required form-required\" for=\"edit-pays\">Pays</label>\n\t\t\t\t\t\t\t\t<input aria-describedby=\"Pays-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"country-name\" data-drupal-selector=\"edit-pays\" type=\"text\" id=\"edit-pays\" name=\"Pays\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">\n\n\t\t\t\t\t\t\t\t\t<div class=\"fr-messages-group\" id=\"Pays-input-errors-messages\" aria-live=\"polite\"><p class=\"fr-message fr-message--error\"><span>Le champ Pays est requis.</span></p></div>\n\t\t\t</div>"
+      },
+      {
+        "tag": "input",
+        "id": "edit-codepostal",
+        "class": "fr-input form-text required error",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgb(238, 238, 238)",
+        "rect": {
+          "x": 934,
+          "y": 1860,
+          "width": 154,
+          "height": 40
+        },
+        "describedby": "CodePostal-input-errors-messages",
+        "html": "<input aria-describedby=\"CodePostal-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"postal-code\" data-drupal-selector=\"edit-codepostal\" type=\"text\" id=\"edit-codepostal\" name=\"CodePostal\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+        "parentHtml": "<div class=\"fr-input-group--error fr-input-group\">\n\t\t\t\t\t<label class=\"fr-label js-form-required form-required\" for=\"edit-codepostal\">Code postal</label>\n\t\t\t\t\t\t\t\t<input aria-describedby=\"CodePostal-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"postal-code\" data-drupal-selector=\"edit-codepostal\" type=\"text\" id=\"edit-codepostal\" name=\"CodePostal\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">\n\n\t\t\t\t\t\t\t\t\t<div class=\"fr-messages-group\" id=\"CodePostal-input-errors-messages\" aria-live=\"polite\"><p class=\"fr-message fr-message--error\"><span>Le champ Code postal est requis.</span></p></div>\n\t\t\t</div>"
+      },
+      {
+        "tag": "input",
+        "id": "edit-adressemail",
+        "class": "fr-input form-email required error",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgb(238, 238, 238)",
+        "rect": {
+          "x": 352,
+          "y": 2028,
+          "width": 736,
+          "height": 40
+        },
+        "describedby": "AdresseMail-input-errors-messages",
+        "html": "<input aria-describedby=\"AdresseMail-input-errors-messages\" class=\"fr-input form-email required error\" autocomplete=\"email\" data-drupal-selector=\"edit-adressemail\" type=\"email\" id=\"edit-adressemail\" name=\"AdresseMail\" value=\"\" size=\"60\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+        "parentHtml": "<div class=\"fr-input-group--error fr-input-group\">\n\t\t\t\t\t<label class=\"fr-label js-form-required form-required\" for=\"edit-adressemail\">Adresse électronique<span class=\"fr-hint-text\">Format attendu : nom@domaine.fr</span></label>\n\t\t\t\t\t\t\t\t<input aria-describedby=\"AdresseMail-input-errors-messages\" class=\"fr-input form-email required error\" autocomplete=\"email\" data-drupal-selector=\"edit-adressemail\" type=\"email\" id=\"edit-adressemail\" name=\"AdresseMail\" value=\"\" size=\"60\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">\n\n\t\t\t\t\t\t\t\t\t<div class=\"fr-messages-group\" id=\"AdresseMail-input-errors-messages\" aria-live=\"polite\"><p class=\"fr-message fr-message--error\"><span>Le champ Adresse électronique<span class=\"fr-hint-text\">Format attendu : nom@domaine.fr</span> est requis.</span></p></div>\n\t\t\t</div>"
+      },
+      {
+        "tag": "textarea",
+        "id": "edit-question",
+        "class": "fr-input fr-mt-2v form-textarea required error resize-vertical",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgb(238, 238, 238)",
+        "rect": {
+          "x": 352,
+          "y": 2216,
+          "width": 736,
+          "height": 136
+        },
+        "describedby": "Question-input-errors-messages",
+        "html": "<textarea aria-describedby=\"Question-input-errors-messages\" class=\"fr-input fr-mt-2v form-textarea required error resize-vertical\" style=\"resize: none\" data-drupal-selector=\"edit-question\" id=\"edit-question\" name=\"Question\" rows=\"5\" cols=\"60\" maxlength=\"2000\" placeholder=\"Votre message en maximum 2000 caractères\" required=\"required\" aria-invalid=\"true\"></textarea>",
+        "parentHtml": "<div class=\"form-textarea-wrapper\">\n  <textarea aria-describedby=\"Question-input-errors-messages\" class=\"fr-input fr-mt-2v form-textarea required error resize-vertical\" style=\"resize: none\" data-drupal-selector=\"edit-question\" id=\"edit-question\" name=\"Question\" rows=\"5\" cols=\"60\" maxlength=\"2000\" placeholder=\"Votre message en maximum 2000 caractères\" required=\"required\" aria-invalid=\"true\"></textarea>\n</div>"
+      },
+      {
+        "tag": "input",
+        "id": "edit-accept-conditions",
+        "class": "form-checkbox required error",
+        "text": "",
+        "visible": true,
+        "color": "rgb(58, 58, 58)",
+        "background": "rgba(0, 0, 0, 0)",
+        "rect": {
+          "x": 352,
+          "y": 2630,
+          "width": 24,
+          "height": 24
+        },
+        "describedby": "accept_conditions-input-errors-messages",
+        "html": "<input aria-describedby=\"accept_conditions-input-errors-messages\" data-drupal-selector=\"edit-accept-conditions\" type=\"checkbox\" id=\"edit-accept-conditions\" name=\"accept_conditions\" value=\"1\" class=\"form-checkbox required error\" required=\"required\" aria-invalid=\"true\" data-fr-js-checkbox-input=\"true\">",
+        "parentHtml": "<div class=\"fr-checkbox-group--error fr-checkbox-group\">\n\t\t\t\t\t\t\t\t<input aria-describedby=\"accept_conditions-input-errors-messages\" data-drupal-selector=\"edit-accept-conditions\" type=\"checkbox\" id=\"edit-accept-conditions\" name=\"accept_conditions\" value=\"1\" class=\"form-checkbox required error\" required=\"required\" aria-invalid=\"true\" data-fr-js-checkbox-input=\"true\">\n\n\t\t\t\t\t\t\t<label class=\"fr-label option js-form-required form-required\" for=\"edit-accept-conditions\">J'accepte les conditions générales d'utilisation</label>\n\t\t\t\t\t\t\t\t\t\t<div class=\"fr-messages-group\" id=\"accept_conditions-input-errors-messages\" aria-live=\"polite\"><p class=\"fr-message fr-message--error\"><span>Le champ J'accepte les conditions générales d'utilisation est requis.</span></p></div>\n\t\t\t</div>"
+      }
+    ],
+    "axe": {
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "help": "ARIA hidden element must not be focusable or contain focusable elements",
+          "nodes": [
+            {
+              "target": [
+                "#search"
+              ],
+              "html": "<form action=\"/recherche\" method=\"get\" class=\"fr-search-bar\" id=\"search\" role=\"search\" aria-hidden=\"true\">",
+              "failureSummary": "Fix all of the following:\n  Focusable content should be disabled or be removed from the DOM"
+            }
+          ]
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-valid-attr-value",
+          "impact": "critical",
+          "help": "ARIA attributes must conform to valid values",
+          "nodes": [
+            {
+              "target": [
+                "#edit-document-upload"
+              ],
+              "html": "<input accept=\".jpg,.jpeg,.png,.pdf\" data-drupal-selector=\"edit-document-upload\" multiple=\"multiple\" class=\"fr-upload js-form-fi...\" type=\"file\" id=\"edit-document-upload\" name=\"files[Document][]\" size=\"22\" aria-describedby=\"edit-document--descr...\" data-once=\"fileValidate auto-fi...\">",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute element ID does not exist on the page: aria-describedby=\"edit-document--description\""
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".fr-header__tools-links > .menu-connection.fr-nav[data-fr-js-navigation=\"true\"] > .fr-nav__item[data-fr-js-navigation-item=\"true\"] > .fr-btn--account.fr-icon-account-line[href$=\"connexion\"]"
+              ],
+              "html": "<a href=\"/connexion\" class=\"fr-btn--account fr-btn fr-btn--icon-left fr-icon-account-line\">Se connecter</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+            },
+            {
+              "target": [
+                "#menu-nous-rejoindre"
+              ],
+              "html": "<a id=\"menu-nous-rejoindre\" type=\"link\" href=\"/devenir-douanier\" class=\"fr-nav__link\">Nous rejoindre</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+            },
+            {
+              "target": [
+                ".fr-breadcrumb__link[href=\"/\"]"
+              ],
+              "html": "<a class=\"fr-breadcrumb__link\" href=\"/\">Accueil</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[aria-current=\"page\"]"
+              ],
+              "html": "<a class=\"fr-breadcrumb__link\" aria-current=\"page\">Ecrivez-nous</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+            },
+            {
+              "target": [
+                "#data-perso-fieldset-messages > p"
+              ],
+              "html": "<p>Un problème est survenu lors de la soumission du formulaire. Merci d'attendre 11 secondes et d'essayer à nouveau.</p>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".fr-col-md-10.fr-col-lg-8.fr-col-12 > ul > li:nth-child(1) > a[target=\"_blank\"]"
+              ],
+              "html": "<a href=\"https://www.diplomatie.gouv.fr/fr/le-ministere-et-son-reseau/actualites-du-ministere/informations-coronavirus-covid-19/\" target=\"_blank\">www.diplomatie.gouv.fr/fr/le-ministere-et-son-reseau/actualites-du-ministere/informations-coronavirus-covid-19</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".fr-col-md-10.fr-col-lg-8.fr-col-12 > ul > li:nth-child(2) > a[target=\"_blank\"]"
+              ],
+              "html": "<a href=\"https://www.gouvernement.fr/info-coronavirus\" target=\"_blank\">www.gouvernement.fr/info-coronavirus</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "#edit-question-type"
+              ],
+              "html": "<select class=\"fr-select form-select required\" data-drupal-selector=\"edit-question-type\" id=\"edit-question-type\" name=\"Question_type\" required=\"required\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+            },
+            {
+              "target": [
+                "#edit-candidate-gender"
+              ],
+              "html": "<select class=\"fr-select form-select required\" data-drupal-selector=\"edit-candidate-gender\" id=\"edit-candidate-gender\" name=\"candidate_gender\" required=\"required\" data-once=\"changeCandidateGender\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+            },
+            {
+              "target": [
+                "label[for=\"edit-nom\"]"
+              ],
+              "html": "<label class=\"fr-label js-form-required form-required\" for=\"edit-nom\">Nom</label>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#edit-nom"
+              ],
+              "html": "<input aria-describedby=\"Nom-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"family-name\" data-drupal-selector=\"edit-nom\" type=\"text\" id=\"edit-nom\" name=\"Nom\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#Nom-input-errors-messages > .fr-message.fr-message--error > span"
+              ],
+              "html": "<span>Le champ Nom est requis.</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-prenom\"]"
+              ],
+              "html": "<label class=\"fr-label js-form-required form-required\" for=\"edit-prenom\">Prénom</label>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#edit-prenom"
+              ],
+              "html": "<input aria-describedby=\"Prenom-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"given-name\" data-drupal-selector=\"edit-prenom\" type=\"text\" id=\"edit-prenom\" name=\"Prenom\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#Prenom-input-errors-messages > .fr-message.fr-message--error > span"
+              ],
+              "html": "<span>Le champ Prénom est requis.</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-pays\"]"
+              ],
+              "html": "<label class=\"fr-label js-form-required form-required\" for=\"edit-pays\">Pays</label>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#edit-pays"
+              ],
+              "html": "<input aria-describedby=\"Pays-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"country-name\" data-drupal-selector=\"edit-pays\" type=\"text\" id=\"edit-pays\" name=\"Pays\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#Pays-input-errors-messages > .fr-message.fr-message--error > span"
+              ],
+              "html": "<span>Le champ Pays est requis.</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-codepostal\"]"
+              ],
+              "html": "<label class=\"fr-label js-form-required form-required\" for=\"edit-codepostal\">Code postal</label>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#edit-codepostal"
+              ],
+              "html": "<input aria-describedby=\"CodePostal-input-errors-messages\" class=\"fr-input form-text required error\" autocomplete=\"postal-code\" data-drupal-selector=\"edit-codepostal\" type=\"text\" id=\"edit-codepostal\" name=\"CodePostal\" value=\"\" size=\"40\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#CodePostal-input-errors-messages > .fr-message.fr-message--error > span"
+              ],
+              "html": "<span>Le champ Code postal est requis.</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-adressemail\"]"
+              ],
+              "html": "<label class=\"fr-label js-form-required form-required\" for=\"edit-adressemail\">Adresse électronique<span class=\"fr-hint-text\">Format attendu : nom@domaine.fr</span></label>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-adressemail\"] > .fr-hint-text"
+              ],
+              "html": "<span class=\"fr-hint-text\">Format attendu : nom@domaine.fr</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#edit-adressemail"
+              ],
+              "html": "<input aria-describedby=\"AdresseMail-input-errors-messages\" class=\"fr-input form-email required error\" autocomplete=\"email\" data-drupal-selector=\"edit-adressemail\" type=\"email\" id=\"edit-adressemail\" name=\"AdresseMail\" value=\"\" size=\"60\" maxlength=\"128\" required=\"required\" aria-invalid=\"true\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#AdresseMail-input-errors-messages > .fr-message.fr-message--error > span"
+              ],
+              "html": "<span>Le champ Adresse électronique<span class=\"fr-hint-text\">Format attendu : nom@domaine.fr</span> est requis.</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#AdresseMail-input-errors-messages > .fr-message.fr-message--error > span > .fr-hint-text"
+              ],
+              "html": "<span class=\"fr-hint-text\">Format attendu : nom@domaine.fr</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-question\"]"
+              ],
+              "html": "<label class=\"fr-label js-form-required form-required\" for=\"edit-question\">Posez votre question<span class=\"fr-hint-text\">Maximum 2000 characters</span></label>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "label[for=\"edit-question\"] > .fr-hint-text"
+              ],
+              "html": "<span class=\"fr-hint-text\">Maximum 2000 characters</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#edit-question"
+              ],
+              "html": "<textarea aria-describedby=\"Question-input-error...\" class=\"fr-input fr-mt-2v fo...\" style=\"resize: none\" data-drupal-selector=\"edit-question\" id=\"edit-question\" name=\"Question\" rows=\"5\" cols=\"60\" maxlength=\"2000\" placeholder=\"Votre message en max...\" required=\"required\" aria-invalid=\"true\">",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#Question-input-errors-messages > .fr-message.fr-message--error > span"
+              ],
+              "html": "<span>Le champ Posez votre question<span class=\"fr-hint-text\">Maximum 2000 characters</span> est requis.</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                "#Question-input-errors-messages > .fr-message.fr-message--error > span > .fr-hint-text"
+              ],
+              "html": "<span class=\"fr-hint-text\">Maximum 2000 characters</span>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                ".cgu-btn-ids"
+              ],
+              "html": "<button type=\"button\" aria-controls=\"cgu-ids-modal\" data-fr-opened=\"false\" class=\"fr-link cgu-btn-ids\" data-fr-js-modal-button=\"true\">Consulter les CGU du formulaire de demande à Infos Douane Service</button>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href=\"tel:+33800944040\"]"
+              ],
+              "html": "<a href=\"tel:+33800944040\">Par téléphone<span class=\"fr-sr-only\"> : 0&nbsp;800&nbsp;94&nbsp;40&nbsp;40</span></a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                ".fr-tile__desc"
+              ],
+              "html": "<p class=\"fr-tile__desc fr-text--bold\" aria-hidden=\"true\">\n\t\t\t\t\t\t\t\t0&nbsp;800&nbsp;94&nbsp;40&nbsp;40\n\t\t\t\t\t\t\t</p>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".fr-col-md-6.fr-col-12:nth-child(1) > .fr-tile--sm.fr-tile.fr-tile--horizontal > .fr-tile__body > .fr-tile__content > .fr-tile__detail:nth-child(3)"
+              ],
+              "html": "<p class=\"fr-tile__detail\">Service &amp; appel gratuits</p>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".detail_ids"
+              ],
+              "html": "<p class=\"fr-mt-0 fr-tile__detail detail_ids\">Appels depuis les Outre-mer ou l'étranger : <a href=\"tel:+33172407850\">+33 1 72 40 78 50</a></p>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href=\"tel:+33172407850\"]"
+              ],
+              "html": "<a href=\"tel:+33172407850\">+33 1 72 40 78 50</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".fr-tile_no_enlarge-link"
+              ],
+              "html": "<h3 class=\"fr-tile__title fr-text-title--blue-france fr-tile_no_enlarge-link\">\n\t\t\t\t\t\t\t\tPar messagerie\n\t\t\t\t\t\t\t</h3>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+            },
+            {
+              "target": [
+                ".fr-link--icon-left"
+              ],
+              "html": "<a href=\"/formulaire-infos-douane-service\" class=\"fr-link fr-link--icon-left\">\n\t\t\t\t\t\t\t\t\t<span class=\"fr-icon-mail-line fr-icon--sm\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t\tFormulaire de contact\n\t\t\t\t\t\t\t\t</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".fr-mt-1v"
+              ],
+              "html": "<p class=\"fr-tile__detail fr-mt-1v\">Réponse par email sous 5 jours ouvrés.</p>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "#footer__content-link-7143"
+              ],
+              "html": "<a title=\"info.gouv.fr - nouvelle fenêtre\" id=\"footer__content-link-7143\" href=\"https://info.gouv.fr\" target=\"_blank\" rel=\"noopener external\" class=\"fr-footer__content-link\">info.gouv.fr</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "#footer__content-link-7144"
+              ],
+              "html": "<a title=\"service-public.gouv.fr - nouvelle fenêtre\" id=\"footer__content-link-7144\" href=\"https://service-public.gouv.fr\" target=\"_blank\" rel=\"noopener external\" class=\"fr-footer__content-link\">service-public.gouv.fr</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "#footer__content-link-7145"
+              ],
+              "html": "<a title=\"legifrance.gouv.fr - nouvelle fenêtre\" id=\"footer__content-link-7145\" href=\"https://legifrance.gouv.fr\" target=\"_blank\" rel=\"noopener external\" class=\"fr-footer__content-link\">legifrance.gouv.fr</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "#footer__content-link-7146"
+              ],
+              "html": "<a title=\"data.gouv.fr - nouvelle fenêtre\" id=\"footer__content-link-7146\" href=\"https://data.gouv.fr\" target=\"_blank\" rel=\"noopener external\" class=\"fr-footer__content-link\">data.gouv.fr</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href$=\"plan-du-site\"]"
+              ],
+              "html": "<a id=\"footer__bottom-link\" href=\"/plan-du-site\" class=\"fr-footer__bottom-link\">Plan du site</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href$=\"accessibilite\"]"
+              ],
+              "html": "<a id=\"footer__bottom-link\" href=\"/accessibilite\" class=\"fr-footer__bottom-link\">Accessibilité : partiellement conforme</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href$=\"mentions-legales\"]"
+              ],
+              "html": "<a id=\"footer__bottom-link\" href=\"/mentions-legales\" class=\"fr-footer__bottom-link\">Mentions légales</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href$=\"donnees-personnelles\"]"
+              ],
+              "html": "<a id=\"footer__bottom-link\" href=\"/fiche/donnees-personnelles\" class=\"fr-footer__bottom-link\">Données personnelles</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "a[href$=\"gestion-des-cookies\"]"
+              ],
+              "html": "<a id=\"footer__bottom-link\" href=\"/gestion-des-cookies\" class=\"fr-footer__bottom-link\">Gestion des cookies</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "p > a[rel=\"noopener external\"][target=\"_blank\"]"
+              ],
+              "html": "<a href=\"https://github.com/etalab/licence-ouverte/blob/master/LO.md\" target=\"_blank\" rel=\"noopener external\" title=\"Licence etalab - nouvelle fenêtre\">licence etalab-2.0</a>",
+              "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "professional_focus": {
+    "companyVisible": true,
+    "companyName": "Societe",
+    "companyAutocomplete": null,
+    "labelClass": "fr-label",
+    "labelVisible": true,
+    "outline": {
+      "style": "solid",
+      "width": "2px",
+      "color": "rgb(10, 118, 246)"
+    }
+  },
+  "mobile_form": {
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "formWidth": 224
+  },
+  "text_spacing_form": {
+    "innerWidth": 1280,
+    "scrollWidth": 1280,
+    "formClipped": [
+      {
+        "tag": "legend",
+        "id": "fieldset-ids-bottom-legend",
+        "class": "fr-sr-only",
+        "text": "Conditions and submission"
+      }
+    ]
+  }
+}

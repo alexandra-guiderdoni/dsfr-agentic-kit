@@ -1,0 +1,3452 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-04",
+  "scope": "Échantillon Douane P01 à P09",
+  "referential": "RGAA 4.1.2",
+  "claim": "Préqualification instrumentée ; aucun taux RGAA officiel.",
+  "grouping": "Une fiche par cause racine ; regroupement des tests partageant une correction.",
+  "source_confirmed_findings": 145,
+  "source_rule_ids": [
+    "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+    "RGAA-10-8-HIDDEN-FOCUS-001",
+    "RGAA-11-10-REQUIRED-INDICATION-HUMAN-001",
+    "RGAA-11-13-AUTOCOMPLETE-HUMAN-001",
+    "RGAA-12-7-SKIPLINK-001",
+    "RGAA-12-7-SKIPLINK-HUMAN-002",
+    "RGAA-13-2-NEW-WINDOW-HUMAN-001",
+    "RGAA-7-1-ARIA-REFERENCE-002",
+    "RGAA-7-1-DIALOG-NAME-001",
+    "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+    "RGAA-8-2-ANCHOR-TYPE-002",
+    "RGAA-8-2-ID-UNIQUE-001",
+    "RGAA-8-7-LANGUAGE-CHANGE-001",
+    "RGAA-8-9-EMPTY-PRESENTATION-001"
+  ],
+  "ticket_count": 19,
+  "nc_ticket_count": 15,
+  "requalification_count": 4,
+  "pages": [
+    {
+      "id": "P01",
+      "name": "Accueil",
+      "url": "https://moa.douane.gouv.fr/"
+    },
+    {
+      "id": "P02",
+      "name": "Plan du site",
+      "url": "https://moa.douane.gouv.fr/plan-du-site"
+    },
+    {
+      "id": "P03",
+      "name": "Déclaration d’accessibilité",
+      "url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr"
+    },
+    {
+      "id": "P04",
+      "name": "Mentions légales",
+      "url": "https://moa.douane.gouv.fr/mentions-legales"
+    },
+    {
+      "id": "P05",
+      "name": "Données personnelles",
+      "url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles"
+    },
+    {
+      "id": "P06",
+      "name": "Formulaire Écrivez-nous",
+      "url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
+    },
+    {
+      "id": "P07",
+      "name": "Voyages à l’étranger",
+      "url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger"
+    },
+    {
+      "id": "P08",
+      "name": "Commerce international",
+      "url": "https://moa.douane.gouv.fr/professionnels/commerce-international"
+    },
+    {
+      "id": "P09",
+      "name": "Actualité DELTA IE",
+      "url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "NC-TRANSVERSE-001",
+      "title": "Recherche visible et focalisable sous aria-hidden",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Bloquant",
+      "severity_justification": "La navigation clavier et la restitution vocale sont désynchronisées. Le champ et le bouton peuvent être impossibles à identifier ou à utiliser avec une technologie d’assistance.",
+      "component_or_template": "En-tête / barre de recherche",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06, P07, P08, P09",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "criteria": [
+        "7.1",
+        "10.8"
+      ],
+      "tests": [
+        "7.1.1",
+        "10.8.1"
+      ],
+      "rule_ids": [
+        "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+        "RGAA-10-8-HIDDEN-FOCUS-001"
+      ],
+      "methodological_alert": "Le rattachement au test 10.8.1 est direct. Le rattachement secondaire au test 7.1.1 doit rester appuyé par la preuve d’arbre d’accessibilité montrant la perte de restitution du composant.",
+      "source_findings": 34,
+      "source_finding_ids": [
+        "P01-RGAA-10-8-HIDDEN-FOCUS-001-010",
+        "P01-RGAA-10-8-HIDDEN-FOCUS-001-012",
+        "P01-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-009",
+        "P01-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-011",
+        "P02-RGAA-10-8-HIDDEN-FOCUS-001-018",
+        "P02-RGAA-10-8-HIDDEN-FOCUS-001-020",
+        "P02-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-017",
+        "P02-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-019",
+        "P03-RGAA-10-8-HIDDEN-FOCUS-001-013",
+        "P03-RGAA-10-8-HIDDEN-FOCUS-001-015",
+        "P03-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-012",
+        "P03-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-014",
+        "P04-RGAA-10-8-HIDDEN-FOCUS-001-013",
+        "P04-RGAA-10-8-HIDDEN-FOCUS-001-015",
+        "P04-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-012",
+        "P04-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-014",
+        "P05-RGAA-10-8-HIDDEN-FOCUS-001-014",
+        "P05-RGAA-10-8-HIDDEN-FOCUS-001-016",
+        "P05-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-013",
+        "P05-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-015",
+        "P06-RGAA-10-8-HIDDEN-FOCUS-001-025",
+        "P06-RGAA-10-8-HIDDEN-FOCUS-001-027",
+        "P06-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-024",
+        "P06-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-026",
+        "P07-RGAA-10-8-HIDDEN-FOCUS-001-012",
+        "P07-RGAA-10-8-HIDDEN-FOCUS-001-014",
+        "P07-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-011",
+        "P07-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-013",
+        "P08-RGAA-10-8-HIDDEN-FOCUS-001-012",
+        "P08-RGAA-10-8-HIDDEN-FOCUS-001-014",
+        "P08-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-011",
+        "P08-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-013",
+        "RGAA-P09-Q-003",
+        "RGAA-P09-Q-007"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-10-8-HIDDEN-FOCUS-001-010",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P01-RGAA-10-8-HIDDEN-FOCUS-001-012",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P01-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-009",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json",
+            "preuves-p01-complet/mobile-search-open.png"
+          ]
+        },
+        {
+          "id": "P01-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-011",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json",
+            "preuves-p01-complet/mobile-search-open.png"
+          ]
+        },
+        {
+          "id": "P02-RGAA-10-8-HIDDEN-FOCUS-001-018",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-10-8-HIDDEN-FOCUS-001-020",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-017",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-019",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-10-8-HIDDEN-FOCUS-001-013",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-10-8-HIDDEN-FOCUS-001-015",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-012",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-014",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-10-8-HIDDEN-FOCUS-001-013",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-10-8-HIDDEN-FOCUS-001-015",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-012",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-014",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-10-8-HIDDEN-FOCUS-001-014",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-10-8-HIDDEN-FOCUS-001-016",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-013",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-015",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-8-HIDDEN-FOCUS-001-025",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-8-HIDDEN-FOCUS-001-027",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-024",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-026",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-10-8-HIDDEN-FOCUS-001-012",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-10-8-HIDDEN-FOCUS-001-014",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-011",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-013",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-10-8-HIDDEN-FOCUS-001-012",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Focus atteint à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-10-8-HIDDEN-FOCUS-001-014",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Focus atteint à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-011",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input",
+          "observed": "Contrôle scripté focalisé à la tabulation 10 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-7-1-SCRIPT-ARIA-HIDDEN-003-013",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-btn",
+          "observed": "Contrôle scripté focalisé à la tabulation 11 sous aria-hidden=true",
+          "provenance": "KEYBOARD_TRACE",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "RGAA-P09-Q-003",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-SCRIPT-ARIA-HIDDEN-003",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search",
+          "observed": "La recherche visible conserve aria-hidden=true et ses contrôles restent atteignables au clavier.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "preuves-p09-complet/P09-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "RGAA-P09-Q-007",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "10.8",
+          "test": "10.8.1",
+          "rule_id": "RGAA-10-8-HIDDEN-FOCUS-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#search-input, #search-btn",
+          "observed": "Le champ et le bouton de recherche sont atteints à la tabulation sous #search[aria-hidden=true].",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "preuves-p09-complet/P09-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-001-recherche-visible-sous-aria-hidden.md",
+      "html_file": "NC-TRANSVERSE-001-recherche-visible-sous-aria-hidden.html"
+    },
+    {
+      "id": "NC-P06-004",
+      "title": "Modale CGU sans nom accessible ni contenu utile",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Bloquant",
+      "severity_justification": "À l’ouverture, une personne utilisant un lecteur d’écran peut entendre seulement « dialogue » sans identifier les conditions générales ni accéder à leur contenu.",
+      "component_or_template": "Modale CGU",
+      "scope": "Locale — P06",
+      "pages": [
+        "P06"
+      ],
+      "criteria": [
+        "7.1"
+      ],
+      "tests": [
+        "7.1.1"
+      ],
+      "rule_ids": [
+        "RGAA-7-1-DIALOG-NAME-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 1,
+      "source_finding_ids": [
+        "P06-RGAA-7-1-DIALOG-NAME-001-001"
+      ],
+      "occurrences": [
+        {
+          "id": "P06-RGAA-7-1-DIALOG-NAME-001-001",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-DIALOG-NAME-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#cgu-ids-modal",
+          "observed": "aria-labelledby référence #cgu-ids-modal-title absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+            "preuves-p06-complet/form-cgu-empty-modal-target.png"
+          ]
+        }
+      ],
+      "markdown_file": "NC-P06-004-modale-cgu-sans-nom-ni-contenu.md",
+      "html_file": "NC-P06-004-modale-cgu-sans-nom-ni-contenu.html"
+    },
+    {
+      "id": "NC-P09-001",
+      "title": "Modale de transcription sans nom accessible",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Une personne utilisant un lecteur d’écran accède au texte de transcription sans connaître le nom de la fenêtre ouverte ni son lien avec le graphique.",
+      "component_or_template": "Modale de transcription",
+      "scope": "Locale — P09",
+      "pages": [
+        "P09"
+      ],
+      "criteria": [
+        "7.1"
+      ],
+      "tests": [
+        "7.1.1"
+      ],
+      "rule_ids": [
+        "RGAA-7-1-DIALOG-NAME-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 1,
+      "source_finding_ids": [
+        "P09-RGAA-7-1-DIALOG-NAME-001-001"
+      ],
+      "occurrences": [
+        {
+          "id": "P09-RGAA-7-1-DIALOG-NAME-001-001",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-DIALOG-NAME-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#fr-transcription-modal-transcription-20210",
+          "observed": "aria-labelledby référence #fr-transcription-modal-title absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/raw-dom.json",
+            "rgaa/preuves/P09/attempt-001/desktop.png",
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "preuves-p09-complet/P09-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-P09-001-modale-transcription-sans-nom.md",
+      "html_file": "NC-P09-001-modale-transcription-sans-nom.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-003",
+      "title": "Lien d’évitement vers une cible absente",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Bloquant",
+      "severity_justification": "Les personnes naviguant au clavier ne peuvent pas éviter l’en-tête et doivent parcourir tous ses contrôles avant d’atteindre le contenu principal.",
+      "component_or_template": "Liens d’évitement",
+      "scope": "Transverse — P07, P08",
+      "pages": [
+        "P07",
+        "P08"
+      ],
+      "criteria": [
+        "12.7"
+      ],
+      "tests": [
+        "12.7.1",
+        "12.7.2"
+      ],
+      "rule_ids": [
+        "RGAA-12-7-SKIPLINK-001",
+        "RGAA-12-7-SKIPLINK-HUMAN-002"
+      ],
+      "methodological_alert": null,
+      "source_findings": 3,
+      "source_finding_ids": [
+        "P07-RGAA-12-7-SKIPLINK-001-015",
+        "P08-RGAA-12-7-SKIPLINK-001-015",
+        "RGAA-P08-Q-008"
+      ],
+      "occurrences": [
+        {
+          "id": "P07-RGAA-12-7-SKIPLINK-001-015",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "12.7",
+          "test": "12.7.1",
+          "rule_id": "RGAA-12-7-SKIPLINK-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "body.eu-cookie-compliance-popup-open.eu-cookie-compliance-status-null > div.fr-skiplinks:nth-of-type(2) > nav.fr-container > ul.fr-skiplinks__list > li:nth-of-type(1) > a.fr-link",
+          "observed": "#content ne cible aucun élément",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-12-7-SKIPLINK-001-015",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "12.7",
+          "test": "12.7.1",
+          "rule_id": "RGAA-12-7-SKIPLINK-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "body.eu-cookie-compliance-popup-open.eu-cookie-compliance-status-null > div.fr-skiplinks:nth-of-type(2) > nav.fr-container > ul.fr-skiplinks__list > li:nth-of-type(1) > a.fr-link",
+          "observed": "#content ne cible aucun élément",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "RGAA-P08-Q-008",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "12.7",
+          "test": "12.7.2",
+          "rule_id": "RGAA-12-7-SKIPLINK-HUMAN-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": null,
+          "observed": "Le lien d’accès rapide au contenu n’est pas fonctionnel puisque sa destination #content est absente.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-003-lien-evitement-cible-absente.md",
+      "html_file": "NC-TRANSVERSE-003-lien-evitement-cible-absente.html"
+    },
+    {
+      "id": "A-REQUALIFIER-RGAA-002",
+      "title": "Description du bandeau de cookies non reliée",
+      "delivery_status": "À requalifier avant transmission comme non-conformité",
+      "severity": "Majeur",
+      "severity_justification": "Le lecteur d’écran ne restitue pas la description attendue du bandeau. La personne peut manquer l’explication utile avant de choisir ses préférences de cookies.",
+      "component_or_template": "Bandeau de consentement",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06, P07",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07"
+      ],
+      "criteria": [
+        "7.1"
+      ],
+      "tests": [
+        "7.1.1"
+      ],
+      "rule_ids": [
+        "RGAA-7-1-ARIA-REFERENCE-002"
+      ],
+      "methodological_alert": "Un aria-describedby orphelin ne suffit pas, à lui seul, à établir l’échec de 7.1.1 si le nom, le rôle, les états et les informations nécessaires restent accessibles. P08 et P09 classent d’ailleurs ce même signal A_RETESTER. Une vérification fonctionnelle est requise.",
+      "source_findings": 7,
+      "source_finding_ids": [
+        "P01-RGAA-7-1-ARIA-REFERENCE-002-001",
+        "P02-RGAA-7-1-ARIA-REFERENCE-002-001",
+        "P03-RGAA-7-1-ARIA-REFERENCE-002-001",
+        "P04-RGAA-7-1-ARIA-REFERENCE-002-001",
+        "P05-RGAA-7-1-ARIA-REFERENCE-002-001",
+        "P06-RGAA-7-1-ARIA-REFERENCE-002-002",
+        "P07-RGAA-7-1-ARIA-REFERENCE-002-001"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-7-1-ARIA-REFERENCE-002-001",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-7-1-ARIA-REFERENCE-002-001",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-7-1-ARIA-REFERENCE-002-001",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-7-1-ARIA-REFERENCE-002-001",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-7-1-ARIA-REFERENCE-002-001",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-7-1-ARIA-REFERENCE-002-002",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-7-1-ARIA-REFERENCE-002-001",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "aria-describedby référence #popup-text absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "A-REQUALIFIER-RGAA-002-description-bandeau-cookies-absente.md",
+      "html_file": "A-REQUALIFIER-RGAA-002-description-bandeau-cookies-absente.html"
+    },
+    {
+      "id": "A-REQUALIFIER-RGAA-003",
+      "title": "Aide du champ de téléversement non reliée",
+      "delivery_status": "À requalifier avant transmission comme non-conformité",
+      "severity": "Majeur",
+      "severity_justification": "Les formats, limites ou consignes attendus ne sont pas associés au champ pour une personne utilisant un lecteur d’écran.",
+      "component_or_template": "Champ de téléversement",
+      "scope": "Locale — P06",
+      "pages": [
+        "P06"
+      ],
+      "criteria": [
+        "7.1"
+      ],
+      "tests": [
+        "7.1.1"
+      ],
+      "rule_ids": [
+        "RGAA-7-1-ARIA-REFERENCE-002"
+      ],
+      "methodological_alert": "La relation orpheline est un défaut technique observable, mais le test 7.1.1 exige de démontrer que l’information est nécessaire au composant. Requalifier après contrôle du texte d’aide visible et, si nécessaire, du test 11.10.5 relatif aux indications de format.",
+      "source_findings": 1,
+      "source_finding_ids": [
+        "P06-RGAA-7-1-ARIA-REFERENCE-002-003"
+      ],
+      "occurrences": [
+        {
+          "id": "P06-RGAA-7-1-ARIA-REFERENCE-002-003",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "7.1",
+          "test": "7.1.1",
+          "rule_id": "RGAA-7-1-ARIA-REFERENCE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-document-upload",
+          "observed": "aria-describedby référence #edit-document--description absent",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json"
+          ]
+        }
+      ],
+      "markdown_file": "A-REQUALIFIER-RGAA-003-aide-televersement-non-reliee.md",
+      "html_file": "A-REQUALIFIER-RGAA-003-aide-televersement-non-reliee.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-005",
+      "title": "Identifiant button-menu dupliqué dans l’en-tête",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Les scripts ou relations qui ciblent `button-menu` peuvent résoudre le mauvais bouton et produire un comportement imprévisible.",
+      "component_or_template": "En-tête",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06, P07, P08, P09",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "criteria": [
+        "8.2"
+      ],
+      "tests": [
+        "8.2.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-2-ID-UNIQUE-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 9,
+      "source_finding_ids": [
+        "P01-RGAA-8-2-ID-UNIQUE-001-002",
+        "P02-RGAA-8-2-ID-UNIQUE-001-002",
+        "P03-RGAA-8-2-ID-UNIQUE-001-002",
+        "P04-RGAA-8-2-ID-UNIQUE-001-002",
+        "P05-RGAA-8-2-ID-UNIQUE-001-002",
+        "P06-RGAA-8-2-ID-UNIQUE-001-004",
+        "P07-RGAA-8-2-ID-UNIQUE-001-002",
+        "P08-RGAA-8-2-ID-UNIQUE-001-002",
+        "P09-RGAA-8-2-ID-UNIQUE-001-003"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-frontpage.eu-cookie-compliance-popup-open > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-plan-du-site.eu-cookie-compliance-popup-open > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-node.node--type-page > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-node.node--type-page > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-node.node--type-page > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-formulaire-infos-douane-service.eu-cookie-compliance-popup-open > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), div.thematique:nth-of-type(2) > header.banner.bandeau > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-8-2-ID-UNIQUE-001-002",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), div.thematique:nth-of-type(2) > header.banner.bandeau > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P09-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container > div.fr-header__body-row > div.fr-header__brand.fr-enlarge-link:nth-of-type(1) > div.fr-header__brand-top:nth-of-type(1) > div.fr-header__navbar:nth-of-type(3) > button.fr-btn--menu.fr-btn:nth-of-type(2), body.path-node.node--type-actualite > div.dialog-off-canvas-main-canvas:nth-of-type(3) > header.fr-header > div.fr-header__menu.fr-modal:nth-of-type(2) > div.fr-container > button.fr-btn--close.fr-btn",
+          "observed": "id=button-menu présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/raw-dom.json",
+            "rgaa/preuves/P09/attempt-001/desktop.png",
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "preuves-p09-complet/P09-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-005-identifiant-button-menu-duplique.md",
+      "html_file": "NC-TRANSVERSE-005-identifiant-button-menu-duplique.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-009",
+      "title": "Identifiant de fermeture du méga-menu dupliqué",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Une association ou un script fondé sur cet identifiant peut agir sur le mauvais méga-menu.",
+      "component_or_template": "Navigation / méga-menu",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06, P07, P08, P09",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "criteria": [
+        "8.2"
+      ],
+      "tests": [
+        "8.2.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-2-ID-UNIQUE-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 9,
+      "source_finding_ids": [
+        "P01-RGAA-8-2-ID-UNIQUE-001-003",
+        "P02-RGAA-8-2-ID-UNIQUE-001-003",
+        "P03-RGAA-8-2-ID-UNIQUE-001-003",
+        "P04-RGAA-8-2-ID-UNIQUE-001-003",
+        "P05-RGAA-8-2-ID-UNIQUE-001-003",
+        "P06-RGAA-8-2-ID-UNIQUE-001-005",
+        "P07-RGAA-8-2-ID-UNIQUE-001-003",
+        "P08-RGAA-8-2-ID-UNIQUE-001-003",
+        "P09-RGAA-8-2-ID-UNIQUE-001-004"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-2-ID-UNIQUE-001-005",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-8-2-ID-UNIQUE-001-003",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P09-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-nav__item:nth-of-type(3) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn, li.fr-nav__item:nth-of-type(5) > div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-mb-n3v:nth-of-type(1) > button.fr-btn--close.fr-btn",
+          "observed": "id=button-2835 présent 2 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/raw-dom.json",
+            "rgaa/preuves/P09/attempt-001/desktop.png",
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "preuves-p09-complet/P09-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-009-identifiant-bouton-megamenu-duplique.md",
+      "html_file": "NC-TRANSVERSE-009-identifiant-bouton-megamenu-duplique.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-010",
+      "title": "Identifiant partagé par les liens du pied de page",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Les ancres, scripts et relations fondés sur cet identifiant peuvent cibler un contrôle arbitraire du pied de page.",
+      "component_or_template": "Pied de page",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06, P07, P08, P09",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "criteria": [
+        "8.2"
+      ],
+      "tests": [
+        "8.2.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-2-ID-UNIQUE-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 9,
+      "source_finding_ids": [
+        "P01-RGAA-8-2-ID-UNIQUE-001-004",
+        "P02-RGAA-8-2-ID-UNIQUE-001-004",
+        "P03-RGAA-8-2-ID-UNIQUE-001-004",
+        "P04-RGAA-8-2-ID-UNIQUE-001-004",
+        "P05-RGAA-8-2-ID-UNIQUE-001-004",
+        "P06-RGAA-8-2-ID-UNIQUE-001-006",
+        "P07-RGAA-8-2-ID-UNIQUE-001-004",
+        "P08-RGAA-8-2-ID-UNIQUE-001-004",
+        "P09-RGAA-8-2-ID-UNIQUE-001-005"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-2-ID-UNIQUE-001-006",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-8-2-ID-UNIQUE-001-004",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P09-RGAA-8-2-ID-UNIQUE-001-005",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(1) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(2) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(3) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(4) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(5) > a.fr-footer__bottom-link, footer.fr-footer > div.fr-container > div.fr-footer__bottom:nth-of-type(2) > ul.fr-footer__bottom-list > li.fr-footer__bottom-item:nth-of-type(6) > button.fr-icon-theme-fill.fr-btn--icon-left",
+          "observed": "id=footer__bottom-link présent 6 fois",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/raw-dom.json",
+            "rgaa/preuves/P09/attempt-001/desktop.png",
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "preuves-p09-complet/P09-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-010-identifiant-liens-footer-duplique.md",
+      "html_file": "NC-TRANSVERSE-010-identifiant-liens-footer-duplique.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-006",
+      "title": "Nom anglais du bandeau de cookies sans langue déclarée",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Une synthèse vocale française peut prononcer ce nom avec des règles phonétiques inadaptées.",
+      "component_or_template": "Bandeau de consentement",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06, P07, P08",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "criteria": [
+        "8.7"
+      ],
+      "tests": [
+        "8.7.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-7-LANGUAGE-CHANGE-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 8,
+      "source_finding_ids": [
+        "P01-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+        "P03-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+        "P04-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+        "P05-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+        "P07-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+        "P08-RGAA-8-7-LANGUAGE-CHANGE-001-006"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-003/evidence.json",
+            "preuves-p01-complet/P01-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-7-LANGUAGE-CHANGE-001-005",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#sliding-popup",
+          "observed": "Intitulé anglais sans lang=en : Cookie compliance banner",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-006-nom-anglais-bandeau-cookies.md",
+      "html_file": "NC-TRANSVERSE-006-nom-anglais-bandeau-cookies.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-011",
+      "title": "Lien English content sans langue déclarée",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Une synthèse vocale française peut rendre cette destination moins compréhensible.",
+      "component_or_template": "Navigation et liens éditoriaux",
+      "scope": "Transverse — P02, P03, P04, P05, P06, P07, P08",
+      "pages": [
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08"
+      ],
+      "criteria": [
+        "8.7"
+      ],
+      "tests": [
+        "8.7.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-7-LANGUAGE-CHANGE-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 9,
+      "source_finding_ids": [
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-013",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-014",
+        "P03-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+        "P04-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+        "P05-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-012",
+        "P07-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+        "P08-RGAA-8-7-LANGUAGE-CHANGE-001-010"
+      ],
+      "occurrences": [
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-013",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row--gutters > div.fr-col-lg-4.fr-col-md-4:nth-of-type(4) > div.lexique-item > ul.sitemap-submenu > li:nth-of-type(6) > a.fr-link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-014",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row--gutters > div.fr-col-lg-4.fr-col-md-4:nth-of-type(10) > div.lexique-item > ul.sitemap-submenu > li:nth-of-type(6) > a.fr-link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-012",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P08-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row-lg--gutters > div.fr-col-12.fr-col-lg-3:nth-of-type(5) > div.menu_link_content.menu-link-contentla-douane > ul.fr-mega-menu__list > li:nth-of-type(6) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : English content",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "preuves-p08-complet/P08-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-011-lien-english-content-sans-langue.md",
+      "html_file": "NC-TRANSVERSE-011-lien-english-content-sans-langue.html"
+    },
+    {
+      "id": "A-REQUALIFIER-RGAA-004",
+      "title": "Libellés French Customs à requalifier comme noms propres",
+      "delivery_status": "À requalifier avant transmission comme non-conformité",
+      "severity": "Majeur",
+      "severity_justification": "Sans langue déclarée, une synthèse vocale française peut appliquer une prononciation inadaptée ; l’applicabilité RGAA reste à arbitrer.",
+      "component_or_template": "Navigation et liens éditoriaux",
+      "scope": "Transverse — P02, P03, P04, P05, P06, P07",
+      "pages": [
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07"
+      ],
+      "criteria": [
+        "8.7"
+      ],
+      "tests": [
+        "8.7.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-7-LANGUAGE-CHANGE-001"
+      ],
+      "methodological_alert": "Le test 8.7.1 exclut notamment les noms propres. Il faut décider éditorialement si « French Customs » est un nom de service ou de rubrique à traiter comme nom propre avant de maintenir ces constats en NC.",
+      "source_findings": 21,
+      "source_finding_ids": [
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-011",
+        "P02-RGAA-8-7-LANGUAGE-CHANGE-001-012",
+        "P03-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+        "P03-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+        "P03-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+        "P04-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+        "P04-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+        "P04-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+        "P05-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+        "P05-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+        "P05-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-011",
+        "P07-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+        "P07-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+        "P07-RGAA-8-7-LANGUAGE-CHANGE-001-009"
+      ],
+      "occurrences": [
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > h5.fr-mega-menu__category > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(1) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(2) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "li.fr-mb-8v:nth-of-type(2) > section.globallisteThematique > div.fr-grid-row.fr-grid-row--gutters > div.fr-col-lg-4.fr-col-md-4:nth-of-type(12) > h3 > a.fr-link.fr-h3",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-011",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row--gutters > div.fr-col-lg-4.fr-col-md-4:nth-of-type(12) > section.listeThematique > ul > li.listeDocument.listeDocumentEnavant:nth-of-type(1) > a.fr-link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-7-LANGUAGE-CHANGE-001-012",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-grid-row.fr-grid-row--gutters > div.fr-col-lg-4.fr-col-md-4:nth-of-type(12) > section.listeThematique > ul > li.listeDocument.listeDocumentEnavant:nth-of-type(2) > a.fr-link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > h5.fr-mega-menu__category > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(1) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(2) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-7-LANGUAGE-CHANGE-001-006",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > h5.fr-mega-menu__category > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(1) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(2) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > h5.fr-mega-menu__category > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(1) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(2) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > h5.fr-mega-menu__category > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-010",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(1) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-011",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(2) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-7-LANGUAGE-CHANGE-001-007",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-collapse.fr-mega-menu > div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > h5.fr-mega-menu__category > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-7-LANGUAGE-CHANGE-001-008",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(1) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs presentation",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-7-LANGUAGE-CHANGE-001-009",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "div.fr-container.fr-container--fluid > div.fr-grid-row.fr-grid-row-lg--gutters:nth-of-type(1) > div.fr-col-12.fr-col-lg-3:nth-of-type(13) > ul.fr-mega-menu__list > li:nth-of-type(2) > a.fr-nav__link",
+          "observed": "Intitulé anglais sans lang=en : French Customs for business",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "preuves-p07-complet/P07-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "A-REQUALIFIER-RGAA-004-libelles-french-customs-noms-propres.md",
+      "html_file": "A-REQUALIFIER-RGAA-004-libelles-french-customs-noms-propres.html"
+    },
+    {
+      "id": "NC-P06-006",
+      "title": "Textes anglais du formulaire sans langue déclarée",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Les instructions peuvent être mal prononcées et moins bien comprises par une personne utilisant une synthèse vocale française.",
+      "component_or_template": "Formulaire",
+      "scope": "Locale — P06",
+      "pages": [
+        "P06"
+      ],
+      "criteria": [
+        "8.7"
+      ],
+      "tests": [
+        "8.7.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-7-LANGUAGE-CHANGE-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 2,
+      "source_finding_ids": [
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-013",
+        "P06-RGAA-8-7-LANGUAGE-CHANGE-001-014"
+      ],
+      "occurrences": [
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-013",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "form.ids-eloquant-form > fieldset.fr-fieldset:nth-of-type(1) > div.fr-fieldset__element:nth-of-type(9) > div.fr-input-group > label.fr-label.js-form-required > span.fr-hint-text",
+          "observed": "Intitulé anglais sans lang=en : Maximum 2000 characters",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-7-LANGUAGE-CHANGE-001-014",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.7",
+          "test": "8.7.1",
+          "rule_id": "RGAA-8-7-LANGUAGE-CHANGE-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#fieldset-ids-bottom-legend",
+          "observed": "Intitulé anglais sans lang=en : Conditions and submission",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-P06-006-textes-formulaire-anglais-sans-langue.md",
+      "html_file": "NC-P06-006-textes-formulaire-anglais-sans-langue.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-007",
+      "title": "Paragraphes vides utilisés pour l’espacement",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "La structure exposée peut contenir des paragraphes sans contenu et la présentation dépend d’un balisage sémantique détourné.",
+      "component_or_template": "Bandeau de consentement",
+      "scope": "Transverse — P01, P02, P03, P04, P05, P06",
+      "pages": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06"
+      ],
+      "criteria": [
+        "8.9"
+      ],
+      "tests": [
+        "8.9.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-9-EMPTY-PRESENTATION-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 12,
+      "source_finding_ids": [
+        "P01-RGAA-8-9-EMPTY-PRESENTATION-001-006",
+        "P01-RGAA-8-9-EMPTY-PRESENTATION-001-007",
+        "P02-RGAA-8-9-EMPTY-PRESENTATION-001-015",
+        "P02-RGAA-8-9-EMPTY-PRESENTATION-001-016",
+        "P03-RGAA-8-9-EMPTY-PRESENTATION-001-010",
+        "P03-RGAA-8-9-EMPTY-PRESENTATION-001-011",
+        "P04-RGAA-8-9-EMPTY-PRESENTATION-001-010",
+        "P04-RGAA-8-9-EMPTY-PRESENTATION-001-011",
+        "P05-RGAA-8-9-EMPTY-PRESENTATION-001-011",
+        "P05-RGAA-8-9-EMPTY-PRESENTATION-001-012",
+        "P06-RGAA-8-9-EMPTY-PRESENTATION-001-015",
+        "P06-RGAA-8-9-EMPTY-PRESENTATION-001-016"
+      ],
+      "occurrences": [
+        {
+          "id": "P01-RGAA-8-9-EMPTY-PRESENTATION-001-006",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-frontpage.eu-cookie-compliance-popup-open > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p.fr-text--sm:nth-of-type(1)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-009/evidence.json",
+            "collectes-ay11/P01/attempt-001/rgaa-collected-plan.json"
+          ]
+        },
+        {
+          "id": "P01-RGAA-8-9-EMPTY-PRESENTATION-001-007",
+          "page": "P01",
+          "page_url": "https://moa.douane.gouv.fr/",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-frontpage.eu-cookie-compliance-popup-open > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p:nth-of-type(3)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P01/attempt-009/raw-dom.json",
+            "rgaa/preuves/P01/attempt-009/desktop.png",
+            "rgaa/preuves/P01/attempt-009/evidence.json",
+            "collectes-ay11/P01/attempt-001/rgaa-collected-plan.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-9-EMPTY-PRESENTATION-001-015",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-plan-du-site.eu-cookie-compliance-popup-open > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p.fr-text--sm:nth-of-type(1)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P02-RGAA-8-9-EMPTY-PRESENTATION-001-016",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-plan-du-site.eu-cookie-compliance-popup-open > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p:nth-of-type(3)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P02/attempt-002/raw-dom.json",
+            "rgaa/preuves/P02/attempt-002/desktop.png",
+            "rgaa/preuves/P02/attempt-002/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-9-EMPTY-PRESENTATION-001-010",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-node.node--type-page > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p.fr-text--sm:nth-of-type(1)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P03-RGAA-8-9-EMPTY-PRESENTATION-001-011",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-node.node--type-page > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p:nth-of-type(3)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P03/attempt-001/raw-dom.json",
+            "rgaa/preuves/P03/attempt-001/desktop.png",
+            "rgaa/preuves/P03/attempt-001/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-9-EMPTY-PRESENTATION-001-010",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-node.node--type-page > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p.fr-text--sm:nth-of-type(1)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P04-RGAA-8-9-EMPTY-PRESENTATION-001-011",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-node.node--type-page > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p:nth-of-type(3)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P04/attempt-001/raw-dom.json",
+            "rgaa/preuves/P04/attempt-001/desktop.png",
+            "rgaa/preuves/P04/attempt-001/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-9-EMPTY-PRESENTATION-001-011",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js.tablesaw-enhanced > body.path-node.node--type-page > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p.fr-text--sm:nth-of-type(1)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P05-RGAA-8-9-EMPTY-PRESENTATION-001-012",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js.tablesaw-enhanced > body.path-node.node--type-page > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p:nth-of-type(3)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-9-EMPTY-PRESENTATION-001-015",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-formulaire-infos-douane-service.eu-cookie-compliance-popup-open > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p.fr-text--sm:nth-of-type(1)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-9-EMPTY-PRESENTATION-001-016",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.9",
+          "test": "8.9.1",
+          "rule_id": "RGAA-8-9-EMPTY-PRESENTATION-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "html.js > body.path-formulaire-infos-douane-service.eu-cookie-compliance-popup-open > div.sliding-popup-bottom:nth-of-type(1) > div.fr-consent-banner > div.fr-consent-banner__content > p:nth-of-type(3)",
+          "observed": "Paragraphe vide avec marge 0px 0px 16px",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-007-paragraphes-vides-presentation.md",
+      "html_file": "NC-TRANSVERSE-007-paragraphes-vides-presentation.html"
+    },
+    {
+      "id": "NC-TRANSVERSE-008",
+      "title": "Valeur type=link invalide sur un lien",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Le code source généré n’est pas valide. Cette erreur réduit la robustesse d’interprétation et peut perturber des outils qui exploitent le type déclaré de la ressource.",
+      "component_or_template": "Navigation",
+      "scope": "Transverse — P05, P06, P07, P08, P09",
+      "pages": [
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "criteria": [
+        "8.2"
+      ],
+      "tests": [
+        "8.2.1"
+      ],
+      "rule_ids": [
+        "RGAA-8-2-ANCHOR-TYPE-002"
+      ],
+      "methodological_alert": null,
+      "source_findings": 5,
+      "source_finding_ids": [
+        "P05-RGAA-8-2-ANCHOR-TYPE-002-005",
+        "P06-RGAA-8-2-ANCHOR-TYPE-002-007",
+        "P07-RGAA-8-2-ANCHOR-TYPE-002-005",
+        "P08-RGAA-8-2-ANCHOR-TYPE-002-005",
+        "P09-RGAA-8-2-ANCHOR-TYPE-002-006"
+      ],
+      "occurrences": [
+        {
+          "id": "P05-RGAA-8-2-ANCHOR-TYPE-002-005",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ANCHOR-TYPE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#menu-nous-rejoindre",
+          "observed": "type='link' n’est pas un type MIME valide sur a",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P05/attempt-002/raw-dom.json",
+            "rgaa/preuves/P05/attempt-002/desktop.png",
+            "rgaa/preuves/P05/attempt-002/evidence.json",
+            "captures-ay11/P05/attempt-001/moa-douane-gouv-fr-pied-de-page-donnees-personnelles-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-8-2-ANCHOR-TYPE-002-007",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ANCHOR-TYPE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#menu-nous-rejoindre",
+          "observed": "type='link' n’est pas un type MIME valide sur a",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P07-RGAA-8-2-ANCHOR-TYPE-002-005",
+          "page": "P07",
+          "page_url": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ANCHOR-TYPE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#menu-nous-rejoindre",
+          "observed": "type='link' n’est pas un type MIME valide sur a",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P07/attempt-002/raw-dom.json",
+            "rgaa/preuves/P07/attempt-002/desktop.png",
+            "rgaa/preuves/P07/attempt-002/evidence.json",
+            "captures-ay11/P07/attempt-001/moa-douane-gouv-fr-particuliers-voyages-letranger-rendered.html"
+          ]
+        },
+        {
+          "id": "P08-RGAA-8-2-ANCHOR-TYPE-002-005",
+          "page": "P08",
+          "page_url": "https://moa.douane.gouv.fr/professionnels/commerce-international",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ANCHOR-TYPE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#menu-nous-rejoindre",
+          "observed": "type='link' n’est pas un type MIME valide sur a",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P08/attempt-001/raw-dom.json",
+            "rgaa/preuves/P08/attempt-001/desktop.png",
+            "rgaa/preuves/P08/attempt-001/evidence.json",
+            "captures-ay11/P08/attempt-001/moa-douane-gouv-fr-professionnels-commerce-international-rendered.html"
+          ]
+        },
+        {
+          "id": "P09-RGAA-8-2-ANCHOR-TYPE-002-006",
+          "page": "P09",
+          "page_url": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+          "criterion": "8.2",
+          "test": "8.2.1",
+          "rule_id": "RGAA-8-2-ANCHOR-TYPE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#menu-nous-rejoindre",
+          "observed": "type='link' n’est pas un type MIME valide sur a",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P09/attempt-001/raw-dom.json",
+            "rgaa/preuves/P09/attempt-001/desktop.png",
+            "rgaa/preuves/P09/attempt-001/evidence.json",
+            "captures-ay11/P09/attempt-001/moa-douane-gouv-fr-actualites-point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-a-rendered.html"
+          ]
+        }
+      ],
+      "markdown_file": "NC-TRANSVERSE-008-type-link-invalide.md",
+      "html_file": "NC-TRANSVERSE-008-type-link-invalide.html"
+    },
+    {
+      "id": "NC-P06-001",
+      "title": "Attributs size utilisés pour dimensionner les champs",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "La présentation dépend du code HTML au lieu des styles. Elle devient plus difficile à adapter aux différents écrans, zooms et préférences d’affichage.",
+      "component_or_template": "Champ de saisie / téléversement",
+      "scope": "Locale — P06",
+      "pages": [
+        "P06"
+      ],
+      "criteria": [
+        "10.1"
+      ],
+      "tests": [
+        "10.1.2"
+      ],
+      "rule_ids": [
+        "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002"
+      ],
+      "methodological_alert": null,
+      "source_findings": 7,
+      "source_finding_ids": [
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-017",
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-018",
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-019",
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-020",
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-021",
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-022",
+        "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-023"
+      ],
+      "occurrences": [
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-017",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-societe",
+          "observed": "Attributs de présentation sur <input> : size='40'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-018",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-nom",
+          "observed": "Attributs de présentation sur <input> : size='40'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-019",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-prenom",
+          "observed": "Attributs de présentation sur <input> : size='40'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-020",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-pays",
+          "observed": "Attributs de présentation sur <input> : size='40'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-021",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-codepostal",
+          "observed": "Attributs de présentation sur <input> : size='40'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-022",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-adressemail",
+          "observed": "Attributs de présentation sur <input> : size='60'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        },
+        {
+          "id": "P06-RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002-023",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "10.1",
+          "test": "10.1.2",
+          "rule_id": "RGAA-10-1-PRESENTATIONAL-ATTRIBUTE-002",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-document-upload",
+          "observed": "Attributs de présentation sur <input> : size='22'",
+          "provenance": "RENDERED_DOM",
+          "evidence": [
+            "rgaa/preuves/P06/attempt-004/raw-dom.json",
+            "rgaa/preuves/P06/attempt-004/desktop.png",
+            "rgaa/preuves/P06/attempt-004/evidence.json",
+            "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+          ]
+        }
+      ],
+      "markdown_file": "NC-P06-001-attributs-size-presentation.md",
+      "html_file": "NC-P06-001-attributs-size-presentation.html"
+    },
+    {
+      "id": "NC-P06-002",
+      "title": "Champ entreprise optionnel annoncé comme obligatoire",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "La personne peut croire à tort qu’elle doit fournir le nom de son entreprise, ce qui augmente la charge de saisie et peut conduire à communiquer une donnée non requise.",
+      "component_or_template": "Champ de saisie",
+      "scope": "Locale — P06",
+      "pages": [
+        "P06"
+      ],
+      "criteria": [
+        "11.10"
+      ],
+      "tests": [
+        "11.10.1"
+      ],
+      "rule_ids": [
+        "RGAA-11-10-REQUIRED-INDICATION-HUMAN-001"
+      ],
+      "methodological_alert": "La note technique du critère 11.10 autorise l’instruction globale « tous les champs sont obligatoires sauf… » uniquement si chaque champ facultatif porte une mention visible dans son libellé ou sa légende, et si les autres champs conservent required ou aria-required=true.",
+      "source_findings": 1,
+      "source_finding_ids": [
+        "RGAA-P06-Q-013"
+      ],
+      "occurrences": [
+        {
+          "id": "RGAA-P06-Q-013",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "11.10",
+          "test": "11.10.1",
+          "rule_id": "RGAA-11-10-REQUIRED-INDICATION-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-societe",
+          "observed": "L’instruction annonce que tous les champs sont obligatoires sauf mention contraire. Dans la variante Un professionnel, Société est visible, accepte une valeur vide et ne porte aucune mention optionnel.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json",
+            "preuves-p06-complet/form-professional-target.png"
+          ]
+        }
+      ],
+      "markdown_file": "NC-P06-002-champ-entreprise-optionnel-non-indique.md",
+      "html_file": "NC-P06-002-champ-entreprise-optionnel-non-indique.html"
+    },
+    {
+      "id": "NC-P06-003",
+      "title": "Finalité du champ entreprise non déclarée",
+      "delivery_status": "Préqualification — NC confirmée dans les rapports sources",
+      "severity": "Majeur",
+      "severity_justification": "Les outils de remplissage automatique et les adaptations personnalisées ne peuvent pas reconnaître le nom de l’organisation attendu dans ce champ.",
+      "component_or_template": "Champ de saisie",
+      "scope": "Locale — P06",
+      "pages": [
+        "P06"
+      ],
+      "criteria": [
+        "11.13"
+      ],
+      "tests": [
+        "11.13.1"
+      ],
+      "rule_ids": [
+        "RGAA-11-13-AUTOCOMPLETE-HUMAN-001"
+      ],
+      "methodological_alert": null,
+      "source_findings": 1,
+      "source_finding_ids": [
+        "RGAA-P06-Q-012"
+      ],
+      "occurrences": [
+        {
+          "id": "RGAA-P06-Q-012",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "11.13",
+          "test": "11.13.1",
+          "rule_id": "RGAA-11-13-AUTOCOMPLETE-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": "#edit-societe",
+          "observed": "Dans la variante Un professionnel, le champ Nom de l’entreprise devient visible avec son label, mais ne possède pas autocomplete=organization.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+            "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+            "preuves-p06-complet/form-professional-target.png"
+          ]
+        }
+      ],
+      "markdown_file": "NC-P06-003-autocomplete-entreprise-absent.md",
+      "html_file": "NC-P06-003-autocomplete-entreprise-absent.html"
+    },
+    {
+      "id": "A-REQUALIFIER-RGAA-001",
+      "title": "Ouvertures de liens dans une nouvelle fenêtre à requalifier",
+      "delivery_status": "À requalifier avant transmission comme non-conformité",
+      "severity": "Majeur",
+      "severity_justification": "Une nouvelle fenêtre non annoncée peut surprendre certaines personnes. Cet impact justifie une amélioration, mais ne suffit pas à établir l’échec du test 13.2.1 décrit dans la méthode officielle.",
+      "component_or_template": "Liens externes / suivi sur les réseaux sociaux",
+      "scope": "Transverse — P02, P03, P04, P05, P06",
+      "pages": [
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06"
+      ],
+      "criteria": [
+        "13.2"
+      ],
+      "tests": [
+        "13.2.1"
+      ],
+      "rule_ids": [
+        "RGAA-13-2-NEW-WINDOW-HUMAN-001"
+      ],
+      "methodological_alert": "Ne pas transmettre ce fichier comme non-conformité RGAA 13.2.1 sans arbitrage d’un auditeur. La méthode officielle locale consultée valide le test lorsqu’aucune fenêtre ne s’ouvre au chargement.",
+      "source_findings": 5,
+      "source_finding_ids": [
+        "RGAA-P02-Q-007",
+        "RGAA-P03-Q-007",
+        "RGAA-P04-Q-007",
+        "RGAA-P05-Q-007",
+        "RGAA-P06-Q-011"
+      ],
+      "occurrences": [
+        {
+          "id": "RGAA-P02-Q-007",
+          "page": "P02",
+          "page_url": "https://moa.douane.gouv.fr/plan-du-site",
+          "criterion": "13.2",
+          "test": "13.2.1",
+          "rule_id": "RGAA-13-2-NEW-WINDOW-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": null,
+          "observed": "Six liens vers les réseaux sociaux utilisent target=_blank sans annoncer la nouvelle fenêtre dans leur nom accessible. Cinq autres liens target=_blank l’annoncent correctement dans title.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "dsfr/preuves/P02/attempt-004/evidence.json",
+            "preuves-p02-complet/P02-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "RGAA-P03-Q-007",
+          "page": "P03",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+          "criterion": "13.2",
+          "test": "13.2.1",
+          "rule_id": "RGAA-13-2-NEW-WINDOW-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": null,
+          "observed": "Onze liens target=_blank, dont six liens sociaux et cinq liens de contenu, ouvrent une nouvelle fenêtre sans l’annoncer dans leur nom accessible. Les huit autres occurrences l’annoncent correctement.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "dsfr/preuves/P03/attempt-004/evidence.json",
+            "preuves-p03-complet/P03-COLLECTE-COMPLETE.json",
+            "dsfr/preuves/P03/attempt-006/evidence.json"
+          ]
+        },
+        {
+          "id": "RGAA-P04-Q-007",
+          "page": "P04",
+          "page_url": "https://moa.douane.gouv.fr/mentions-legales",
+          "criterion": "13.2",
+          "test": "13.2.1",
+          "rule_id": "RGAA-13-2-NEW-WINDOW-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": null,
+          "observed": "Douze liens target=_blank, dont six liens sociaux et six liens de contenu, ouvrent une nouvelle fenêtre sans l’annoncer dans leur nom accessible. Les six autres occurrences l’annoncent correctement.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "dsfr/preuves/P04/attempt-002/evidence.json",
+            "preuves-p04-complet/P04-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "RGAA-P05-Q-007",
+          "page": "P05",
+          "page_url": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
+          "criterion": "13.2",
+          "test": "13.2.1",
+          "rule_id": "RGAA-13-2-NEW-WINDOW-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": null,
+          "observed": "Quinze liens target=_blank, dont six liens sociaux et neuf liens de contenu, ouvrent une nouvelle fenêtre sans l’annoncer dans leur nom accessible. Les six autres occurrences l’annoncent correctement.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "dsfr/preuves/P05/attempt-002/evidence.json",
+            "preuves-p05-complet/P05-COLLECTE-COMPLETE.json"
+          ]
+        },
+        {
+          "id": "RGAA-P06-Q-011",
+          "page": "P06",
+          "page_url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+          "criterion": "13.2",
+          "test": "13.2.1",
+          "rule_id": "RGAA-13-2-NEW-WINDOW-HUMAN-001",
+          "source_status": "NC_CONFIRMEE",
+          "selector": null,
+          "observed": "Huit liens target=_blank, dont six liens sociaux et deux liens d’information sur le coronavirus, ouvrent une nouvelle fenêtre sans l’annoncer. Les six liens institutionnels restants l’annoncent correctement.",
+          "provenance": "MEASUREMENTS",
+          "evidence": [
+            "dsfr/preuves/P06/attempt-008/evidence.json",
+            "preuves-p06-complet/P06-COLLECTE-COMPLETE.json"
+          ]
+        }
+      ],
+      "markdown_file": "A-REQUALIFIER-RGAA-001-ouverture-nouvelle-fenetre-non-annoncee.md",
+      "html_file": "A-REQUALIFIER-RGAA-001-ouverture-nouvelle-fenetre-non-annoncee.html"
+    }
+  ],
+  "source_status_counts": {
+    "A_RETESTER": 11,
+    "C_CONFIRMEE": 1,
+    "NC_CONFIRMEE": 145,
+    "NON_TESTE": 4
+  },
+  "evidence_policy": "Les chemins de preuve sont conservés pour la traçabilité vers les archives de travail ; les fichiers volumineux ne sont pas dupliqués. Les extraits utiles sont embarqués dans les fiches.",
+  "archive_evidence_references": 54,
+  "bundled_evidence_files": 0
+}

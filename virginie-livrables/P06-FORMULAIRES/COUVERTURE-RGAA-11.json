@@ -1,0 +1,911 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-03T22:14:11.456820+00:00",
+  "page": {
+    "id": "P06",
+    "name": "Formulaire Écrivez-nous",
+    "url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
+  },
+  "referential": "RGAA 4.1.2",
+  "theme": "11 — Formulaires",
+  "tests_count": 34,
+  "audit_mode": "Complément instrumenté sûr, sans requête mutante",
+  "safety": {
+    "allowed_http_methods": [
+      "GET",
+      "HEAD",
+      "OPTIONS"
+    ],
+    "guard_scope": "BrowserContext",
+    "mutating_requests_completed": false,
+    "completed_mutating_request_details": [],
+    "blocked_mutating_requests": 1,
+    "blocked_request_details": [
+      {
+        "method": "POST",
+        "url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service?element_parents=fieldset/Document&ajax_form=1&_wrapper_format=drupal_ajax",
+        "resource_type": "xhr",
+        "decision": "ABORTED_BEFORE_SEND"
+      }
+    ],
+    "blocked_websockets": 0,
+    "blocked_websocket_details": [],
+    "websocket_application_message_completed": false,
+    "synthetic_data_only": true,
+    "valid_final_submission": false,
+    "server_mutation_authorized": false,
+    "page_errors_observed": 1,
+    "guard_window_page_errors": [
+      {
+        "scenario": "five_allowed_files",
+        "url": "https://moa.douane.gouv.fr/formulaire-infos-douane-service",
+        "message": "Drupal.AjaxError",
+        "error_family": "drupal-ajax",
+        "attribution": "guard-window-causality-unproven"
+      }
+    ],
+    "page_error_attribution_limit": "L’erreur Drupal.AjaxError survient dans la fenêtre de l’unique POST bloqué, mais l’API pageerror ne permet pas d’établir un lien causal avec cette requête."
+  },
+  "published_theme_11_counts": {
+    "A_RETESTER": 4,
+    "C_CONFIRMEE": 19,
+    "NA_CONFIRMEE": 9,
+    "NC_CONFIRMEE": 2
+  },
+  "published_full_258_counts": {
+    "C_CONFIRMEE": 66,
+    "NA_CONFIRMEE": 150,
+    "A_RETESTER": 33,
+    "NC_CONFIRMEE": 9
+  },
+  "probative_baseline_counts": {
+    "A_RETESTER": 15,
+    "NON_APPLICABLE_CONDITIONNEL_DOM": 5,
+    "NON_TESTE": 8,
+    "TESTE_CONFORME": 3,
+    "TESTE_NON_CONFORME": 3
+  },
+  "manual_review_counts": {
+    "A_REVOIR": 32,
+    "DECISION_PARTIELLE": 2
+  },
+  "supplement_counts": {
+    "A_QUALIFIER_HUMAINEMENT": 17,
+    "A_RETESTER_SERVEUR": 4,
+    "CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT": 3,
+    "NON_APPLICABLE_A_CONFIRMER_METIER": 2,
+    "NON_APPLICABLE_CONDITIONNEL_DOM": 5,
+    "NON_CONFORME_ETAYE": 3
+  },
+  "client_transmission_ready": false,
+  "blocking_reasons": [
+    "4 branches nécessitent encore une véritable réponse serveur : 11.10.6, 11.10.7, 11.11.1 et 11.11.2.",
+    "Une erreur Drupal.AjaxError a été observée dans la fenêtre du POST bloqué ; son lien causal avec la garde ne peut pas être établi par pageerror.",
+    "17 décisions restent à qualifier humainement et 2 non-applicabilités à confirmer par la MOA métier.",
+    "Le test 11.10.2 publié conforme et le test adjacent 7.5.2 publié NA doivent être requalifiés en non-conformité.",
+    "Aucun test réel NVDA, JAWS ou VoiceOver n’est joint."
+  ],
+  "safe_retest": {
+    "generated_at": "2026-09-03T22:14:11.456820+00:00",
+    "run_id": "20260903T221344281418Z-42c57784",
+    "collector": {
+      "file": "scripts/retest-p06-form-safe.py",
+      "sha256": "42c57784840455795d7e7e9586ff9c2ddf3f5acf58fe9f843cf5fa6d930e8dd8"
+    },
+    "screenshots": {
+      "empty_native_submit": {
+        "file": "preuves/runs/20260903T221344281418Z-42c57784/P06-01-soumission-vide-native.png",
+        "sha256": "e8f1de0dcdd4ad8732d585087b8b0666e4b1d898934e25b4b0632a764b979f19",
+        "bytes": 72969
+      },
+      "invalid_email_native": {
+        "file": "preuves/runs/20260903T221344281418Z-42c57784/P06-02-email-invalide-natif.png",
+        "sha256": "d6f16a2b55bbda00295de5acb257dbdbd7299f3a9b1f8a38cd6df1174391852f",
+        "bytes": 82217
+      },
+      "professional_variant": {
+        "file": "preuves/runs/20260903T221344281418Z-42c57784/P06-03-variante-professionnel.png",
+        "sha256": "40879237e970acc2c52ed0f7cc81410fbb7c8517a018e1505b41ea0c1a95cf48",
+        "bytes": 76203
+      },
+      "invalid_file_extension": {
+        "file": "preuves/runs/20260903T221344281418Z-42c57784/P06-04-extension-interdite-validation-client-sans-requete.png",
+        "sha256": "ba4a68ea0e006cea565b8f0f4c6ecb64911816f4a0a4d77fe47e0fdf73ba8088",
+        "bytes": 88085
+      },
+      "five_allowed_files": {
+        "file": "preuves/runs/20260903T221344281418Z-42c57784/P06-05-cinq-fichiers-requete-bloquee.png",
+        "sha256": "0abb765b35f89f19c6f3c78bdaa1f3bf510f8983a7676422e9766fde24765b4b",
+        "bytes": 72536
+      }
+    },
+    "p06_controls_inventoried": 34,
+    "p06_controls_without_name_candidate": 0,
+    "required_controls_observed": 9,
+    "required_controls_without_associated_indication": 9,
+    "required_control_violation_ids": [
+      "edit-question-type",
+      "edit-candidate-gender",
+      "edit-nom",
+      "edit-prenom",
+      "edit-pays",
+      "edit-codepostal",
+      "edit-adressemail",
+      "edit-question",
+      "edit-accept-conditions"
+    ],
+    "repeated_controls_compared": 4,
+    "repeated_controls_coherent": true,
+    "native_empty_focus": {
+      "tag": "input",
+      "id": "edit-nom",
+      "name": "Nom",
+      "type": "text",
+      "role": null
+    },
+    "native_invalid_email_focus": {
+      "tag": "input",
+      "id": "edit-adressemail",
+      "name": "AdresseMail",
+      "type": "email",
+      "role": null
+    },
+    "invalid_extension_message": {
+      "tag": "div",
+      "id": null,
+      "role": null,
+      "aria_live": "polite",
+      "aria_atomic": null,
+      "text": "Le fichier sélectionné preuve-synthetique-interdite.exe ne peut pas être transféré. Seuls les fichiers avec les extensions suivantes sont autorisés : jpg, jpeg, png, pdf.",
+      "source_kind": "live-region",
+      "visually_rendered": true,
+      "html": "<div class=\"messages messages--error file-upload-js-error\" aria-live=\"polite\">Le fichier sélectionné <em class=\"placeholder\">preuve-synthetique-interdite.exe</em> ne peut pas être transféré. Seuls les fichiers avec les extensions suivantes sont autorisés : <em class=\"placeholder\">jpg, jpeg, png, pdf</em>.</div>"
+    },
+    "five_files_server_response_available": false
+  },
+  "decisions": [
+    {
+      "criterion": "11.1",
+      "test": "11.1.1",
+      "title": "Chaque [champ de formulaire](#champ-de-saisie-de-formulaire) vérifie-t-il une de ces conditions ? Le [champ de formulaire](#champ-de-saisie-de-formulaire) possède un attribut WAI-ARIA `aria-labelledby` référençant un [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) identifié ; Le [champ de formulaire](#champ-de-saisie-de-formulaire) possède un attribut WAI-ARIA `aria-label` ; Une balise `<label>` ayant un attribut `for` est associée au [champ de formulaire](#champ-de-saisie-de-formulaire) ; Le [champ de formulaire](#champ-de-saisie-de-formulaire) possède un attribut `title` ; Un bouton adjacent au [champ de formulaire](#champ-de-saisie-de-formulaire) lui fournit une étiquette visible et un élément `<label>` visuellement caché ou un attribut WAI-ARIA `aria-label`, `aria-labelledby` ou `title` lui fournit un nom accessible.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "Le relevé conserve les mécanismes d’étiquette et un candidat calculé, mais il ne constitue pas une implémentation normative d’AccName : qualification humaine maintenue.",
+      "human_validation": "Non requise pour absence technique ; obligatoire pour pertinence et `placeholder` seul.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.1.1"
+    },
+    {
+      "criterion": "11.1",
+      "test": "11.1.2",
+      "title": "Chaque [champ de formulaire](#champ-de-saisie-de-formulaire) associé à une balise `<label>` ayant un attribut `for`, vérifie-t-il ces conditions ? Le [champ de formulaire](#champ-de-saisie-de-formulaire) possède un attribut `id` ; La valeur de l’attribut `for` est égale à la valeur de l’attribut `id` du [champ de formulaire](#champ-de-saisie-de-formulaire) associé.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "TESTE_CONFORME",
+      "supplement_status": "CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT",
+      "supplement_label": "Conforme technique étayée — validation humaine requise",
+      "rationale": "Les preuves comportent un contrôle technique ciblé, mais la validation humaine requise par le contrat de preuve n’est pas signée dans le registre de revue.",
+      "human_validation": "Non requise pour association technique ; obligatoire si libellé ambigu.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.1.2"
+    },
+    {
+      "criterion": "11.1",
+      "test": "11.1.3",
+      "title": "Chaque [champ de formulaire](#champ-de-saisie-de-formulaire) ayant une [étiquette](#etiquette-de-champ-de-formulaire) dont le contenu n’est pas visible ou à proximité (masqué, `aria-label`) ou qui n’est pas [accolé](#accoles-etiquette-et-champ-accoles) au champ (`aria-labelledby`), vérifie-t-il une de ses conditions ? Le [champ de formulaire](#champ-de-saisie-de-formulaire) possède un attribut `title` dont le contenu permet de comprendre la nature de la saisie attendue ; Le [champ de formulaire](#champ-de-saisie-de-formulaire) est accompagné d’un [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) accolé au champ qui devient visible à la prise de focus permettant de comprendre la nature de la saisie attendue ; Le [champ de formulaire](#champ-de-saisie-de-formulaire) est accompagné d’un [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) visible accolé au champ permettant de comprendre la nature de la saisie attendue.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La variante « Un professionnel » montre Société et son étiquette ensemble, mais la visibilité et la proximité de tous les champs, notamment la recherche masquée, n’ont pas été qualifiées exhaustivement : revue humaine maintenue.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.1.3"
+    },
+    {
+      "criterion": "11.2",
+      "test": "11.2.1",
+      "title": "Chaque balise `<label>` permet-elle de connaître la fonction exacte du [champ de formulaire](#champ-de-saisie-de-formulaire) auquel elle est associée ?",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.2.1"
+    },
+    {
+      "criterion": "11.2",
+      "test": "11.2.2",
+      "title": "Chaque attribut `title` permet-il de connaître la fonction exacte du [champ de formulaire](#champ-de-saisie-de-formulaire) auquel il est associé ?",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_status": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_label": "Non applicable conditionnel — DOM observé",
+      "rationale": "Le DOM observé ne contient aucune cible correspondant au mécanisme testé. Cette non-applicabilité reste conditionnelle aux états capturés et à la qualification sémantique du critère parent.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.2.2"
+    },
+    {
+      "criterion": "11.2",
+      "test": "11.2.3",
+      "title": "Chaque étiquette implémentée via l’attribut WAI-ARIA `aria-label` permet-elle de connaître la fonction exacte du [champ de formulaire](#champ-de-saisie-de-formulaire) auquel elle est associée ?",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_status": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_label": "Non applicable conditionnel — DOM observé",
+      "rationale": "Le DOM observé ne contient aucune cible correspondant au mécanisme testé. Cette non-applicabilité reste conditionnelle aux états capturés et à la qualification sémantique du critère parent.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.2.3"
+    },
+    {
+      "criterion": "11.2",
+      "test": "11.2.4",
+      "title": "Chaque [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) associé via l’attribut WAI-ARIA `aria-labelledby` permet-il de connaître la fonction exacte du [champ de formulaire](#champ-de-saisie-de-formulaire) auquel il est associé ?",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_status": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_label": "Non applicable conditionnel — DOM observé",
+      "rationale": "Le DOM observé ne contient aucune cible correspondant au mécanisme testé. Cette non-applicabilité reste conditionnelle aux états capturés et à la qualification sémantique du critère parent.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.2.4"
+    },
+    {
+      "criterion": "11.2",
+      "test": "11.2.5",
+      "title": "Chaque [champ de formulaire](#champ-de-saisie-de-formulaire) ayant un [intitulé visible](#intitule-visible) vérifie-t-il ces conditions (hors cas particuliers) ? S’il est présent, le contenu de l’attribut WAI-ARIA `aria-label` du [champ de formulaire](#champ-de-saisie-de-formulaire) contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) lié au [champ de formulaire](#champ-de-saisie-de-formulaire) via un attribut WAI-ARIA `aria-labelledby` contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le contenu de l’attribut `title` du [champ de formulaire](#champ-de-saisie-de-formulaire) contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent le contenu de la balise `<label>` associé au [champ de formulaire](#champ-de-saisie-de-formulaire) contient au moins l’[intitulé visible](#intitule-visible).",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Conditionnelle : obligatoire si divergence ou intitulé ambigu.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.2.5"
+    },
+    {
+      "criterion": "11.2",
+      "test": "11.2.6",
+      "title": "Chaque bouton adjacent au [champ de formulaire](#champ-de-saisie-de-formulaire) qui fournit une étiquette visible permet-il de connaître la fonction exacte du [champ de formulaire](#champ-de-saisie-de-formulaire) auquel il est associé ?",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.2.6"
+    },
+    {
+      "criterion": "11.3",
+      "test": "11.3.1",
+      "title": "Chaque [étiquette](#etiquette-de-champ-de-formulaire) associée à un [champ de formulaire](#champ-de-saisie-de-formulaire) ayant la même fonction et répétée plusieurs fois dans une même page est-elle [cohérente](#etiquettes-coherentes) ?",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.3.1"
+    },
+    {
+      "criterion": "11.3",
+      "test": "11.3.2",
+      "title": "Chaque [étiquette](#etiquette-de-champ-de-formulaire) associée à un [champ de formulaire](#champ-de-saisie-de-formulaire) ayant la même fonction et répétée dans un ensemble de pages est-elle [cohérente](#etiquettes-coherentes) ?",
+      "published_status": "A_RETESTER",
+      "published_coverage_complete": false,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "Les quatre contrôles explicitement cartographiés sur P01 à P09 — recherche et trois choix de thème — conservent le même texte de label et candidat de nom ; la visibilité effective et la qualification « même fonction » restent humaines.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.3.2"
+    },
+    {
+      "criterion": "11.4",
+      "test": "11.4.1",
+      "title": "Chaque [étiquette de champ](#etiquette-de-champ-de-formulaire) et son [champ](#champ-de-saisie-de-formulaire) associé sont-ils [accolés](#accoles-etiquette-et-champ-accoles) ?",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.4.1"
+    },
+    {
+      "criterion": "11.4",
+      "test": "11.4.2",
+      "title": "Chaque [étiquette](#etiquette-de-champ-de-formulaire) [accolée](#accoles-etiquette-et-champ-accoles) à un [champ](#champ-de-saisie-de-formulaire) (à l’exception des cases à cocher, bouton radio ou balises ayant un attribut WAI-ARIA `role=\"checkbox\"`, `role=\"radio\"` ou `role=\"switch\"`), vérifie-t-elle ces conditions (hors cas particuliers) ? L’étiquette est visuellement [accolée](#accoles-etiquette-et-champ-accoles) immédiatement au-dessus ou à gauche du [champ de formulaire](#champ-de-saisie-de-formulaire) lorsque le sens de lecture de la langue de l’étiquette est de gauche à droite ; L’étiquette est visuellement [accolée](#accoles-etiquette-et-champ-accoles) immédiatement au-dessus ou à droite du [champ de formulaire](#champ-de-saisie-de-formulaire) lorsque le sens de lecture de la langue de l’étiquette est de droite à gauche.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.4.2"
+    },
+    {
+      "criterion": "11.4",
+      "test": "11.4.3",
+      "title": "Chaque [étiquette](#etiquette-de-champ-de-formulaire) [accolée](#accoles-etiquette-et-champ-accoles) à un [champ](#champ-de-saisie-de-formulaire) de type `checkbox` ou `radio` ou à une balise ayant un attribut WAI-ARIA `role=\"checkbox\"`, `role=\"radio\"` ou `role=\"switch\"`, vérifie-t-elle ces conditions (hors cas particuliers) ? L’étiquette est visuellement [accolée](#accoles-etiquette-et-champ-accoles) immédiatement au-dessous ou à droite du [champ de formulaire](#champ-de-saisie-de-formulaire) lorsque le sens de lecture de la langue de l’étiquette est de gauche à droite ; L’étiquette est visuellement [accolée](#accoles-etiquette-et-champ-accoles) immédiatement au-dessous ou à gauche du [champ de formulaire](#champ-de-saisie-de-formulaire) lorsque le sens de lecture de la langue de l’étiquette est de droite à gauche.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.4.3"
+    },
+    {
+      "criterion": "11.5",
+      "test": "11.5.1",
+      "title": "Les [champs de même nature](#champs-de-meme-nature) vérifient-ils l’une de ces conditions, si nécessaire ? Les [champs de même nature](#champs-de-meme-nature) sont regroupés dans une balise `<fieldset>` ; Les [champs de même nature](#champs-de-meme-nature) sont regroupés dans une balise possédant un attribut WAI-ARIA `role=\"group\"` ; Les [champs de même nature](#champs-de-meme-nature) de type radio (`<input type=\"radio\">`) ou balises possédant un attribut WAI-ARIA `role=\"radio\"`) sont regroupés dans une balise possédant un attribut WAI-ARIA `role=\"radiogroup\"` ou `role=\"group\"`.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.5.1"
+    },
+    {
+      "criterion": "11.6",
+      "test": "11.6.1",
+      "title": "Chaque regroupement de [champs de même nature](#champs-de-meme-nature) possède-t-il une [légende](#legende) ?",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "TESTE_CONFORME",
+      "supplement_status": "CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT",
+      "supplement_label": "Conforme technique étayée — validation humaine requise",
+      "rationale": "Les preuves comportent un contrôle technique ciblé, mais la validation humaine requise par le contrat de preuve n’est pas signée dans le registre de revue.",
+      "human_validation": "Non requise pour présence technique ; obligatoire pour pertinence.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.6.1"
+    },
+    {
+      "criterion": "11.7",
+      "test": "11.7.1",
+      "title": "Chaque [légende](#legende) associée à un regroupement de [champs de même nature](#champs-de-meme-nature) est-elle pertinente ?",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.7.1"
+    },
+    {
+      "criterion": "11.8",
+      "test": "11.8.1",
+      "title": "Pour chaque balise `<select>`, les [items de même nature d’une liste de choix](#items-de-meme-nature-d-une-liste-de-choix) sont-ils regroupés avec une balise `<optgroup>`, si nécessaire ?",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.8.1"
+    },
+    {
+      "criterion": "11.8",
+      "test": "11.8.2",
+      "title": "Dans chaque balise `<select>`, chaque balise `<optgroup>` possède-t-elle un attribut `label` ?",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_status": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_label": "Non applicable conditionnel — DOM observé",
+      "rationale": "Le DOM observé ne contient aucune cible correspondant au mécanisme testé. Cette non-applicabilité reste conditionnelle aux états capturés et à la qualification sémantique du critère parent.",
+      "human_validation": "Non requise pour présence technique ; obligatoire si libellé suspect.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.8.2"
+    },
+    {
+      "criterion": "11.8",
+      "test": "11.8.3",
+      "title": "Pour chaque balise `<optgroup>` ayant un attribut `label`, le contenu de l’attribut `label` est-il pertinent ?",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_status": "NON_APPLICABLE_CONDITIONNEL_DOM",
+      "supplement_label": "Non applicable conditionnel — DOM observé",
+      "rationale": "Le DOM observé ne contient aucune cible correspondant au mécanisme testé. Cette non-applicabilité reste conditionnelle aux états capturés et à la qualification sémantique du critère parent.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.8.3"
+    },
+    {
+      "criterion": "11.9",
+      "test": "11.9.1",
+      "title": "L’intitulé de chaque [bouton](#bouton-formulaire) vérifie-t-il ces conditions (hors cas particuliers) ? S’il est présent, le contenu de l’attribut WAI-ARIA `aria-label` est pertinent ; S’il est présent, le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) lié au bouton via un attribut WAI-ARIA `aria-labelledby` est pertinent ; S’il est présent, le contenu de l’attribut `value` d’une balise `<input>` de type `submit`, `reset` ou `button` est pertinent ; S’il est présent, le contenu de la balise `<button>` est pertinent ; S’il est présent, le contenu de l’attribut `alt` d’une balise `<input>` de type `image` est pertinent ; S’il est présent, le contenu de l’attribut `title` est pertinent.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Non requise pour absence de nom ; obligatoire pour pertinence.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.9.1"
+    },
+    {
+      "criterion": "11.9",
+      "test": "11.9.2",
+      "title": "Chaque [bouton](#bouton-formulaire) affichant un [intitulé visible](#intitule-visible) vérifie-t-il ces conditions (hors cas particuliers) ? S’il est présent, le contenu de l’attribut WAI-ARIA `aria-label `contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) lié au bouton via un attribut WAI-ARIA `aria-labelledby` contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le contenu de l’attribut value d’une balise `<input>` de type `submit`, `reset` ou `button` contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le contenu de la balise `<button>` contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le contenu de l’attribut `alt` d’une balise `<input>` de type `image` contient au moins l’[intitulé visible](#intitule-visible) ; S’il est présent, le contenu de l’attribut `title` contient au moins l’[intitulé visible](#intitule-visible).",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "La pertinence, l’applicabilité ou le rendu nécessite encore une revue humaine ciblée ; les collecteurs automatiques ne produisent pas cette décision.",
+      "human_validation": "Conditionnelle : obligatoire si divergence ou intitulé ambigu.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.9.2"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.1",
+      "title": "Les [indications du caractère obligatoire](#indication-de-champ-obligatoire) de la saisie des champs vérifient-elles une de ces conditions (hors cas particuliers) ? Une [indication de champ obligatoire](#indication-de-champ-obligatoire) est visible et permet d’identifier nommément le champ concerné préalablement à la validation du formulaire ; Le champ obligatoire dispose de l’attribut `aria-required=\"true\"` ou `required` préalablement à la validation du formulaire.",
+      "published_status": "NC_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "DECISION_PARTIELLE",
+      "probative_baseline": "TESTE_NON_CONFORME",
+      "supplement_status": "NON_CONFORME_ETAYE",
+      "supplement_label": "Non conforme étayé",
+      "rationale": "Le champ Société est facultatif mais aucune mention visible ne l’indique alors que l’instruction globale annonce tous les champs obligatoires sauf mention contraire.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html",
+        "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.1"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.2",
+      "title": "Les champs obligatoires ayant l’attribut `aria-required=\"true\"` ou `required` vérifient-ils une de ces conditions ? Une [indication de champ obligatoire](#indication-de-champ-obligatoire) est visible et située dans l’étiquette associée au champ préalablement à la validation du formulaire ; Une [indication de champ obligatoire](#indication-de-champ-obligatoire) est visible et située dans le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) associé au champ préalablement à la validation du formulaire.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "TESTE_NON_CONFORME",
+      "supplement_status": "NON_CONFORME_ETAYE",
+      "supplement_label": "Non conforme étayé",
+      "rationale": "Les champs portant required ne présentent pas l’indication de leur caractère obligatoire dans leur étiquette ou un passage de texte associé ; l’instruction globale non associée ne suffit pas.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.2"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.3",
+      "title": "Les messages d’erreur indiquant l’absence de saisie d’un champ obligatoire vérifient-ils une de ces conditions ? Le message d’erreur indiquant l’absence de saisie d’un champ obligatoire est visible et permet d’identifier nommément le champ concerné ; Le champ obligatoire dispose de l’attribut `aria-invalid=\"true\"`.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "Le premier état client utilise un message de validation natif générique sans aria-invalid ; sa capacité à identifier nommément le champ reste à qualifier humainement malgré un état serveur archivé plus riche.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.3"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.4",
+      "title": "Les champs obligatoires ayant l’attribut `aria-invalid=\"true\"` vérifient-ils une de ces conditions ? Le message d’erreur indiquant le caractère invalide de la saisie est visible et situé dans l’étiquette associée au champ ; Le message d’erreur indiquant le caractère invalide de la saisie est visible et situé dans le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) associé au champ.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "TESTE_CONFORME",
+      "supplement_status": "CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT",
+      "supplement_label": "Conforme technique étayée — validation humaine requise",
+      "rationale": "Les preuves comportent un contrôle technique ciblé, mais la validation humaine requise par le contrat de preuve n’est pas signée dans le registre de revue.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.4"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.5",
+      "title": "Les instructions et indications du type de données et/ou de format obligatoires vérifient-elles une de ces conditions ? Une instruction ou une indication du type de données et/ou de format obligatoire est visible et permet d’identifier nommément le champ concerné préalablement à la validation du formulaire ; Une instruction ou une indication du type de données et/ou de format obligatoire est visible dans l’étiquette ou le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) associé au champ préalablement à la validation du formulaire.",
+      "published_status": "C_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_QUALIFIER_HUMAINEMENT",
+      "supplement_label": "À qualifier humainement",
+      "rationale": "Plusieurs champs portent maxlength=128 sans instruction associée. La nécessité et la formulation d’une indication de format/longueur restent à qualifier humainement.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.5"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.6",
+      "title": "Les messages d’erreurs fournissant une instruction ou une indication du type de données et/ou de format obligatoire des champs vérifient-ils une de ces conditions ? Le message d’erreur fournissant une instruction ou une indication du type de données et/ou de format obligatoires est visible et identifie le champ concerné ; Le champ dispose de l’attribut `aria-invalid=\"true\"`.",
+      "published_status": "A_RETESTER",
+      "published_coverage_complete": false,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_RETESTER_SERVEUR",
+      "supplement_label": "À retester côté serveur",
+      "rationale": "L’adresse électronique invalide et l’extension de fichier interdite ont produit des messages visibles. Le scénario de cinq fichiers déclenche une requête AJAX qui a été bloquée avant envoi : son véritable retour serveur reste inconnu.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.6"
+    },
+    {
+      "criterion": "11.10",
+      "test": "11.10.7",
+      "title": "Les champs ayant l’attribut `aria-invalid=\"true\"` dont la saisie requiert un type de données et/ou de format obligatoires vérifient-ils une de ces conditions ? Une instruction ou une indication du type de données et/ou de format obligatoire est visible et située dans la balise `<label>` associée au champ ; Une instruction ou une indication du type de données et/ou de format obligatoire est visible et située dans le [passage de texte](#passage-de-texte-lie-par-aria-labelledby-ou-aria-describedby) associé au champ.",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_RETESTER_SERVEUR",
+      "supplement_label": "À retester côté serveur",
+      "rationale": "Les états natifs observés ne posent pas aria-invalid. Les états serveur archivés en posent, mais le retour réel du dépassement de quatre fichiers n’a pas été obtenu en mode sûr. L’ancien NA est donc remplacé par un retest serveur.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.10.7"
+    },
+    {
+      "criterion": "11.11",
+      "test": "11.11.1",
+      "title": "Pour chaque erreur de saisie, les types et les formats de données sont-ils suggérés, si nécessaire ?",
+      "published_status": "A_RETESTER",
+      "published_coverage_complete": false,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_RETESTER_SERVEUR",
+      "supplement_label": "À retester côté serveur",
+      "rationale": "Le message d’extension interdite donne les types autorisés et le navigateur indique le caractère @ manquant. La suggestion associée au dépassement de quatre fichiers reste inconnue sans réponse serveur.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.11.1"
+    },
+    {
+      "criterion": "11.11",
+      "test": "11.11.2",
+      "title": "Pour chaque erreur de saisie, des exemples de valeurs attendues sont-ils suggérés, si nécessaire ?",
+      "published_status": "A_RETESTER",
+      "published_coverage_complete": false,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "A_RETESTER",
+      "supplement_status": "A_RETESTER_SERVEUR",
+      "supplement_label": "À retester côté serveur",
+      "rationale": "L’exemple nom@domaine.fr est visible pour l’email. La nécessité et le contenu d’un exemple dans le retour « cinq fichiers » restent à qualifier après réponse serveur.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.11.2"
+    },
+    {
+      "criterion": "11.12",
+      "test": "11.12.1",
+      "title": "Pour chaque formulaire qui modifie ou supprime des données, ou qui transmet des réponses à un test ou un examen, ou dont la validation a des conséquences financières ou juridiques, la saisie des données vérifie-t-elle une de ces conditions ? L’utilisateur peut [modifier ou annuler les données et les actions effectuées](#modifier-ou-annuler-les-donnees-et-les-actions-effectues) sur ces données après la validation du formulaire ; L’utilisateur peut vérifier et corriger les données avant la validation d’un formulaire en plusieurs étapes ; Un mécanisme de confirmation explicite, via une case à cocher (balise `<input>` de type `checkbox` ou balise ayant un attribut WAI-ARIA `role=\"checkbox\"`) ou une étape supplémentaire, est présent.",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "NON_APPLICABLE_A_CONFIRMER_METIER",
+      "supplement_label": "Non applicable à confirmer métier",
+      "rationale": "Le formulaire de contact ne paraît ni modifier/supprimer des données existantes, ni constituer un test, ni emporter par lui-même une conséquence financière ou juridique. Cette qualification doit être confirmée par la MOA métier.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.12.1"
+    },
+    {
+      "criterion": "11.12",
+      "test": "11.12.2",
+      "title": "Chaque formulaire dont la validation modifie ou supprime des données à caractère financier, juridique ou personnel vérifie-t-il une de ces conditions ? Un mécanisme permet de récupérer les données supprimées ou modifiées par l’utilisateur ; Un mécanisme de demande de confirmation explicite de la suppression ou de la modification, via un [champ de formulaire](#champ-de-saisie-de-formulaire) ou une étape supplémentaire, est proposé.",
+      "published_status": "NA_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "A_REVOIR",
+      "probative_baseline": "NON_TESTE",
+      "supplement_status": "NON_APPLICABLE_A_CONFIRMER_METIER",
+      "supplement_label": "Non applicable à confirmer métier",
+      "rationale": "Le formulaire de contact ne paraît ni modifier/supprimer des données existantes, ni constituer un test, ni emporter par lui-même une conséquence financière ou juridique. Cette qualification doit être confirmée par la MOA métier.",
+      "human_validation": "Obligatoire.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.12.2"
+    },
+    {
+      "criterion": "11.13",
+      "test": "11.13.1",
+      "title": "Chaque [champ de formulaire](#champ-de-saisie-de-formulaire) dont l’objet se rapporte à une information concernant l’utilisateur vérifie-t-il ces conditions ? Le [champ de formulaire](#champ-de-saisie-de-formulaire) possède un attribut `autocomplete `; L’attribut `autocomplete` est pourvu d’une valeur présente dans la [liste des valeurs possibles pour l’attribut `autocomplete`](#liste-des-valeurs-possibles-pour-l-attribut-autocomplete) associés à un [champ de formulaire](#champ-de-saisie-de-formulaire) ; La valeur indiquée pour l’attribut `autocomplete` est pertinente au regard du type d’information attendu.",
+      "published_status": "NC_CONFIRMEE",
+      "published_coverage_complete": true,
+      "manual_review_status": "DECISION_PARTIELLE",
+      "probative_baseline": "TESTE_NON_CONFORME",
+      "supplement_status": "NON_CONFORME_ETAYE",
+      "supplement_label": "Non conforme étayé",
+      "rationale": "Le champ Société concerne l’organisation de l’utilisateur et ne possède pas autocomplete=organization.",
+      "human_validation": "Conditionnelle : non requise pour syntaxe, obligatoire pour pertinence.",
+      "evidence": [
+        "preuves-p06-complet/P06-COLLECTE-COMPLETE.json",
+        "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
+        "captures-ay11/P06/attempt-001/moa-douane-gouv-fr-formulaire-infos-douane-service-rendered.html"
+      ],
+      "official_url": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#11.13.1"
+    }
+  ],
+  "theme_requalification": {
+    "criterion": "11.10",
+    "test": "11.10.2",
+    "status": "NON_CONFORME_ETAYE",
+    "label": "Non conforme étayé — décision publiée à requalifier",
+    "published_status": "C_CONFIRMEE",
+    "observation": "9 champs portant required ne présentent aucune indication de caractère obligatoire dans leur étiquette, aria-labelledby ou aria-describedby. L’instruction générale n’est associée à aucun de ces champs.",
+    "affected_control_ids": [
+      "edit-question-type",
+      "edit-candidate-gender",
+      "edit-nom",
+      "edit-prenom",
+      "edit-pays",
+      "edit-codepostal",
+      "edit-adressemail",
+      "edit-question",
+      "edit-accept-conditions"
+    ],
+    "screenshot": "preuves/runs/20260903T221344281418Z-42c57784/P06-01-soumission-vide-native.png",
+    "evidence": [
+      "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+      "P06-FORMULAIRES/preuves/runs/20260903T221344281418Z-42c57784/P06-01-soumission-vide-native.png"
+    ],
+    "requalification_required": true
+  },
+  "adjacent_decision": {
+    "criterion": "7.5",
+    "test": "7.5.2",
+    "status": "NON_CONFORME_ETAYE",
+    "label": "Non conforme étayé — complément P06",
+    "observation": "Le message dynamique d’extension interdite est une erreur/suggestion. Le conteneur observé porte aria-live=\"polite\", sans role et sans aria-atomic. Il ne satisfait donc ni role=\"alert\", ni l’équivalent aria-live=\"assertive\" avec aria-atomic=\"true\".",
+    "message": "Le fichier sélectionné preuve-synthetique-interdite.exe ne peut pas être transféré. Seuls les fichiers avec les extensions suivantes sont autorisés : jpg, jpeg, png, pdf.",
+    "screenshot": "preuves/runs/20260903T221344281418Z-42c57784/P06-04-extension-interdite-validation-client-sans-requete.png",
+    "evidence": [
+      "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+      "P06-FORMULAIRES/preuves/runs/20260903T221344281418Z-42c57784/P06-04-extension-interdite-validation-client-sans-requete.png",
+      "P06-FORMULAIRES/preuves/P06-ETAT-SERVEUR-ARCHIVE.json"
+    ],
+    "published_status": "NA_CONFIRMEE",
+    "requalification_required": true
+  },
+  "requalifications": [
+    {
+      "criterion": "11.10",
+      "test": "11.10.2",
+      "status": "NON_CONFORME_ETAYE",
+      "label": "Non conforme étayé — décision publiée à requalifier",
+      "published_status": "C_CONFIRMEE",
+      "observation": "9 champs portant required ne présentent aucune indication de caractère obligatoire dans leur étiquette, aria-labelledby ou aria-describedby. L’instruction générale n’est associée à aucun de ces champs.",
+      "affected_control_ids": [
+        "edit-question-type",
+        "edit-candidate-gender",
+        "edit-nom",
+        "edit-prenom",
+        "edit-pays",
+        "edit-codepostal",
+        "edit-adressemail",
+        "edit-question",
+        "edit-accept-conditions"
+      ],
+      "screenshot": "preuves/runs/20260903T221344281418Z-42c57784/P06-01-soumission-vide-native.png",
+      "evidence": [
+        "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+        "P06-FORMULAIRES/preuves/runs/20260903T221344281418Z-42c57784/P06-01-soumission-vide-native.png"
+      ],
+      "requalification_required": true
+    },
+    {
+      "criterion": "7.5",
+      "test": "7.5.2",
+      "status": "NON_CONFORME_ETAYE",
+      "label": "Non conforme étayé — complément P06",
+      "observation": "Le message dynamique d’extension interdite est une erreur/suggestion. Le conteneur observé porte aria-live=\"polite\", sans role et sans aria-atomic. Il ne satisfait donc ni role=\"alert\", ni l’équivalent aria-live=\"assertive\" avec aria-atomic=\"true\".",
+      "message": "Le fichier sélectionné preuve-synthetique-interdite.exe ne peut pas être transféré. Seuls les fichiers avec les extensions suivantes sont autorisés : jpg, jpeg, png, pdf.",
+      "screenshot": "preuves/runs/20260903T221344281418Z-42c57784/P06-04-extension-interdite-validation-client-sans-requete.png",
+      "evidence": [
+        "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
+        "P06-FORMULAIRES/preuves/runs/20260903T221344281418Z-42c57784/P06-04-extension-interdite-validation-client-sans-requete.png",
+        "P06-FORMULAIRES/preuves/P06-ETAT-SERVEUR-ARCHIVE.json"
+      ],
+      "published_status": "NA_CONFIRMEE",
+      "requalification_required": true
+    }
+  ],
+  "source_integrity": {
+    "safe_evidence_sha256": "0a2894dcf1ac00b0dd9f6767a55132ca612767cb7b71fd07ad62d2a899da1d3d",
+    "published_decisions_sha256": "39cc1b4d2ea962e1743a1feb4f12737eac44ed50c151829e02f042c82ba2dcf9",
+    "manual_reviews_sha256": "207fc2d46935d0fbb723a2e83b3c801f250943e26d00949edd202bc42865e333",
+    "archived_server_state_sha256": "8032c2b87a482b24736b81b798c2d95ae8cc12e51dfd6490cc86d99fb453a50f",
+    "archived_company_state_sha256": "82debbdff3caae079cd2ce5782754c95db17cef770324dcac89dd4352928948c",
+    "reference_sha256": "c526941b8c18cd7f408ca993a9df723ce4ad27ead69be9bd50a57f44dbfb2134"
+  }
+}
