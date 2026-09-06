@@ -2299,7 +2299,31 @@ def _run_locked() -> int:
     return 0 if not errors else 1
 
 
+def verifier_donnees_entree() -> None:
+    """Arrête avant tout effet de bord si les archives de campagne manquent.
+
+    Le kit publie ce générateur mais pas `archives/` (voir .gitignore). Les neuf
+    pages de la campagne sont vérifiées : une archive partielle produirait un
+    livrable incomplet présenté comme complet.
+    """
+    if not ARCHIVES.is_dir():
+        raise SystemExit(
+            f"Données d'entrée absentes : {ARCHIVES}\n"
+            "Ce générateur consomme les archives d'une campagne d'audit, qui ne "
+            "sont pas publiées avec le kit.\n"
+            "Aucun fichier n'a été modifié."
+        )
+    manquantes = [page for page in PAGE_IDS if not archive_for(page).is_dir()]
+    if manquantes:
+        raise SystemExit(
+            "Archives de campagne incomplètes, pages manquantes : "
+            + ", ".join(manquantes)
+            + f"\nAttendues sous {ARCHIVES}.\nAucun fichier n'a été modifié."
+        )
+
+
 def main() -> int:
+    verifier_donnees_entree()
     with p06_pipeline_lock():
         return _run_locked()
 

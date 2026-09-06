@@ -1134,7 +1134,24 @@ def _run_locked() -> int:
     return 0
 
 
+def verifier_donnees_entree() -> None:
+    """Arrête avant tout effet de bord si les archives de campagne manquent.
+
+    Le kit publie ce générateur mais pas `archives/` (voir .gitignore). Sans ce
+    contrôle, `_run_locked` invalide le paquet précédent avant de mourir sur la
+    première lecture, laissant un livrable valide marqué non transmissible.
+    """
+    if not ARCHIVE.is_dir():
+        raise SystemExit(
+            f"Données d'entrée absentes : {ARCHIVE}\n"
+            "Ce générateur consomme les archives d'une campagne d'audit, qui ne "
+            "sont pas publiées avec le kit.\n"
+            "Aucun fichier n'a été modifié."
+        )
+
+
 def main() -> int:
+    verifier_donnees_entree()
     with p06_pipeline_lock():
         return _run_locked()
 
