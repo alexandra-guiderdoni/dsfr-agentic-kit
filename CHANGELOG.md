@@ -25,4 +25,36 @@
   assemblé DSFR : portail commun RGAA/DSFR, rapports complets et vues par page,
   extraits échappés, configurations conservées et provenance `BUILD.json`.
 
+## Correctifs de portabilité et fiabilité des contrôles
+
+Série issue d'un retour d'installation par un tiers, complétée par un audit des
+contrôles eux-mêmes.
+
+- suppression des chemins absolus du poste d'origine dans `meta-prompt.md`,
+  `documentation/AUDIT-RGAA-CREATOR.md` et les deux générateurs, remplacés par
+  des marques de substitution et par la variable `AY11_ROOT`, seul nom employé
+  par la documentation et par le skill `audit-rgaa-creator` ;
+- retrait du suivi des livrables d'audit et des sorties de run, qui sont
+  produits par le kit et non livrés avec lui ;
+- correction du contrôle de frontière standalone : il s'interrompait après un
+  seul de ses six contrôles dès que la sortie dépassait le tampon de tube, et
+  rendait un verdict qu'il n'avait pas calculé ; son périmètre porte désormais
+  sur le contenu versionné et non sur l'arbre de travail ;
+- élargissement du motif de détection des chemins personnels aux formes qui lui
+  échappaient, sans y inclure les chemins portables recommandés par ailleurs ;
+- suppression de l'énumération d'extensions du contrôle de portabilité des
+  skills, qui laissait hors du scan tout format non prévu ;
+- fermeture du bloc de code du skill `audit-report-dsfr`, dont les sections
+  « Garde-fous » et « Définition de fin » étaient rendues comme du code et donc
+  invisibles en tant que contenu normatif ;
+- arrêt des générateurs avant tout effet de bord lorsque leurs données d'entrée
+  sont absentes : l'un d'eux invalidait le paquet de tickets précédent puis
+  échouait, rendant un livrable valide non transmissible et non reconstructible ;
+- ajout d'un garde de zone synchronisée, qui signale au moment du commit les
+  fichiers recopiés depuis le workspace source.
+
+Contrôle complet exercé sur un clone neuf, hors du poste d'origine :
+`scripts/check-agentic-design-pack.sh` se termine par `[OK] DSFR Agentic Kit
+standalone`, 134 contrôles au vert et aucun échec.
+
 Ce prototype local n’est pas une release publiée.

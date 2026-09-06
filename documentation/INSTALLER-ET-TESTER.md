@@ -29,6 +29,43 @@ Lorsque le paquet officiel DSFR n’est pas disponible dans le cache local, le
 contrôle de fidélité officiel peut être marqué `[SKIP]`. Ce saut ne vaut pas
 preuve de fidélité.
 
+Le contrôle exige un dépôt propre, fichiers ignorés compris. Après une
+exécution manuelle de Python, supprimer les caches produits :
+
+```bash
+find . -name __pycache__ -type d -exec rm -rf {} +
+```
+
+Deux contrôles peuvent être lancés seuls, sans dépendance externe :
+
+```bash
+bash scripts/tests/check-standalone-boundary.sh
+bash scripts/tests/check-skills-paths-agnostic.sh
+```
+
+Le premier vérifie qu’aucun marqueur interne ni chemin personnel n’est livré,
+qu’aucun lien symbolique ni résidu Python ne subsiste, et que l’inventaire des
+skills correspond au manifeste. Son périmètre est le contenu versionné : un
+fichier ignoré par Git n’est jamais publié et ne le fait donc pas échouer.
+Hors dépôt Git, il inspecte l’arbre complet.
+
+## 2 bis. Installer le garde de zone synchronisée
+
+Plusieurs zones de ce kit sont recopiées depuis un workspace source à chaque
+publication. Une correction faite ici y survit jusqu’à la recopie suivante,
+puis disparaît ou doit être reportée à la main.
+
+```bash
+bash scripts/install-upstream-guard.sh
+```
+
+Le garde s’exécute alors avant chaque commit et nomme les fichiers concernés.
+Il avertit sans bloquer. `UPSTREAM_ZONE_GUARD=block` refuse le commit,
+`UPSTREAM_ZONE_GUARD=off` le désactive le temps d’une commande.
+
+Cette étape est utile à qui contribue au kit. Elle est inutile à qui l’utilise
+comme boîte à outils en lecture seule.
+
 ## 3. Exécuter les démonstrations
 
 ```bash
