@@ -69,15 +69,15 @@ résultats JSON canoniques
 → génération HTML DSFR
 → capture native des rapports depuis `BUILD.json`
 → contrôles structurels, accessibilité et portabilité
+```
 
 Après génération, lancer la revue réutilisable :
 
 ```bash
-python3 <kit>/.claude/skills/audit-report-dsfr/scripts/capture_audit_reports.py <campagne>
+python3 "<dossier-du-skill>/scripts/capture_audit_reports.py" <campagne>
 ```
 
 Le helper découvre les pages dans `campaign.yaml` et `BUILD.json`, produit les captures dans `rapport-dsfr/captures-validation/` et écrit `REPORT-REVIEW.json`. Le mode `--check` vérifie la découverte et les liens locaux sans lancer Playwright.
-```
 
 ## Garde-fous
 
