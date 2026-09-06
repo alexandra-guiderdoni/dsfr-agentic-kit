@@ -9,3 +9,8 @@ dist/
 
 archives/
 .env.local
+
+# Livrables et sorties de run : produits par le kit, jamais livrés avec lui.
+virginie-livrables/
+virginie-livrables.zip
+visual-tests/_results/
