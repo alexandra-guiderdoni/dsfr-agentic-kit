@@ -23,7 +23,26 @@ from pathlib import Path
 import yaml
 
 manifest = yaml.safe_load(Path(os.environ["MANIFEST"]).read_text(encoding="utf-8")) or {}
-for skill in manifest.get("product", {}).get("skills", []):
+
+# Deux formes coexistent : product.skills dans l’export public,
+# packages.<paquet>.includes.skills dans le workspace source et le miroir.
+skills = list(manifest.get("product", {}).get("skills", []))
+if not skills:
+    prefixe = "skills/"
+    vus = set()
+    for paquet in (manifest.get("packages") or {}).values():
+        for entree in ((paquet or {}).get("includes") or {}).get("skills", []):
+            texte = entree if isinstance(entree, str) else str(entree)
+            if prefixe not in texte:
+                continue
+            # Le segment qui suit skills/ nomme le skill ; ce qui vient apres
+            # designe un fichier interne et ne doit pas devenir un nom.
+            nom = texte.split(prefixe, 1)[1].split("/", 1)[0]
+            if nom and nom not in vus:
+                vus.add(nom)
+                skills.append(nom)
+
+for skill in skills:
     print(skill)
 PY
 )
