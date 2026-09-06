@@ -18,15 +18,17 @@ Travaille de manière autonome. Ne demande confirmation que si une information b
 Utilise conjointement :
 
 1. Le kit de travail :
-   `/Users/alex/Claude/projets-heberges/dsfr-agentic-kit`
+   `<chemin-vers>/dsfr-agentic-kit`
 
 2. Les skills :
-   `/Users/alex/Claude/projets-heberges/dsfr-agentic-packs`
+   `<chemin-vers>/dsfr-agentic-packs`
 
 3. AY11 :
-   `/Users/alex/Claude/git-hors-workflow/ay11-pre-audit`
+   `<chemin-vers>/ay11-pre-audit`
 
-Avant l’audit, lis les instructions locales applicables, notamment les fichiers `AGENTS.md`, puis les skills pertinents.
+Remplace chaque `<chemin-vers>` par l’emplacement réel sur ton poste.
+
+Avant l’audit, lis les instructions locales applicables de ton projet hôte, par exemple un `AGENTS.md` ou un `CLAUDE.md` à sa racine, puis les skills pertinents. Le kit lui-même n’en fournit pas : il reste une boîte à outils en lecture seule.
 
 Applique explicitement :
 

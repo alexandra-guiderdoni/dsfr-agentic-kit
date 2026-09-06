@@ -35,7 +35,7 @@ bash "$KIT/scripts/audit-rgaa-creator.sh" run "$AUDIT/campaign.yaml"
 Organisation de travail claire avec `ay11-pre-audit` en source externe :
 
 ```text
-/Users/alex/Claude/
+<workspace>/
 ├── git-hors-workflow/
 │   └── ay11-pre-audit/
 ├── projets-heberges/
@@ -46,8 +46,8 @@ Organisation de travail claire avec `ay11-pre-audit` en source externe :
 Dans `dsfr-agentic-kit`, crée (ou adapte) `.env.local` :
 
 ```bash
-cd /Users/alex/Claude/projets-heberges/dsfr-agentic-kit
-export AY11_ROOT="/Users/alex/Claude/git-hors-workflow/ay11-pre-audit"
+cd <workspace>/projets-heberges/dsfr-agentic-kit
+export AY11_ROOT="<workspace>/git-hors-workflow/ay11-pre-audit"
 # Optionnel :
 export AY11_EXPECTED_VERSION="1.3.0"
 ```
