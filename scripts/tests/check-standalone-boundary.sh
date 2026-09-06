@@ -48,7 +48,20 @@ marker_one="lor""iq"
 marker_two="her""mes"
 marker_three="PUB""-07"
 marker_four='scripts/(syn'"c"'|pack'"age"')-'
-marker_pattern="$marker_one|$marker_two|$marker_three|$marker_four|/Users/[[:alnum:]_.-]+/|/home/[[:alnum:]_.-]+/"
+# Littéraux coupés en deux : ce script est lui-même versionné et se scanne.
+marker_five="/Users""/[[:alnum:]_.-]+"
+marker_six="/home""/[[:alnum:]_.-]+"
+marker_seven="C:""\\\\Users\\\\"
+marker_eight="~""/Claude"
+# Le slash final n'est plus exigé : un chemin personnel terminant une ligne
+# échappait au motif précédent.
+# Les formes ~/ et $HOME génériques restent volontairement hors motif :
+# mesuré à 16 fichiers suivis de faux positifs (caches npm, npx et Playwright),
+# qui sont la forme portable recommandée ailleurs dans le kit.
+# Aucun exemple littéral de chemin personnel dans ce fichier : il est versionné
+# et fait partie du périmètre qu-il contrôle.
+marker_pattern="$marker_one|$marker_two|$marker_three|$marker_four"
+marker_pattern="$marker_pattern|$marker_five|$marker_six|$marker_seven|$marker_eight"
 # Périmètre du contrôle : ce que le dépôt livre réellement.
 # Dans un dépôt Git, seuls les fichiers suivis sont contrôlés — un fichier
 # ignoré (.env.local, archives/, __pycache__) n'est jamais publié et n'a donc
@@ -73,9 +86,19 @@ extrait() { head -20 <<<"$1" >&2; }
 # grep -H préfixe déjà chaque ligne du chemin : un sed supplémentaire le
 # dupliquait, et un « # » dans un chemin y faisait disparaître toutes les
 # correspondances sans le moindre message.
+# Les traces sous evals/runtime-traces/ sont exclues du scan : ce sont des
+# preuves horodatees de ce qui a reellement tourne sur un poste, pas des
+# instructions destinees a etre rejouees. Les reecrire falsifierait la preuve
+# et son empreinte raw_sha256.
+# Commentaire volontairement place hors de la substitution ci-dessous et sans
+# apostrophe : bash 3.2 ouvre une quote sur une apostrophe ASCII, meme en
+# commentaire, des lors qu-elle se trouve a l-interieur d-un $( ).
 marker_hits="$(
   while IFS= read -r -d '' file; do
     [[ -f "$file" ]] || continue
+    if [[ "$file" == */evals/runtime-traces/* ]]; then
+      continue
+    fi
     grep -nEIH "$marker_pattern" "$file" 2>/dev/null || true
   done < <(delivered_files)
 )"

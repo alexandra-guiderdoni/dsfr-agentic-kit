@@ -50,11 +50,14 @@ for skill in "${skills[@]}"; do
       */examples/*/preuve.md|*/examples/*/page.json|*/examples/*/page.html|*/evals/*-trace.md|*/evals/official-coverage-inventory.md)
         continue ;;
     esac
-    if grep -Eq "$motif" "$file"; then
-      grep -En "$motif" "$file" | cut -c1-160 | sed "s#^#[FAIL] $rel:#" >&2
+    if grep -EqI "$motif" "$file" 2>/dev/null; then
+      grep -EnI "$motif" "$file" | cut -c1-160 | sed "s#^#[FAIL] $rel:#" >&2
       violations=$((violations + 1))
     fi
-  done < <(find "$target" -type f \( -name '*.md' -o -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.json' -o -name '*.yaml' -o -name '*.yml' \) \
+    # Tous les fichiers sont scannes, sans liste d-extensions : une extension
+    # non prevue creait un angle mort silencieux. grep -I ecarte les binaires,
+    # comme le fait deja le controle de frontiere.
+  done < <(find "$target" -type f \
     -not -path '*/__pycache__/*' -not -path '*/node_modules/*' | sort)
 done
 
