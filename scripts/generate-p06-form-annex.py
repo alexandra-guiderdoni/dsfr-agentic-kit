@@ -29,15 +29,39 @@ ARCHIVE = ROOT / "archives/audit-douane-p06-complet-rgaa-dsfr-2026-09-02"
 OUTPUT = ROOT / "virginie-livrables/P06-FORMULAIRES"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
 EVIDENCE = OUTPUT / "preuves/P06-RETEST-SAFE.json"
-REFERENCE = Path(
-    "/Users/alex/Claude/git-hors-workflow/ay11-pre-audit/references/rgaa/normalized/rgaa-4.1.2.json"
-)
 DECISIONS = ARCHIVE / "rgaa/P06-DECISIONS-258.json"
 MANUAL_REVIEWS = ARCHIVE / "rgaa/REVUE-MANUELLE-258.json"
 ARCHIVED_SERVER_STATE = ARCHIVE / "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json"
 ARCHIVED_COMPANY_STATE = ARCHIVE / "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json"
 P06_URL = "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
 OFFICIAL_RGAA = "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/"
+
+
+def resolve_ay11_root() -> Path:
+    """Racine locale du dépôt ay11-pre-audit, lue dans l'environnement.
+
+    Aucune valeur par défaut : la disposition des dossiers varie d'un poste à
+    l'autre, et un chemin codé en dur ne ferait que déplacer l'erreur au
+    premier accès au fichier. `AY11_ROOT` est le nom documenté ; le nom
+    historique `AY11_PRE_AUDIT_ROOT` reste accepté.
+    """
+    valeur = os.environ.get("AY11_ROOT") or os.environ.get("AY11_PRE_AUDIT_ROOT")
+    if not valeur:
+        raise SystemExit(
+            "AY11_ROOT n'est pas défini : indiquer la racine locale du dépôt "
+            "ay11-pre-audit, par exemple\n"
+            '    export AY11_ROOT="/chemin/vers/ay11-pre-audit"\n'
+            "Le fichier .env.local du kit peut porter cette variable."
+        )
+    racine = Path(valeur).expanduser()
+    if not racine.is_dir():
+        raise SystemExit(f"AY11_ROOT ne désigne pas un dossier existant : {racine}")
+    return racine
+
+
+def rgaa_reference() -> Path:
+    """Référentiel RGAA normalisé, résolu depuis AY11_ROOT."""
+    return resolve_ay11_root() / "references/rgaa/normalized/rgaa-4.1.2.json"
 REQUIRED_INDICATION = re.compile(
     r"\b(?:obligatoire|required|requis(?:e)?|exig[eé](?:e)?)\b", re.IGNORECASE
 )
@@ -343,7 +367,7 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
 
 
 def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
-    reference = load_json(REFERENCE)
+    reference = load_json(rgaa_reference())
     decision_doc = load_json(DECISIONS)
     manual_doc = load_json(MANUAL_REVIEWS)
     evidence = load_json(EVIDENCE)
@@ -609,7 +633,7 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
             "manual_reviews_sha256": sha256(MANUAL_REVIEWS),
             "archived_server_state_sha256": sha256(ARCHIVED_SERVER_STATE),
             "archived_company_state_sha256": sha256(ARCHIVED_COMPANY_STATE),
-            "reference_sha256": sha256(REFERENCE),
+            "reference_sha256": sha256(rgaa_reference()),
         },
     }
     return generated, evidence

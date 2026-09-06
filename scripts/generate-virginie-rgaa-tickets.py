@@ -29,14 +29,34 @@ TICKETS_ROOT = DELIVERY / "TICKETS-RGAA"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
 MD_ROOT = TICKETS_ROOT / "markdown"
 HTML_ROOT = TICKETS_ROOT / "html"
-AY11_ROOT = Path(
-    os.environ.get(
-        "AY11_PRE_AUDIT_ROOT",
-        "/Users/alex/Claude/git-hors-workflow/ay11-pre-audit",
-    )
-)
-RGAA_REFERENCE = AY11_ROOT / "references/rgaa/normalized/rgaa-4.1.2.json"
 DELIVERY_DATE = date.today().isoformat()
+
+
+def resolve_ay11_root() -> Path:
+    """Racine locale du dépôt ay11-pre-audit, lue dans l'environnement.
+
+    Aucune valeur par défaut : la disposition des dossiers varie d'un poste à
+    l'autre, et un chemin codé en dur ne ferait que déplacer l'erreur au
+    premier accès au fichier. `AY11_ROOT` est le nom documenté ; le nom
+    historique `AY11_PRE_AUDIT_ROOT` reste accepté.
+    """
+    valeur = os.environ.get("AY11_ROOT") or os.environ.get("AY11_PRE_AUDIT_ROOT")
+    if not valeur:
+        raise SystemExit(
+            "AY11_ROOT n'est pas défini : indiquer la racine locale du dépôt "
+            "ay11-pre-audit, par exemple\n"
+            '    export AY11_ROOT="/chemin/vers/ay11-pre-audit"\n'
+            "Le fichier .env.local du kit peut porter cette variable."
+        )
+    racine = Path(valeur).expanduser()
+    if not racine.is_dir():
+        raise SystemExit(f"AY11_ROOT ne désigne pas un dossier existant : {racine}")
+    return racine
+
+
+def rgaa_reference() -> Path:
+    """Référentiel RGAA normalisé, résolu depuis AY11_ROOT."""
+    return resolve_ay11_root() / "references/rgaa/normalized/rgaa-4.1.2.json"
 
 PAGE_IDS = [f"P{i:02d}" for i in range(1, 10)]
 
@@ -103,7 +123,7 @@ def load_sources() -> tuple[
     dict[str, dict[str, str]],
     Counter[str],
 ]:
-    reference = json.loads(RGAA_REFERENCE.read_text(encoding="utf-8"))
+    reference = json.loads(rgaa_reference().read_text(encoding="utf-8"))
     criteria = {
         item["criterion_id"]: {
             "title": clean_reference_text(item["title"]),
@@ -1814,7 +1834,7 @@ def validate_p06_supplement(
         / "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json",
         "archived_company_state_sha256": p06_archive
         / "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json",
-        "reference_sha256": RGAA_REFERENCE,
+        "reference_sha256": rgaa_reference(),
     }
     for key, path in source_paths.items():
         if not path.is_file() or sha256_file(path) != integrity.get(key):
