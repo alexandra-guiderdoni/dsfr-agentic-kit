@@ -3,6 +3,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+# Un slash final ferait echouer la comparaison exacte avec "$WORKSPACE/.git" :
+# le depot lui-meme serait signale comme imbrique et son elagage desactive.
+WORKSPACE="${WORKSPACE%/}"
+[[ -n "$WORKSPACE" ]] || WORKSPACE="/"
 MANIFEST="$WORKSPACE/config/agentic-design-packages.yaml"
 CHECK="$WORKSPACE/scripts/check-agentic-design-pack.sh"
 
@@ -45,29 +49,66 @@ marker_two="her""mes"
 marker_three="PUB""-07"
 marker_four='scripts/(syn'"c"'|pack'"age"')-'
 marker_pattern="$marker_one|$marker_two|$marker_three|$marker_four|/Users/[[:alnum:]_.-]+/|/home/[[:alnum:]_.-]+/"
+# Périmètre du contrôle : ce que le dépôt livre réellement.
+# Dans un dépôt Git, seuls les fichiers suivis sont contrôlés — un fichier
+# ignoré (.env.local, archives/, __pycache__) n'est jamais publié et n'a donc
+# pas à faire échouer la frontière. Hors dépôt Git (export autonome déjà
+# détaché), tout l'arbre est contrôlé : il n'y a plus d'index pour arbitrer.
+delivered_files() {
+  if git -C "$WORKSPACE" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    git -C "$WORKSPACE" ls-files -z | while IFS= read -r -d '' rel; do
+      printf '%s\0' "$WORKSPACE/$rel"
+    done
+  else
+    find "$WORKSPACE" -path "$WORKSPACE/.git" -prune -o -type f -print0
+  fi
+}
+
+# « head -20 <<< » et non « printf | head -20 » : au-delà du tampon de tube
+# (~64 Kio), head se ferme avant la fin de l'écriture, printf reçoit SIGPIPE
+# et, sous « set -o pipefail », le script meurt en 141 sans exécuter les
+# contrôles suivants ni afficher son verdict.
+extrait() { head -20 <<<"$1" >&2; }
+
+# grep -H préfixe déjà chaque ligne du chemin : un sed supplémentaire le
+# dupliquait, et un « # » dans un chemin y faisait disparaître toutes les
+# correspondances sans le moindre message.
 marker_hits="$(
   while IFS= read -r -d '' file; do
-    grep -nEIH "$marker_pattern" "$file" 2>/dev/null | sed "s#^#$file:#" || true
-  done < <(find "$WORKSPACE" -path "$WORKSPACE/.git" -prune -o -type f -print0)
+    [[ -f "$file" ]] || continue
+    grep -nEIH "$marker_pattern" "$file" 2>/dev/null || true
+  done < <(delivered_files)
 )"
 if [[ -n "$marker_hits" ]]; then
-  printf '%s\n' "$marker_hits" | head -20 >&2
+  extrait "$marker_hits"
   fail "marqueur interne ou chemin personnel détecté"
 else
   ok "aucun marqueur interne ni chemin personnel"
 fi
 
-symlinks="$(find "$WORKSPACE" -path "$WORKSPACE/.git" -prune -o -type l -print)"
+symlinks="$(
+  while IFS= read -r -d '' file; do
+    [[ -L "$file" ]] && printf '%s\n' "$file"
+  done < <(delivered_files)
+  true
+)"
 if [[ -n "$symlinks" ]]; then
-  printf '%s\n' "$symlinks" >&2
+  extrait "$symlinks"
   fail "liens symboliques interdits dans l'export autonome"
 else
   ok "aucun lien symbolique"
 fi
 
-runtime_residue="$(find "$WORKSPACE" -path "$WORKSPACE/.git" -prune -o \( -type d -name '__pycache__' -o -type f -name '*.pyc' \) -print)"
+runtime_residue="$(
+  while IFS= read -r -d '' file; do
+    if [[ "$file" == */__pycache__/* || "$file" == *.pyc ]]; then
+      printf '%s\n' "$file"
+    fi
+  done < <(delivered_files)
+  true
+)"
 if [[ -n "$runtime_residue" ]]; then
-  printf '%s\n' "$runtime_residue" >&2
+  extrait "$runtime_residue"
   fail "résidu d'exécution Python livré"
 else
   ok "aucun résidu d'exécution Python"
