@@ -57,4 +57,22 @@ Contrôle complet exercé sur un clone neuf, hors du poste d'origine :
 `scripts/check-agentic-design-pack.sh` se termine par `[OK] DSFR Agentic Kit
 standalone`, 134 contrôles au vert et aucun échec.
 
+## Synthèse DSFR par composant
+
+- ajout de `scripts/generate-virginie-dsfr-composants.py` et du paquet
+  `scripts/virginie_dsfr/` : post-traitement des archives par page en une fiche
+  unique par composant, verdict Conforme / Non conforme / Non vérifié borné aux
+  règles exécutées, quatre natures de manques et états non exercés ;
+- fiche de revue Markdown pour la qualification humaine des signaux à confirmer,
+  une case par groupe dédoublonné, repères vérifiables contre les paquets
+  officiels ; les archives restent en lecture seule ;
+- séparation intégration / migration prouvée par `dist/dsfr.min.css` de la
+  version observée et de la version cible, identifiants exclus des classes
+  attendues ;
+- rendu HTML sous thème DSFR et Markdown, manifeste, empreintes, carte
+  idempotente dans l'index général des livrables, contrôle des classes émises
+  contre la version cible ;
+- tests `scripts/tests/check-virginie-dsfr-composants.sh`, 18 cas sur fixture
+  synthétique. Script dédié d'abord ; passage dans le builder différé.
+
 Ce prototype local n’est pas une release publiée.
