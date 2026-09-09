@@ -307,5 +307,26 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(manifest["observed_versions"], ["1.13.2"])
 
 
+class PublishTests(unittest.TestCase):
+    def test_index_card_inserted_then_replaced_idempotently(self):
+        from virginie_dsfr import publish
+        with tempfile.TemporaryDirectory() as tmp:
+            index = Path(tmp) / "INDEX-LIVRABLES.html"
+            self.assertEqual(publish.insert_index_card(index, "<article>x</article>"), "missing")
+            index.write_text('<main><section class="cards">\n    <article>a</article>\n  </section><p>fin</p></main>', encoding="utf-8")
+            self.assertEqual(publish.insert_index_card(index, "<article>carte v1</article>"), "inserted")
+            first = index.read_text(encoding="utf-8")
+            self.assertIn("carte v1", first)
+            self.assertLess(first.index("carte v1"), first.index("</section>"))
+            self.assertEqual(publish.insert_index_card(index, "<article>carte v2</article>"), "replaced")
+            second = index.read_text(encoding="utf-8")
+            self.assertIn("carte v2", second)
+            self.assertNotIn("carte v1", second)
+            self.assertEqual(second.count(publish.INDEX_START), 1)
+            self.assertIn("<p>fin</p>", second)
+            index.write_text("<main><p>sans section</p></main>", encoding="utf-8")
+            self.assertEqual(publish.insert_index_card(index, "<article>x</article>"), "no_anchor")
+
+
 if __name__ == "__main__":
     unittest.main()
