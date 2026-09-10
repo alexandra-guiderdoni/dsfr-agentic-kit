@@ -15,6 +15,45 @@ Le diagnostic ne réalise aucune installation. Une dépendance facultative
 absente produit un avertissement ; une dépendance requise absente fait échouer
 la commande avec l’action attendue.
 
+## 1 bis. Reconstituer une session Cowork
+
+Un conteneur cloud est éphémère. Conserver `scripts/amorcage-session-cloud.sh`
+dans un Projet Cowork persistant, puis lancer au début de chaque session :
+
+```bash
+bash amorcage-session-cloud.sh
+```
+
+Le script clone ou met à jour le dépôt en `--ff-only`, refuse une mise à jour
+sur un clone modifié, lit les versions Python et DSFR dans le manifeste,
+prépare le cache DSFR et `rsync`, puis rejoue les contrôles. Utiliser
+`--no-check` pour préparer uniquement l’environnement et `--update` pour
+forcer explicitement la vérification d’une mise à jour. Le fichier persistant
+rend l’installation reproductible ; il ne prolonge pas la durée de vie du
+conteneur.
+
+## 1 ter. Découvrir les skills comme plugin
+
+Le dépôt contient `.claude-plugin/marketplace.json`, catalogue versionné pour
+Claude/Cowork. Après publication du dépôt, ajouter le marketplace puis
+installer le plugin :
+
+```text
+/plugin marketplace add alexandra-guiderdoni/dsfr-agentic-kit
+/plugin install dsfr-agentic-kit@dsfr-agentic
+```
+
+Cette voie expose nativement les skills, mais pas les scripts de contrôle, le
+profil DSFR ni le cache officiel. Garder le clone pour l’installation
+complète. Une archive plugin locale peut être reconstruite depuis le clone :
+
+```bash
+bash scripts/build-plugin.sh --version 0.1.0
+```
+
+La sortie va hors du dépôt. Le build échoue si les skills déclarés, les
+`SKILL.md`, les renvois relatifs ou la provenance ne sont pas cohérents.
+
 ## 2. Vérifier le kit
 
 ```bash
@@ -73,6 +112,9 @@ bash scripts/demo-dsfr-assembled-page.sh --quiet
 bash scripts/demo-dsfr-vitrine.sh --quiet
 ```
 
+La démo vitrine nécessite `rsync`. Le diagnostic des prérequis signale son
+absence comme un avertissement, car le reste du kit n’en dépend pas.
+
 Les commandes affichent les chemins de leurs sorties temporaires. La vitrine
 indique aussi comment servir le résultat localement si une inspection visuelle
 est souhaitée.
@@ -105,6 +147,8 @@ Créer un brief dans `mon-projet/`, puis transmettre à l’agent le prompt de
 
 ## Mettre à jour
 
-Remplacer le dossier du kit après avoir conservé le projet séparément. Relancer
-les prérequis, le check principal et une démonstration avant de reprendre un
-travail existant.
+Depuis un clone propre, utiliser `git pull --ff-only`, relire `CHANGELOG.md` et
+`config/agentic-design-packages.yaml`, puis relancer les prérequis, le check
+principal et une démonstration avant de reprendre un travail existant. Si un
+plugin est utilisé, reconstruire ensuite une archive avec une nouvelle version
+et la réinstaller : la version distingue les contenus mis en cache.

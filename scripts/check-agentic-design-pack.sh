@@ -15,6 +15,18 @@ ok() { printf '[OK] %s\n' "$*"; }
 warn() { printf '[WARN] %s\n' "$*"; }
 fail() { printf '[FAIL] %s\n' "$*" >&2; failures=$((failures + 1)); }
 
+# Les suites Python peuvent laisser des caches transitoires malgré le garde
+# d’environnement. Ils ne font pas partie du kit livré et doivent être retirés
+# avant les contrôles qui vérifient précisément leur absence.
+clean_runtime_artifacts() {
+  local root
+  for root in "$WORKSPACE/.claude" "$WORKSPACE/design-systems" "$WORKSPACE/scripts"; do
+    [[ -d "$root" ]] || continue
+    find "$root" -type d -name '__pycache__' -prune -exec rm -rf -- {} + 2>/dev/null || true
+    find "$root" -type f -name '*.pyc' -delete 2>/dev/null || true
+  done
+}
+
 run_check() {
   local label="$1"
   shift
@@ -28,6 +40,7 @@ run_check() {
 
 [[ -d "$WORKSPACE" ]] || { printf '[FAIL] répertoire absent : %s\n' "$WORKSPACE" >&2; exit 1; }
 [[ -f "$MANIFEST" ]] || { printf '[FAIL] manifeste absent : %s\n' "$MANIFEST" >&2; exit 1; }
+clean_runtime_artifacts
 
 run_check "frontière standalone" bash "$SCRIPT_DIR/tests/check-standalone-boundary.sh" "$WORKSPACE"
 run_check "prérequis" bash "$SCRIPT_DIR/check-prerequisites.sh" --quiet
@@ -89,6 +102,29 @@ else
   fail "manifeste consommateur"
 fi
 
+marketplace_manifest="$WORKSPACE/.claude-plugin/marketplace.json"
+if [[ -f "$marketplace_manifest" ]]; then
+  run_check "catalogue marketplace" python3 - "$marketplace_manifest" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+assert data.get("name") == "dsfr-agentic"
+assert isinstance(data.get("owner", {}).get("name"), str)
+plugins = data.get("plugins")
+assert isinstance(plugins, list) and len(plugins) == 1
+plugin = plugins[0]
+assert plugin.get("name") == "dsfr-agentic-kit"
+source = plugin.get("source", {})
+assert source.get("source") == "github"
+assert source.get("repo") == "alexandra-guiderdoni/dsfr-agentic-kit"
+assert source.get("ref") == "main"
+assert plugin.get("strict") is False
+assert plugin.get("skills") == ["./.claude/skills"]
+PY
+fi
+
 tests=()
 markdown=()
 while IFS=$'\t' read -r kind rel; do
@@ -111,26 +147,47 @@ else
   fail "syntaxe Bash : $shell_failures fichier(s) invalide(s)"
 fi
 
-if WORKSPACE="$WORKSPACE" python3 - <<'PY'
+python_interpreters=()
+for candidate in python3.10 python3.11 python3; do
+  if command -v "$candidate" >/dev/null 2>&1; then
+    python_interpreters+=("$candidate")
+  fi
+done
+
+python_syntax_failed=0
+if ((${#python_interpreters[@]} == 0)); then
+  python_syntax_failed=1
+  printf '[FAIL] syntaxe Python : aucun interpréteur disponible\n' >&2
+fi
+for interpreter in "${python_interpreters[@]}"; do
+  if ! WORKSPACE="$WORKSPACE" "$interpreter" - <<'PY'
 import os
 import sys
 from pathlib import Path
 
 workspace = Path(os.environ["WORKSPACE"])
 errors = []
-for path in workspace.rglob("*.py"):
-    if "__pycache__" in path.parts:
+for relative_root in (".claude", "design-systems", "scripts"):
+    root = workspace / relative_root
+    if not root.is_dir():
         continue
-    try:
-        compile(path.read_text(encoding="utf-8"), str(path), "exec")
-    except Exception as exc:
-        errors.append(f"{path.relative_to(workspace)}: {exc}")
+    for path in root.rglob("*.py"):
+        if "__pycache__" in path.parts:
+            continue
+        try:
+            compile(path.read_text(encoding="utf-8"), str(path), "exec")
+        except Exception as exc:
+            errors.append(f"{path.relative_to(workspace)}: {exc}")
 for error in errors:
     print(f"[FAIL] syntaxe Python : {error}", file=sys.stderr)
 raise SystemExit(1 if errors else 0)
 PY
-then
-  ok "syntaxe Python"
+  then
+    python_syntax_failed=1
+  fi
+done
+if (( python_syntax_failed == 0 )); then
+  ok "syntaxe Python (${python_interpreters[*]})"
 else
   fail "syntaxe Python"
 fi
@@ -157,6 +214,8 @@ run_check "profil DSFR" env AGENTIC_DESIGN_PACK_SKIP_SELF_TESTS=1 \
 for rel in ${tests[@]+"${tests[@]}"}; do
   run_check "test produit : $rel" bash "$WORKSPACE/$rel" "$WORKSPACE"
 done
+
+clean_runtime_artifacts
 
 dsfr_version="$(sed -n 's/^package_version_ref: *"\{0,1\}\([0-9.]*\)"\{0,1\}.*/\1/p' "$WORKSPACE/design-systems/dsfr/tokens.yaml" | head -1)"
 cache_root="${DSFR_OFFICIAL_CACHE_DIR:-$HOME/.cache/dsfr-official-cache}"

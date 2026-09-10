@@ -203,6 +203,25 @@
       ]
     },
     {
+      "rule_id": "DSFR-QUOTE-STRUCTURE-001",
+      "component": "quote",
+      "selector": ".fr-quote",
+      "version_scope": "VERSION_INDEPENDENT",
+      "severity": "Majeur",
+      "title": "Citation DSFR sans structure sémantique complète",
+      "expected": "Une citation portée par figure contient un blockquote non vide et un figcaption pour les informations complémentaires.",
+      "expected_html": "<figure class=\"fr-quote\"><blockquote><p>…</p></blockquote><figcaption>…</figcaption></figure>",
+      "source": "dsfr-components/references/components/content-media/quote.md",
+      "recommendation": "Conserver la classe fr-quote sur un élément figure, placer le texte cité dans blockquote et les informations complémentaires dans figcaption.",
+      "verification": "Inspecter chaque citation dans le DOM rendu, puis vérifier la restitution de blockquote et des informations de source.",
+      "conditions": [
+        {"type": "tag_in", "values": ["FIGURE"], "message": "La racine .fr-quote n’est pas un élément figure."},
+        {"type": "descendant_min", "selector": "blockquote", "min": 1, "message": "Le composant ne contient pas de blockquote."},
+        {"type": "descendant_text_non_empty", "selector": "blockquote", "message": "Le blockquote de la citation est vide."},
+        {"type": "descendant_min", "selector": "figcaption", "min": 1, "message": "Les informations complémentaires de la citation sont absentes : figcaption est requis."}
+      ]
+    },
+    {
       "rule_id": "DSFR-BUTTON-TARGET-001",
       "component": "button",
       "selector": ".fr-btn",

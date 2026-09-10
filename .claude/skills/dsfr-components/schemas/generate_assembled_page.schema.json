@@ -1987,6 +1987,7 @@
             "pages": {"type": "array", "items": {"$ref": "#/$defs/auditPage"}},
             "sample_pages": {"type": "array", "items": {"$ref": "#/$defs/auditPage"}},
             "sample_title": {"type": "string", "minLength": 1},
+            "catalog_status": {"type": "object", "additionalProperties": true},
             "root_causes": {"type": "array", "items": {"$ref": "#/$defs/auditCause"}},
             "findings": {"type": "array", "items": {"$ref": "#/$defs/auditFinding"}}
           }

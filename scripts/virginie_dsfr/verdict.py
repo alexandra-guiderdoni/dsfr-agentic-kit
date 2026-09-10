@@ -12,10 +12,14 @@ from collections import Counter
 from dataclasses import dataclass, field
 
 from . import gaps
-from .collect import Collection, Group, VERSION_COMPONENT
+from .collect import VERSION_COMPONENT, Collection, Group
 
 SEVERITY_ORDER = {"Bloquant": 3, "Majeur": 2, "Mineur": 1, "": 0}
-LABELS = {"CONFORME": "Conforme", "NON_CONFORME": "Non conforme", "NON_VERIFIE": "Non vérifié"}
+LABELS = {
+    "CONFORME": "Conforme",
+    "NON_CONFORME": "Non conforme",
+    "NON_VERIFIE": "Non vérifié",
+}
 ORDER = {"NON_CONFORME": 0, "NON_VERIFIE": 1, "CONFORME": 2}
 PENDING = {"A_CONFIRMER", "REFERENCE_INDISPONIBLE", "CONTRADICTION"}
 WARNING = (
@@ -46,7 +50,9 @@ class Verdict:
         return LABELS[self.status]
 
 
-def component_verdicts(collection: Collection, kinds: dict[str, str]) -> dict[str, Verdict]:
+def component_verdicts(
+    collection: Collection, kinds: dict[str, str]
+) -> dict[str, Verdict]:
     verdicts: dict[str, Verdict] = {}
     for name, summary in collection.components.items():
         if name == VERSION_COMPONENT:
@@ -56,31 +62,50 @@ def component_verdicts(collection: Collection, kinds: dict[str, str]) -> dict[st
         for group in groups:
             status = group.status
             if status == "ECART_CONFIRME":
-                target = verdict.migration_groups if kinds.get(group.group_id, "integration") == "migration" else verdict.confirmed_groups
+                target = (
+                    verdict.migration_groups
+                    if kinds.get(group.group_id, "integration") == "migration"
+                    else verdict.confirmed_groups
+                )
                 target.append(group)
             elif status in PENDING:
                 verdict.pending_groups.append(group)
             else:
                 verdict.clean_groups.append(group)
-        verdict.rules_executed = sorted(summary.rules_executed | {g.rule_id for g in groups})
+        verdict.rules_executed = sorted(
+            summary.rules_executed | {g.rule_id for g in groups}
+        )
         count = len(verdict.rules_executed)
         if verdict.confirmed_groups:
             verdict.status = "NON_CONFORME"
-            verdict.max_severity = max((g.severity for g in verdict.confirmed_groups), key=lambda s: SEVERITY_ORDER.get(s, 0))
+            verdict.max_severity = max(
+                (g.severity for g in verdict.confirmed_groups),
+                key=lambda s: SEVERITY_ORDER.get(s, 0),
+            )
             rules = ", ".join(sorted({g.rule_id for g in verdict.confirmed_groups}))
-            verdict.reasons.append(f"{plural(len(verdict.confirmed_groups), 'écart confirmé', 'écarts confirmés')} sur {plural(count, 'règle exécutée', 'règles exécutées')} : {rules}.")
+            verdict.reasons.append(
+                f"{plural(len(verdict.confirmed_groups), 'écart confirmé', 'écarts confirmés')} sur {plural(count, 'règle exécutée', 'règles exécutées')} : {rules}."
+            )
         elif verdict.pending_groups:
-            verdict.reasons.append(f"{plural(len(verdict.pending_groups), 'signal à confirmer non arbitré', 'signaux à confirmer non arbitrés')} : aucun verdict possible.")
+            verdict.reasons.append(
+                f"{plural(len(verdict.pending_groups), 'signal à confirmer non arbitré', 'signaux à confirmer non arbitrés')} : aucun verdict possible."
+            )
         elif count == 0:
             verdict.reasons.append(
-                f"Aucune règle du harnais ne couvre ce composant ; détecté {summary.count} fois sur {len(summary.pages)} page(s).")
+                f"Aucune règle du harnais ne couvre ce composant ; détecté {summary.count} fois sur {len(summary.pages)} page(s)."
+            )
         else:
             verdict.status = "CONFORME"
-            executed = "la règle exécutée" if count == 1 else f"les {count} règles exécutées"
-            verdict.reasons.append(f"Aucun écart sur {executed} contre DSFR {', '.join(collection.observed_versions)}.")
+            executed = (
+                "la règle exécutée" if count == 1 else f"les {count} règles exécutées"
+            )
+            verdict.reasons.append(
+                f"Aucun écart sur {executed} contre DSFR {', '.join(collection.observed_versions)}."
+            )
         if verdict.migration_groups:
             verdict.reasons.append(
-                f"{plural(len(verdict.migration_groups), 'écart relève', 'écarts relèvent')} de la migration vers {collection.target_version}, hors verdict.")
+                f"{plural(len(verdict.migration_groups), 'écart relève', 'écarts relèvent')} de la migration vers {collection.target_version}, hors verdict."
+            )
         verdicts[name] = verdict
     return verdicts
 
@@ -98,36 +123,67 @@ class Report:
     delivery_date: str
     audit_date: str
     version_group: Group | None
+    catalog_status: dict = field(default_factory=dict)
 
     @property
     def warning(self) -> str:
-        return WARNING.format(observed=", ".join(self.collection.observed_versions) or "inconnue")
+        warning = WARNING.format(
+            observed=", ".join(self.collection.observed_versions) or "inconnue"
+        )
+        catalog = self.catalog_status
+        if catalog.get("status") and catalog["status"] != "A_JOUR":
+            warning += " " + str(
+                catalog.get("message", "Le catalogue de règles doit être vérifié.")
+            )
+        return warning
 
     @property
     def pages(self) -> list[dict]:
-        return [{"id": p.id, "name": p.name, "url": p.url, "type": p.type} for p in self.collection.pages]
+        return [
+            {"id": p.id, "name": p.name, "url": p.url, "type": p.type}
+            for p in self.collection.pages
+        ]
 
 
 LOCAL_SOURCE_LIMIT = "intégration exacte contre une source locale"
-LOCAL_SOURCE_NOTE = ("structure complète des composants en DSFR {observed} : les classes attendues ont été vérifiées contre le paquet "
-                     "officiel {observed}, les exemples officiels ont été relus lors de la qualification, mais les règles n'ont pas été rejouées contre {observed}")
+LOCAL_SOURCE_NOTE = (
+    "structure complète des composants en DSFR {observed} : les classes attendues ont été vérifiées contre le paquet "
+    "officiel {observed}, les exemples officiels ont été relus lors de la qualification, mais les règles n'ont pas été rejouées contre {observed}"
+)
 
 
-def build_report(collection: Collection, verdicts: dict[str, Verdict], migration_details: dict[str, list[str]],
-                 delivery_date: str, example_diffs: dict[str, dict[str, list[str]]] | None = None,
-                 reference_available: bool = False) -> Report:
+def build_report(
+    collection: Collection,
+    verdicts: dict[str, Verdict],
+    migration_details: dict[str, list[str]],
+    delivery_date: str,
+    example_diffs: dict[str, dict[str, list[str]]] | None = None,
+    reference_available: bool = False,
+) -> Report:
     def sort_key(name: str):
         verdict = verdicts[name]
-        return (ORDER[verdict.status], -SEVERITY_ORDER.get(verdict.max_severity, 0), name)
+        return (
+            ORDER[verdict.status],
+            -SEVERITY_ORDER.get(verdict.max_severity, 0),
+            name,
+        )
 
     components = sorted(verdicts, key=sort_key)
     version_groups = collection.groups_for(VERSION_COMPONENT)
     audit_dates = sorted({p.audited_at[:10] for p in collection.pages if p.audited_at})
     return Report(
-        collection=collection, verdicts=verdicts, components=components, migration_details=migration_details,
-        example_diffs=example_diffs or {}, expected_absent=gaps.expected_absent(collection),
-        uncovered=gaps.uncovered_components(collection), not_verified=_not_verified(collection, reference_available),
-        delivery_date=delivery_date, audit_date=", ".join(audit_dates), version_group=version_groups[0] if version_groups else None,
+        collection=collection,
+        verdicts=verdicts,
+        components=components,
+        migration_details=migration_details,
+        example_diffs=example_diffs or {},
+        expected_absent=gaps.expected_absent(collection),
+        uncovered=gaps.uncovered_components(collection),
+        not_verified=_not_verified(collection, reference_available),
+        delivery_date=delivery_date,
+        audit_date=", ".join(audit_dates),
+        version_group=version_groups[0] if version_groups else None,
+        catalog_status=collection.catalog_status,
     )
 
 
@@ -159,12 +215,17 @@ def build_manifest(report: Report) -> dict:
                 "verdict": report.verdicts[name].status,
                 "pages": report.collection.components[name].pages,
                 "rules_executed": report.verdicts[name].rules_executed,
-                "confirmed": [g.group_id for g in report.verdicts[name].confirmed_groups],
+                "confirmed": [
+                    g.group_id for g in report.verdicts[name].confirmed_groups
+                ],
                 "pending": [g.group_id for g in report.verdicts[name].pending_groups],
-                "migration": [g.group_id for g in report.verdicts[name].migration_groups],
+                "migration": [
+                    g.group_id for g in report.verdicts[name].migration_groups
+                ],
             }
             for name in report.components
         ],
         "expected_absent": report.expected_absent,
         "uncovered_components": report.uncovered,
+        "catalog_status": report.catalog_status,
     }

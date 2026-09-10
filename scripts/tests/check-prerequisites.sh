@@ -23,7 +23,7 @@ ko() { printf '[FAIL] %s\n' "$*" >&2; echecs=$((echecs + 1)); }
 set +e
 sortie="$(bash "$DIAG" 2>&1)"; rc=$?
 set -e
-if [[ "$rc" -eq 0 ]] && grep -q '^\[REQUIS\] python3 ' <<<"$sortie" && grep -q '^\[REQUIS\] node ' <<<"$sortie" && grep -q '^\[OK\] prérequis' <<<"$sortie"; then
+if [[ "$rc" -eq 0 ]] && grep -q '^\[REQUIS\] python3 ' <<<"$sortie" && grep -q '^\[REQUIS\] node ' <<<"$sortie" && grep -q '^\[OPTIONNEL\] rsync ' <<<"$sortie" && grep -q '^\[OK\] prérequis' <<<"$sortie"; then
   ok "environnement courant : requis présents, exit 0"
 else
   printf '%s\n' "$sortie" | tail -5 >&2

@@ -16,7 +16,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from virginie_dsfr import collect, gaps, migration, qualify, render_html, render_markdown, verdict  # noqa: E402
+from virginie_dsfr import (
+    collect,
+    gaps,
+    migration,
+    qualify,
+    render_html,
+    render_markdown,
+    verdict,
+)
 
 SELECTOR_P01 = (
     "html.js > body.path-frontpage.eu-cookie-compliance-popup-open > "
@@ -28,7 +36,15 @@ SELECTOR_P02 = (
 )
 
 
-def difference(page: str, rule: str, component: str, selector: str, status: str, kind: str = "integration", **extra):
+def difference(
+    page: str,
+    rule: str,
+    component: str,
+    selector: str,
+    status: str,
+    kind: str = "integration",
+    **extra,
+):
     base = {
         "id": f"{page}-{rule}-001",
         "rule_id": rule,
@@ -62,20 +78,41 @@ def difference(page: str, rule: str, component: str, selector: str, status: str,
     return base
 
 
-def inventory_item(name: str, selector: str, status: str, rules: list[str], count: int = 1):
-    return {"name": name, "selector": selector, "count": count, "visible": count, "status": status,
-            "rules_executed": rules, "source": f"dsfr-components/references/components/{name}.md", "samples": []}
+def inventory_item(
+    name: str, selector: str, status: str, rules: list[str], count: int = 1
+):
+    return {
+        "name": name,
+        "selector": selector,
+        "count": count,
+        "visible": count,
+        "status": status,
+        "rules_executed": rules,
+        "source": f"dsfr-components/references/components/{name}.md",
+        "samples": [],
+    }
 
 
-def make_archive(root: Path, page: str, name: str, page_type: str, inventory: list, differences: list) -> Path:
+def make_archive(
+    root: Path, page: str, name: str, page_type: str, inventory: list, differences: list
+) -> Path:
     archive = root / f"audit-test-{page.lower()}-2026-09-02"
     (archive / "dsfr" / "pages").mkdir(parents=True)
     page_doc = {
         "schema_version": 2,
-        "page": {"id": page, "name": name, "url": f"https://exemple.gouv.fr/{page.lower()}", "type": page_type},
+        "page": {
+            "id": page,
+            "name": name,
+            "url": f"https://exemple.gouv.fr/{page.lower()}",
+            "type": page_type,
+        },
         "audited_at": "2026-09-02T10:00:00+00:00",
-        "version": {"observed": ["1.13.2"], "target": "1.15.2", "comparison_mode": "MIGRATION_VERS_CIBLE",
-                    "exact_observed_reference_available": False},
+        "version": {
+            "observed": ["1.13.2"],
+            "target": "1.15.2",
+            "comparison_mode": "MIGRATION_VERS_CIBLE",
+            "exact_observed_reference_available": False,
+        },
         "reference_version": "1.15.2",
         "detected_versions": ["1.13.2"],
         "inventory": inventory,
@@ -85,57 +122,149 @@ def make_archive(root: Path, page: str, name: str, page_type: str, inventory: li
         "not_verified": ["lecteur d’écran réel"],
         "evidence": {},
     }
-    (archive / "dsfr" / "pages" / f"{page}.json").write_text(json.dumps(page_doc, ensure_ascii=False), encoding="utf-8")
-    ecarts = {"schema_version": 2, "claim": "Aucune conformité DSFR globale n’est revendiquée.",
-              "target_versions": ["1.15.2"], "observed_versions": ["1.13.2"], "root_causes": [], "differences": differences}
-    (archive / "dsfr" / "ECARTS-COMPOSANTS.json").write_text(json.dumps(ecarts, ensure_ascii=False), encoding="utf-8")
-    (archive / "dsfr-findings.json").write_text(json.dumps({"schema_version": 1, "findings": []}), encoding="utf-8")
+    (archive / "dsfr" / "pages" / f"{page}.json").write_text(
+        json.dumps(page_doc, ensure_ascii=False), encoding="utf-8"
+    )
+    ecarts = {
+        "schema_version": 2,
+        "claim": "Aucune conformité DSFR globale n’est revendiquée.",
+        "target_versions": ["1.15.2"],
+        "observed_versions": ["1.13.2"],
+        "root_causes": [],
+        "differences": differences,
+    }
+    (archive / "dsfr" / "ECARTS-COMPOSANTS.json").write_text(
+        json.dumps(ecarts, ensure_ascii=False), encoding="utf-8"
+    )
+    (archive / "dsfr-findings.json").write_text(
+        json.dumps({"schema_version": 1, "findings": []}), encoding="utf-8"
+    )
     return archive
 
 
 def build_fixture(root: Path) -> list[Path]:
     p01 = make_archive(
-        root, "P01", "Accueil", "homepage",
-        [inventory_item("navigation", ".fr-nav", "ECART_OBSERVE", ["DSFR-NAV-STRUCTURE-001"]),
-         inventory_item("header", ".fr-header", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-HEADER-STRUCTURE-001"]),
-         inventory_item("quote", ".fr-quote", "DETECTE_NON_AUDITE", []),
-         inventory_item("skiplink", ".fr-skiplinks", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-SKIPLINK-STRUCTURE-001"]),
-         inventory_item("footer", ".fr-footer", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-FOOTER-STRUCTURE-001"]),
-         inventory_item("consent", ".fr-consent-banner", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-CONSENT-STRUCTURE-001"])],
-        [difference("P01", "DSFR-NAV-STRUCTURE-001", "navigation", SELECTOR_P01, "ECART_CONFIRME")],
+        root,
+        "P01",
+        "Accueil",
+        "homepage",
+        [
+            inventory_item(
+                "navigation", ".fr-nav", "ECART_OBSERVE", ["DSFR-NAV-STRUCTURE-001"]
+            ),
+            inventory_item(
+                "header",
+                ".fr-header",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-HEADER-STRUCTURE-001"],
+            ),
+            inventory_item("quote", ".fr-quote", "DETECTE_NON_AUDITE", []),
+            inventory_item(
+                "skiplink",
+                ".fr-skiplinks",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-SKIPLINK-STRUCTURE-001"],
+            ),
+            inventory_item(
+                "footer",
+                ".fr-footer",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-FOOTER-STRUCTURE-001"],
+            ),
+            inventory_item(
+                "consent",
+                ".fr-consent-banner",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-CONSENT-STRUCTURE-001"],
+            ),
+        ],
+        [
+            difference(
+                "P01",
+                "DSFR-NAV-STRUCTURE-001",
+                "navigation",
+                SELECTOR_P01,
+                "ECART_CONFIRME",
+            )
+        ],
     )
     p02 = make_archive(
-        root, "P02", "Plan du site", "sitemap",
-        [inventory_item("navigation", ".fr-nav", "ECART_OBSERVE", ["DSFR-NAV-STRUCTURE-001"]),
-         inventory_item("header", ".fr-header", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-HEADER-STRUCTURE-001"]),
-         inventory_item("skiplink", ".fr-skiplinks", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-SKIPLINK-STRUCTURE-001"]),
-         inventory_item("footer", ".fr-footer", "AUCUN_ECART_REGLES_EXECUTEES", ["DSFR-FOOTER-STRUCTURE-001"])],
-        [difference("P02", "DSFR-NAV-STRUCTURE-001", "navigation", SELECTOR_P02, "A_CONFIRMER", kind="migration")],
+        root,
+        "P02",
+        "Plan du site",
+        "sitemap",
+        [
+            inventory_item(
+                "navigation", ".fr-nav", "ECART_OBSERVE", ["DSFR-NAV-STRUCTURE-001"]
+            ),
+            inventory_item(
+                "header",
+                ".fr-header",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-HEADER-STRUCTURE-001"],
+            ),
+            inventory_item(
+                "skiplink",
+                ".fr-skiplinks",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-SKIPLINK-STRUCTURE-001"],
+            ),
+            inventory_item(
+                "footer",
+                ".fr-footer",
+                "AUCUN_ECART_REGLES_EXECUTEES",
+                ["DSFR-FOOTER-STRUCTURE-001"],
+            ),
+        ],
+        [
+            difference(
+                "P02",
+                "DSFR-NAV-STRUCTURE-001",
+                "navigation",
+                SELECTOR_P02,
+                "A_CONFIRMER",
+                kind="migration",
+            )
+        ],
     )
     return [p01, p02]
 
 
 class SelectorTests(unittest.TestCase):
     def test_normalize_selector_strips_volatile_tokens(self):
-        self.assertEqual(collect.normalize_selector(SELECTOR_P01), collect.normalize_selector(SELECTOR_P02))
+        self.assertEqual(
+            collect.normalize_selector(SELECTOR_P01),
+            collect.normalize_selector(SELECTOR_P02),
+        )
         self.assertNotIn("nth-of-type", collect.normalize_selector(SELECTOR_P01))
-        self.assertEqual(collect.leaf_selector(SELECTOR_P01), "div.fr-nav.menu-connection")
+        self.assertEqual(
+            collect.leaf_selector(SELECTOR_P01), "div.fr-nav.menu-connection"
+        )
 
     def test_normalize_keeps_distinct_components_distinct(self):
-        self.assertNotEqual(collect.normalize_selector("#edit-nom"), collect.normalize_selector("#edit-prenom"))
+        self.assertNotEqual(
+            collect.normalize_selector("#edit-nom"),
+            collect.normalize_selector("#edit-prenom"),
+        )
 
 
 class CollectTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.pages = [collect.load_page(path) for path in build_fixture(Path(self.tmp.name))]
+        self.pages = [
+            collect.load_page(path) for path in build_fixture(Path(self.tmp.name))
+        ]
         self.collection = collect.collect(self.pages)
 
     def tearDown(self):
         self.tmp.cleanup()
 
     def test_same_leaf_selector_on_two_pages_is_one_group(self):
-        groups = [g for g in self.collection.groups.values() if g.rule_id == "DSFR-NAV-STRUCTURE-001"]
+        groups = [
+            g
+            for g in self.collection.groups.values()
+            if g.rule_id == "DSFR-NAV-STRUCTURE-001"
+        ]
         self.assertEqual(len(groups), 1)
         self.assertEqual(groups[0].pages, ["P01", "P02"])
         self.assertEqual(groups[0].statuses, {"ECART_CONFIRME": 1, "A_CONFIRMER": 1})
@@ -149,14 +278,33 @@ class CollectTests(unittest.TestCase):
 
     def test_contradiction_detected_without_arbitration(self):
         contradictions = qualify.detect_contradictions(self.collection)
-        self.assertEqual([g.rule_id for g in contradictions], ["DSFR-NAV-STRUCTURE-001"])
+        self.assertEqual(
+            [g.rule_id for g in contradictions], ["DSFR-NAV-STRUCTURE-001"]
+        )
+
+    def test_contradiction_buckets_are_page_state_and_dom_variant_scoped(self):
+        group = next(
+            g
+            for g in self.collection.groups.values()
+            if g.rule_id == "DSFR-NAV-STRUCTURE-001"
+        )
+        buckets = collect.contradiction_buckets(group)
+        self.assertEqual([bucket["page"] for bucket in buckets], ["P01", "P02"])
+        self.assertEqual({bucket["state"] for bucket in buckets}, {"REPOS"})
+        self.assertEqual(len({bucket["dom_variant"] for bucket in buckets}), 1)
+        self.assertEqual(
+            [dict(bucket["statuses"]) for bucket in buckets],
+            [{"ECART_CONFIRME": 1}, {"A_CONFIRMER": 1}],
+        )
 
     def test_review_sheet_arbitration_resolves_contradiction(self):
         group = next(iter(self.collection.groups.values()))
         sheet = qualify.render_review_sheet(self.collection, [group])
         self.assertIn(group.group_id, sheet)
         self.assertIn("- [ ] ECART_CONFIRME", sheet)
-        checked = sheet.replace("- [ ] AUCUN_ECART_OBSERVE", "- [x] AUCUN_ECART_OBSERVE", 1)
+        checked = sheet.replace(
+            "- [ ] AUCUN_ECART_OBSERVE", "- [x] AUCUN_ECART_OBSERVE", 1
+        )
         overrides = qualify.parse_review_sheet(checked)
         self.assertEqual(overrides, {group.group_id: "AUCUN_ECART_OBSERVE"})
         qualify.apply_overrides(self.collection, overrides)
@@ -165,14 +313,22 @@ class CollectTests(unittest.TestCase):
 
     def test_review_sheet_carries_hints(self):
         group = next(iter(self.collection.groups.values()))
-        sheet = qualify.render_review_sheet(self.collection, [group], {group.group_id: ["toutes les classes attendues existent en DSFR 1.13.2"]})
-        self.assertIn("- Repère : toutes les classes attendues existent en DSFR 1.13.2", sheet)
+        sheet = qualify.render_review_sheet(
+            self.collection,
+            [group],
+            {group.group_id: ["toutes les classes attendues existent en DSFR 1.13.2"]},
+        )
+        self.assertIn(
+            "- Repère : toutes les classes attendues existent en DSFR 1.13.2", sheet
+        )
         self.assertEqual(qualify.parse_review_sheet(sheet), {})
 
     def test_review_sheet_rejects_two_checked_boxes(self):
         group = next(iter(self.collection.groups.values()))
         sheet = qualify.render_review_sheet(self.collection, [group])
-        broken = sheet.replace("- [ ] ECART_CONFIRME", "- [x] ECART_CONFIRME").replace("- [ ] NON_APPLICABLE", "- [x] NON_APPLICABLE")
+        broken = sheet.replace("- [ ] ECART_CONFIRME", "- [x] ECART_CONFIRME").replace(
+            "- [ ] NON_APPLICABLE", "- [x] NON_APPLICABLE"
+        )
         with self.assertRaises(qualify.ReviewSheetError):
             qualify.parse_review_sheet(broken)
 
@@ -180,7 +336,9 @@ class CollectTests(unittest.TestCase):
 class VerdictTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.pages = [collect.load_page(path) for path in build_fixture(Path(self.tmp.name))]
+        self.pages = [
+            collect.load_page(path) for path in build_fixture(Path(self.tmp.name))
+        ]
         self.collection = collect.collect(self.pages)
 
     def tearDown(self):
@@ -189,7 +347,9 @@ class VerdictTests(unittest.TestCase):
     def test_three_verdicts(self):
         group = next(iter(self.collection.groups.values()))
         qualify.apply_overrides(self.collection, {group.group_id: "ECART_CONFIRME"})
-        verdicts = verdict.component_verdicts(self.collection, kinds={group.group_id: "integration"})
+        verdicts = verdict.component_verdicts(
+            self.collection, kinds={group.group_id: "integration"}
+        )
         self.assertEqual(verdicts["navigation"].status, "NON_CONFORME")
         self.assertEqual(verdicts["header"].status, "CONFORME")
         self.assertEqual(verdicts["quote"].status, "NON_VERIFIE")
@@ -199,9 +359,14 @@ class VerdictTests(unittest.TestCase):
     def test_migration_group_does_not_make_component_non_conforme(self):
         group = next(iter(self.collection.groups.values()))
         qualify.apply_overrides(self.collection, {group.group_id: "ECART_CONFIRME"})
-        verdicts = verdict.component_verdicts(self.collection, kinds={group.group_id: "migration"})
+        verdicts = verdict.component_verdicts(
+            self.collection, kinds={group.group_id: "migration"}
+        )
         self.assertEqual(verdicts["navigation"].status, "CONFORME")
-        self.assertEqual([g.group_id for g in verdicts["navigation"].migration_groups], [group.group_id])
+        self.assertEqual(
+            [g.group_id for g in verdicts["navigation"].migration_groups],
+            [group.group_id],
+        )
 
     def test_pending_group_gives_non_verifie(self):
         verdicts = verdict.component_verdicts(self.collection, kinds={})
@@ -212,27 +377,53 @@ class MigrationTests(unittest.TestCase):
     def test_kind_from_css_class_presence(self):
         with tempfile.TemporaryDirectory() as tmp:
             cache = Path(tmp)
-            for version, css in (("1.13.2", ".fr-nav{}.fr-nav__list{}"), ("1.15.2", ".fr-nav{}.fr-nav__list{}.fr-nav__new{}")):
+            for version, css in (
+                ("1.13.2", ".fr-nav{}.fr-nav__list{}"),
+                ("1.15.2", ".fr-nav{}.fr-nav__list{}.fr-nav__new{}"),
+            ):
                 target = cache / f"gouvfr-dsfr-{version}" / "package" / "dist"
                 target.mkdir(parents=True)
                 (target / "dsfr.min.css").write_text(css, encoding="utf-8")
-            icons = cache / "gouvfr-dsfr-1.15.2" / "package" / "dist" / "utility" / "icons"
+            icons = (
+                cache / "gouvfr-dsfr-1.15.2" / "package" / "dist" / "utility" / "icons"
+            )
             icons.mkdir(parents=True)
-            (icons / "icons.min.css").write_text(".fr-icon-arrow-left-line::before{}", encoding="utf-8")
+            (icons / "icons.min.css").write_text(
+                ".fr-icon-arrow-left-line::before{}", encoding="utf-8"
+            )
             index = migration.CssIndex(cache, "1.13.2", "1.15.2")
             self.assertIn("fr-icon-arrow-left-line", index.target_classes)
             self.assertNotIn("fr-icon-arrow-left-line", index.observed_classes)
-            self.assertEqual(index.classify('<nav class="fr-nav"><ul class="fr-nav__list"></ul></nav>', []), ("integration", []))
-            self.assertEqual(index.classify('<ul class="fr-nav__new"></ul>', []), ("migration", ["fr-nav__new"]))
-            self.assertEqual(index.classify("<div></div>", ["La classe fr-nav__new est absente."]), ("migration", ["fr-nav__new"]))
+            self.assertEqual(
+                index.classify(
+                    '<nav class="fr-nav"><ul class="fr-nav__list"></ul></nav>', []
+                ),
+                ("integration", []),
+            )
+            self.assertEqual(
+                index.classify('<ul class="fr-nav__new"></ul>', []),
+                ("migration", ["fr-nav__new"]),
+            )
+            self.assertEqual(
+                index.classify("<div></div>", ["La classe fr-nav__new est absente."]),
+                ("migration", ["fr-nav__new"]),
+            )
             # Un identifiant ou une cible aria-controls n'est pas une classe : pas de fausse migration.
-            self.assertEqual(index.classify('<button class="fr-nav" aria-controls="fr-theme-modal" id="fr-other">x</button>', []), ("integration", []))
+            self.assertEqual(
+                index.classify(
+                    '<button class="fr-nav" aria-controls="fr-theme-modal" id="fr-other">x</button>',
+                    [],
+                ),
+                ("integration", []),
+            )
 
 
 class GapsTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.pages = [collect.load_page(path) for path in build_fixture(Path(self.tmp.name))]
+        self.pages = [
+            collect.load_page(path) for path in build_fixture(Path(self.tmp.name))
+        ]
         self.collection = collect.collect(self.pages)
 
     def tearDown(self):
@@ -255,8 +446,15 @@ class RenderTests(unittest.TestCase):
         self.collection = collect.collect(self.pages)
         group = next(iter(self.collection.groups.values()))
         qualify.apply_overrides(self.collection, {group.group_id: "ECART_CONFIRME"})
-        self.verdicts = verdict.component_verdicts(self.collection, kinds={group.group_id: "integration"})
-        self.report = verdict.build_report(self.collection, self.verdicts, migration_details={}, delivery_date="2026-09-09")
+        self.verdicts = verdict.component_verdicts(
+            self.collection, kinds={group.group_id: "integration"}
+        )
+        self.report = verdict.build_report(
+            self.collection,
+            self.verdicts,
+            migration_details={},
+            delivery_date="2026-09-09",
+        )
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -273,16 +471,77 @@ class RenderTests(unittest.TestCase):
     def test_html_outputs_use_known_dsfr_classes_only(self):
         index_html = render_html.render_index(self.report)
         fiche_html = render_html.render_fiche(self.report, "navigation")
-        known = {"fr-container", "fr-badge", "fr-badge--error", "fr-badge--success", "fr-badge--info", "fr-table",
-                 "fr-callout", "fr-callout__title", "fr-callout__text", "fr-alert", "fr-alert--warning", "fr-alert__title",
-                 "fr-skiplinks", "fr-skiplinks__list", "fr-link", "fr-grid-row", "fr-col-12", "fr-mt-4w", "fr-mb-4w",
-                 "fr-h1", "fr-h2", "fr-h3", "fr-text--sm", "fr-card", "fr-card__body", "fr-card__content", "fr-card__title",
-                 "fr-card__desc", "fr-tag", "fr-btn", "fr-btn--secondary", "fr-btns-group", "fr-accordion",
-                 "fr-accordion__btn", "fr-accordion__title", "fr-collapse", "fr-mb-2w", "fr-mt-2w", "fr-text--xs",
-                 "fr-highlight", "fr-hr", "fr-table--bordered", "fr-sr-only", "fr-icon-arrow-left-line", "fr-link--icon-left",
-                 "fr-btn--icon-left", "fr-header", "fr-footer", "fr-footer__body", "fr-footer__content", "fr-footer__content-desc",
-                 "fr-col-md-6", "fr-col-lg-4", "fr-grid-row--gutters", "fr-badge--sm", "fr-badge--new", "fr-mt-1w", "fr-mb-1w",
-                 "fr-card--sm", "fr-table__wrapper", "fr-table__container", "fr-table__content", "fr-mb-0"}
+        known = {
+            "fr-container",
+            "fr-container--fluid",
+            "fr-badge",
+            "fr-badge--error",
+            "fr-badge--success",
+            "fr-badge--info",
+            "fr-table",
+            "fr-callout",
+            "fr-callout__title",
+            "fr-callout__text",
+            "fr-alert",
+            "fr-alert--warning",
+            "fr-alert__title",
+            "fr-skiplinks",
+            "fr-skiplinks__list",
+            "fr-link",
+            "fr-grid-row",
+            "fr-col-12",
+            "fr-mt-4w",
+            "fr-mb-4w",
+            "fr-h1",
+            "fr-h2",
+            "fr-h3",
+            "fr-text--sm",
+            "fr-card",
+            "fr-card__body",
+            "fr-card__content",
+            "fr-card__title",
+            "fr-card__desc",
+            "fr-tag",
+            "fr-btn",
+            "fr-btn--secondary",
+            "fr-btns-group",
+            "fr-accordion",
+            "fr-accordion__btn",
+            "fr-accordion__title",
+            "fr-collapse",
+            "fr-mb-2w",
+            "fr-mt-2w",
+            "fr-text--xs",
+            "fr-highlight",
+            "fr-hr",
+            "fr-table--bordered",
+            "fr-table--no-scroll",
+            "fr-sr-only",
+            "fr-icon-arrow-left-line",
+            "fr-link--icon-left",
+            "fr-btn--icon-left",
+            "fr-header",
+            "fr-footer",
+            "fr-footer__body",
+            "fr-footer__content",
+            "fr-footer__content-desc",
+            "fr-col-md-4",
+            "fr-col-md-6",
+            "fr-col-lg-4",
+            "fr-col-lg-11",
+            "fr-col-lg-10",
+            "fr-grid-row--gutters",
+            "fr-grid-row--center",
+            "fr-badge--sm",
+            "fr-badge--new",
+            "fr-mt-1w",
+            "fr-mb-1w",
+            "fr-card--sm",
+            "fr-table__wrapper",
+            "fr-table__container",
+            "fr-table__content",
+            "fr-mb-0",
+        }
         for html_text in (index_html, fiche_html):
             used = set(render_html.dsfr_classes(html_text))
             self.assertTrue(used, "aucune classe DSFR rendue")
@@ -290,14 +549,53 @@ class RenderTests(unittest.TestCase):
             self.assertNotIn("/Users/", html_text)
             self.assertIn('lang="fr"', html_text)
 
+        self.assertIn('id="tableau-verdicts"', index_html)
+        self.assertIn('class="fr-container--fluid fr-mb-4w"', index_html)
+        self.assertIn(
+            '<div class="fr-grid-row fr-grid-row--center"><div class="fr-col-12 fr-col-lg-10">\n<h2>Échantillon</h2>',
+            index_html,
+        )
+        self.assertIn(
+            '<div class="fr-grid-row fr-grid-row--center"><div class="fr-col-12 fr-col-lg-10">\n<h2>Composants attendus mais absents</h2>',
+            index_html,
+        )
+        self.assertIn(
+            'class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"><div class="fr-col-12 fr-col-lg-11">',
+            index_html,
+        )
+        self.assertIn(
+            'class="fr-table fr-table--bordered fr-table--no-scroll"', index_html
+        )
+        self.assertIn('aria-describedby="tableau-verdicts-aide"', index_html)
+        self.assertNotIn('tabindex="0"', index_html)
+        self.assertNotIn("défilant horizontalement", index_html)
+        self.assertIn('scope="row"', index_html)
+        self.assertIn('headers="col-action"', index_html)
+        self.assertIn('class="dashboard-summary', index_html)
+        self.assertIn("sans défilement horizontal", index_html)
+
     def test_local_source_limit_reworded_when_reference_available(self):
-        self.pages[0].not_verified.append("intégration exacte contre une source locale DSFR 1.13.2")
+        self.pages[0].not_verified.append(
+            "intégration exacte contre une source locale DSFR 1.13.2"
+        )
         without = verdict.build_report(self.collection, self.verdicts, {}, "2026-09-09")
         self.assertTrue(any("source locale" in item for item in without.not_verified))
-        with_ref = verdict.build_report(self.collection, self.verdicts, {}, "2026-09-09", reference_available=True)
-        self.assertFalse(any("intégration exacte contre une source locale" in item for item in with_ref.not_verified))
-        self.assertTrue(any("paquet officiel 1.13.2" in item for item in with_ref.not_verified))
-        self.assertEqual(self.verdicts["header"].reasons[0], "Aucun écart sur la règle exécutée contre DSFR 1.13.2.")
+        with_ref = verdict.build_report(
+            self.collection, self.verdicts, {}, "2026-09-09", reference_available=True
+        )
+        self.assertFalse(
+            any(
+                "intégration exacte contre une source locale" in item
+                for item in with_ref.not_verified
+            )
+        )
+        self.assertTrue(
+            any("paquet officiel 1.13.2" in item for item in with_ref.not_verified)
+        )
+        self.assertEqual(
+            self.verdicts["header"].reasons[0],
+            "Aucun écart sur la règle exécutée contre DSFR 1.13.2.",
+        )
 
     def test_manifest_counts_match_report(self):
         manifest = verdict.build_manifest(self.report)
@@ -306,26 +604,87 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(manifest["pages"], ["P01", "P02"])
         self.assertEqual(manifest["observed_versions"], ["1.13.2"])
 
+    def test_manifest_signals_missing_catalog_fingerprint(self):
+        self.assertEqual(self.report.catalog_status["status"], "EMPREINTE_ABSENTE")
+        manifest = verdict.build_manifest(self.report)
+        self.assertEqual(manifest["catalog_status"]["status"], "EMPREINTE_ABSENTE")
+        self.assertIn("empreinte", self.report.warning)
+
+    def test_html_distinguishes_uncovered_qualified_and_contradictory(self):
+        pending_collection = collect.collect(self.pages)
+        pending_group = collect.Group(
+            component="input",
+            rule_id="DSFR-INPUT-STRUCTURE-001",
+            selector=".fr-input",
+            severity="Majeur",
+            title="Champ à qualifier",
+            expected="attendu",
+            observed="observé",
+            expected_html="<input>",
+            observed_html="<input>",
+            source="source",
+            recommendation="qualifier",
+            verification="rejouer",
+        )
+        pending_group.statuses["A_CONFIRMER"] = 1
+        pending_collection.groups[pending_group.group_id] = pending_group
+        pending_collection.components["input"] = collect.ComponentSummary(
+            "input",
+            ".fr-input",
+            count=1,
+            pages=["P01"],
+            rules_executed={pending_group.rule_id},
+        )
+        pending_verdicts = verdict.component_verdicts(pending_collection, kinds={})
+        pending_report = verdict.build_report(
+            pending_collection,
+            pending_verdicts,
+            migration_details={},
+            delivery_date="2026-09-09",
+        )
+        index_html = render_html.render_index(pending_report)
+        self.assertIn("Non couvert", index_html)
+        self.assertIn("À qualifier", index_html)
+        self.assertIn("Contradiction", index_html)
+        fiche_html = render_html.render_fiche(pending_report, "navigation")
+        self.assertIn(
+            "Contradictions regroupées par page, état et variante DOM", fiche_html
+        )
+
 
 class PublishTests(unittest.TestCase):
     def test_index_card_inserted_then_replaced_idempotently(self):
         from virginie_dsfr import publish
+
         with tempfile.TemporaryDirectory() as tmp:
             index = Path(tmp) / "INDEX-LIVRABLES.html"
-            self.assertEqual(publish.insert_index_card(index, "<article>x</article>"), "missing")
-            index.write_text('<main><section class="cards">\n    <article>a</article>\n  </section><p>fin</p></main>', encoding="utf-8")
-            self.assertEqual(publish.insert_index_card(index, "<article>carte v1</article>"), "inserted")
+            self.assertEqual(
+                publish.insert_index_card(index, "<article>x</article>"), "missing"
+            )
+            index.write_text(
+                '<main><section class="cards">\n    <article>a</article>\n  </section><p>fin</p></main>',
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                publish.insert_index_card(index, "<article>carte v1</article>"),
+                "inserted",
+            )
             first = index.read_text(encoding="utf-8")
             self.assertIn("carte v1", first)
             self.assertLess(first.index("carte v1"), first.index("</section>"))
-            self.assertEqual(publish.insert_index_card(index, "<article>carte v2</article>"), "replaced")
+            self.assertEqual(
+                publish.insert_index_card(index, "<article>carte v2</article>"),
+                "replaced",
+            )
             second = index.read_text(encoding="utf-8")
             self.assertIn("carte v2", second)
             self.assertNotIn("carte v1", second)
             self.assertEqual(second.count(publish.INDEX_START), 1)
             self.assertIn("<p>fin</p>", second)
             index.write_text("<main><p>sans section</p></main>", encoding="utf-8")
-            self.assertEqual(publish.insert_index_card(index, "<article>x</article>"), "no_anchor")
+            self.assertEqual(
+                publish.insert_index_card(index, "<article>x</article>"), "no_anchor"
+            )
 
 
 if __name__ == "__main__":

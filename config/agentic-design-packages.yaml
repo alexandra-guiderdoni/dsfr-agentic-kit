@@ -1,5 +1,6 @@
 schema_version: 1
 name: dsfr-agentic-kit
+version: "0.1.0"
 status: local-prototype
 purpose: >-
   Router, contraindre, générer et vérifier des interfaces publiques françaises
@@ -37,6 +38,7 @@ product:
     - ticket-rgaa
   required_paths:
     - README.md
+    - .claude-plugin/marketplace.json
     - DEMARRAGE-AGENT.md
     - LICENSE
     - CHANGELOG.md
@@ -76,10 +78,13 @@ product:
     - design-systems/scripts/check-dsfr-fidelity.py
     - scripts/check-agentic-design-pack.sh
     - scripts/check-prerequisites.sh
+    - scripts/amorcage-session-cloud.sh
+    - scripts/build-plugin.sh
     - scripts/check-dsfr-design-system.sh
     - scripts/demo-dsfr-assembled-page.sh
     - scripts/demo-dsfr-vitrine.sh
     - scripts/tests/check-standalone-install.sh
+    - virginie-livrables/PROMPT-GOAL-GOVERNOR-AUDIT-DSFR-DOUANE.md
 
 validation:
   product_tests:
@@ -106,6 +111,7 @@ validation:
     - documentation/AUDIT-RGAA-CREATOR.md
     - templates/AGENTS.md.exemple
     - templates/CLAUDE.md.exemple
+    - virginie-livrables/PROMPT-GOAL-GOVERNOR-AUDIT-DSFR-DOUANE.md
 
 claims:
   allowed:

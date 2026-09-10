@@ -31,10 +31,17 @@ PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
 EVIDENCE = OUTPUT / "preuves/P06-RETEST-SAFE.json"
 DECISIONS = ARCHIVE / "rgaa/P06-DECISIONS-258.json"
 MANUAL_REVIEWS = ARCHIVE / "rgaa/REVUE-MANUELLE-258.json"
-ARCHIVED_SERVER_STATE = ARCHIVE / "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json"
-ARCHIVED_COMPANY_STATE = ARCHIVE / "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json"
+ARCHIVED_SERVER_STATE = (
+    ARCHIVE / "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json"
+)
+ARCHIVED_COMPANY_STATE = (
+    ARCHIVE / "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json"
+)
 P06_URL = "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
 OFFICIAL_RGAA = "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/"
+EXPECTED_ERROR_MARKUP = """<div class="fr-alert fr-alert--error" role="alert">
+  <p>…message d’erreur précis…</p>
+</div>"""
 
 
 def resolve_ay11_root() -> Path:
@@ -62,6 +69,8 @@ def resolve_ay11_root() -> Path:
 def rgaa_reference() -> Path:
     """Référentiel RGAA normalisé, résolu depuis AY11_ROOT."""
     return resolve_ay11_root() / "references/rgaa/normalized/rgaa-4.1.2.json"
+
+
 REQUIRED_INDICATION = re.compile(
     r"\b(?:obligatoire|required|requis(?:e)?|exig[eé](?:e)?)\b", re.IGNORECASE
 )
@@ -249,21 +258,33 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
         or page_errors[0].get("attribution") != "guard-window-causality-unproven"
         or not evidence.get("page_error_attribution_limit")
     ):
-        raise ValueError("La limite d’attribution de l’erreur page cinq fichiers est incohérente.")
+        raise ValueError(
+            "La limite d’attribution de l’erreur page cinq fichiers est incohérente."
+        )
     if evidence.get("mode") != "SAFE_NO_MUTATING_REQUEST":
         raise ValueError("Le fichier de preuve ne provient pas du mode sûr attendu.")
     contract = evidence.get("safety_contract", {})
     if set(contract.get("allowed_http_methods", [])) != {"GET", "HEAD", "OPTIONS"}:
-        raise ValueError("Le contrat de sécurité n’applique pas l’allowlist HTTP attendue.")
+        raise ValueError(
+            "Le contrat de sécurité n’applique pas l’allowlist HTTP attendue."
+        )
     if contract.get("synthetic_data_only") is not True:
-        raise ValueError("Le contrat de sécurité ne garantit pas des données exclusivement synthétiques.")
+        raise ValueError(
+            "Le contrat de sécurité ne garantit pas des données exclusivement synthétiques."
+        )
     if contract.get("valid_final_submission") is not False:
-        raise ValueError("Le contrat de sécurité autorise ou ne documente pas la soumission finale.")
+        raise ValueError(
+            "Le contrat de sécurité autorise ou ne documente pas la soumission finale."
+        )
     if contract.get("server_mutation_authorized") is not False:
-        raise ValueError("Le contrat de sécurité autorise ou ne documente pas une mutation serveur.")
+        raise ValueError(
+            "Le contrat de sécurité autorise ou ne documente pas une mutation serveur."
+        )
     guard = evidence.get("network_guard", {})
     if guard.get("guard_scope") != "BrowserContext":
-        raise ValueError("La garde réseau n’est pas installée au niveau du contexte navigateur.")
+        raise ValueError(
+            "La garde réseau n’est pas installée au niveau du contexte navigateur."
+        )
     if guard.get("completed_mutating_requests") != []:
         raise ValueError("La preuve contient une requête mutante terminée.")
     if guard.get("mutating_request_completed") is not False:
@@ -276,10 +297,14 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
         raise ValueError("Le compteur global des WebSockets bloqués est incohérent.")
     for request in guard.get("blocked_requests", []):
         if request.get("decision") != "ABORTED_BEFORE_SEND":
-            raise ValueError("Une requête mutante n’a pas la décision de blocage attendue.")
+            raise ValueError(
+                "Une requête mutante n’a pas la décision de blocage attendue."
+            )
     for websocket in guard.get("blocked_websockets", []):
         if websocket.get("decision") != "CLOSED_BEFORE_APPLICATION_MESSAGES":
-            raise ValueError("Une connexion WebSocket n’a pas la décision de blocage attendue.")
+            raise ValueError(
+                "Une connexion WebSocket n’a pas la décision de blocage attendue."
+            )
     multipage = evidence.get("multipage_labels", {})
     page_ids = [page.get("page") for page in multipage.get("pages", [])]
     comparisons = multipage.get("repeated_control_comparisons", [])
@@ -295,14 +320,27 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
             or set(comparison.get("pages", [])) != set(page_ids)
             for comparison in comparisons
         )
-        or multipage.get("all_expected_repeated_dom_candidates_complete_and_coherent") is not True
+        or multipage.get("all_expected_repeated_dom_candidates_complete_and_coherent")
+        is not True
     ):
-        raise ValueError("Les quatre candidats DOM attendus ne sont pas complets et cohérents sur P01–P09.")
+        raise ValueError(
+            "Les quatre candidats DOM attendus ne sont pas complets et cohérents sur P01–P09."
+        )
     scenarios = evidence.get("scenarios", {})
-    if scenarios.get("empty_native_submit", {}).get("active_element", {}).get("id") != "edit-nom":
-        raise ValueError("Le focus de la soumission vide n’est pas établi sur #edit-nom.")
-    if scenarios.get("invalid_email_native", {}).get("active_element", {}).get("id") != "edit-adressemail":
-        raise ValueError("Le focus de l’email invalide n’est pas établi sur #edit-adressemail.")
+    if (
+        scenarios.get("empty_native_submit", {}).get("active_element", {}).get("id")
+        != "edit-nom"
+    ):
+        raise ValueError(
+            "Le focus de la soumission vide n’est pas établi sur #edit-nom."
+        )
+    if (
+        scenarios.get("invalid_email_native", {}).get("active_element", {}).get("id")
+        != "edit-adressemail"
+    ):
+        raise ValueError(
+            "Le focus de l’email invalide n’est pas établi sur #edit-adressemail."
+        )
     company = scenarios.get("professional_variant", {}).get("company", {})
     if (
         company.get("visible") is not True
@@ -311,16 +349,21 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
         or company.get("disabled") is not False
         or not company.get("labels")
         or company.get("autocomplete") is not None
-        or evidence["scenarios"]["professional_variant"].get("optional_mentioned") is not False
+        or evidence["scenarios"]["professional_variant"].get("optional_mentioned")
+        is not False
     ):
         raise ValueError("La variante Société ne correspond plus à la preuve attendue.")
     extension_messages = [
         message
-        for message in evidence["scenarios"]["invalid_file_extension"]["visible_messages"]
+        for message in evidence["scenarios"]["invalid_file_extension"][
+            "visible_messages"
+        ]
         if "preuve-synthetique-interdite.exe" in message.get("text", "")
     ]
     if len(extension_messages) != 1:
-        raise ValueError("Le message nominatif d’extension interdite est absent ou ambigu.")
+        raise ValueError(
+            "Le message nominatif d’extension interdite est absent ou ambigu."
+        )
     extension_message = extension_messages[0]
     if (
         extension_message.get("role") is not None
@@ -331,7 +374,9 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
             "La sémantique du message d’extension a changé ; la décision 7.5.2 doit être recalculée."
         )
     if evidence["scenarios"]["invalid_file_extension"]["blocked_mutating_requests"]:
-        raise ValueError("Le scénario extension interdite ne devrait déclencher aucune requête mutante.")
+        raise ValueError(
+            "Le scénario extension interdite ne devrait déclencher aucune requête mutante."
+        )
     five_files = evidence["scenarios"]["five_allowed_files"]
     trigger = five_files.get("triggering_request") or {}
     if (
@@ -346,7 +391,9 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
         or len(trigger.get("synthetic_file_names_in_post_data", {})) != 5
         or not all(trigger["synthetic_file_names_in_post_data"].values())
     ):
-        raise ValueError("Le scénario cinq fichiers n’est pas corrélé exactement à la garde réseau.")
+        raise ValueError(
+            "Le scénario cinq fichiers n’est pas corrélé exactement à la garde réseau."
+        )
     for scenario_name, scenario in evidence.get("scenarios", {}).items():
         screenshot = scenario.get("screenshot")
         if not screenshot:
@@ -354,16 +401,26 @@ def assert_safe_evidence(evidence: dict[str, Any]) -> None:
         relative = screenshot.get("file", "")
         relative_path = Path(relative)
         if not relative or relative_path.is_absolute() or ".." in relative_path.parts:
-            raise ValueError(f"Chemin de capture non sûr pour le scénario {scenario_name}.")
+            raise ValueError(
+                f"Chemin de capture non sûr pour le scénario {scenario_name}."
+            )
         screenshot_path = (OUTPUT / relative_path).resolve()
         if not screenshot_path.is_relative_to(OUTPUT.resolve()):
-            raise ValueError(f"Capture hors complément P06 pour le scénario {scenario_name}.")
+            raise ValueError(
+                f"Capture hors complément P06 pour le scénario {scenario_name}."
+            )
         if not screenshot_path.is_file():
-            raise ValueError(f"Capture introuvable pour le scénario {scenario_name} : {relative}")
+            raise ValueError(
+                f"Capture introuvable pour le scénario {scenario_name} : {relative}"
+            )
         if screenshot_path.stat().st_size != screenshot.get("bytes"):
-            raise ValueError(f"Taille de capture incohérente pour le scénario {scenario_name}.")
+            raise ValueError(
+                f"Taille de capture incohérente pour le scénario {scenario_name}."
+            )
         if sha256(screenshot_path) != screenshot.get("sha256"):
-            raise ValueError(f"Empreinte de capture incohérente pour le scénario {scenario_name}.")
+            raise ValueError(
+                f"Empreinte de capture incohérente pour le scénario {scenario_name}."
+            )
 
 
 def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
@@ -373,7 +430,9 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
     evidence = load_json(EVIDENCE)
     assert_safe_evidence(evidence)
 
-    tests = [item for item in reference["tests"] if item["criterion_id"].startswith("11.")]
+    tests = [
+        item for item in reference["tests"] if item["criterion_id"].startswith("11.")
+    ]
     expected = {item["test_id"] for item in tests}
     if len(tests) != 34 or len(expected) != 34:
         raise ValueError(
@@ -393,9 +452,13 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
         if sum(test_id in group for group in classification_groups) != 1
     }
     if overlapping:
-        raise ValueError(f"Catégories probatoires chevauchantes : {sorted(overlapping)}")
+        raise ValueError(
+            f"Catégories probatoires chevauchantes : {sorted(overlapping)}"
+        )
     if expected != classified:
-        raise ValueError(f"Classification probatoire incomplète : {sorted(expected ^ classified)}")
+        raise ValueError(
+            f"Classification probatoire incomplète : {sorted(expected ^ classified)}"
+        )
     overlay_groups = [TECHNICALLY_PREQUALIFIED, SERVER_RETEST, BUSINESS_REVIEW]
     overlay_union = set().union(*overlay_groups)
     overlay_overlaps = {
@@ -404,28 +467,44 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
         if sum(test_id in group for group in overlay_groups) != 1
     }
     if overlay_overlaps:
-        raise ValueError(f"Surcouches de conclusion chevauchantes : {sorted(overlay_overlaps)}")
+        raise ValueError(
+            f"Surcouches de conclusion chevauchantes : {sorted(overlay_overlaps)}"
+        )
     if not TECHNICALLY_PREQUALIFIED <= ARCHIVE_RETEST:
-        raise ValueError("Une conformité technique ne provient pas du groupe de retest attendu.")
+        raise ValueError(
+            "Une conformité technique ne provient pas du groupe de retest attendu."
+        )
     if not SERVER_RETEST <= ARCHIVE_RETEST:
-        raise ValueError("Un retest serveur ne provient pas du groupe de retest attendu.")
+        raise ValueError(
+            "Un retest serveur ne provient pas du groupe de retest attendu."
+        )
     if not BUSINESS_REVIEW <= ARCHIVE_NOT_TESTED:
-        raise ValueError("Une confirmation métier ne provient pas du groupe non testé attendu.")
+        raise ValueError(
+            "Une confirmation métier ne provient pas du groupe non testé attendu."
+        )
 
     decision_rows = [
-        item for item in decision_doc["decisions"] if item["criterion"].startswith("11.")
+        item
+        for item in decision_doc["decisions"]
+        if item["criterion"].startswith("11.")
     ]
     review_rows = [
         item for item in manual_doc["reviews"] if item["criterion"].startswith("11.")
     ]
     if len(decision_rows) != 34 or len({item["test"] for item in decision_rows}) != 34:
-        raise ValueError("La matrice publiée ne contient pas 34 lignes thème 11 uniques.")
+        raise ValueError(
+            "La matrice publiée ne contient pas 34 lignes thème 11 uniques."
+        )
     if len(review_rows) != 34 or len({item["test"] for item in review_rows}) != 34:
-        raise ValueError("La revue manuelle ne contient pas 34 lignes thème 11 uniques.")
+        raise ValueError(
+            "La revue manuelle ne contient pas 34 lignes thème 11 uniques."
+        )
     decisions = {item["test"]: item for item in decision_rows}
     reviews = {item["test"]: item for item in review_rows}
     if set(decisions) != expected or set(reviews) != expected:
-        raise ValueError("La matrice publiée ou la revue manuelle ne contient pas exactement les 34 tests.")
+        raise ValueError(
+            "La matrice publiée ou la revue manuelle ne contient pas exactement les 34 tests."
+        )
     if decisions["11.10.2"].get("status") != "C_CONFIRMEE":
         raise ValueError(
             "La décision publiée 11.10.2 n’est plus C_CONFIRMEE ; la requalification doit être recalculée."
@@ -447,7 +526,8 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
     unnamed_controls = [
         item
         for item in p06_page["controls"]
-        if item.get("exposed_to_at_candidate") and not item.get("accessible_name_candidate")
+        if item.get("exposed_to_at_candidate")
+        and not item.get("accessible_name_candidate")
     ]
     required_controls = [
         item
@@ -489,7 +569,9 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
                 "supplement_status": status,
                 "supplement_label": STATUS_LABELS[status],
                 "rationale": generic_rationale(test_id, status),
-                "human_validation": test.get("human_validation", reviews[test_id].get("human_validation")),
+                "human_validation": test.get(
+                    "human_validation", reviews[test_id].get("human_validation")
+                ),
                 "evidence": evidence_refs,
                 "official_url": f"{OFFICIAL_RGAA}#{test_id}",
             }
@@ -497,7 +579,9 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
 
     extension_message = next(
         message
-        for message in evidence["scenarios"]["invalid_file_extension"]["visible_messages"]
+        for message in evidence["scenarios"]["invalid_file_extension"][
+            "visible_messages"
+        ]
         if "preuve-synthetique-interdite.exe" in message.get("text", "")
     )
     adjacent = {
@@ -507,12 +591,14 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
         "label": "Non conforme étayé — complément P06",
         "observation": (
             "Le message dynamique d’extension interdite est une erreur/suggestion. "
-            f"Le conteneur observé porte aria-live=\"{extension_message.get('aria_live')}\", "
-            "sans role et sans aria-atomic. Il ne satisfait donc ni role=\"alert\", "
-            "ni l’équivalent aria-live=\"assertive\" avec aria-atomic=\"true\"."
+            f'Le conteneur observé porte aria-live="{extension_message.get("aria_live")}", '
+            'sans role et sans aria-atomic. Il ne satisfait donc ni role="alert", '
+            'ni l’équivalent aria-live="assertive" avec aria-atomic="true".'
         ),
         "message": extension_message["text"],
-        "screenshot": evidence["scenarios"]["invalid_file_extension"]["screenshot"]["file"],
+        "screenshot": evidence["scenarios"]["invalid_file_extension"]["screenshot"][
+            "file"
+        ],
         "evidence": [
             "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
             "P06-FORMULAIRES/"
@@ -538,7 +624,9 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
         "affected_control_ids": [
             item.get("id") for item in required_without_associated_indication
         ],
-        "screenshot": evidence["scenarios"]["empty_native_submit"]["screenshot"]["file"],
+        "screenshot": evidence["scenarios"]["empty_native_submit"]["screenshot"][
+            "file"
+        ],
         "evidence": [
             "P06-FORMULAIRES/preuves/P06-RETEST-SAFE.json",
             "P06-FORMULAIRES/"
@@ -561,16 +649,28 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
         "safety": {
             "allowed_http_methods": evidence["safety_contract"]["allowed_http_methods"],
             "guard_scope": evidence["network_guard"]["guard_scope"],
-            "mutating_requests_completed": evidence["network_guard"]["mutating_request_completed"],
-            "completed_mutating_request_details": evidence["network_guard"]["completed_mutating_requests"],
+            "mutating_requests_completed": evidence["network_guard"][
+                "mutating_request_completed"
+            ],
+            "completed_mutating_request_details": evidence["network_guard"][
+                "completed_mutating_requests"
+            ],
             "blocked_mutating_requests": evidence["network_guard"]["blocked_count"],
             "blocked_request_details": evidence["network_guard"]["blocked_requests"],
             "blocked_websockets": evidence["network_guard"]["blocked_websocket_count"],
-            "blocked_websocket_details": evidence["network_guard"]["blocked_websockets"],
-            "websocket_application_message_completed": evidence["network_guard"]["websocket_application_message_completed"],
+            "blocked_websocket_details": evidence["network_guard"][
+                "blocked_websockets"
+            ],
+            "websocket_application_message_completed": evidence["network_guard"][
+                "websocket_application_message_completed"
+            ],
             "synthetic_data_only": evidence["safety_contract"]["synthetic_data_only"],
-            "valid_final_submission": evidence["safety_contract"]["valid_final_submission"],
-            "server_mutation_authorized": evidence["safety_contract"]["server_mutation_authorized"],
+            "valid_final_submission": evidence["safety_contract"][
+                "valid_final_submission"
+            ],
+            "server_mutation_authorized": evidence["safety_contract"][
+                "server_mutation_authorized"
+            ],
             "page_errors_observed": len(evidence["page_errors"]),
             "guard_window_page_errors": evidence["guard_window_page_errors"],
             "page_error_attribution_limit": evidence["page_error_attribution_limit"],
@@ -595,7 +695,8 @@ def build_matrix() -> tuple[dict[str, Any], dict[str, Any]]:
             "run_id": evidence["run_id"],
             "collector": evidence["collector"],
             "screenshots": {
-                name: scenario["screenshot"] for name, scenario in evidence["scenarios"].items()
+                name: scenario["screenshot"]
+                for name, scenario in evidence["scenarios"].items()
             },
             "p06_controls_inventoried": len(p06_page["controls"]),
             "p06_controls_without_name_candidate": len(unnamed_controls),
@@ -681,12 +782,12 @@ def render_markdown(doc: dict[str, Any], evidence: dict[str, Any]) -> str:
 
 La matrice publiée contient bien les 34 tests, mais elle ne prouve pas les 19 conformités annoncées. Après relecture probatoire et complément Playwright :
 
-- {counts.get('CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT', 0)} tests sont techniquement étayés comme conformes, sans validation humaine finale signée ;
-- {counts.get('NON_CONFORME_ETAYE', 0)} tests du thème 11 disposent d’une non-conformité étayée ;
-- {counts.get('NON_APPLICABLE_CONDITIONNEL_DOM', 0)} tests sont non applicables conditionnellement dans le DOM observé ;
-- {counts.get('A_QUALIFIER_HUMAINEMENT', 0)} tests restent à qualifier humainement ;
-- {counts.get('NON_APPLICABLE_A_CONFIRMER_METIER', 0)} non-applicabilités restent à confirmer par la MOA métier ;
-- {counts.get('A_RETESTER_SERVEUR', 0)} tests exigent encore une réponse serveur réelle.
+- {counts.get("CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT", 0)} tests sont techniquement étayés comme conformes, sans validation humaine finale signée ;
+- {counts.get("NON_CONFORME_ETAYE", 0)} tests du thème 11 disposent d’une non-conformité étayée ;
+- {counts.get("NON_APPLICABLE_CONDITIONNEL_DOM", 0)} tests sont non applicables conditionnellement dans le DOM observé ;
+- {counts.get("A_QUALIFIER_HUMAINEMENT", 0)} tests restent à qualifier humainement ;
+- {counts.get("NON_APPLICABLE_A_CONFIRMER_METIER", 0)} non-applicabilités restent à confirmer par la MOA métier ;
+- {counts.get("A_RETESTER_SERVEUR", 0)} tests exigent encore une réponse serveur réelle.
 
 Le test **11.10.2**, publié conforme, est requalifié non conforme : les indications obligatoires ne figurent ni dans les étiquettes ni dans des passages associés. Un défaut adjacent est aussi confirmé pour **RGAA 7.5.2** : les messages d’erreur dynamiques observés n’utilisent ni `role="alert"`, ni `aria-live="assertive"` avec `aria-atomic="true"`.
 
@@ -707,8 +808,8 @@ Le test **11.10.2**, publié conforme, est requalifié non conforme : les indica
 
 ### États dynamiques
 
-- Soumission native vide : focus déplacé sur `#{evidence['scenarios']['empty_native_submit']['active_element']['id']}` ; aucune requête mutante.
-- Email invalide : focus déplacé sur `#{evidence['scenarios']['invalid_email_native']['active_element']['id']}` ; message natif du navigateur et exemple visible `nom@domaine.fr`.
+- Soumission native vide : focus déplacé sur `#{evidence["scenarios"]["empty_native_submit"]["active_element"]["id"]}` ; aucune requête mutante.
+- Email invalide : focus déplacé sur `#{evidence["scenarios"]["invalid_email_native"]["active_element"]["id"]}` ; message natif du navigateur et exemple visible `nom@domaine.fr`.
 - Variante professionnel : Société visible, facultatif techniquement, sans mention « optionnel » et sans `autocomplete="organization"`.
 - Extension `.exe` : message français visible donnant les extensions autorisées, produit sans requête mutante.
 - Cinq fichiers autorisés par extension : tentative AJAX bloquée ; le véritable message serveur n’est donc pas disponible.
@@ -719,7 +820,7 @@ Le test **11.10.2**, publié conforme, est requalifié non conforme : les indica
 **Décision publiée :** `C_CONFIRMEE`  
 **Complément :** **NON_CONFORME_ETAYE**
 
-{doc['theme_requalification']['observation']}
+{doc["theme_requalification"]["observation"]}
 
 Voir le ticket candidat : [TICKET-CANDIDAT-RGAA-11.10.2.md](TICKET-CANDIDAT-RGAA-11.10.2.md).
 
@@ -728,15 +829,15 @@ Voir le ticket candidat : [TICKET-CANDIDAT-RGAA-11.10.2.md](TICKET-CANDIDAT-RGAA
 **Décision publiée :** `NA_CONFIRMEE`  
 **Complément :** **NON_CONFORME_ETAYE**
 
-{doc['adjacent_decision']['observation']}
+{doc["adjacent_decision"]["observation"]}
 
-Message observé : « {doc['adjacent_decision']['message']} »
+Message observé : « {doc["adjacent_decision"]["message"]} »
 
 Voir le ticket candidat : [TICKET-CANDIDAT-RGAA-7.5.2.md](TICKET-CANDIDAT-RGAA-7.5.2.md).
 
 ## Matrice probatoire des 34 tests
 
-{markdown_table(doc['decisions'])}
+{markdown_table(doc["decisions"])}
 
 ## Contrôles restant à réaliser
 
@@ -749,11 +850,11 @@ Voir le ticket candidat : [TICKET-CANDIDAT-RGAA-7.5.2.md](TICKET-CANDIDAT-RGAA-7
 ## Preuves livrées
 
 - [Données structurées du retest sûr](preuves/P06-RETEST-SAFE.json)
-- [Soumission native vide]({screenshots['empty_native_submit']})
-- [Email invalide]({screenshots['invalid_email_native']})
-- [Variante professionnel]({screenshots['professional_variant']})
-- [Extension interdite]({screenshots['invalid_file_extension']})
-- [Cinq fichiers, requête bloquée]({screenshots['five_allowed_files']})
+- [Soumission native vide]({screenshots["empty_native_submit"]})
+- [Email invalide]({screenshots["invalid_email_native"]})
+- [Variante professionnel]({screenshots["professional_variant"]})
+- [Extension interdite]({screenshots["invalid_file_extension"]})
+- [Cinq fichiers, requête bloquée]({screenshots["five_allowed_files"]})
 - [État serveur archivé, copie intègre](preuves/P06-ETAT-SERVEUR-ARCHIVE.json)
 - [État Société optionnel archivé, copie intègre](preuves/P06-SOCIETE-OPTIONNEL-ARCHIVE.json)
 - [Matrice JSON du complément](COUVERTURE-RGAA-11.json)
@@ -768,7 +869,7 @@ La présence d’une ligne dans une matrice ne vaut pas exécution du test. Ce d
 
 
 def table_html(headers: list[str], rows: list[list[str]]) -> str:
-    head = "".join(f"<th scope=\"col\">{item}</th>" for item in headers)
+    head = "".join(f'<th scope="col">{item}</th>' for item in headers)
     body = "".join(
         "<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>" for row in rows
     )
@@ -784,15 +885,15 @@ def render_html(doc: dict[str, Any], evidence: dict[str, Any]) -> str:
             [
                 html.escape(row["criterion"]),
                 f'<a href="{html.escape(row["official_url"])}">{html.escape(row["test"])}</a>',
-                f'<code>{html.escape(row["published_status"])}</code>',
-                f'<code>{html.escape(row["probative_baseline"])}</code>',
+                f"<code>{html.escape(row['published_status'])}</code>",
+                f"<code>{html.escape(row['probative_baseline'])}</code>",
                 f'<span class="badge {status_class(status)}">{html.escape(row["supplement_label"])}</span>',
                 html.escape(row["rationale"]),
             ]
         )
     comparison_rows = [
         [
-            f'<code>{html.escape(item["identity"])}</code>',
+            f"<code>{html.escape(item['identity'])}</code>",
             html.escape(", ".join(item["pages"])),
             html.escape(
                 "Nom accessible : "
@@ -812,11 +913,31 @@ def render_html(doc: dict[str, Any], evidence: dict[str, Any]) -> str:
     screenshot_figures = "".join(
         f'<figure><a href="{html.escape(evidence["scenarios"][scenario]["screenshot"]["file"], quote=True)}"><img src="{html.escape(evidence["scenarios"][scenario]["screenshot"]["file"], quote=True)}" alt="{html.escape(alt)}"></a><figcaption>{html.escape(caption)}</figcaption></figure>'
         for scenario, alt, caption in (
-            ("empty_native_submit", "Formulaire avec message natif de champ obligatoire", "Soumission native vide : focus sur Nom."),
-            ("invalid_email_native", "Formulaire avec adresse électronique invalide", "Email invalide : message natif, aucune soumission."),
-            ("professional_variant", "Formulaire dans la variante professionnel", "Champ Société visible, facultatif et sans autocomplete."),
-            ("invalid_file_extension", "Message d’erreur pour extension de fichier interdite", "Extension interdite : message client obtenu sans POST."),
-            ("five_allowed_files", "Formulaire après sélection de cinq fichiers synthétiques", "Cinq fichiers : POST AJAX bloqué avant envoi."),
+            (
+                "empty_native_submit",
+                "Formulaire avec message natif de champ obligatoire",
+                "Soumission native vide : focus sur Nom.",
+            ),
+            (
+                "invalid_email_native",
+                "Formulaire avec adresse électronique invalide",
+                "Email invalide : message natif, aucune soumission.",
+            ),
+            (
+                "professional_variant",
+                "Formulaire dans la variante professionnel",
+                "Champ Société visible, facultatif et sans autocomplete.",
+            ),
+            (
+                "invalid_file_extension",
+                "Message d’erreur pour extension de fichier interdite",
+                "Extension interdite : message client obtenu sans POST.",
+            ),
+            (
+                "five_allowed_files",
+                "Formulaire après sélection de cinq fichiers synthétiques",
+                "Cinq fichiers : POST AJAX bloqué avant envoi.",
+            ),
         )
     )
     return f"""<!doctype html>
@@ -829,9 +950,9 @@ def render_html(doc: dict[str, Any], evidence: dict[str, Any]) -> str:
 <div class="notice warning" role="note"><strong>Conclusion :</strong> la matrice est exhaustive mais l’audit n’est pas clôturé. Le complément sépare les décisions étayées des validations humaines, métier ou serveur encore requises.</div>
 <section class="cards" aria-label="Synthèse">
 <article class="card"><p class="count">34/34</p><h2>Tests inventoriés</h2><p>Aucun identifiant manquant.</p></article>
-<article class="card"><p class="count">{counts.get('CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT', 0)}</p><h2>Conformités techniques</h2><p>Toutes restent à valider humainement et à signer.</p></article>
-<article class="card"><p class="count">{counts.get('NON_CONFORME_ETAYE', 0)} + 1</p><h2>Non-conformités</h2><p>{counts.get('NON_CONFORME_ETAYE', 0)} au thème 11 et une requalification 7.5.2.</p></article>
-<article class="card"><p class="count">{counts.get('A_RETESTER_SERVEUR', 0)}</p><h2>Retests serveur</h2><p>Maintenus ouverts par le mode sans soumission.</p></article>
+<article class="card"><p class="count">{counts.get("CONFORME_TECHNIQUE_ETAYEE_A_VALIDER_HUMAINEMENT", 0)}</p><h2>Conformités techniques</h2><p>Toutes restent à valider humainement et à signer.</p></article>
+<article class="card"><p class="count">{counts.get("NON_CONFORME_ETAYE", 0)} + 1</p><h2>Non-conformités</h2><p>{counts.get("NON_CONFORME_ETAYE", 0)} au thème 11 et une requalification 7.5.2.</p></article>
+<article class="card"><p class="count">{counts.get("A_RETESTER_SERVEUR", 0)}</p><h2>Retests serveur</h2><p>Maintenus ouverts par le mode sans soumission.</p></article>
 </section>
 <h2>Garantie de non-soumission</h2>
 <div class="notice safe"><strong>Aucune requête mutante transmise.</strong> Seules GET, HEAD et OPTIONS étaient autorisées ; toute connexion WebSocket était fermée avant les messages applicatifs. Une tentative AJAX POST déclenchée par cinq fichiers a été enregistrée puis bloquée avant envoi. Données et fichiers exclusivement synthétiques.</div>
@@ -839,23 +960,23 @@ def render_html(doc: dict[str, Any], evidence: dict[str, Any]) -> str:
 <p><a href="preuves/P06-RETEST-SAFE.json">Consulter la preuve structurée complète</a>.</p>
 <h2>Résultats ciblés</h2>
 <ul>
-<li>Soumission vide : focus sur <code>#{html.escape(evidence['scenarios']['empty_native_submit']['active_element']['id'])}</code>, sans requête mutante.</li>
-<li>Email invalide : focus sur <code>#{html.escape(evidence['scenarios']['invalid_email_native']['active_element']['id'])}</code>, message natif et exemple visible.</li>
+<li>Soumission vide : focus sur <code>#{html.escape(evidence["scenarios"]["empty_native_submit"]["active_element"]["id"])}</code>, sans requête mutante.</li>
+<li>Email invalide : focus sur <code>#{html.escape(evidence["scenarios"]["invalid_email_native"]["active_element"]["id"])}</code>, message natif et exemple visible.</li>
 <li>Extension interdite : message précis donnant les extensions autorisées, sans POST.</li>
 <li>Cinq fichiers : réponse serveur non observée car la tentative POST a été bloquée.</li>
 <li>Le champ fichier référence toujours <code>#edit-document--description</code>, cible absente.</li>
 </ul>
 <h2>Cohérence multipage — 11.3.2</h2>
-{table_html(['Contrôle répété','Pages','Candidats DOM','Libellé visible observé','Portée'], comparison_rows)}
+{table_html(["Contrôle répété", "Pages", "Candidats DOM", "Libellé visible observé", "Portée"], comparison_rows)}
 <p>La comparaison couvre les neuf pages et établit seulement une correspondance exacte des candidats DOM. La visibilité dans chaque état, la notion de fonction identique et la conformité RGAA restent à qualifier humainement.</p>
 <h2>Requalification nécessaire — 11.10.2</h2>
-<div class="notice"><p><strong>Décision publiée :</strong> <code>C_CONFIRMEE</code><br><strong>Complément :</strong> <span class="badge fail">Non conforme étayé</span></p><p>{html.escape(doc['theme_requalification']['observation'])}</p></div>
+<div class="notice"><p><strong>Décision publiée :</strong> <code>C_CONFIRMEE</code><br><strong>Complément :</strong> <span class="badge fail">Non conforme étayé</span></p><p>{html.escape(doc["theme_requalification"]["observation"])}</p></div>
 <p><a href="TICKET-CANDIDAT-RGAA-11.10.2.html">Ouvrir le ticket candidat RGAA 11.10.2</a>.</p>
 <h2>Requalification nécessaire — 7.5.2</h2>
-<div class="notice"><p><strong>Décision publiée :</strong> <code>NA_CONFIRMEE</code><br><strong>Complément :</strong> <span class="badge fail">Non conforme étayé</span></p><p>{html.escape(doc['adjacent_decision']['observation'])}</p></div>
+<div class="notice"><p><strong>Décision publiée :</strong> <code>NA_CONFIRMEE</code><br><strong>Complément :</strong> <span class="badge fail">Non conforme étayé</span></p><p>{html.escape(doc["adjacent_decision"]["observation"])}</p></div>
 <p><a href="TICKET-CANDIDAT-RGAA-7.5.2.html">Ouvrir le ticket candidat RGAA 7.5.2</a>.</p>
 <h2>Matrice probatoire des 34 tests</h2>
-{table_html(['Critère','Test','Publié','Base probatoire','Complément','Justification'], matrix_rows)}
+{table_html(["Critère", "Test", "Publié", "Base probatoire", "Complément", "Justification"], matrix_rows)}
 <h2>Validations encore requises</h2>
 <ol><li>Réponse serveur réelle du scénario cinq fichiers en recette isolée.</li><li>Revue humaine des intitulés, placements responsive, regroupements, boutons et listes de choix.</li><li>Confirmation métier pour 11.12.1 et 11.12.2.</li><li>Test NVDA + Firefox et/ou VoiceOver + Safari des annonces dynamiques.</li><li>Réconciliation et signature du registre de revue manuelle.</li></ol>
 <h2>Captures</h2><div class="evidence-grid">{screenshot_figures}</div>
@@ -873,16 +994,16 @@ def render_candidate_markdown(doc: dict[str, Any]) -> str:
 - **Page :** P06 — {P06_URL}
 - **Critère / test :** RGAA 4.1.2 — 7.5 / 7.5.2
 - **Statut :** NON_CONFORME_ETAYE dans le complément ; décision publiée à requalifier
-- **Décision publiée :** {adjacent['published_status']}
+- **Décision publiée :** {adjacent["published_status"]}
 - **Sévérité proposée :** Majeur
 
 ## Observation
 
-{adjacent['observation']}
+{adjacent["observation"]}
 
 Message observé :
 
-> {adjacent['message']}
+> {adjacent["message"]}
 
 Le même type de divergence est présent dans la preuve serveur archivée : conteneur d’erreur avec `aria-live="polite"`, sans `role="alert"` et sans `aria-atomic="true"`, alors que la matrice publiée indique qu’aucun message de statut n’a été produit.
 
@@ -921,30 +1042,32 @@ La région doit exister avant l’injection si le composant ou la pile de techno
 ## Preuves
 
 - [JSON du retest sûr](preuves/P06-RETEST-SAFE.json)
-- [Capture extension interdite]({adjacent['screenshot']})
+- [Capture extension interdite]({adjacent["screenshot"]})
 - [Copie intègre de l’état serveur archivé](preuves/P06-ETAT-SERVEUR-ARCHIVE.json)
 """
 
 
 def render_candidate_html(doc: dict[str, Any]) -> str:
     adjacent = doc["adjacent_decision"]
-    return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ticket candidat RGAA 7.5.2 — P06</title><style>{CSS}</style></head><body><a class="skip" href="#contenu">Aller au contenu</a><header><div class="container"><p><a href="INDEX-P06-FORMULAIRES.html">← Complément P06</a></p><h1>Ticket candidat RGAA 7.5.2 — Message d’erreur dynamique</h1><p><span class="badge fail">Non conforme étayé — décision publiée à requalifier</span></p></div></header><main id="contenu" class="container"><h2>Observation</h2><p>{html.escape(adjacent['observation'])}</p><blockquote>{html.escape(adjacent['message'])}</blockquote><h2>Impact</h2><p>Le message peut ne pas être restitué avec la priorité et l’intégrité attendues lorsque le focus reste ailleurs. Une personne utilisant un lecteur d’écran peut ne pas percevoir immédiatement l’erreur ni la correction proposée.</p><h2>Correction attendue</h2><pre><code>{html.escape('<div class="fr-alert fr-alert--error" role="alert">\n  <p>…message d’erreur précis…</p>\n</div>')}</code></pre><p>Alternative explicite : <code>aria-live="assertive"</code> avec <code>aria-atomic="true"</code>.</p><h2>Vérification</h2><ol><li>Rejouer l’extension interdite.</li><li>Vérifier le rôle ou les attributs live dans le DOM rendu.</li><li>Vérifier la visibilité et l’association au champ.</li><li>Tester NVDA + Firefox et VoiceOver + Safari.</li><li>Rejouer le retour serveur de cinq fichiers en recette isolée.</li></ol><h2>Preuves</h2><ul><li><a href="preuves/P06-RETEST-SAFE.json">JSON du retest sûr</a></li><li><a href="{html.escape(adjacent['screenshot'], quote=True)}">Capture extension interdite</a></li><li><a href="preuves/P06-ETAT-SERVEUR-ARCHIVE.json">État serveur archivé</a></li><li><a href="TICKET-CANDIDAT-RGAA-7.5.2.md">Version Markdown</a></li></ul></main><footer><div class="container"><p>P06 — ticket complémentaire à arbitrer.</p></div></footer></body></html>"""
+    return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ticket candidat RGAA 7.5.2 — P06</title><style>{CSS}</style></head><body><a class="skip" href="#contenu">Aller au contenu</a><header><div class="container"><p><a href="INDEX-P06-FORMULAIRES.html">← Complément P06</a></p><h1>Ticket candidat RGAA 7.5.2 — Message d’erreur dynamique</h1><p><span class="badge fail">Non conforme étayé — décision publiée à requalifier</span></p></div></header><main id="contenu" class="container"><h2>Observation</h2><p>{html.escape(adjacent["observation"])}</p><blockquote>{html.escape(adjacent["message"])}</blockquote><h2>Impact</h2><p>Le message peut ne pas être restitué avec la priorité et l’intégrité attendues lorsque le focus reste ailleurs. Une personne utilisant un lecteur d’écran peut ne pas percevoir immédiatement l’erreur ni la correction proposée.</p><h2>Correction attendue</h2><pre><code>{html.escape(EXPECTED_ERROR_MARKUP)}</code></pre><p>Alternative explicite : <code>aria-live="assertive"</code> avec <code>aria-atomic="true"</code>.</p><h2>Vérification</h2><ol><li>Rejouer l’extension interdite.</li><li>Vérifier le rôle ou les attributs live dans le DOM rendu.</li><li>Vérifier la visibilité et l’association au champ.</li><li>Tester NVDA + Firefox et VoiceOver + Safari.</li><li>Rejouer le retour serveur de cinq fichiers en recette isolée.</li></ol><h2>Preuves</h2><ul><li><a href="preuves/P06-RETEST-SAFE.json">JSON du retest sûr</a></li><li><a href="{html.escape(adjacent["screenshot"], quote=True)}">Capture extension interdite</a></li><li><a href="preuves/P06-ETAT-SERVEUR-ARCHIVE.json">État serveur archivé</a></li><li><a href="TICKET-CANDIDAT-RGAA-7.5.2.md">Version Markdown</a></li></ul></main><footer><div class="container"><p>P06 — ticket complémentaire à arbitrer.</p></div></footer></body></html>"""
 
 
 def render_required_candidate_markdown(doc: dict[str, Any]) -> str:
     decision = doc["theme_requalification"]
-    affected = ", ".join(f"`#{control_id}`" for control_id in decision["affected_control_ids"])
+    affected = ", ".join(
+        f"`#{control_id}`" for control_id in decision["affected_control_ids"]
+    )
     return f"""# Ticket candidat RGAA 11.10.2 — Indication des champs obligatoires
 
 - **Page :** P06 — Formulaire Écrivez-nous
 - **Test :** [RGAA 4.1.2 — 11.10.2]({OFFICIAL_RGAA}#11.10.2)
-- **Décision publiée :** `{decision['published_status']}`
+- **Décision publiée :** `{decision["published_status"]}`
 - **Conclusion étayée :** `NON_CONFORME_ETAYE`
 - **État :** décision publiée à requalifier
 
 ## Observation
 
-{decision['observation']}
+{decision["observation"]}
 
 Champs relevés : {affected}.
 
@@ -972,15 +1095,20 @@ Une autre solution est un passage de texte visible associé au champ avec `aria-
 ## Preuves
 
 - [JSON du retest sûr](preuves/P06-RETEST-SAFE.json)
-- [Capture du formulaire]({decision['screenshot']})
+- [Capture du formulaire]({decision["screenshot"]})
 """
 
 
 def render_required_candidate_html(doc: dict[str, Any]) -> str:
     decision = doc["theme_requalification"]
-    affected = ", ".join(f"<code>#{html.escape(control_id)}</code>" for control_id in decision["affected_control_ids"])
-    correction = html.escape('<label for="edit-nom">Nom <span>(obligatoire)</span></label>')
-    return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ticket candidat RGAA 11.10.2 — P06</title><style>{CSS}</style></head><body><a class="skip" href="#contenu">Aller au contenu</a><header><div class="container"><p><a href="INDEX-P06-FORMULAIRES.html">← Complément P06</a></p><h1>Ticket candidat RGAA 11.10.2 — Champs obligatoires</h1><p><span class="badge fail">Non conforme étayé — décision publiée à requalifier</span></p></div></header><main id="contenu" class="container"><h2>Observation</h2><p>{html.escape(decision['observation'])}</p><p>Champs relevés : {affected}.</p><h2>Impact</h2><p>L’utilisateur doit mémoriser l’instruction globale puis déduire le statut de chaque champ ; aucune indication associée champ par champ ne satisfait le test 11.10.2.</p><h2>Correction attendue</h2><pre><code>{correction}</code></pre><p>Une autre solution est un passage visible associé avec <code>aria-labelledby</code> ou <code>aria-describedby</code>. L’attribut <code>required</code> seul répond à 11.10.1, pas à 11.10.2.</p><h2>Vérification</h2><ol><li>Inventorier tous les champs obligatoires dans chaque état.</li><li>Vérifier une indication visible dans l’étiquette ou un passage associé.</li><li>Contrôler l’association programmatiquement et en responsive.</li><li>Rejouer sans soumission serveur.</li></ol><h2>Preuves</h2><ul><li><a href="preuves/P06-RETEST-SAFE.json">JSON du retest sûr</a></li><li><a href="{html.escape(decision['screenshot'], quote=True)}">Capture du formulaire</a></li><li><a href="TICKET-CANDIDAT-RGAA-11.10.2.md">Version Markdown</a></li></ul></main><footer><div class="container"><p>P06 — ticket complémentaire à arbitrer.</p></div></footer></body></html>"""
+    affected = ", ".join(
+        f"<code>#{html.escape(control_id)}</code>"
+        for control_id in decision["affected_control_ids"]
+    )
+    correction = html.escape(
+        '<label for="edit-nom">Nom <span>(obligatoire)</span></label>'
+    )
+    return f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ticket candidat RGAA 11.10.2 — P06</title><style>{CSS}</style></head><body><a class="skip" href="#contenu">Aller au contenu</a><header><div class="container"><p><a href="INDEX-P06-FORMULAIRES.html">← Complément P06</a></p><h1>Ticket candidat RGAA 11.10.2 — Champs obligatoires</h1><p><span class="badge fail">Non conforme étayé — décision publiée à requalifier</span></p></div></header><main id="contenu" class="container"><h2>Observation</h2><p>{html.escape(decision["observation"])}</p><p>Champs relevés : {affected}.</p><h2>Impact</h2><p>L’utilisateur doit mémoriser l’instruction globale puis déduire le statut de chaque champ ; aucune indication associée champ par champ ne satisfait le test 11.10.2.</p><h2>Correction attendue</h2><pre><code>{correction}</code></pre><p>Une autre solution est un passage visible associé avec <code>aria-labelledby</code> ou <code>aria-describedby</code>. L’attribut <code>required</code> seul répond à 11.10.1, pas à 11.10.2.</p><h2>Vérification</h2><ol><li>Inventorier tous les champs obligatoires dans chaque état.</li><li>Vérifier une indication visible dans l’étiquette ou un passage associé.</li><li>Contrôler l’association programmatiquement et en responsive.</li><li>Rejouer sans soumission serveur.</li></ol><h2>Preuves</h2><ul><li><a href="preuves/P06-RETEST-SAFE.json">JSON du retest sûr</a></li><li><a href="{html.escape(decision["screenshot"], quote=True)}">Capture du formulaire</a></li><li><a href="TICKET-CANDIDAT-RGAA-11.10.2.md">Version Markdown</a></li></ul></main><footer><div class="container"><p>P06 — ticket complémentaire à arbitrer.</p></div></footer></body></html>"""
 
 
 class StructureParser(HTMLParser):
@@ -1067,7 +1195,9 @@ def _run_locked() -> int:
     company_copy = proof_root / "P06-SOCIETE-OPTIONNEL-ARCHIVE.json"
 
     payloads: dict[Path, bytes] = {
-        json_path: (json.dumps(doc, ensure_ascii=False, indent=2) + "\n").encode("utf-8"),
+        json_path: (json.dumps(doc, ensure_ascii=False, indent=2) + "\n").encode(
+            "utf-8"
+        ),
         md_path: render_markdown(doc, evidence).encode("utf-8"),
         ticket_md: render_candidate_markdown(doc).encode("utf-8"),
         required_ticket_md: render_required_candidate_markdown(doc).encode("utf-8"),
@@ -1089,7 +1219,9 @@ def _run_locked() -> int:
         )
     ]
     changed_paths = [
-        path for path, payload in payloads.items() if not path.is_file() or path.read_bytes() != payload
+        path
+        for path, payload in payloads.items()
+        if not path.is_file() or path.read_bytes() != payload
     ] + [path for path in legacy_screenshots if path.exists()]
     proof_root.mkdir(parents=True, exist_ok=True)
     for path, payload in payloads.items():
@@ -1124,7 +1256,9 @@ def _run_locked() -> int:
                 "adjacent_7_5_2": doc["adjacent_decision"]["status"],
                 "client_transmission_ready": doc["client_transmission_ready"],
                 "package_validation_invalidated": True,
-                "changed_outputs": [str(path.relative_to(ROOT)) for path in changed_paths],
+                "changed_outputs": [
+                    str(path.relative_to(ROOT)) for path in changed_paths
+                ],
                 "outputs": [str(path.relative_to(ROOT)) for path in output_paths],
             },
             ensure_ascii=False,

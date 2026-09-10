@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "dsfr-agentic",
+  "owner": {
+    "name": "Équipe DSFR Agentic"
+  },
+  "plugins": [
+    {
+      "name": "dsfr-agentic-kit",
+      "description": "Skills DSFR et RGAA/WCAG pour générer, auditer et corriger des interfaces publiques, avec des preuves bornées.",
+      "source": {
+        "source": "github",
+        "repo": "alexandra-guiderdoni/dsfr-agentic-kit",
+        "ref": "main"
+      },
+      "strict": false,
+      "skills": [
+        "./.claude/skills"
+      ]
+    }
+  ]
+}

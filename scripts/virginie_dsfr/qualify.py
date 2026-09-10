@@ -8,13 +8,17 @@ from __future__ import annotations
 
 import re
 
-from .collect import Collection, Group, VERSION_COMPONENT
+from .collect import VERSION_COMPONENT, Collection, Group, contradiction_buckets
 
 DECISIONS = ("ECART_CONFIRME", "AUCUN_ECART_OBSERVE", "NON_APPLICABLE")
 PENDING = {"A_CONFIRMER", "REFERENCE_INDISPONIBLE", "CONTRADICTION"}
 HEADING_RE = re.compile(r"^## (\S+)\s*$", re.MULTILINE)
-CHECKED_RE = re.compile(r"^- \[[xX]\] (ECART_CONFIRME|AUCUN_ECART_OBSERVE|NON_APPLICABLE)\s*$", re.MULTILINE)
-COMMENT_RE = re.compile(r"^Commentaire de revue :\s*\n(.*?)(?=\n## |\Z)", re.MULTILINE | re.DOTALL)
+CHECKED_RE = re.compile(
+    r"^- \[[xX]\] (ECART_CONFIRME|AUCUN_ECART_OBSERVE|NON_APPLICABLE)\s*$", re.MULTILINE
+)
+COMMENT_RE = re.compile(
+    r"^Commentaire de revue :\s*\n(.*?)(?=\n## |\Z)", re.MULTILINE | re.DOTALL
+)
 
 
 class ReviewSheetError(ValueError):
@@ -22,15 +26,28 @@ class ReviewSheetError(ValueError):
 
 
 def pending_groups(collection: Collection) -> list[Group]:
-    return [g for g in collection.groups.values()
-            if g.component != VERSION_COMPONENT and g.final_status is None and g.status in PENDING]
+    return [
+        g
+        for g in collection.groups.values()
+        if g.component != VERSION_COMPONENT
+        and g.final_status is None
+        and g.status in PENDING
+    ]
 
 
 def detect_contradictions(collection: Collection) -> list[Group]:
-    return [g for g in collection.groups.values() if g.final_status is None and g.status == "CONTRADICTION"]
+    return [
+        g
+        for g in collection.groups.values()
+        if g.final_status is None and g.status == "CONTRADICTION"
+    ]
 
 
-def render_review_sheet(collection: Collection, groups: list[Group], hints: dict[str, list[str]] | None = None) -> str:
+def render_review_sheet(
+    collection: Collection,
+    groups: list[Group],
+    hints: dict[str, list[str]] | None = None,
+) -> str:
     lines = [
         "# Revue des signaux DSFR à qualifier",
         "",
@@ -42,7 +59,9 @@ def render_review_sheet(collection: Collection, groups: list[Group], hints: dict
         "",
     ]
     for group in sorted(groups, key=lambda g: (g.component, g.rule_id, g.selector)):
-        statuses = ", ".join(f"{status} x{count}" for status, count in sorted(group.statuses.items()))
+        statuses = ", ".join(
+            f"{status} x{count}" for status, count in sorted(group.statuses.items())
+        )
         lines += [
             f"## {group.group_id}",
             "",
@@ -59,12 +78,29 @@ def render_review_sheet(collection: Collection, groups: list[Group], hints: dict
             *[f"  - {condition}" for condition in group.failed_conditions],
         ]
         if group.comments:
-            lines += ["- Commentaires déjà posés dans les archives :", *[f"  - {comment}" for comment in group.comments]]
+            lines += [
+                "- Commentaires déjà posés dans les archives :",
+                *[f"  - {comment}" for comment in group.comments],
+            ]
         for hint in (hints or {}).get(group.group_id, []):
             lines.append(f"- Repère : {hint}")
         lines += [
             f"- Source de la règle : {group.source}",
             "",
+        ]
+        if group.status == "CONTRADICTION":
+            lines += [
+                "Contradiction regroupée par page, état et variante DOM :",
+                "",
+                "| Page | État | Variante DOM | Statuts | Occurrences |",
+                "|---|---|---|---|---:|",
+            ]
+            lines += [
+                f"| {bucket['page']} | {bucket['state']} | `{bucket['dom_variant']}` | {', '.join(f'{status} x{count}' for status, count in sorted(bucket['statuses'].items()))} | {len(bucket['occurrences'])} |"
+                for bucket in contradiction_buckets(group)
+            ]
+            lines.append("")
+        lines += [
             "HTML observé (DOM rendu) :",
             "",
             "```html",
@@ -93,10 +129,12 @@ def parse_review_sheet(text: str) -> dict[str, str]:
     overrides: dict[str, str] = {}
     for index, heading in enumerate(headings):
         end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
-        section = text[heading.end():end]
+        section = text[heading.end() : end]
         checked = CHECKED_RE.findall(section)
         if len(checked) > 1:
-            raise ReviewSheetError(f"{heading.group(1)} : plusieurs cases cochées ({', '.join(checked)})")
+            raise ReviewSheetError(
+                f"{heading.group(1)} : plusieurs cases cochées ({', '.join(checked)})"
+            )
         if checked:
             overrides[heading.group(1)] = checked[0]
     return overrides
@@ -107,13 +145,17 @@ def parse_review_comments(text: str) -> dict[str, str]:
     comments: dict[str, str] = {}
     for index, heading in enumerate(headings):
         end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
-        match = COMMENT_RE.search(text[heading.end():end])
+        match = COMMENT_RE.search(text[heading.end() : end])
         if match and match.group(1).strip():
             comments[heading.group(1)] = match.group(1).strip()
     return comments
 
 
-def apply_overrides(collection: Collection, overrides: dict[str, str], comments: dict[str, str] | None = None) -> None:
+def apply_overrides(
+    collection: Collection,
+    overrides: dict[str, str],
+    comments: dict[str, str] | None = None,
+) -> None:
     for group_id, status in overrides.items():
         if status not in DECISIONS:
             raise ReviewSheetError(f"{group_id} : décision inconnue {status}")

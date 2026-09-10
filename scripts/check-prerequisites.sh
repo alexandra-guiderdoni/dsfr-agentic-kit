@@ -113,6 +113,13 @@ if [[ -n "$dsfr_version" ]]; then
   fi
 fi
 
+# rsync : démo vitrine DSFR ; le reste du kit n'en dépend pas.
+if command -v rsync >/dev/null 2>&1; then
+  optionnel_ok "rsync présent (démo vitrine)"
+else
+  optionnel_absent "rsync absent : requis par scripts/demo-dsfr-vitrine.sh (brew install rsync ou apt-get install rsync)"
+fi
+
 # git : contrôles Git en avertissement sans lui.
 if command -v git >/dev/null 2>&1; then
   optionnel_ok "git présent"

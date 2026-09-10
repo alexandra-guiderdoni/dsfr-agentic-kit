@@ -1,5 +1,18 @@
 # Journal des versions
 
+## Durabilité d’installation et distribution
+
+- correction de `generate-p06-form-annex.py` pour restaurer la compatibilité
+  Python 3.10 annoncée par le manifeste ;
+- ajout du bootstrap `scripts/amorcage-session-cloud.sh`, qui reconstruit une
+  session cloud depuis les versions du manifeste et refuse les clones salis ;
+- ajout du catalogue `.claude-plugin/marketplace.json` et du builder
+  `scripts/build-plugin.sh`, avec parité des skills, validation des renvois et
+  provenance du commit dans l’archive ;
+- ajout d’un `SKILL.md` canonique à `a11y-shared-references` ;
+- suppression de `dist/` des sorties ignorées du kit, puisque la frontière
+  standalone interdit cette surface dans le dépôt.
+
 ## Prototype standalone
 
 - réunion des capacités DSFR et RGAA/WCAG dans un seul kit consommateur ;
@@ -70,7 +83,7 @@ standalone`, 134 contrôles au vert et aucun échec.
   version observée et de la version cible, identifiants exclus des classes
   attendues ;
 - rendu HTML sous thème DSFR et Markdown, manifeste, empreintes, carte
-  idempotente dans l'index général des livrables, contrôle des classes émises
+  idempotente dans l’index général des livrables, contrôle des classes émises
   contre la version cible ;
 - tests `scripts/tests/check-virginie-dsfr-composants.sh`, 18 cas sur fixture
   synthétique. Script dédié d'abord ; passage dans le builder différé.

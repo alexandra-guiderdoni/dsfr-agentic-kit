@@ -35,6 +35,43 @@ bash scripts/demo-dsfr-assembled-page.sh --quiet
 Le diagnostic ne réalise aucune installation. La démonstration écrit sa page
 dans un dossier temporaire et laisse le kit intact.
 
+## Persister une session cloud et découvrir les skills
+
+Le fichier `scripts/amorcage-session-cloud.sh` est la procédure de
+reconstruction persistante. Conserver une copie de ce fichier dans le Projet
+Cowork, qui survit à la session, puis l’exécuter au début d’une nouvelle
+session :
+
+```bash
+bash amorcage-session-cloud.sh
+```
+
+Le script clone ou met à jour le kit en `--ff-only`, lit `python_minimum` et
+`dsfr_version` dans le manifeste, prépare les dépendances et le cache DSFR,
+puis rejoue les contrôles et les démonstrations. `--no-check` prépare seulement
+l’environnement ; `--update` refuse une mise à jour si le clone est modifié.
+Le script rend la session reconstructible : il ne rend pas le conteneur
+permanent.
+
+Pour une découverte native des skills dans Claude/Cowork, le kit fournit le
+catalogue `.claude-plugin/marketplace.json`. Après publication du dépôt :
+
+```text
+/plugin marketplace add alexandra-guiderdoni/dsfr-agentic-kit
+/plugin install dsfr-agentic-kit@dsfr-agentic
+```
+
+Le marketplace expose les skills du kit, pas les scripts de contrôle, le
+profil DSFR ni le cache officiel. Conserver le clone pour les vérifications
+complètes. Pour produire une archive plugin locale rattachée à un commit :
+
+```bash
+bash scripts/build-plugin.sh --version 0.1.0
+```
+
+L’archive est écrite hors du dépôt et le build vérifie la parité des 18 skills,
+les `SKILL.md`, les renvois relatifs et la provenance Git.
+
 Lire ensuite :
 
 - [l’accueil destiné à l’agent](DEMARRAGE-AGENT.md) ;
@@ -116,7 +153,9 @@ Les `[WARN]` et `[SKIP]` explicitent une preuve non exercée. Ils ne doivent pas
 - Python 3.10 minimum, 3.12 recommandé ;
 - PyYAML et `jsonschema`, ou `uv` capable de les fournir ;
 - Node 20 minimum, Node 22 recommandé, avec `npm` et `npx` ;
-- Playwright facultatif pour les contrôles navigateur.
+- Playwright facultatif pour les contrôles navigateur ;
+- `rsync` requis pour la démo vitrine (`brew install rsync` ou
+  `apt-get install rsync`).
 
 Le paquet officiel DSFR peut être placé dans
 `~/.cache/dsfr-official-cache`. En mode hors ligne, son absence produit un saut
