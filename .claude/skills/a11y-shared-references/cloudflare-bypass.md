@@ -86,7 +86,7 @@ Quand un challenge Cloudflare est detecte, **inverser l'ordre des niveaux** :
 Quand un contournement Cloudflare est active, le rapport doit mentionner :
 
 ```
-Phase 1 : Audit WCAG ............... {score}/100 — {n} violations
+Phase 1 : Audit WCAG ............... {n} violation(s) détectée(s)
   Outil : axe-core CDN 4.10.2 via chrome-devtools (contournement Cloudflare)
   Note : Site protege par Cloudflare — niveaux 1 (accesslint) et 3 (CLI) indisponibles
 ```

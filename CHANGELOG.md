@@ -16,6 +16,8 @@
   écrites dans le clone du kit ;
 - rapports détaillés RGAA/DSFR produits par le builder commun, sans claim de
   conformité globale.
+- suppression du reliquat de score global dans la procédure de contournement
+  Cloudflare.
 
 ## Nettoyage du harnais et portabilité
 
