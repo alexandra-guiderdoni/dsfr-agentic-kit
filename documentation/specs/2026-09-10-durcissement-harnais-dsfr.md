@@ -14,7 +14,8 @@ canonique, `--rules` ne pilote pas entièrement la fraîcheur, et un refus rése
 peut être confondu avec un échec d’audit.
 
 Le kit contient aussi des recettes propres au portail Douane, alors que son
-contrat doit rester portable et indépendant de Loriq.
+contrat doit rester portable et indépendant de toute couche d’environnement
+hôte.
 
 ## Solution
 
@@ -43,7 +44,8 @@ immuable et l’empreinte attendue du kit.
 
 - Le kit reste générique et portable.
 - Les recettes Douane sortent du kit et rejoignent `dsfr-agentic-douane`.
-- Loriq, `.loriq/`, `CLAUDE.md` et les hooks Loriq sont hors périmètre du kit.
+- Les fichiers de configuration, instructions et hooks propres à l’hôte sont
+  hors périmètre du kit.
 - Chaque campagne consomme un commit précis du kit.
 - `kit.lock` est la source de vérité du projet consommateur.
 - Le kit est récupéré dans un cache de travail ; il n’est pas copié dans le
@@ -75,7 +77,7 @@ immuable et l’empreinte attendue du kit.
 - Audit frais du portail Douane.
 - Création effective du dépôt GitHub privé `dsfr-agentic-douane`.
 - Stockage ou transfert des preuves brutes.
-- Installation d’un plugin Claude ou ajout d’une intégration Loriq.
+- Installation d’un plugin Claude ou ajout d’une intégration propre à l’hôte.
 - Passage en HTTPS par défaut, gestion de `rsync` et vérification Python 3.10/3.11 ;
   ces sujets restent des améliorations ultérieures.
 

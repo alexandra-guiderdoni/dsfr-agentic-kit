@@ -5,13 +5,13 @@ tests du générateur DSFR et expose son résultat dans le bilan final.
 
 **Bloqué par :** Aucun — peut commencer immédiatement.
 
-**Statut :** ready-for-agent
+**Statut :** terminé
 
-- [ ] La validation canonique lance les tests produit du générateur.
-- [ ] Un échec du générateur fait échouer la validation globale.
-- [ ] Le nombre de tests exécutés est reporté sans double comptage.
-- [ ] Le contrôle reste vert sur l’état de référence `f200af9`.
-- [ ] Un scénario négatif prouve qu’un test du générateur en échec est visible.
+- [x] La validation canonique lance les tests produit du générateur.
+- [x] Un échec du générateur fait échouer la validation globale.
+- [x] Le nombre de tests exécutés est reporté sans double comptage.
+- [x] Le contrôle reste vert sur l’état de référence `f200af9`.
+- [x] Un scénario négatif prouve qu’un test du générateur en échec est visible.
 
 **Preuve attendue :** sortie du contrôle canonique et test automatisé du chemin
-d’échec.
+d’échec (`check-validation-produit-en-echec.sh`).

@@ -14,7 +14,8 @@ sous-module.
 - [ ] Le contrat décrit la vérification du commit et de l’empreinte.
 - [ ] Le contrat prévoit un cache de travail séparé du dépôt consommateur.
 - [ ] Aucun exemple ne copie le kit dans le projet consommateur.
-- [ ] Les exemples restent indépendants de Loriq et de tout hostname Douane.
+- [ ] Les exemples restent indépendants de toute couche hôte et de tout
+  hostname Douane.
 
 **Preuve attendue :** exemple de consommation reproductible sur un commit connu,
 avec échec explicite en cas d’empreinte divergente.

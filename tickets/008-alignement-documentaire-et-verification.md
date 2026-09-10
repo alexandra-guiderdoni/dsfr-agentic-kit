@@ -10,7 +10,7 @@ recette séparée restent cohérents.
 
 - [ ] Les exemples ne pointent jamais `PROJECT_ROOT` vers le kit.
 - [ ] Les statuts `BLOQUE_INFRA`, `NO-GO` et les modes d’archives sont alignés.
-- [ ] La règle de séparation kit, recette Douane et Loriq est documentée.
+- [ ] La règle de séparation kit, recette Douane et couche hôte est documentée.
 - [ ] Les affirmations de version Python sont datées et prouvées ou marquées
   comme non exercées.
 - [ ] Le contrôle complet termine au vert sur un scénario nominal.

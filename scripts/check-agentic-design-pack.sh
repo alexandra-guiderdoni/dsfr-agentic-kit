@@ -3,7 +3,34 @@ set -euo pipefail
 export PYTHONDONTWRITEBYTECODE=1
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE="${1:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+STOP_AFTER_PRODUCT_TESTS=0
+WORKSPACE_ARG=""
+
+usage() {
+  printf 'Usage : %s [WORKSPACE] [--stop-after-product-tests]\n' "${BASH_SOURCE[0]}"
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --stop-after-product-tests)
+      STOP_AFTER_PRODUCT_TESTS=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      if [[ -n "$WORKSPACE_ARG" ]]; then
+        printf '[FAIL] argument inattendu : %s\n' "$arg" >&2
+        usage >&2
+        exit 2
+      fi
+      WORKSPACE_ARG="$arg"
+      ;;
+  esac
+done
+
+WORKSPACE="${WORKSPACE_ARG:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 WORKSPACE="$(cd "$WORKSPACE" && pwd)"
 MANIFEST="$WORKSPACE/config/agentic-design-packages.yaml"
 
@@ -216,6 +243,15 @@ for rel in ${tests[@]+"${tests[@]}"}; do
 done
 
 clean_runtime_artifacts
+
+if (( STOP_AFTER_PRODUCT_TESTS )); then
+  if (( failures > 0 )); then
+    printf '[FAIL] tests produit : %d échec(s)\n' "$failures" >&2
+    exit 1
+  fi
+  printf '[OK] tests produit\n'
+  exit 0
+fi
 
 dsfr_version="$(sed -n 's/^package_version_ref: *"\{0,1\}\([0-9.]*\)"\{0,1\}.*/\1/p' "$WORKSPACE/design-systems/dsfr/tokens.yaml" | head -1)"
 cache_root="${DSFR_OFFICIAL_CACHE_DIR:-$HOME/.cache/dsfr-official-cache}"

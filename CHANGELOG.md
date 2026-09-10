@@ -1,5 +1,10 @@
 # Journal des versions
 
+## Validation canonique du générateur
+
+- intégration du contrôle du générateur DSFR à la validation produit canonique,
+  avec propagation des échecs et scénario négatif vérifiant leur visibilité ;
+
 ## Durabilité d’installation et distribution
 
 - correction de `generate-p06-form-annex.py` pour restaurer la compatibilité
