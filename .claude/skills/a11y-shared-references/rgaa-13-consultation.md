@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 13 - Consultation
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 12 critères et 21 tests RGAA. Décision opérationnelle : Séparer temps, fenêtres, documents, contenus cryptiques, flashs, mouvements, orientation, gestes, pointage et capteurs ; intégrer `rgaa-13-11` comme module spécialisé.
 
@@ -22,7 +22,6 @@ Priorité d’intégration : P1 - critère 13.11 en P0, documents et gestes en r
 | `ADOCX` | `accessible-docx` | Production DOCX structuré et version documentaire accessible possible. |
 | `APPTX` | `accessible-pptx` | Production PPTX : ordre de lecture, langue, alternatives, tableaux et contrastes. |
 | `DSFRC` | `dsfr-components` | Prévention DSFR, modèles de composants et source anti-faux-positif. |
-| `OPQ` | `opquast` | Appui qualité web et priorisation ; non normatif RGAA. |
 
 ## Sources externes, licences et réemploi
 

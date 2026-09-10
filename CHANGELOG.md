@@ -1,5 +1,22 @@
 # Journal des versions
 
+## Fiabilisation des audits DSFR et RGAA
+
+- correction du markup généré des groupes de boutons DSFR en `ul/li`, avec
+  contrôle croisé entre le générateur, les exemples et l’évaluateur ;
+- ajout des portées de version explicites aux règles DSFR et distinction entre
+  écart d’intégration, migration et contrôle non exercé ;
+- embarquement du référentiel RGAA 4.1.2 (106 critères et 258 tests), avec
+  AY11 conservé comme collecteur optionnel ;
+- ajout d’un scan axe-core direct via Playwright, de son mapping RGAA borné et
+  d’une trace des violations non mappées ;
+- correction des faux négatifs sur les liens vides et les champs étiquetés par
+  `title`, et généralisation de l’heuristique de changement de langue ;
+- blocage explicite des refus réseau (`BLOQUÉ-INFRA`) et refus des sorties
+  écrites dans le clone du kit ;
+- rapports détaillés RGAA/DSFR produits par le builder commun, sans claim de
+  conformité globale.
+
 ## Nettoyage du harnais et portabilité
 
 - alignement du routage et de la qualification sur les skills RGAA/DSFR v2,

@@ -1476,7 +1476,7 @@ COMPONENT_EXPECTATIONS: list[tuple[str, list[str], list[str]]] = [
     ("component-expect:stepper-title-then-state", ["stepper", "--config", '{"current":2,"total":4,"title":"Titre","next":"Suite"}'], ['Titre\n        <span class="fr-stepper__state">Étape 2 sur 4</span>', "Étape suivante :"]),
     ("component-expect:footer-official-links", ["footer"], ['href="https://info.gouv.fr"', 'href="https://data.gouv.fr"']),
     ("component-expect:logo-operator-responsive", ["logo", "--config", '{"operator_src":"/logo.svg","operator_alt":"Op"}'], ['<img class="fr-responsive-img" style="max-width:3.5rem;" src="/logo.svg" alt="Op">']),
-    ("component-expect:modal-buttons-group", ["modal"], ['<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">', '<dialog id="fr-modal" class="fr-modal" aria-labelledby="fr-modal-title">']),
+    ("component-expect:modal-buttons-group", ["modal"], ['<ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">', '<dialog id="fr-modal" class="fr-modal" aria-labelledby="fr-modal-title">']),
     ("component-expect:tag-color", ["tag", "--config", '{"label":"T","color":"green-menthe"}'], ['class="fr-tag fr-tag--green-menthe"']),
     ("component-expect:input-error-state", ["input", "--config", '{"label":"Nom","error":"Champ requis"}'], ['fr-input-group--error', 'class="fr-input fr-input--error"', 'aria-describedby="nom-error"']),
     ("component-expect:input-valid-state", ["input", "--config", '{"label":"Nom","valid":"Bien reçu"}'], ['fr-input-group--valid', 'class="fr-input fr-input--valid"', 'class="fr-valid-text"']),
@@ -2241,10 +2241,11 @@ def check_tool_cases() -> list[Issue]:
         returncode, output = run_script_check(ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": home_relative})
         if returncode != 0:
             issues.append(Issue("tool_expectation_failed", "icons-expect:tilde-package-dir", output.strip().replace("\n", " ")[-160:]))
-        older = DEFAULT_OFFICIAL_CACHE_DIR / "gouvfr-dsfr-1.14.4" / "package"
+        historical_version = os.environ.get("DSFR_HISTORICAL_OFFICIAL_VERSION", "1.14.4")
+        older = DEFAULT_OFFICIAL_CACHE_DIR / f"gouvfr-dsfr-{historical_version}" / "package"
         if official_package_complete(older):
             returncode, output = run_script_check(ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": str(older)})
-            if returncode != 0 or "1.14.4" not in output or "1.15.2" in output:
+            if returncode != 0 or historical_version not in output or "1.15.2" in output:
                 issues.append(Issue("tool_expectation_missing", "icons-expect:version-of-package-read", output.strip().replace("\n", " ")[:160]))
     return issues
 
@@ -2575,6 +2576,7 @@ def check_common(scope: str, html: str, allow_error_state: bool = False) -> list
     if dups:
         issues.append(Issue("duplicate_id", scope, ", ".join(dups[:10])))
     issues.extend(check_button_types(scope, facts))
+    issues.extend(check_button_group_structure(scope, facts))
     issues.extend(check_external_links(scope, facts))
     issues.extend(check_modal_title_level(scope, facts))
     issues.extend(check_table_structure(scope, facts))
@@ -2604,6 +2606,21 @@ def check_common(scope: str, html: str, allow_error_state: bool = False) -> list
     # recherche vit dans un <form>, pour fonctionner sans JavaScript.
     issues.extend(check_search_bar_contract(scope, facts, require_form=True))
 
+    return issues
+
+
+def check_button_group_structure(scope: str, facts: MarkupFacts) -> list[Issue]:
+    """Vérifie le contrat DSFR 1.15.2 des groupes d'actions."""
+    issues: list[Issue] = []
+    for group in find_elements(facts, class_name="fr-btns-group"):
+        if group.tag != "ul":
+            issues.append(Issue("dsfr_button_group_structure", scope, "fr-btns-group doit être un ul"))
+    for item in find_elements(facts, tag="button") + find_elements(facts, tag="a"):
+        if "fr-btn" not in item.classes and not any(c.startswith("fr-btn--") for c in item.classes):
+            continue
+        parent = parent_element(facts, item)
+        if parent is not None and "fr-btns-group" in parent.classes:
+            issues.append(Issue("dsfr_button_group_structure", scope, "les actions directes doivent être placées dans li"))
     return issues
 
 

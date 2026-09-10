@@ -545,6 +545,7 @@ def block_form(s):
         if reset_label
         else ""
     )
+    reset_item_html = f"<li>{reset_html}</li>" if reset_html else ""
     deferred_script = ""
     if deferred and required_ids:
         deferred_script = gp.generate_deferred_validation_script(form_id, required_ids)
@@ -556,9 +557,9 @@ def block_form(s):
         f"                <h2>{esc(title)}</h2>\n"
         f"            </legend>\n"
         f'            <div class="fr-fieldset__content">{fields_html}\n'
-        f'                <div class="fr-btns-group">\n'
-        f'                    <button class="fr-btn" type="submit">{esc(submit_label)}</button>{reset_html}\n'
-        f"                </div>\n"
+        f'                <ul class="fr-btns-group">\n'
+        f'                    <li><button class="fr-btn" type="submit">{esc(submit_label)}</button></li>{reset_item_html}\n'
+        f"                </ul>\n"
         f"            </div>\n"
         f"        </fieldset>{deferred_script}\n"
         f"    </form>"

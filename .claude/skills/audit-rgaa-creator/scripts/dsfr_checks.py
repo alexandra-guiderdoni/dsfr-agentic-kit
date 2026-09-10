@@ -24,6 +24,8 @@ except ImportError as exc:
         "Playwright est absent de l’environnement Python sélectionné"
     ) from exc
 
+from navigation import goto_checked
+
 
 COMPONENTS: dict[str, tuple[str, str]] = {
     "header": (".fr-header", "components/structure/header.md"),
@@ -72,6 +74,14 @@ COMPONENTS: dict[str, tuple[str, str]] = {
     "share": (".fr-share", "components/feedback-actions/share.md"),
     "franceconnect": (".fr-connect", "components/forms-services/franceconnect.md"),
     "stepper": (".fr-stepper", "components/navigation/stepper.md"),
+    "sidemenu": (".fr-sidemenu", "components/navigation.md"),
+    "pagination": (".fr-pagination", "components/navigation.md"),
+    "password": (".fr-password", "components/forms-services/forms/fields.md"),
+    "range": (".fr-range-group,.fr-range", "components/forms-services/forms/fields.md"),
+    "segmented": (".fr-segmented", "components/forms-services/forms/choices.md"),
+    "tooltip": (".fr-tooltip", "components/feedback-actions/tooltip.md"),
+    "back_to_top": (".fr-back-to-top", "components/navigation/back-to-top.md"),
+    "transcription": (".fr-transcription", "components/content-media/transcription.md"),
     "tag_group": (".fr-tags-group", "components/feedback-actions/tags.md"),
     "artwork": ("svg.fr-artwork", "components/content-media/artwork.md"),
     "responsive_media": (".fr-responsive-img", "components/content-media/images.md"),
@@ -118,6 +128,28 @@ def load_rules() -> dict[str, Any]:
     return load_rules_with_metadata()[0]
 
 
+def version_tuple(value: str) -> tuple[int, ...]:
+    """Normalise une version DSFR pour une comparaison prudente."""
+    match = re.match(r"^(\d+(?:\.\d+){1,2})", str(value).strip())
+    return tuple(int(part) for part in match.group(1).split(".")) if match else ()
+
+
+def requires_migration(
+    rule: dict[str, Any], observed_versions: list[str], target_version: str
+) -> bool:
+    """Ne classe en migration qu’une version observée antérieure à la borne."""
+    minimum = str(rule.get("minimum_version") or target_version)
+    minimum_value = version_tuple(minimum)
+    return bool(
+        rule.get("version_scope") == "TARGET_VERSION"
+        and minimum_value
+        and any(
+            version_tuple(version) and version_tuple(version) < minimum_value
+            for version in observed_versions
+        )
+    )
+
+
 def difference(
     pid: str,
     index: int,
@@ -140,6 +172,7 @@ def difference(
     target_version: str,
     instance: int | None = None,
     observed_html_origin: str = "RENDERED_DOM",
+    status: str = "ECART_OBSERVE",
 ) -> dict[str, Any]:
     return {
         "id": f"{pid}-{rule_id}-{index:03d}",
@@ -148,7 +181,7 @@ def difference(
         "component": component,
         "instance": instance,
         "signal_status": "FAIL_CANDIDATE",
-        "status": "ECART_OBSERVE",
+        "status": status,
         "qualification_status": "A_CONFIRMER",
         "severity": severity,
         "title": title,
@@ -162,7 +195,9 @@ def difference(
         "source": source,
         "reference_target_version": target_version,
         "observed_versions": observed_versions,
-        "assessed_against": "VERSION_CIBLE"
+        "assessed_against": "CONTROLE_EN_ECHEC"
+        if status == "CONTROLE_EN_ECHEC"
+        else "VERSION_CIBLE"
         if target_version in observed_versions
         else (
             "VERSION_INDEPENDANTE"
@@ -210,13 +245,28 @@ async def inspect_page(
     )
     page = await context.new_page()
     console_errors: list[str] = []
+    resource_failures: list[dict[str, str]] = []
     page.on(
         "console",
         lambda msg: (
             console_errors.append(msg.text[:500]) if msg.type == "error" else None
         ),
     )
-    await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
+    page.on(
+        "requestfailed",
+        lambda request: resource_failures.append(
+            {"url": request.url, "error": request.failure or "Échec réseau"}
+        ),
+    )
+    page.on(
+        "response",
+        lambda response: resource_failures.append(
+            {"url": response.url, "error": f"HTTP {response.status}"}
+        )
+        if response.status >= 400
+        else None,
+    )
+    await goto_checked(page, url, timeout)
     await page.wait_for_timeout(wait)
 
     selectors = {name: selector for name, (selector, _source) in COMPONENTS.items()}
@@ -342,7 +392,7 @@ async def inspect_page(
         viewport={"width": 375, "height": 812}, locale="fr-FR"
     )
     mobile_page = await mobile.new_page()
-    await mobile_page.goto(url, wait_until="domcontentloaded", timeout=timeout)
+    await goto_checked(mobile_page, url, timeout)
     await mobile_page.wait_for_timeout(wait)
     await mobile_page.screenshot(path=str(attempt_root / "mobile.png"), full_page=False)
     mobile_metrics = await mobile_page.evaluate(
@@ -366,7 +416,23 @@ async def inspect_page(
     target_version = str(catalog["target_version"])
     raw["detectedVersions"] = observed_versions
     raw["consoleErrors"] = console_errors
+    raw["resourceFailures"] = resource_failures
     raw["mobile"] = mobile_metrics
+    dsfr_resource_failures = [
+        item
+        for item in resource_failures
+        if re.search(r"dsfr|marianne|font|woff|\.css(?:[?#]|$)|\.js(?:[?#]|$)", item["url"], re.I)
+    ]
+    dsfr_console_failure = [
+        message
+        for message in console_errors
+        if re.search(r"failed to load resource|net::err|dsfr|marianne|woff", message, re.I)
+    ]
+    resource_failure = bool(dsfr_resource_failures or dsfr_console_failure)
+    resource_failure_detail = json.dumps(
+        {"requests": dsfr_resource_failures, "console": dsfr_console_failure},
+        ensure_ascii=False,
+    )
 
     differences: list[dict[str, Any]] = []
     state_component_rules: dict[str, set[str]] = {}
@@ -388,6 +454,7 @@ async def inspect_page(
         failed_conditions: list[str] | None = None,
         instance: int | None = None,
         observed_html_origin: str = "RENDERED_DOM",
+        status: str = "ECART_OBSERVE",
     ) -> None:
         differences.append(
             difference(
@@ -412,6 +479,7 @@ async def inspect_page(
                 target_version,
                 instance,
                 observed_html_origin,
+                status,
             )
         )
 
@@ -508,7 +576,11 @@ async def inspect_page(
             add(
                 "DSFR-INPUT-ERROR-STATE-002",
                 "migration"
-                if observed_versions and target_version not in observed_versions
+                if requires_migration(
+                    {"version_scope": "TARGET_VERSION", "minimum_version": target_version},
+                    observed_versions,
+                    target_version,
+                )
                 else "integration",
                 "input",
                 "Majeur",
@@ -617,7 +689,10 @@ async def inspect_page(
             verification="Recharger à 375 px et vérifier la largeur de mise en page.",
             failed_conditions=["width=device-width est absent."],
         )
-    if observed_versions and target_version not in observed_versions:
+    if any(
+        version_tuple(version) and version_tuple(version) < version_tuple(target_version)
+        for version in observed_versions
+    ):
         add(
             "DSFR-VERSION-MIGRATION-001",
             "migration",
@@ -658,18 +733,19 @@ async def inspect_page(
     if not raw["dsfrInitialized"]:
         add(
             "DSFR-JS-INITIALIZATION-001",
-            "integration",
+            "control_failure" if resource_failure else "integration",
             "javascript",
             "Majeur",
             "Initialisation JavaScript DSFR non observée",
             "Initialisation DSFR visible après chargement",
             "data-fr-js/fr-js absent",
             selector="html",
-            observed_html="<html>",
+            observed_html=resource_failure_detail if resource_failure else "<html>",
             expected_html='<html data-fr-js="true">',
             recommendation="Charger et initialiser le JavaScript DSFR avant les interactions.",
             verification="Contrôler data-fr-js après chargement.",
             failed_conditions=["Aucun marqueur d’initialisation DSFR n’a été observé."],
+            status="CONTROLE_EN_ECHEC" if resource_failure else "ECART_OBSERVE",
         )
     if raw["duplicateIds"]:
         add(
@@ -697,7 +773,11 @@ async def inspect_page(
         add(
             "DSFR-GRID-STRUCTURE-001",
             "migration"
-            if observed_versions and target_version not in observed_versions
+            if requires_migration(
+                {"version_scope": "TARGET_VERSION", "minimum_version": target_version},
+                observed_versions,
+                target_version,
+            )
             else "integration",
             "grid",
             "Majeur",
@@ -714,9 +794,14 @@ async def inspect_page(
     if "Marianne" not in raw["fontFamily"]:
         add(
             "DSFR-TYPOGRAPHY-MARIANNE-001",
-            "migration"
-            if observed_versions and target_version not in observed_versions
-            else "integration",
+            "control_failure" if resource_failure else (
+                "migration"
+                if any(
+                    version_tuple(version) and version_tuple(version) < version_tuple(target_version)
+                    for version in observed_versions
+                )
+                else "integration"
+            ),
             "typography",
             "Majeur",
             "Police Marianne non observée sur le corps",
@@ -729,6 +814,7 @@ async def inspect_page(
             verification="Contrôler la police calculée du corps et des composants.",
             failed_conditions=["La police calculée ne contient pas Marianne."],
             observed_html_origin="COMPUTED_VALUE",
+            status="CONTROLE_EN_ECHEC" if resource_failure else "ECART_OBSERVE",
         )
     if raw["mobile"]["scrollWidth"] > raw["mobile"]["viewport"]:
         add(
@@ -775,15 +861,7 @@ async def inspect_page(
         if item["signal_status"] != "FAIL_CANDIDATE":
             continue
         rule = rule_by_id[item["rule_id"]]
-        kind = (
-            "integration"
-            if rule.get("version_scope") == "VERSION_INDEPENDENT"
-            else (
-                "migration"
-                if observed_versions and target_version not in observed_versions
-                else "integration"
-            )
-        )
+        kind = "migration" if requires_migration(rule, observed_versions, target_version) else "integration"
         add(
             rule["rule_id"],
             kind,

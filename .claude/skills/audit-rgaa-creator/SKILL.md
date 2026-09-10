@@ -89,6 +89,12 @@ bash <kit>/scripts/audit-rgaa-creator.sh status ../audit-example/campaign.yaml -
 Phases fixes : `preflight`, `catalog`, `plan`, `capture`, `collect`, `browser`,
 `rgaa`, `dsfr`, `protocols`, `report`, `report_capture`, `validate`.
 
+Le pré-vol sonde les origines des URL avant toute capture. Un refus explicite
+du proxy ou une cible injoignable produit le statut machine `BLOQUE_INFRA`, le
+libellé humain `BLOQUÉ-INFRA` et le code de sortie 5 ; aucune phase d’audit ne
+démarre dans ce cas. Une réponse HTTP en erreur sans indice de proxy reste une
+erreur du site et ne devient pas un constat RGAA ou DSFR.
+
 `protocols` exécute des scripts déclarés dans `campaign.yaml` et leur fournit un JSON canonique contenant la campagne, la page, l’URL, le type et le répertoire de preuves. La sortie déclarée doit rester sous la campagne et restituer les métadonnées exactes de page.
 
 `report_capture`, activé avec `phases.report_capture: true`, lit `BUILD.json` et contrôle le portail ainsi que chaque détail RGAA/DSFR. Il produit `rapport-dsfr/captures-validation/REPORT-REVIEW.json`.

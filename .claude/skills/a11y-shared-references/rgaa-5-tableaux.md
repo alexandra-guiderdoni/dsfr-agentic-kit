@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 5 - Tableaux
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 8 critères et 15 tests RGAA. Décision opérationnelle : Construire le graphe cellules/en-têtes et la linéarisation ; réserver résumé, titre pertinent et intention data/layout à la revue humaine.
 

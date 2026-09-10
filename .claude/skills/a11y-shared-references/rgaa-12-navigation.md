@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 12 - Navigation
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 11 critères et 19 tests RGAA. Décision opérationnelle : Combiner crawler multi-pages, landmarks, liens d’évitement et scénarios clavier ; ne pas conclure cohérence inter-pages depuis une page isolée.
 
@@ -17,7 +17,6 @@ Priorité d’intégration : P0 - demandé dans le premier lot, navigation multi
 | `TCW` | `tests-conformite-wcag` | Runner Playwright pour reflow, zoom, espacement, focus, orientation, temps et autocomplete. |
 | `SRT` | `screen-reader-testing` | Validation lecteur d’écran, arbre d’accessibilité, annonces et restitution réelle. |
 | `DSFRC` | `dsfr-components` | Prévention DSFR, modèles de composants et source anti-faux-positif. |
-| `OPQ` | `opquast` | Appui qualité web et priorisation ; non normatif RGAA. |
 | `AHTML` | `accessible-html` | Production HTML accessible : doctype, langue, titre, structure, skip link, tableaux. |
 
 ## Sources externes, licences et réemploi

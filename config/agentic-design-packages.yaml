@@ -53,6 +53,9 @@ product:
     - .claude/skills/audit-dsfr-complet/schemas/dsfr-findings.schema.json
     - .claude/skills/audit-report-dsfr/SKILL.md
     - .claude/skills/audit-rgaa-complet/SKILL.md
+    - .claude/skills/audit-rgaa-complet/references/rgaa-4.1.2.json
+    - .claude/skills/audit-rgaa-complet/references/axe-rgaa-mapping.json
+    - .claude/skills/audit-rgaa-complet/scripts/build-rgaa-referential.py
     - .claude/skills/audit-rgaa-complet/rules/rgaa-rules.json
     - .claude/skills/audit-rgaa-complet/schemas/rgaa-findings.schema.json
     - .claude/skills/audit-rgaa-complet/schemas/rgaa-page.schema.json
@@ -66,6 +69,7 @@ product:
     - .claude/skills/audit-rgaa-creator/scripts/browser_checks.py
     - .claude/skills/audit-rgaa-creator/scripts/dsfr_checks.py
     - .claude/skills/audit-rgaa-creator/scripts/rgaa_checks.py
+    - .claude/skills/audit-rgaa-creator/scripts/navigation.py
     - .claude/skills/audit-rgaa-creator/examples/findings.example.json
     - scripts/audit-rgaa-creator.sh
     - design-systems/dsfr/DESIGN.md

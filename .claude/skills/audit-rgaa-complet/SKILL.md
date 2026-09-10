@@ -20,9 +20,11 @@ bash <kit>/scripts/audit-rgaa-creator.sh run <audit>/campaign.yaml \
   --only browser,rgaa,report,validate
 ```
 
-Le catalogue exécutable et versionné se trouve dans
-`rules/rgaa-rules.json`. Chaque mapping critère/test est contrôlé contre le
-plan AY11 avant validation.
+Le référentiel officiel embarqué et versionné se trouve dans
+`references/rgaa-4.1.2.json` (106 critères et 258 tests). Le catalogue
+exécutable `rules/rgaa-rules.json` est contrôlé contre ce référentiel. AY11 est
+un collecteur optionnel : son absence ne supprime ni le référentiel ni le plan
+de preuve.
 
 Livrables :
 
@@ -77,7 +79,9 @@ Le DOM rendu ne doit pas être présenté comme le fichier source du dépôt.
 
 ## File de revue des 258 tests
 
-Le plan AY11 est la source de vérité. Pour chaque test, conserver :
+Le référentiel embarqué est la source de vérité. AY11 peut enrichir la collecte
+quand il est installé, mais ne remplace pas le référentiel. Pour chaque test,
+conserver :
 
 - cible et preuves attendues ;
 - points de revue humaine ;

@@ -9,6 +9,7 @@ Mode 2 : Bibliothèque JSON — injection directe depuis dsfr_complete_library.j
 """
 
 import argparse
+import inspect
 import json
 import os
 import re
@@ -431,10 +432,10 @@ def generate_modal(title: str = "", content: str = "", id: str = "fr-modal",
                         <p>{esc(content) or 'Contenu de la modale'}</p>
                     </div>
                     <div class="fr-modal__footer">
-                        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">
-                            <button type="button" class="fr-btn">Action principale</button>
-                            <button type="button" class="fr-btn fr-btn--secondary">Action secondaire</button>
-                        </div>
+                        <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">
+                            <li><button type="button" class="fr-btn">Action principale</button></li>
+                            <li><button type="button" class="fr-btn fr-btn--secondary">Action secondaire</button></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1786,15 +1787,16 @@ def generate_form(action: str = "/submit", method: str = "post", title: str = "F
         else:
             fields_html += f'\n                            <div class="fr-input-group">\n                                <label class="fr-label" for="{esc(fid)}">{esc(flabel)}{hint_html}\n                                </label>\n                                <input class="fr-input" type="{esc(ftype)}" id="{esc(fid)}" name="{esc(fname)}">\n                            </div>'
     reset_html = f'\n                            <button class="fr-btn fr-btn--secondary" type="reset">{esc(reset_label)}</button>' if reset_label else ""
+    reset_item_html = f'<li>{reset_html}</li>' if reset_html else ""
     return f"""<form action="{esc_href(action)}" method="{esc(method)}" novalidate>
     <fieldset class="fr-fieldset">
         <legend class="fr-fieldset__legend">
             <h2>{esc(title)}</h2>
         </legend>
         <div class="fr-fieldset__content">{fields_html}
-            <div class="fr-btns-group">
-                <button class="fr-btn" type="submit">{esc(submit_label)}</button>{reset_html}
-            </div>
+            <ul class="fr-btns-group">
+                <li><button class="fr-btn" type="submit">{esc(submit_label)}</button></li>{reset_item_html}
+            </ul>
         </div>
     </fieldset>
 </form>"""
@@ -1987,6 +1989,35 @@ NATIVE_COMPONENTS = {
 }
 
 
+def native_option_names(component: str) -> list[str]:
+    """Retourne les paramètres réellement acceptés par un générateur natif."""
+    adapter = NATIVE_COMPONENTS[component]
+    names = [name for name in adapter.__code__.co_names if name.startswith("generate_")]
+    target = adapter.__globals__.get(names[0]) if names else None
+    options = list(inspect.signature(target).parameters) if target else []
+    if component in {"accordion", "breadcrumb", "checkbox", "radio", "segmented"} and "items" not in options:
+        options.insert(0, "items")
+    if component == "input" and "label" not in options:
+        options.insert(0, "label")
+    if component == "select" and "options" not in options:
+        options.insert(0, "options")
+    return list(dict.fromkeys(options))
+
+
+def print_component_options(component: str, library: Dict[str, Any]) -> None:
+    """Affiche les clés de configuration sans produire de markup."""
+    canonical = registry.canonical_name(component)
+    if canonical in NATIVE_COMPONENTS:
+        print(f"Options natives de {canonical} :")
+        for option in native_option_names(canonical):
+            print(f"- {option}")
+        return
+    variants = library.get("components", {}).get(canonical, {}).get("html", {})
+    print(f"{canonical} est fourni par la bibliothèque JSON.")
+    print(f"Variantes disponibles : {', '.join(sorted(variants)) or 'aucune'}")
+    print("--config ne modifie pas une variante de bibliothèque.")
+
+
 def main():
     library = load_library()
     all_components = sorted(set(
@@ -2002,6 +2033,7 @@ def main():
     parser.add_argument("--config", help="Configuration JSON (pour les composants natifs)", type=str)
     parser.add_argument("--output", help="Fichier de sortie ; refuse d'écraser un fichier existant")
     parser.add_argument("--list", action="store_true", help="Lister tous les composants disponibles")
+    parser.add_argument("--options", action="store_true", help="Afficher les clés de configuration acceptées")
 
     args = parser.parse_args()
 
@@ -2015,6 +2047,10 @@ def main():
         # Aucune cible : usage invalide, aide sur stderr, code 2 (comme generate_field).
         parser.print_help(sys.stderr)
         sys.exit(2)
+        return
+
+    if args.options:
+        print_component_options(args.component, library)
         return
 
     config = {}

@@ -8,6 +8,9 @@ from __future__ import annotations
 import asyncio
 import json
 import math
+import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -16,6 +19,8 @@ try:
     from playwright.async_api import async_playwright
 except ImportError as exc:
     raise SystemExit("Playwright est absent de l’environnement Python sélectionné") from exc
+
+from navigation import goto_checked
 
 
 def dump(path: Path, value: Any) -> None:
@@ -55,15 +60,74 @@ CONTRAST_JS = r'''() => {
 
 FOCUS_STYLE_JS = r'''e=>{const chain=[e,e.parentElement,e.parentElement?.parentElement].filter(Boolean);return chain.some(n=>{const s=getComputedStyle(n);return (s.outlineStyle!=='none'&&parseFloat(s.outlineWidth)>0)||s.boxShadow!=='none'})}'''
 
+MAPPING_PATH = Path(__file__).resolve().parents[2] / "audit-rgaa-complet/references/axe-rgaa-mapping.json"
 
-async def page_checks(browser: Any, page_info: dict[str, Any], config: dict[str, Any], root: Path) -> None:
+
+def resolve_axe_source() -> tuple[str | None, str]:
+    """Résout axe-core sans installer de paquet pendant une campagne."""
+    candidates: list[Path] = []
+    configured = os.environ.get("AXE_CORE_PATH", "").strip()
+    if configured:
+        candidates.append(Path(configured).expanduser())
+    package = os.environ.get("AXE_CORE_PACKAGE", "").strip()
+    if package:
+        candidates.append(Path(package).expanduser() / "axe.min.js")
+        candidates.append(Path(package).expanduser() / "axe.js")
+    node = shutil.which("node")
+    if node:
+        result = subprocess.run(
+            [node, "-e", "try { process.stdout.write(require.resolve('axe-core/axe.min.js')) } catch {}"],
+            text=True, capture_output=True, check=False,
+        )
+        if result.stdout.strip():
+            candidates.append(Path(result.stdout.strip()))
+    npm = shutil.which("npm")
+    if npm:
+        result = subprocess.run([npm, "root", "-g"], text=True, capture_output=True, check=False)
+        if result.returncode == 0 and result.stdout.strip():
+            global_root = Path(result.stdout.strip())
+            candidates.extend(global_root.glob("@*/**/axe-core/axe.min.js"))
+            candidates.extend(global_root.glob("@*/**/axe-core/axe.js"))
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate.read_text(encoding="utf-8"), str(candidate)
+    return None, "axe-core absent : définir AXE_CORE_PATH ou AXE_CORE_PACKAGE"
+
+
+async def page_checks(browser: Any, page_info: dict[str, Any], config: dict[str, Any], root: Path, axe_source: str | None, axe_source_name: str) -> None:
     pid, url = page_info["id"], page_info["url"]
     timeout = int(config.get("browser", {}).get("timeout_seconds", 30)) * 1000
     wait = int(config.get("browser", {}).get("wait_ms", 900))
     context = await browser.new_context(viewport={"width": 1280, "height": 720}, locale="fr-FR")
-    page = await context.new_page(); await page.goto(url, wait_until="domcontentloaded", timeout=timeout); await page.wait_for_timeout(wait)
+    page = await context.new_page(); await goto_checked(page, url, timeout); await page.wait_for_timeout(wait)
     semantic = await page.evaluate(SEMANTIC_JS); contrast = await page.evaluate(CONTRAST_JS)
     semantic["contrast"] = contrast
+    axe_result: dict[str, Any]
+    if axe_source:
+        try:
+            await page.add_script_tag(content=axe_source)
+            axe_raw = await page.evaluate("async () => axe.run(document)")
+            mapping = json.loads(MAPPING_PATH.read_text(encoding="utf-8")) if MAPPING_PATH.is_file() else {}
+            axe_result = {
+                "status": "collected",
+                "engine": axe_raw.get("testEngine", {}),
+                "source": axe_source_name,
+                "violations": axe_raw.get("violations", []),
+                "rgaa_candidates": [
+                    {
+                        "axe_id": violation.get("id"),
+                        "rule_ids": mapping.get(violation.get("id"), {}).get("rule_ids", []),
+                        "criteria": mapping.get(violation.get("id"), {}).get("criteria", []),
+                        "status": "A_CONFIRMER",
+                        "description": violation.get("description", ""),
+                    }
+                    for violation in axe_raw.get("violations", [])
+                ],
+            }
+        except Exception as exc:
+            axe_result = {"status": "failed", "source": axe_source_name, "reason": str(exc)}
+    else:
+        axe_result = {"status": "skipped", "source": axe_source_name, "reason": axe_source_name}
     dump(root / "inspections-approfondies" / f"{pid}.json", semantic)
 
     client = await context.new_cdp_session(page)
@@ -90,7 +154,7 @@ async def page_checks(browser: Any, page_info: dict[str, Any], config: dict[str,
     await context.close()
 
     mobile = await browser.new_context(viewport={"width": 320, "height": 720}, locale="fr-FR")
-    p = await mobile.new_page(); await p.goto(url, wait_until="domcontentloaded", timeout=timeout); await p.wait_for_timeout(wait)
+    p = await mobile.new_page(); await goto_checked(p, url, timeout); await p.wait_for_timeout(wait)
     reflow = await p.evaluate("() => ({viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,status:document.documentElement.scrollWidth>innerWidth?'review':'pass'})")
     autocomplete = []
     for field in semantic["forms"]["fields"]:
@@ -100,14 +164,14 @@ async def page_checks(browser: Any, page_info: dict[str, Any], config: dict[str,
         "reflow": reflow,
         "spacing": {"status": "review", "reason": "État forcé et validation visuelle requis"},
         "zoom": {"status": "review", "reason": "Zoom navigateur et validation visuelle requis"},
-        "orientation": {"status": "pass", "reason": "Aucun verrouillage mesuré par le collecteur générique"},
+        "orientation": {"status": "review", "reason": "Émulation portrait/paysage non exercée par le collecteur générique"},
         "autocomplete": {"status": "review" if autocomplete else "na", "fields": autocomplete},
         "time": {"status": "review", "reason": "Délais dynamiques à exercer"},
         "autoplay": {"status": "review" if semantic["media"] else "na", "media": semantic["media"]},
         "focus": {"status": "review", "tested": len(keyboard), "withoutIndicatorCandidate": [x for x in keyboard if not x["indicatorCandidate"]]},
         "target": {"status": "review", "reason": "Exceptions de taille et espacement à qualifier"},
     }
-    dump(root / "tests-wcag" / f"{pid}.json", {"page": page_info, "tests": tests})
+    dump(root / "tests-wcag" / f"{pid}.json", {"page": page_info, "tests": tests, "axe_core": axe_result})
     await mobile.close()
 
 
@@ -116,9 +180,10 @@ async def main(config_path: Path) -> int:
     failures = []
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
+        axe_source, axe_source_name = resolve_axe_source()
         for page in config["sample"]:
             try:
-                await page_checks(browser, page, config, root); print(f"{page['id']} OK")
+                await page_checks(browser, page, config, root, axe_source, axe_source_name); print(f"{page['id']} OK")
             except Exception as exc:
                 failures.append({"page": page["id"], "error": str(exc)}); print(f"{page['id']} ECHEC: {exc}", file=sys.stderr)
         await browser.close()

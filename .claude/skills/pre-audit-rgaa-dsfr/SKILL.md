@@ -171,7 +171,8 @@ agent-browser close                         # Fermer
 ### Phase 1 : scan automatisé (sauf si `--skip-scan`)
 
 1. Scanner via axe-core selon la stratégie de `axe-core-scan-patterns.md`
-2. Mapper les violations vers les critères RGAA via `resources/rgaa-mapping.md` du skill `audit-accessibilite-web`
+2. Mapper les violations vers les critères RGAA via
+   `../audit-accessibilite-web/resources/rgaa-mapping.md`
 3. Collecter : critère RGAA, élément DOM, code source fautif, sévérité axe
 4. Afficher : `[PRE-AUDIT-RGAA] Phase 1/6 : Scan automatisé ............... OK (N violations)`
 

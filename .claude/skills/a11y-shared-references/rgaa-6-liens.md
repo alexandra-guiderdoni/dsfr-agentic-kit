@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 6 - Liens
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 2 critères et 6 tests RGAA. Décision opérationnelle : Calculer nom accessible, source du nom, texte visible et destination ; évaluer l’explicitation en contexte humainement.
 
@@ -15,7 +15,6 @@ Priorité d’intégration : P1 - extension de `accessible-name-probe` vers lien
 | `AAW` | `audit-accessibilite-web` | Scan axe/WCAG, mapping RGAA et signaux techniques non suffisants seuls. |
 | `SHR` | `a11y-shared-references` | Contrats communs de preuve, patterns axe et sondes de nom accessible. |
 | `ALT` | `alt-text` | Jugement sur rôle, alternative, image-lien, CAPTCHA, image texte ou image complexe. |
-| `OPQ` | `opquast` | Appui qualité web et priorisation ; non normatif RGAA. |
 
 ## Sources externes, licences et réemploi
 

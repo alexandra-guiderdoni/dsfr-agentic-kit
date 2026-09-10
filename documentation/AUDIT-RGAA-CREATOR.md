@@ -62,6 +62,9 @@ preflight → catalog → plan → capture → collect → browser → rgaa → 
 ```
 
 - `preflight` vérifie URLs, AY11 et skills ;
+- si le proxy refuse un hôte ou si la cible est injoignable, `preflight` produit
+  le statut machine `BLOQUE_INFRA`, le libellé humain `BLOQUÉ-INFRA` et le code
+  de sortie 5 ; aucune phase d’audit ne démarre ;
 - `catalog` conserve les 106 critères AY11 ;
 - `plan` produit le contrat des 258 tests ;
 - `capture` crée HTML rendu, arbre a11y, axe et capture par page ;

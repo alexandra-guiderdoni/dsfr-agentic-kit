@@ -106,7 +106,7 @@ DSFR_CACHE_ROOT="${DSFR_OFFICIAL_CACHE_DIR:-$HOME/.cache/dsfr-official-cache}"
 DSFR_VERSION="${DSFR_OFFICIAL_VERSION:-1.15.2}"
 DSFR_DIST="$DSFR_CACHE_ROOT/gouvfr-dsfr-$DSFR_VERSION/package/dist"
 if [[ ! -d "$DSFR_DIST" ]]; then
-  fail "DSFR asset cache missing: $DSFR_DIST. Run: bash scripts/check-agentic-design-pack.sh . --package agentic-design-dsfr-pack"
+  fail "DSFR asset cache missing: $DSFR_DIST. Run: bash scripts/check-agentic-design-pack.sh"
 fi
 
 if [[ -z "$OUT_DIR" ]]; then

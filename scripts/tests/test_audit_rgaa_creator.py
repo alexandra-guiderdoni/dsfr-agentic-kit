@@ -1,18 +1,58 @@
 #!/usr/bin/env python3
 import hashlib
+import asyncio
+import http.server
 import json
 import os
 import re
+import threading
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / ".claude/skills/audit-rgaa-creator/scripts/audit_campaign.py"
+sys.path.insert(0, str(CLI.parent))
+from audit_campaign import preflight, probe_network_url  # noqa: E402
+from navigation import goto_checked  # noqa: E402
+
+
+class _FakeResponse:
+    def __init__(self, status=200, headers=None):
+        self.status = status
+        self.headers = headers or {}
+
+
+class _FakePage:
+    def __init__(self, response=None, error=None):
+        self.response = response
+        self.error = error
+
+    async def goto(self, url, wait_until, timeout):
+        if self.error:
+            raise RuntimeError(self.error)
+        return self.response
+
+
+class _HeadHandler(http.server.BaseHTTPRequestHandler):
+    def do_HEAD(self):  # noqa: N802
+        if self.path == "/proxy":
+            self.send_response(403)
+            self.send_header("x-deny-reason", "host_not_allowed")
+        elif self.path == "/site":
+            self.send_response(403)
+            self.send_header("server", "DGDDI-WS")
+        else:
+            self.send_response(200)
+        self.end_headers()
+
+    def log_message(self, format, *args):
+        return
 
 
 class CreatorTests(unittest.TestCase):
@@ -93,7 +133,7 @@ class CreatorTests(unittest.TestCase):
         self.assertIn("[OK] Validation", result.stdout)
         matrix = (self.project / "MATRICE-RGAA-106.md").read_text(encoding="utf-8")
         self.assertEqual(106, len(re.findall(r"^\| \d+\.\d+ \|", matrix, re.MULTILINE)))
-        self.assertTrue((self.project / "AUDIT-PAR-PAGE.html").is_file())
+        self.assertFalse((self.project / "AUDIT-PAR-PAGE.html").exists())
         self.assertTrue((self.project / "dsfr/AUDIT-PAR-PAGE.html").is_file())
         self.assertTrue((self.project / "dsfr/INVENTAIRE-COMPOSANTS.json").is_file())
         self.assertTrue((self.project / "PORTAIL-AUDITS.html").is_file())
@@ -1159,12 +1199,156 @@ class CreatorTests(unittest.TestCase):
         (self.project / "findings.json").write_text(
             json.dumps({"schema_version": 1, "findings": [finding]}), encoding="utf-8"
         )
+        proof = self.project / "rgaa/preuves/P01/attempt-001"
+        proof.mkdir(parents=True)
+        (proof / "evidence.json").write_text("{}", encoding="utf-8")
+        (proof / "desktop.png").write_bytes(b"png")
+        page = {
+            "schema_version": 1,
+            "page": {
+                "id": "P01",
+                "name": "Accueil",
+                "url": "https://example.test/",
+                "type": "homepage",
+            },
+            "audited_at": "2026-09-02T00:00:00Z",
+            "rules_executed": ["RGAA-8-2-ID-UNIQUE-001"],
+            "signals": [
+                {
+                    "id": "P01-RGAA-8-2-ID-UNIQUE-001-001",
+                    "rule_id": "RGAA-8-2-ID-UNIQUE-001",
+                    "criterion": "8.2",
+                    "test": "8.2.1",
+                    "component": "html",
+                    "instance": 1,
+                    "signal_status": "FAIL_CANDIDATE",
+                    "qualification_status": "NON_TESTE",
+                    "severity": "Majeur",
+                    "title": "Valeur HTML non fiable",
+                    "selector": "#malicious",
+                    "observed": "Valeur contrôlée par une source hostile",
+                    "observed_code": "<img src=x onerror=alert(1)>",
+                    "observed_origin": "RENDERED_DOM",
+                    "expected": "Code affiché comme texte dans la preuve",
+                    "expected_code": "&lt;img src=x onerror=alert(1)&gt;",
+                    "failed_assertions": ["Preuve à qualifier"],
+                    "impact": "Injection HTML dans le rapport",
+                    "source": "https://accessibilite.numerique.gouv.fr/",
+                    "recommendation": "Échapper la valeur avant rendu",
+                    "verification": "Relire le HTML produit",
+                    "evidence": [
+                        "rgaa/preuves/P01/attempt-001/evidence.json",
+                        "rgaa/preuves/P01/attempt-001/desktop.png",
+                    ],
+                }
+            ],
+            "passes": [],
+            "evidence": {
+                "attempt": 1,
+                "raw": "rgaa/preuves/P01/attempt-001/evidence.json",
+                "screenshot": "rgaa/preuves/P01/attempt-001/desktop.png",
+            },
+            "limits": ["Préqualification"],
+        }
+        (self.project / "rgaa/pages/P01.json").parent.mkdir(parents=True)
+        (self.project / "rgaa/pages/P01.json").write_text(
+            json.dumps(page, ensure_ascii=False), encoding="utf-8"
+        )
         self.run_cli("report", campaign)
         self.run_cli("validate", campaign)
-        document = (self.project / "AUDIT-PAR-PAGE.html").read_text(encoding="utf-8")
+        document = (self.project / "rgaa/AUDIT-PAR-PAGE.html").read_text(encoding="utf-8")
         self.assertNotIn("<img src=x", document)
         self.assertIn("&lt;img", document)
         self.assertEqual(1, len(list((self.project / "tickets").glob("NC-A-*.md"))))
+
+    def test_navigation_guard_distinguishes_proxy_site_and_unreachable(self):
+        response = asyncio.run(
+            goto_checked(_FakePage(_FakeResponse()), "https://example.test/", 1000)
+        )
+        self.assertEqual(200, response.status)
+
+        with self.assertRaisesRegex(RuntimeError, "BLOQUÉ-INFRA"):
+            asyncio.run(
+                goto_checked(
+                    _FakePage(
+                        _FakeResponse(
+                            403, {"X-Deny-Reason": "host_not_allowed"}
+                        )
+                    ),
+                    "https://example.test/",
+                    1000,
+                )
+            )
+        with self.assertRaisesRegex(RuntimeError, "ERREUR_SITE"):
+            asyncio.run(
+                goto_checked(
+                    _FakePage(_FakeResponse(403, {"server": "DGDDI-WS"})),
+                    "https://example.test/",
+                    1000,
+                )
+            )
+        with self.assertRaisesRegex(RuntimeError, "INJOIGNABLE"):
+            asyncio.run(
+                goto_checked(
+                    _FakePage(error="net::ERR_NAME_NOT_RESOLVED"),
+                    "https://example.test/",
+                    1000,
+                )
+            )
+
+    def test_preflight_records_machine_status_for_network_block(self):
+        state = {
+            "schema_version": 1,
+            "campaign_digest": "a" * 64,
+            "phases": {},
+            "pages": {},
+        }
+        config = {
+            "campaign": {"target": "https://example.test/"},
+            "sample": [
+                {
+                    "id": "P01",
+                    "name": "Accueil",
+                    "url": "https://example.test/",
+                    "type": "homepage",
+                }
+            ],
+            "phases": {"ay11": False},
+            "tooling": {"skills_roots": []},
+        }
+        with patch(
+            "audit_campaign.probe_network_url",
+            return_value={
+                "kind": "BLOQUÉ-INFRA",
+                "cause": "x-deny-reason: host_not_allowed",
+            },
+        ):
+            result = preflight(config, self.project, state, dry_run=False)
+        self.assertFalse(result)
+        self.assertEqual(
+            "BLOQUE_INFRA", state["phases"]["preflight"]["status"]
+        )
+        self.assertEqual(
+            "BLOQUÉ-INFRA", state["phases"]["preflight"]["cause"]
+        )
+
+    def test_network_probe_distinguishes_proxy_and_site_errors(self):
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _HeadHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            base = f"http://127.0.0.1:{server.server_port}"
+            self.assertEqual("SITE", probe_network_url(f"{base}/ok")["kind"])
+            self.assertEqual(
+                "BLOQUÉ-INFRA", probe_network_url(f"{base}/proxy")["kind"]
+            )
+            site_error = probe_network_url(f"{base}/site")
+            self.assertEqual("SITE", site_error["kind"])
+            self.assertEqual(403, site_error["http_status"])
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
 
     def test_unknown_configuration_field_is_rejected(self):
         campaign = self.init()

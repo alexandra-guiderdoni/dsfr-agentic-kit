@@ -73,8 +73,8 @@ effectivement exercés et ceux qui restent à faire.
 Lire seulement les références nécessaires :
 
 - `a11y-shared-references/axe-core-scan-patterns.md` pour les replis ;
-- `audit-accessibilite-web/resources/rgaa-mapping.md` pour une correspondance
-  candidate ;
+- `../audit-accessibilite-web/resources/rgaa-mapping.md` pour une
+  correspondance candidate ;
 - `tests-conformite-wcag` pour les vérifications responsive et clavier ;
 - `screen-reader-testing` pour la préqualification de l'arbre d'accessibilité
   et la checklist humaine.

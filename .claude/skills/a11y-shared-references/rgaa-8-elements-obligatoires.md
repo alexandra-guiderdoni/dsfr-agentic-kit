@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 8 - Éléments obligatoires
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 10 critères et 13 tests RGAA. Décision opérationnelle : Automatiser doctype, langue, titre, validité et `dir` ; garder pertinence de langue, titre et changements de langue en revue humaine.
 
@@ -18,7 +18,6 @@ Priorité d’intégration : P1 - socle de validation statique.
 | `ADOCX` | `accessible-docx` | Production DOCX structuré et version documentaire accessible possible. |
 | `APPTX` | `accessible-pptx` | Production PPTX : ordre de lecture, langue, alternatives, tableaux et contrastes. |
 | `DSFRC` | `dsfr-components` | Prévention DSFR, modèles de composants et source anti-faux-positif. |
-| `OPQ` | `opquast` | Appui qualité web et priorisation ; non normatif RGAA. |
 
 ## Sources externes, licences et réemploi
 

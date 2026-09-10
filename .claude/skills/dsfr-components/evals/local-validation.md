@@ -125,9 +125,10 @@ le `ignore-scripts=true` du `~/.npmrc` du poste. Une installation classique du
 paquet exige en revanche l'acceptation des CGU (`.dsfr.yml` ou
 `DSFR_ACCEPT_LICENSE=1`, voir `design-systems/dsfr/references/sources.md`).
 
-`evals/couverture-officielle-1-14-4.md` est l'instantané de la couverture en
-1.14.4 : ses chiffres côté skill sont périmés, la référence courante est
-`evals/official-coverage-inventory.md` (régénéré par la commande ci-dessus).
+`evals/archive/couverture-officielle-1-14-4-historique.md` conserve
+l'instantané historique de la couverture en 1.14.4. Ses chiffres ne décrivent
+pas la référence courante : utiliser `evals/official-coverage-inventory.md`,
+qui est régénéré par la commande ci-dessus.
 
 Résolution de Playwright : les scripts cherchent le module dans
 `PLAYWRIGHT_PACKAGE_DIR`, puis par `require` standard, puis dans le cache

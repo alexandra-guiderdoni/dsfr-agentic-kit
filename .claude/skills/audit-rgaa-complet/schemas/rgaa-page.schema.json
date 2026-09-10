@@ -61,6 +61,7 @@
         "screenshot": {"type": "string"}
       }
     },
-    "limits": {"type": "array", "items": {"type": "string"}}
+    "limits": {"type": "array", "items": {"type": "string"}},
+    "axe_core": {"type": "object"}
   }
 }

@@ -23,10 +23,10 @@ Référence extraite de `../structure.md`.
                         <p>Contenu de la modale</p>
                     </div>
                     <div class="fr-modal__footer">
-                        <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">
-                            <button type="button" class="fr-btn">Action principale</button>
-                            <button type="button" class="fr-btn fr-btn--secondary">Action secondaire</button>
-                        </div>
+                        <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">
+                            <li><button type="button" class="fr-btn">Action principale</button></li>
+                            <li><button type="button" class="fr-btn fr-btn--secondary">Action secondaire</button></li>
+                        </ul>
                     </div>
                 </div>
             </div>

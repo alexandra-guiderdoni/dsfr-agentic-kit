@@ -102,11 +102,26 @@ THEMES = {
     12: ("Navigation", 11),
     13: ("Consultation", 12),
 }
-CRITERION_IDS = [
-    f"{theme}.{number}"
-    for theme, (_, count) in THEMES.items()
-    for number in range(1, count + 1)
-]
+RGAA_REFERENTIAL = SKILL_ROOT.parent / "audit-rgaa-complet/references/rgaa-4.1.2.json"
+
+
+def load_embedded_rgaa_referential() -> dict[str, Any]:
+    """Charge le référentiel officiel embarqué, sans dépendre d'AY11."""
+    try:
+        data = json.loads(RGAA_REFERENTIAL.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Référentiel RGAA embarqué illisible : {RGAA_REFERENTIAL}: {exc}") from exc
+    counts = data.get("counts", {})
+    if data.get("referential_id") != "rgaa-4.1.2" or counts.get("criteria") != 106 or counts.get("tests") != 258:
+        raise ValueError(f"Référentiel RGAA embarqué invalide : {RGAA_REFERENTIAL}")
+    return data
+
+
+def embedded_criterion_ids() -> list[str]:
+    return [str(item["criterion_id"]) for item in load_embedded_rgaa_referential()["criteria"]]
+
+
+CRITERION_IDS = embedded_criterion_ids()
 
 
 def now() -> str:
@@ -733,7 +748,8 @@ historiques produites par `report` ; ils ne sont pas modifiés directement.
 3. Renseigner les fichiers canoniques `rgaa-findings.json` et, si nécessaire,
    `dsfr-findings.json`, sans modifier les preuves brutes.
 4. Lancer `audit-rgaa-creator.sh report campaign.yaml` puis `validate`.
-5. Vérifier visuellement `AUDIT-PAR-PAGE.html`.
+5. Vérifier visuellement `PORTAIL-AUDITS.html`, puis le rapport détaillé de
+   chaque référentiel activé.
 """
 
 
@@ -791,21 +807,50 @@ def preflight(
     for skill in REQUIRED_SKILLS:
         if not any((candidate / skill / "SKILL.md").is_file() for candidate in roots):
             warnings.append(f"Skill non trouvé : {skill}")
+    network_checks: list[dict[str, Any]] = []
+    blocked_infra: list[dict[str, str]] = []
+    unreachable: list[dict[str, str]] = []
     if not dry_run:
-        for page in pages:
-            req = urllib.request.Request(
-                page["url"],
-                method="HEAD",
-                headers={"User-Agent": "DSFR-Agentic-Kit-Audit-Creator/1.0"},
-            )
+        probe_urls: dict[str, str] = {}
+        for candidate in [config.get("campaign", {}).get("target", "")] + [
+            page.get("url", "") for page in pages
+        ]:
             try:
-                with urllib.request.urlopen(req, timeout=10) as response:
-                    state.setdefault("pages", {}).setdefault(page["id"], {})[
-                        "http_status"
-                    ] = response.status
-            except Exception as exc:
-                warnings.append(f"{page['id']} non vérifiée : {exc}")
-    status = "ECHEC" if errors else ("PARTIEL" if warnings else "OK")
+                parsed = urllib.parse.urlparse(validate_url(candidate))
+            except ValueError:
+                continue
+            origin = urllib.parse.urlunparse(
+                (parsed.scheme, parsed.netloc, "/", "", "", "")
+            )
+            probe_urls.setdefault(origin, candidate)
+        for origin, candidate in probe_urls.items():
+            result = probe_network_url(candidate)
+            network_checks.append({"origin": origin, **result})
+            if result["kind"] == "BLOQUÉ-INFRA":
+                blocked_infra.append(
+                    {"origin": origin, "cause": result["cause"]}
+                )
+            elif result["kind"] == "INJOIGNABLE":
+                unreachable.append({"origin": origin, "cause": result["cause"]})
+            else:
+                for page in pages:
+                    if urllib.parse.urlparse(page["url"]).netloc == urllib.parse.urlparse(candidate).netloc:
+                        state.setdefault("pages", {}).setdefault(page["id"], {})[
+                            "http_status"
+                        ] = result.get("http_status")
+        if blocked_infra:
+            errors.append(
+                "Sortie réseau refusée par le proxy : "
+                + ", ".join(item["origin"] for item in blocked_infra)
+            )
+        if unreachable:
+            errors.append(
+                "Cible réseau injoignable : "
+                + ", ".join(item["origin"] for item in unreachable)
+            )
+    status = "BLOQUE_INFRA" if blocked_infra or unreachable else (
+        "ECHEC" if errors else ("PARTIEL" if warnings else "OK")
+    )
     record(
         state,
         "preflight",
@@ -815,6 +860,10 @@ def preflight(
         ay11=str(ay11) if ay11 else None,
         ay11_version=ay11_version or None,
         ay11_expected_version=expected_version or None,
+        cause="BLOQUÉ-INFRA" if blocked_infra else "INJOIGNABLE" if unreachable else None,
+        network_checks=network_checks,
+        blocked_infra=blocked_infra,
+        unreachable=unreachable,
     )
     save_state(root, state)
     return not errors
@@ -950,10 +999,19 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
         raise SystemExit(f"Phases inconnues : {', '.join(sorted(unknown))}")
     resume = bool(args.resume)
 
+    # En mode resume, une phase explicitement sélectionnée par --only est une
+    # demande de rejeu, même si son état précédent était OK. Ce rejeu doit
+    # invalider les phases dérivées, notamment report et validate.
+    explicit_replay = bool(args.only)
+
     def skip(phase: str) -> bool:
         if phase not in selected:
             return True
-        if resume and state.get("phases", {}).get(phase, {}).get("status") == "OK":
+        if (
+            resume
+            and not explicit_replay
+            and state.get("phases", {}).get(phase, {}).get("status") == "OK"
+        ):
             return True
         invalidated = invalidate_downstream_phases(state, phase)
         if invalidated:
@@ -970,14 +1028,31 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
         args.dry_run,
         strict_ay11=getattr(args, "strict_ay11", False),
     ):
+        preflight_state = state.get("phases", {}).get("preflight", {})
+        if preflight_state.get("status") in {"BLOQUE_INFRA", "BLOQUÉ"}:
+            print(
+                "[BLOQUÉ-INFRA] Pré-vol réseau bloqué ; aucune phase d’audit n’a été exécutée.",
+                file=sys.stderr,
+            )
+            return 5
         print("[FAIL] Pré-vol en échec", file=sys.stderr)
         return 2
     ay11_root_value = config.get("tooling", {}).get("ay11_root") or ""
     ay11, _ = find_ay11(Path(ay11_root_value) if ay11_root_value else None)
+    if not config.get("phases", {}).get("ay11", True):
+        ay11 = None
 
     if not skip("catalog"):
         if not ay11:
-            record(state, "catalog", "IGNORÉ", reason="AY11 absent")
+            if not args.dry_run:
+                write_json(root / "collectes-ay11/rgaa-criteria.json", embedded_rgaa_catalog())
+            record(
+                state,
+                "catalog",
+                "OK",
+                source="référentiel RGAA 4.1.2 embarqué",
+                reason="AY11 absent : le collecteur externe est facultatif",
+            )
         else:
             code, out, err = run_command(
                 [str(ay11), "rgaa", "list", "--kind", "criteria", "--format", "json"],
@@ -1002,7 +1077,15 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
 
     if not skip("plan"):
         if not ay11:
-            record(state, "plan", "IGNORÉ", reason="AY11 absent")
+            if not args.dry_run:
+                write_json(root / "plan-preuves-rgaa-106.json", embedded_rgaa_plan())
+            record(
+                state,
+                "plan",
+                "OK",
+                source="référentiel RGAA 4.1.2 embarqué",
+                reason="AY11 absent : le plan officiel embarqué reste disponible",
+            )
         else:
             argv = [
                 str(ay11),
@@ -1378,11 +1461,104 @@ def run_campaign(args: argparse.Namespace) -> int:
 
 def load_catalog(root: Path) -> dict[str, str]:
     data = read_json(root / "collectes-ay11/rgaa-criteria.json", {}) or {}
-    return {
+    catalog = {
         str(item.get("criterion_id")): str(item.get("title", ""))
         for item in data.get("items", [])
         if item.get("criterion_id")
     }
+    if catalog:
+        return catalog
+    return {
+        str(item["criterion_id"]): str(item.get("title", ""))
+        for item in load_embedded_rgaa_referential()["criteria"]
+    }
+
+
+def embedded_rgaa_catalog() -> dict[str, Any]:
+    """Adapte le catalogue embarqué au format historique consommé par le runner."""
+    return {
+        "items": [
+            {"criterion_id": item["criterion_id"], "title": item.get("title", "")}
+            for item in load_embedded_rgaa_referential()["criteria"]
+        ],
+        "source": "référentiel RGAA 4.1.2 embarqué",
+    }
+
+
+def embedded_rgaa_plan() -> dict[str, Any]:
+    """Produit le contrat de preuve des 258 tests sans collecteur externe."""
+    referential = load_embedded_rgaa_referential()
+    return {
+        "schema_version": 1,
+        "profile": "rgaa-106",
+        "source": "référentiel RGAA 4.1.2 embarqué",
+        "referential": {
+            "id": referential["referential_id"],
+            "version": referential["version"],
+            "source": referential["source"],
+        },
+        "proof_contract": {
+            "tests": [
+                {
+                    "test_id": item["test_id"],
+                    "criterion_id": item["criterion_id"],
+                    "source_rgaa": {"url": item["source_url"], "title": item["title"]},
+                    "reference_contract": {
+                        "target": "Éléments concernés par le test dans le DOM rendu",
+                        "expected_evidence": item.get("methodology", "Méthodologie officielle RGAA"),
+                        "human_validation": "Validation humaine requise avant toute décision",
+                        "limit": "La collecte automatique ne couvre pas toute la méthodologie du test",
+                    },
+                    "human_review_points": ["Applicabilité et cas particuliers à confirmer"],
+                    "collection_status": "not_collected",
+                }
+                for item in referential["tests"]
+            ]
+        },
+    }
+
+
+def probe_network_url(url: str) -> dict[str, Any]:
+    """Sonde une cible sans confondre proxy de sortie et erreur du site."""
+    request = urllib.request.Request(
+        url,
+        method="HEAD",
+        headers={"User-Agent": "DSFR-Agentic-Kit-Audit-Creator/1.0"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            headers = {str(k).lower(): str(v) for k, v in response.headers.items()}
+            return {
+                "kind": "SITE",
+                "http_status": response.status,
+                "server": headers.get("server", ""),
+            }
+    except urllib.error.HTTPError as exc:
+        headers = {str(k).lower(): str(v) for k, v in exc.headers.items()}
+        deny_reason = headers.get("x-deny-reason", "").strip()
+        if deny_reason:
+            return {
+                "kind": "BLOQUÉ-INFRA",
+                "http_status": exc.code,
+                "cause": f"x-deny-reason: {deny_reason}",
+            }
+        return {
+            "kind": "SITE",
+            "http_status": exc.code,
+            "server": headers.get("server", ""),
+            "cause": f"Réponse HTTP {exc.code} du site cible",
+        }
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        cause = str(exc)
+        lowered = cause.lower()
+        proxy_markers = (
+            "x-deny-reason",
+            "proxy connection failed",
+            "tunnel connection failed",
+            "connection reset",
+        )
+        kind = "BLOQUÉ-INFRA" if any(marker in lowered for marker in proxy_markers) else "INJOIGNABLE"
+        return {"kind": kind, "cause": cause or exc.__class__.__name__}
 
 
 def generate_artifact_manifest(root: Path) -> None:
@@ -1739,7 +1915,7 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
     review_lines = [
         "# File de revue RGAA 4.1.2 — 258 tests",
         "",
-        "> Ce document est dérivé du plan AY11. Une ligne ne signifie pas que le test est exécuté. `PASS_CANDIDATE` ne vaut pas conformité.",
+        "> Ce document est dérivé du plan RGAA 4.1.2. Une ligne ne signifie pas que le test est exécuté. `PASS_CANDIDATE` ne vaut pas conformité.",
         "",
         f"- Tests présents : **{len(reviews)}**",
         f"- Décisions partielles : **{sum(x['status'] == 'DECISION_PARTIELLE' for x in reviews)}**",
@@ -1817,7 +1993,9 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
     filters = "<div class='filters' role='group' aria-label='Filtres'><button type='button' data-filter='all'>Tous</button><button type='button' data-filter='NC_CONFIRMEE'>NC confirmées</button><button type='button' data-filter='A_RETESTER'>À retester</button><button type='button' data-filter='NON_TESTE'>Sans qualification</button><button type='button' data-filter='Bloquant'>Bloquants</button><label>Critère <input id='criterion-filter' size='8'></label><label>Rechercher <input id='finding-search' type='search'></label></div>"
     script = """<script>(()=>{const cards=[...document.querySelectorAll('.finding')];let active='all';const apply=()=>{const q=(document.querySelector('#finding-search').value||'').toLowerCase(),c=(document.querySelector('#criterion-filter').value||'').trim();cards.forEach(card=>card.hidden=!((active==='all'||card.dataset.status===active||card.dataset.severity===active)&&(!c||card.dataset.criterion===c)&&card.textContent.toLowerCase().includes(q)));};document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{active=b.dataset.filter;apply();}));document.querySelectorAll('input').forEach(i=>i.addEventListener('input',apply));})();</script>"""
     document = f"<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Pré-audit RGAA détaillé — {html.escape(config['campaign']['name'])}</title><style>body{{font:16px/1.55 system-ui,sans-serif;color:#161616;max-width:1220px;margin:auto;padding:1rem}}header{{border-bottom:5px solid #000091}}.warning{{background:#fff4e5;border-left:6px solid #e4794a;padding:1rem}}section{{margin:3rem 0;border-top:2px solid #ddd;padding-top:1rem}}table{{border-collapse:collapse;width:100%;display:block;overflow:auto}}th,td{{border:1px solid #ccc;padding:.6rem;text-align:left;vertical-align:top}}th{{background:#eee}}pre{{background:#f6f6f6;border:1px solid #ddd;padding:1rem;overflow:auto;max-height:26rem}}pre code{{white-space:pre-wrap}}.filters{{position:sticky;top:0;background:#fff;border:1px solid #bbb;padding:.7rem;display:flex;gap:.5rem;flex-wrap:wrap;z-index:2}}.finding{{border:2px solid #ddd;border-left:7px solid #e4794a;padding:1rem;margin:1.5rem 0}}.badges{{display:flex;gap:.5rem;flex-wrap:wrap}}.badges span{{background:#eee;padding:.2rem .55rem;font-weight:700}}.code-grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem}}.origin{{font-size:.9rem;color:#555}}[hidden]{{display:none!important}}:focus{{outline:3px solid #0a76f6;outline-offset:2px}}@media(max-width:800px){{.code-grid{{grid-template-columns:1fr}}}}</style></head><body><header><h1>Pré-audit RGAA instrumenté par règle et instance</h1><p><b>{html.escape(config['campaign']['name'])}</b></p><p class='warning'>{len(signals)} signal(s), {confirmed} NC confirmée(s), {retest} à retester, {non_tested} signal(s) sans qualification, {sum(x['status'] == 'A_REVOIR' for x in reviews)} test(s) à revoir. Aucun taux RGAA officiel.</p><p><a href='REVUE-MANUELLE-258.md'>File de revue des {len(reviews)} tests</a> · <a href='MATRICE-TESTS-258.md'>Matrice d’exécution</a></p></header><nav aria-label='Pages auditées'><h2>Accès direct</h2><ul>{nav}</ul></nav>{filters}<h2>Causes racines</h2><table><thead><tr><th>Règle</th><th>Critère</th><th>Test</th><th>Sévérité</th><th>Cause</th><th>Instances</th><th>Confirmées</th><th>Pages</th></tr></thead><tbody>{root_rows}</tbody></table><main>{''.join(sections)}</main>{script}</body></html>"
-    atomic_text(rgaa_root / "AUDIT-PAR-PAGE.html", document)
+    # Le HTML publié est produit exclusivement par audit_report_builder.py.
+    # ``document`` reste une représentation transitoire pour les données
+    # historiques de ce générateur.
     root_md = (
         "\n".join(
             f"| `{x['rule_id']}` | {x['criterion']} | {x['test']} | {x['severity']} | {x['title'].replace('|', '—')} | {x['count']} | {x['confirmed']} | {', '.join(x['pages'])} |"
@@ -1833,7 +2011,7 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
 - **NC confirmées après revue :** {confirmed}
 - **Signaux à retester :** {retest}
 - **Signaux sans qualification :** {non_tested}
-- **Tests du plan AY11 :** {len(reviews)}
+- **Tests du plan RGAA 4.1.2 :** {len(reviews)}
 - **Tests restant à revoir :** {sum(x["status"] == "A_REVOIR" for x in reviews)}
 
 > Préqualification instrumentée. Aucun taux RGAA officiel ; les tests applicables doivent être décidés humainement.
@@ -1850,13 +2028,6 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
 - [Constats JSON](CONSTATS-INSTANCES.json)
 """
     atomic_text(rgaa_root / "RAPPORT-CONSOLIDE.md", report)
-    root_html = root / "AUDIT-PAR-PAGE.html"
-    if root_html.is_file():
-        value = root_html.read_text(encoding="utf-8")
-        marker = "</header>"
-        addition = "<p><a href='rgaa/AUDIT-PAR-PAGE.html'><strong>Ouvrir le pré-audit RGAA détaillé par instance</strong></a> · <a href='rgaa/REVUE-MANUELLE-258.md'>Revue des 258 tests</a></p>"
-        if addition not in value:
-            atomic_text(root_html, value.replace(marker, addition + marker, 1))
     consolidated = root / "RAPPORT-CONSOLIDE.md"
     if consolidated.is_file():
         value = consolidated.read_text(encoding="utf-8")
@@ -2284,7 +2455,7 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
     filters = "<div class='filters' role='group' aria-label='Filtres des constats'><button type='button' data-filter='all'>Tous</button><button type='button' data-filter='ECART_CONFIRME'>Écarts confirmés</button><button type='button' data-filter='A_CONFIRMER'>À confirmer</button><button type='button' data-filter='Bloquant'>Bloquants</button><button type='button' data-filter='migration'>Migration</button><label>Rechercher <input id='finding-search' type='search'></label></div>"
     script = """<script>(()=>{const cards=[...document.querySelectorAll('.finding')];let active='all';const apply=()=>{const q=(document.querySelector('#finding-search')?.value||'').toLowerCase();for(const card of cards){const match=active==='all'||card.dataset.status===active||card.dataset.severity===active||card.dataset.kind===active;card.hidden=!(match&&card.textContent.toLowerCase().includes(q));}};document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{active=button.dataset.filter;apply();}));document.querySelector('#finding-search')?.addEventListener('input',apply);})();</script>"""
     document = f"<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Audit DSFR détaillé — {html.escape(config['campaign']['name'])}</title><style>body{{font:16px/1.55 system-ui,sans-serif;color:#161616;max-width:1220px;margin:auto;padding:1rem}}header{{border-bottom:5px solid #000091}}.warning{{background:#fff4e5;border-left:6px solid #e4794a;padding:1rem}}section{{margin:3rem 0;border-top:2px solid #ddd;padding-top:1rem}}table{{border-collapse:collapse;width:100%;display:block;overflow:auto}}th,td{{border:1px solid #ccc;padding:.65rem;text-align:left;vertical-align:top}}th{{background:#eee}}code{{white-space:normal}}pre{{background:#f6f6f6;border:1px solid #ddd;padding:1rem;overflow:auto;max-height:26rem}}pre code{{white-space:pre-wrap}}a{{color:#000091}}:focus{{outline:3px solid #0a76f6;outline-offset:2px}}.filters{{position:sticky;top:0;background:#fff;border:1px solid #ccc;padding:.75rem;display:flex;gap:.5rem;flex-wrap:wrap;z-index:2}}.filters button{{padding:.55rem;border:1px solid #000091;background:#eee}}.finding{{border:2px solid #ddd;border-left:7px solid #e4794a;padding:1rem;margin:1.5rem 0}}.badges{{display:flex;gap:.5rem;flex-wrap:wrap}}.badges span{{background:#eee;padding:.2rem .55rem;font-weight:700}}.code-grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem}}.origin{{font-size:.9rem;color:#555}}[hidden]{{display:none!important}}@media(max-width:800px){{.code-grid{{grid-template-columns:1fr}}}}</style></head><body><header><h1>Audit DSFR détaillé par règle et par instance</h1><p><b>{html.escape(config['campaign']['name'])}</b></p><p class='warning'>{overall}. {len(differences)} signal(s), dont {confirmed_count} confirmé(s) et {candidate_count} à qualifier. Aucune conformité DSFR globale n’est revendiquée.</p><p>Version observée : {html.escape(', '.join(observed_versions) or 'inconnue')} · cible locale : {html.escape(', '.join(target_versions))}. Les règles de composants sont classées migration quand la référence exacte observée n’est pas disponible.</p></header><nav aria-label='Pages auditées'><h2>Accès direct</h2><ul>{nav}</ul></nav>{filters}{root_summary}<main>{''.join(sections)}</main><footer><p><a href='RAPPORT-CONSOLIDE.md'>Synthèse</a> · <a href='MATRICE-RESPECT-DSFR.md'>Matrice DSFR</a> · <a href='../AUDIT-PAR-PAGE.html'>Rapport RGAA</a></p></footer>{script}</body></html>"
-    atomic_text(dsfr_root / "AUDIT-PAR-PAGE.html", document)
+    # Le HTML publié est produit exclusivement par audit_report_builder.py.
 
     root_md = (
         "\n".join(
@@ -2511,7 +2682,8 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
     )
     root_summary = f"<div class='root-causes'><h2>Causes racines consolidées</h2><table><thead><tr><th>Sévérité</th><th>Élément</th><th>Cause</th><th>Occurrences</th><th>Pages</th></tr></thead><tbody>{root_rows}</tbody></table></div>"
     document = f"<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Audit DSFR — {html.escape(config['campaign']['name'])}</title><style>body{{font:16px/1.55 system-ui,sans-serif;color:#161616;max-width:1180px;margin:auto;padding:1rem}}header{{border-bottom:5px solid #000091}}.warning{{background:#fff4e5;border-left:6px solid #e4794a;padding:1rem}}section{{margin:3rem 0;border-top:2px solid #ddd;padding-top:1rem}}table{{border-collapse:collapse;width:100%;display:block;overflow:auto}}th,td{{border:1px solid #ccc;padding:.65rem;text-align:left;vertical-align:top}}th{{background:#eee}}code{{white-space:normal}}a{{color:#000091}}:focus{{outline:3px solid #0a76f6;outline-offset:2px}}</style></head><body><header><h1>Audit des composants et du respect du DSFR</h1><p><b>{html.escape(config['campaign']['name'])}</b></p><p class='warning'>{overall}. {len(differences)} écart(s) observé(s). Vérification bornée : aucune conformité DSFR globale n’est revendiquée.</p></header><nav aria-label='Pages auditées'><h2>Accès direct</h2><ul>{nav}</ul></nav>{root_summary}<main>{''.join(sections)}</main><footer><p><a href='RAPPORT-CONSOLIDE.md'>Synthèse</a> · <a href='MATRICE-RESPECT-DSFR.md'>Matrice DSFR</a> · <a href='../AUDIT-PAR-PAGE.html'>Rapport RGAA</a></p></footer></body></html>"
-    atomic_text(dsfr_root / "AUDIT-PAR-PAGE.html", document)
+    # Cette fonction legacy n'est plus appelée. Le builder commun est l'unique
+    # producteur des rapports HTML publiés.
     root_md = (
         "\n".join(
             f"| {item['severity']} | {item['component']} | {str(item['title']).replace('|', '—')} | {item['count']} | {', '.join(str(page) for page in item['pages'])} |"
@@ -2763,7 +2935,7 @@ d’écran ou parcours authentifié n’est revendiqué sans preuve dédiée.
         for p in config["sample"]
     )
     doc = f"""<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Audit RGAA — {html.escape(config["campaign"]["name"])}</title><style>body{{font:16px/1.55 system-ui,sans-serif;color:#161616;max-width:1180px;margin:auto;padding:1rem}}header{{border-bottom:5px solid #000091}}.warning{{background:#fff4e5;border-left:6px solid #e4794a;padding:1rem}}nav ul{{columns:2}}section{{margin:3rem 0;border-top:2px solid #ddd;padding-top:1rem}}table{{border-collapse:collapse;width:100%;display:block;overflow:auto}}th,td{{border:1px solid #ccc;padding:.65rem;text-align:left;vertical-align:top}}th{{background:#eee}}.bad{{color:#ce0500}}.note{{color:#6a4800}}a{{color:#000091}}:focus{{outline:3px solid #0a76f6;outline-offset:2px}}@media(max-width:700px){{nav ul{{columns:1}}}}</style></head><body><header><h1>Audit RGAA automatisé page par page</h1><p><b>{html.escape(config["campaign"]["name"])}</b></p><p class='warning'>{counts["NC-A"]} critère(s) NC-A consolidé(s), {counts["NT"]} NT. Aucun taux RGAA officiel. Préqualification lecteur d’écran par arbre a11y uniquement.</p></header><nav aria-label='Pages auditées'><h2>Accès direct</h2><ul>{nav}</ul></nav><main>{"".join(page_sections)}</main><footer><p><a href='RAPPORT-CONSOLIDE.md'>Synthèse</a> · <a href='MATRICE-RGAA-106.md'>Matrice 106</a></p></footer></body></html>"""
-    atomic_text(root / "AUDIT-PAR-PAGE.html", doc)
+    # Le portail HTML publié est produit exclusivement par le builder DSFR.
     if config.get("phases", {}).get("rgaa_checks", False):
         generate_rgaa_v2_reports(config, root)
     if config.get("phases", {}).get("dsfr_checks", False):
@@ -2772,8 +2944,10 @@ d’écran ou parcours authentifié n’est revendiqué sans preuve dédiée.
         "phases", {}
     ).get("dsfr_checks", False):
         generate_engine_coverage(root)
-        generate_audit_portal(config, root)
-    editorial_paths = list(root.glob("*.md")) + [root / "AUDIT-PAR-PAGE.html"]
+    # Toujours demander au builder le portail publié, même si une campagne
+    # ne garde qu'une des deux phases d'audit.
+    generate_audit_portal(config, root)
+    editorial_paths = list(root.glob("*.md"))
     for directory in (root / "rgaa", root / "dsfr", root / "pages", root / "tickets"):
         if directory.is_dir():
             editorial_paths.extend(
@@ -2904,7 +3078,7 @@ def validate_campaign(
         "qualification.json",
         "MATRICE-RGAA-106.md",
         "RAPPORT-CONSOLIDE.md",
-        "AUDIT-PAR-PAGE.html",
+        "PORTAIL-AUDITS.html",
         "MANIFESTE-ARTEFACTS.json",
     ):
         if not (root / rel).is_file():
@@ -2957,14 +3131,19 @@ def validate_campaign(
                 errors.append(f"Constat {i + 1} : chemin de preuve non portable")
             elif not (root / evidence_path).exists():
                 errors.append(f"Constat {i + 1} : preuve absente {evidence}")
-    html_path = root / "AUDIT-PAR-PAGE.html"
+    html_path = root / "PORTAIL-AUDITS.html"
     if html_path.is_file():
         doc = html_path.read_text(encoding="utf-8")
         section_ids = set(re.findall(r"<section id=['\"]([^'\"]+)", doc))
+        page_section_ids = {
+            value for value in section_ids if re.fullmatch(r"P\d+", value)
+        }
+        page_cards = set(re.findall(r"<h3[^>]*>\s*(P\d+)\s*-", doc))
+        all_ids = set(re.findall(r"\bid=['\"]([^'\"]+)", doc))
         anchors = re.findall(r"href=['\"]#([^'\"]+)", doc)
-        if set(ids) != section_ids:
+        if not set(ids).issubset(page_cards | page_section_ids):
             errors.append("Sections HTML différentes de l’échantillon")
-        if any(anchor not in section_ids for anchor in anchors):
+        if any(anchor not in all_ids for anchor in anchors):
             errors.append("Ancre HTML interne cassée")
         if re.search(r"taux (?:de )?conformité\s*[:=]?\s*\d", doc, re.IGNORECASE):
             errors.append("Taux de conformité interdit détecté")

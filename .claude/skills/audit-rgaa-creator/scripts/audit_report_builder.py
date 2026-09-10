@@ -795,18 +795,8 @@ def generate_audit_portal(config: dict[str, Any], root: Path) -> dict[str, Any]:
             _build(dsfr_page_config, out_config / f"dsfr-{pid}.json", dsfr_page_output)
             outputs.append(dsfr_page_output)
 
-    legacy_html = root / "AUDIT-PAR-PAGE.html"
-    if legacy_html.is_file():
-        value = legacy_html.read_text(encoding="utf-8")
-        link = f"<p><a href='PORTAIL-AUDITS.html'><strong>Ouvrir le portail {portal_type} généré avec le builder DSFR</strong></a></p>"
-        value = re.sub(
-            r"<p><a href='PORTAIL-AUDITS\.html'><strong>Ouvrir le portail .*? généré avec le builder DSFR</strong></a></p>",
-            "",
-            value,
-        )
-        legacy_html.write_text(
-            value.replace("</header>", link + "</header>", 1), encoding="utf-8"
-        )
+    # Le builder est l'unique écrivain HTML public. Les anciens rapports HTML
+    # racine ne sont ni modifiés ni réhabilités.
     consolidated = root / "RAPPORT-CONSOLIDE.md"
     if consolidated.is_file():
         value = consolidated.read_text(encoding="utf-8")

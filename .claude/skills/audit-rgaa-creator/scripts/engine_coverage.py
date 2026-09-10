@@ -10,6 +10,7 @@ from typing import Any
 
 SKILLS_ROOT = Path(__file__).resolve().parents[2]
 RGAA_RULES = SKILLS_ROOT / "audit-rgaa-complet/rules/rgaa-rules.json"
+RGAA_REFERENTIAL = SKILLS_ROOT / "audit-rgaa-complet/references/rgaa-4.1.2.json"
 
 
 def _read(path: Path, fallback: Any) -> Any:
@@ -56,6 +57,11 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
         for test in plan.get("proof_contract", {}).get("tests", []):
             ay11_tests[str(test.get("test_id"))] = test
 
+    embedded_tests = _read(RGAA_REFERENTIAL, {}).get("tests", [])
+    embedded_by_test = {
+        str(test.get("test_id")): test for test in embedded_tests if test.get("test_id")
+    }
+
     probe_criteria: dict[str, list[str]] = collections.defaultdict(list)
     for probe_path in sorted((root / "collectes-ay11").glob("P*/attempt-*/*.json")):
         if probe_path.name == "rgaa-collected-plan.json":
@@ -66,7 +72,7 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
             probe_criteria[criterion_id].append(str(probe_path.relative_to(root)))
 
     official_tests = sorted(
-        set(decisions_by_test) or set(ay11_tests),
+        set(decisions_by_test) or set(ay11_tests) or set(embedded_by_test),
         key=lambda value: tuple(int(part) for part in value.split(".")),
     )
     rows: list[dict[str, Any]] = []
@@ -94,7 +100,7 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
             "coverage_mode": coverage_mode,
             "coverage_complete": bool(decision.get("coverage_complete", False)),
             "executable_rules": executable_rules,
-            "ay11_collection_status": ay11_tests.get(test_id, {}).get("collection_status", "ABSENT"),
+            "ay11_collection_status": ay11_tests.get(test_id, {}).get("collection_status", "NON_SOLLICITE"),
             "ay11_collected": ay11_collected,
             "ay11_probes": probes,
             "positive_candidate_codes": candidate_codes,
@@ -125,6 +131,19 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
             "flags": dsfr_flags,
         })
 
+    axe_pages = []
+    axe_mapped_candidates = 0
+    axe_unmapped_violations = 0
+    for axe_path in sorted((root / "tests-wcag").glob("P*.json")):
+        axe_document = _read(axe_path, {})
+        axe_result = axe_document.get("axe_core", {})
+        if not isinstance(axe_result, dict):
+            continue
+        if axe_result.get("status") == "collected":
+            axe_pages.append(axe_path.stem)
+            axe_mapped_candidates += len(axe_result.get("rgaa_candidates", []))
+            axe_unmapped_violations += len(axe_result.get("unmapped_violations", []))
+
     summary = {
         "official_rgaa_tests": len(official_tests),
         "rgaa_catalog_rules": len(rules),
@@ -136,6 +155,9 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
         "ay11_positive_tests_unlinked_to_decision": sum("SIGNAUX_AY11_NON_BRANCHES" in row["flags"] for row in rows),
         "confirmed_decisions_without_declared_coverage": sum("DECISION_CONFIRMEE_SANS_COUVERTURE_DECLAREE" in row["flags"] for row in rows),
         "rgaa_tests_requiring_additional_protocol": sum("PROTOCOLE_COMPLEMENTAIRE_REQUIS" in row["flags"] for row in rows),
+        "rgaa_pages_with_axe_core": len(axe_pages),
+        "rgaa_axe_mapped_candidates": axe_mapped_candidates,
+        "rgaa_axe_unmapped_violations": axe_unmapped_violations,
         "dsfr_catalog_rules": int(dsfr_dimensions.get("summary", {}).get("catalog_rules", 0)),
         "observed_dsfr_class_tokens": int(dsfr_dimensions.get("summary", {}).get("observed_fr_classes", 0)),
         "dsfr_class_tokens_targeted_by_rule": int(dsfr_dimensions.get("summary", {}).get("classes_targeted_by_rule", 0)),
@@ -179,6 +201,9 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
         "ay11_positive_tests_unlinked_to_decision": "Tests avec signaux AY11 non reliés à la décision",
         "confirmed_decisions_without_declared_coverage": "Décisions confirmées sans couverture déclarée",
         "rgaa_tests_requiring_additional_protocol": "Tests à retester",
+        "rgaa_pages_with_axe_core": "Pages avec collecte axe-core",
+        "rgaa_axe_mapped_candidates": "Candidats axe-core reliés au RGAA",
+        "rgaa_axe_unmapped_violations": "Violations axe-core non reliées",
         "dsfr_catalog_rules": "Règles du catalogue DSFR",
         "observed_dsfr_class_tokens": "Classes fr-* observées",
         "dsfr_class_tokens_targeted_by_rule": "Classes fr-* citées par une règle",

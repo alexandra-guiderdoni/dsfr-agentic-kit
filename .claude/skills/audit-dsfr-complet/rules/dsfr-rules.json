@@ -12,6 +12,8 @@
     {
       "rule_id": "DSFR-HEADER-STRUCTURE-001",
       "component": "header",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-header",
       "severity": "Bloquant",
       "title": "Structure d’en-tête DSFR incomplète",
@@ -30,6 +32,8 @@
     {
       "rule_id": "DSFR-FOOTER-STRUCTURE-001",
       "component": "footer",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-footer",
       "severity": "Bloquant",
       "title": "Structure de pied de page DSFR incomplète",
@@ -65,6 +69,8 @@
     {
       "rule_id": "DSFR-TRANSLATE-STRUCTURE-001",
       "component": "translate",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-translate",
       "severity": "Majeur",
       "title": "Sélecteur de langue DSFR incomplet",
@@ -104,6 +110,8 @@
     {
       "rule_id": "DSFR-CONSENT-STRUCTURE-001",
       "component": "consent",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-consent-banner",
       "severity": "Majeur",
       "title": "Bandeau de consentement DSFR incomplet",
@@ -143,19 +151,23 @@
       "version_scope": "VERSION_INDEPENDENT",
       "severity": "Majeur",
       "title": "Structure de carte DSFR incomplète",
-      "expected": "Une carte contenant .fr-card__body et .fr-card__title.",
-      "expected_html": "<div class=\"fr-card\"><div class=\"fr-card__body\"><div class=\"fr-card__content\"><h2 class=\"fr-card__title\">…</h2></div></div></div>",
+      "expected": "Une carte contenant .fr-card__body, .fr-card__content et .fr-card__title.",
+      "expected_html": "<div class=\"fr-card\"><div class=\"fr-card__body\"><div class=\"fr-card__content\"><h2 class=\"fr-card__title\"><a>…</a></h2></div></div></div>",
       "source": "dsfr-components/references/components/content-media/cards.md",
       "recommendation": "Ne pas utiliser .fr-card comme simple boîte ; restaurer les sous-éléments de la carte ou utiliser une classe de mise en page adaptée.",
       "verification": "Inspecter chaque racine .fr-card et ses sous-éléments structurants.",
       "conditions": [
         {"type": "descendant_min", "selector": ".fr-card__body", "min": 1, "message": ".fr-card__body est absent."},
-        {"type": "descendant_min", "selector": ".fr-card__title", "min": 1, "message": ".fr-card__title est absent."}
+        {"type": "descendant_min", "selector": ".fr-card__title", "min": 1, "message": ".fr-card__title est absent."},
+        {"type": "descendant_min", "selector": ".fr-card__content", "min": 1, "message": ".fr-card__content est absent."},
+        {"type": "descendant_min", "selector": ".fr-card__title a, .fr-card--no-link .fr-card__title", "min": 1, "message": "Le titre doit être lié ou la carte explicitement marquée fr-card--no-link."}
       ]
     },
     {
       "rule_id": "DSFR-TILE-STRUCTURE-001",
       "component": "tile",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-tile",
       "severity": "Majeur",
       "title": "Structure de tuile DSFR incomplète",
@@ -172,6 +184,8 @@
     {
       "rule_id": "DSFR-NOTICE-STRUCTURE-001",
       "component": "notice",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-notice",
       "severity": "Majeur",
       "title": "Structure de bandeau d’information DSFR incomplète",
@@ -188,6 +202,8 @@
     {
       "rule_id": "DSFR-CALLOUT-STRUCTURE-001",
       "component": "callout",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-callout",
       "severity": "Majeur",
       "title": "Mise en avant DSFR incomplète",
@@ -291,6 +307,8 @@
     {
       "rule_id": "DSFR-FOLLOW-STRUCTURE-001",
       "component": "follow",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-follow",
       "severity": "Majeur",
       "title": "Bloc de suivi DSFR incomplet",
@@ -308,6 +326,8 @@
     {
       "rule_id": "DSFR-ACCORDION-STRUCTURE-001",
       "component": "accordion",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-accordion",
       "severity": "Bloquant",
       "title": "Accordéon DSFR incomplet",
@@ -318,12 +338,16 @@
       "verification": "Exercer ouverture et fermeture au clavier après initialisation DSFR.",
       "conditions": [
         {"type": "descendant_min", "selector": ".fr-accordion__btn[aria-controls][aria-expanded]", "min": 1, "message": "Le bouton d’accordéon ou ses attributs ARIA sont absents."},
-        {"type": "descendant_min", "selector": ".fr-collapse", "min": 1, "message": "Le panneau .fr-collapse est absent."}
+        {"type": "descendant_min", "selector": ".fr-collapse", "min": 1, "message": "Le panneau .fr-collapse est absent."},
+        {"type": "descendant_min", "selector": ".fr-accordion__title", "min": 1, "message": "Le titre .fr-accordion__title est absent."},
+        {"type": "descendant_min", "selector": ".fr-accordion__title .fr-accordion__btn", "min": 1, "message": "Le bouton doit être contenu dans le titre de l’accordéon."}
       ]
     },
     {
       "rule_id": "DSFR-TABS-STRUCTURE-001",
       "component": "tabs",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-tabs",
       "severity": "Bloquant",
       "title": "Onglets DSFR incomplets",
@@ -333,23 +357,30 @@
       "recommendation": "Restaurer les rôles, relations et panneaux documentés.",
       "verification": "Exercer les flèches, l’activation et le focus après initialisation DSFR.",
       "conditions": [
-        {"type": "descendant_min", "selector": ".fr-tabs__tab[aria-controls][aria-selected]", "min": 1, "message": "Les onglets ou leurs relations ARIA sont absents."},
-        {"type": "descendant_min", "selector": ".fr-tabs__panel", "min": 1, "message": "Les panneaux d’onglets sont absents."}
+        {"type": "descendant_min", "selector": ".fr-tabs__list[role=\"tablist\"]", "min": 1, "message": "La liste des onglets doit porter role=tablist."},
+        {"type": "descendant_min", "selector": ".fr-tabs__tab[role=\"tab\"][aria-controls][aria-selected][id]", "min": 1, "message": "Les onglets ou leurs relations ARIA sont absents."},
+        {"type": "descendant_min", "selector": ".fr-tabs__panel[role=\"tabpanel\"][aria-labelledby]", "min": 1, "message": "Les panneaux d’onglets sont absents."},
+        {"type": "descendant_min", "selector": ".fr-tabs__panel--selected", "min": 1, "message": "Un panneau d’onglet sélectionné est absent."}
       ]
     },
     {
       "rule_id": "DSFR-TABLE-STRUCTURE-001",
       "component": "table",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-table",
       "severity": "Majeur",
       "title": "Tableau DSFR incomplet",
-      "expected": "Une enveloppe .fr-table contenant un élément table.",
-      "expected_html": "<div class=\"fr-table\"><table>…</table></div>",
+      "expected": "Une enveloppe .fr-table complète contenant un tableau légendé.",
+      "expected_html": "<div class=\"fr-table\"><div class=\"fr-table__wrapper\"><div class=\"fr-table__container\"><div class=\"fr-table__content\"><table><caption>…</caption></table></div></div></div></div>",
       "source": "dsfr-components/references/components/content-media/tables.md",
       "recommendation": "Conserver l’enveloppe et le tableau documentés ; vérifier séparément la sémantique RGAA.",
       "verification": "Inspecter l’élément table et ses en-têtes.",
       "conditions": [
-        {"type": "descendant_min", "selector": "table", "min": 1, "message": "Aucun élément table n’est présent dans .fr-table."}
+        {"type": "descendant_min", "selector": ".fr-table__wrapper", "min": 1, "message": "L’enveloppe .fr-table__wrapper est absente."},
+        {"type": "descendant_min", "selector": ".fr-table__container", "min": 1, "message": "L’enveloppe .fr-table__container est absente."},
+        {"type": "descendant_min", "selector": ".fr-table__content", "min": 1, "message": "L’enveloppe .fr-table__content est absente."},
+        {"type": "descendant_min", "selector": "table caption", "min": 1, "message": "Le tableau DSFR doit comporter une légende caption."}
       ]
     },
     {
@@ -374,6 +405,8 @@
     {
       "rule_id": "DSFR-MEGA-MENU-STRUCTURE-001",
       "component": "mega_menu",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-mega-menu",
       "severity": "Bloquant",
       "title": "Méga-menu DSFR incomplet",
@@ -407,6 +440,8 @@
     {
       "rule_id": "DSFR-BUTTON-GROUP-STRUCTURE-001",
       "component": "button_group",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-btns-group",
       "severity": "Majeur",
       "title": "Groupe de boutons DSFR incomplet",
@@ -441,6 +476,8 @@
     {
       "rule_id": "DSFR-CONSENT-MANAGER-STRUCTURE-001",
       "component": "consent_manager",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-consent-manager",
       "severity": "Bloquant",
       "title": "Gestionnaire de consentement DSFR incomplet",
@@ -456,6 +493,8 @@
     {
       "rule_id": "DSFR-CONSENT-SERVICE-STRUCTURE-001",
       "component": "consent_service",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-consent-service",
       "severity": "Bloquant",
       "title": "Service de consentement DSFR incomplet",
@@ -473,6 +512,8 @@
     {
       "rule_id": "DSFR-CONSENT-ACTIONS-STRUCTURE-002",
       "component": "consent_manager",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-consent-manager__buttons",
       "severity": "Majeur",
       "title": "Groupe d’actions de consentement incomplet",
@@ -490,6 +531,8 @@
     {
       "rule_id": "DSFR-CONSENT-REQUIRED-DISABLED-003",
       "component": "consent_service",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-consent-service:has(input[value=\"required\"])",
       "severity": "Majeur",
       "title": "État du consentement obligatoire incohérent",
@@ -506,6 +549,8 @@
     {
       "rule_id": "DSFR-DISPLAY-STRUCTURE-001",
       "component": "display",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-display",
       "severity": "Bloquant",
       "title": "Paramètre d’affichage DSFR incomplet",
@@ -542,6 +587,8 @@
     {
       "rule_id": "DSFR-LOGO-STRUCTURE-001",
       "component": "logo",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2",
       "selector": ".fr-logo",
       "severity": "Majeur",
       "title": "Bloc marque DSFR incomplet",
@@ -602,7 +649,9 @@
       "rule_id": "DSFR-INPUT-LABEL-001", "component": "input", "selector": ".fr-input", "version_scope": "VERSION_INDEPENDENT", "severity": "Bloquant", "title": "Champ DSFR sans étiquette résolue", "expected": "Chaque champ fr-input possède une étiquette HTML ou ARIA résolue.", "expected_html": "<label class=\"fr-label\" for=\"champ\">Libellé</label><input class=\"fr-input\" id=\"champ\">", "source": "dsfr-components/references/components/forms-services/forms/fields.md", "recommendation": "Associer une étiquette pertinente au champ.", "verification": "Contrôler le nom accessible et activer le label.", "conditions": [{"type": "tag_in", "values": ["INPUT", "TEXTAREA", "SELECT"], "message": "fr-input est porté par un élément incompatible."}, {"type": "self_labelled", "message": "Aucune étiquette résolue n’est trouvée."}]
     },
     {
-      "rule_id": "DSFR-INPUT-ERROR-STATE-002", "component": "input", "selector": ".fr-input[aria-invalid=\"true\"]", "severity": "Majeur", "title": "Champ en erreur sans modificateur DSFR", "expected": "Dans l’état erreur de la cible 1.15.2, le groupe et le champ portent leurs modificateurs error et le message est relié au champ.", "expected_html": "<div class=\"fr-input-group fr-input-group--error\"><input class=\"fr-input fr-input--error\" aria-invalid=\"true\" aria-describedby=\"champ-erreur\"><p id=\"champ-erreur\" class=\"fr-error-text\">Erreur</p></div>", "source": "dsfr-components/references/components/forms-services/forms/fields.md", "recommendation": "Ajouter fr-input--error au champ et conserver le groupe, le message et aria-describedby cohérents.", "verification": "Déclencher chaque erreur puis inspecter le groupe, le champ et la restitution du message.", "conditions": [{"type": "self_selector", "selector": ".fr-input--error", "message": "Le champ en erreur ne porte pas fr-input--error."}, {"type": "ancestor_or_self_selector", "selector": ".fr-input-group--error", "message": "Le groupe ne porte pas fr-input-group--error."}, {"type": "attribute_non_empty", "name": "aria-describedby", "message": "Le champ en erreur ne référence aucun message."}]
+      "rule_id": "DSFR-INPUT-ERROR-STATE-002", "component": "input",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2", "selector": ".fr-input[aria-invalid=\"true\"]", "severity": "Majeur", "title": "Champ en erreur sans modificateur DSFR", "expected": "Dans l’état erreur de la cible 1.15.2, le groupe et le champ portent leurs modificateurs error et le message est relié au champ.", "expected_html": "<div class=\"fr-input-group fr-input-group--error\"><input class=\"fr-input fr-input--error\" aria-invalid=\"true\" aria-describedby=\"champ-erreur\"><p id=\"champ-erreur\" class=\"fr-error-text\">Erreur</p></div>", "source": "dsfr-components/references/components/forms-services/forms/fields.md", "recommendation": "Ajouter fr-input--error au champ et conserver le groupe, le message et aria-describedby cohérents.", "verification": "Déclencher chaque erreur puis inspecter le groupe, le champ et la restitution du message.", "conditions": [{"type": "self_selector", "selector": ".fr-input--error", "message": "Le champ en erreur ne porte pas fr-input--error."}, {"type": "ancestor_or_self_selector", "selector": ".fr-input-group--error", "message": "Le groupe ne porte pas fr-input-group--error."}, {"type": "attribute_non_empty", "name": "aria-describedby", "message": "Le champ en erreur ne référence aucun message."}]
     },
     {
       "rule_id": "DSFR-SELECT-STRUCTURE-001", "component": "select", "selector": ".fr-select-group", "version_scope": "VERSION_INDEPENDENT", "severity": "Bloquant", "title": "Sélecteur DSFR sans liste ou étiquette", "expected": "Chaque groupe de sélection contient un select fr-select associé à un label persistant.", "expected_html": "<div class=\"fr-select-group\"><label class=\"fr-label\" for=\"choix\">Choix</label><select class=\"fr-select\" id=\"choix\"><option>Option</option></select></div>", "source": "dsfr-components/references/components/forms-services/forms/choices.md", "recommendation": "Conserver le select natif fr-select et son label associé dans le même groupe.", "verification": "Parcourir chaque option au clavier et contrôler le nom accessible du select.", "conditions": [{"type": "descendant_min", "selector": "select.fr-select", "min": 1, "message": "Aucun select fr-select n’est présent."}, {"type": "descendant_labelled", "selector": "select.fr-select", "message": "Un select fr-select n’a pas de label associé."}]
@@ -614,16 +663,24 @@
       "rule_id": "DSFR-MESSAGES-GROUP-STRUCTURE-001", "component": "message_group", "selector": ".fr-messages-group", "version_scope": "VERSION_INDEPENDENT", "severity": "Majeur", "title": "Groupe de messages DSFR non relié ou non annoncé", "expected": "Chaque groupe de messages possède un identifiant et aria-live=polite. Lorsqu’il contient un message, il est référencé par aria-describedby.", "expected_html": "<textarea aria-describedby=\"champ-messages\"></textarea><div class=\"fr-messages-group\" id=\"champ-messages\" aria-live=\"polite\"></div>", "source": "dsfr-components/references/components/forms-services/forms/fields.md", "recommendation": "Identifier le groupe, le référencer avec aria-describedby et conserver aria-live=polite.", "verification": "Déclencher une mise à jour du message et contrôler sa restitution sans déplacement du focus.", "conditions": [{"type": "attribute_non_empty", "name": "id", "message": "Le groupe de messages n’a pas d’identifiant."}, {"type": "attribute_equals", "name": "aria-live", "value": "polite", "message": "aria-live=polite est absent."}, {"type": "referenced_by_attribute_or_empty", "name": "aria-describedby", "message": "Le groupe non vide n’est référencé par aucun aria-describedby."}]
     },
     {
-      "rule_id": "DSFR-TAGS-GROUP-002", "component": "tag_group", "selector": ".fr-tags-group", "severity": "Majeur", "title": "Groupe de tags sans tag", "expected": "Chaque groupe fr-tags-group contient au moins un composant fr-tag.", "expected_html": "<ul class=\"fr-tags-group\"><li><a class=\"fr-tag\">Tag</a></li></ul>", "source": "dsfr-components/references/components/feedback-actions/tags.md", "recommendation": "Restaurer la structure documentée du groupe de tags.", "verification": "Comparer le DOM rendu à la structure de référence disponible.", "conditions": [{"type": "descendant_min", "selector": ".fr-tag", "min": 1, "message": "Aucun fr-tag n’est présent dans le groupe."}]
+      "rule_id": "DSFR-TAGS-GROUP-002", "component": "tag_group",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2", "selector": ".fr-tags-group", "severity": "Majeur", "title": "Groupe de tags sans tag", "expected": "Chaque groupe fr-tags-group contient au moins un composant fr-tag.", "expected_html": "<ul class=\"fr-tags-group\"><li><a class=\"fr-tag\">Tag</a></li></ul>", "source": "dsfr-components/references/components/feedback-actions/tags.md", "recommendation": "Restaurer la structure documentée du groupe de tags.", "verification": "Comparer le DOM rendu à la structure de référence disponible.", "conditions": [{"type": "descendant_min", "selector": ".fr-tag", "min": 1, "message": "Aucun fr-tag n’est présent dans le groupe."}]
     },
     {
-      "rule_id": "DSFR-ARTWORK-LAYERS-001", "component": "artwork", "selector": "svg.fr-artwork", "severity": "Majeur", "title": "Pictogramme DSFR incomplet", "expected": "Un pictogramme décoratif contient les trois couches artwork et est masqué aux technologies d’assistance.", "expected_html": "<svg class=\"fr-artwork\" aria-hidden=\"true\"><use class=\"fr-artwork-decorative\">…</use><use class=\"fr-artwork-minor\">…</use><use class=\"fr-artwork-major\">…</use></svg>", "source": "dsfr-components/references/pictograms.md", "recommendation": "Restaurer les couches et le statut décoratif du pictogramme.", "verification": "Inspecter le SVG rendu puis l’arbre d’accessibilité.", "conditions": [{"type": "attribute_equals", "name": "aria-hidden", "value": "true", "message": "aria-hidden=true est absent."}, {"type": "descendant_min", "selector": ".fr-artwork-decorative", "min": 1, "message": "La couche decorative est absente."}, {"type": "descendant_min", "selector": ".fr-artwork-minor", "min": 1, "message": "La couche minor est absente."}, {"type": "descendant_min", "selector": ".fr-artwork-major", "min": 1, "message": "La couche major est absente."}]
+      "rule_id": "DSFR-ARTWORK-LAYERS-001", "component": "artwork",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2", "selector": "svg.fr-artwork", "severity": "Majeur", "title": "Pictogramme DSFR incomplet", "expected": "Un pictogramme décoratif contient les trois couches artwork et est masqué aux technologies d’assistance.", "expected_html": "<svg class=\"fr-artwork\" aria-hidden=\"true\"><use class=\"fr-artwork-decorative\">…</use><use class=\"fr-artwork-minor\">…</use><use class=\"fr-artwork-major\">…</use></svg>", "source": "dsfr-components/references/pictograms.md", "recommendation": "Restaurer les couches et le statut décoratif du pictogramme.", "verification": "Inspecter le SVG rendu puis l’arbre d’accessibilité.", "conditions": [{"type": "attribute_equals", "name": "aria-hidden", "value": "true", "message": "aria-hidden=true est absent."}, {"type": "descendant_min", "selector": ".fr-artwork-decorative", "min": 1, "message": "La couche decorative est absente."}, {"type": "descendant_min", "selector": ".fr-artwork-minor", "min": 1, "message": "La couche minor est absente."}, {"type": "descendant_min", "selector": ".fr-artwork-major", "min": 1, "message": "La couche major est absente."}]
     },
     {
-      "rule_id": "DSFR-RESPONSIVE-IMAGE-001", "component": "responsive_media", "selector": ".fr-responsive-img", "severity": "Majeur", "title": "Classe image responsive sur un élément incompatible", "expected": "fr-responsive-img est portée par une image img.", "expected_html": "<img class=\"fr-responsive-img\" src=\"…\" alt=\"…\">", "source": "dsfr-components/references/utilities/accessibility.md", "recommendation": "Appliquer la classe responsive au média documenté.", "verification": "Contrôler le tag et le rendu aux principaux breakpoints.", "conditions": [{"type": "tag_in", "values": ["IMG"], "message": "fr-responsive-img n’est pas portée par img."}]
+      "rule_id": "DSFR-RESPONSIVE-IMAGE-001", "component": "responsive_media",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2", "selector": ".fr-responsive-img", "severity": "Majeur", "title": "Classe image responsive sur un élément incompatible", "expected": "fr-responsive-img est portée par une image img.", "expected_html": "<img class=\"fr-responsive-img\" src=\"…\" alt=\"…\">", "source": "dsfr-components/references/utilities/accessibility.md", "recommendation": "Appliquer la classe responsive au média documenté.", "verification": "Contrôler le tag et le rendu aux principaux breakpoints.", "conditions": [{"type": "tag_in", "values": ["IMG"], "message": "fr-responsive-img n’est pas portée par img."}]
     },
     {
-      "rule_id": "DSFR-GRID-COLUMNS-001", "component": "grid", "selector": ".fr-grid-row:not(.fr-grid-row--right)", "severity": "Majeur", "title": "Ligne de grille sans colonne DSFR", "expected": "Chaque fr-grid-row contient au moins une colonne fr-col ou fr-col-*.", "expected_html": "<div class=\"fr-grid-row\"><div class=\"fr-col-12\">…</div></div>", "source": "dsfr-components/references/utilities/grid.md", "recommendation": "Placer le contenu de la ligne dans des colonnes DSFR documentées.", "verification": "Inspecter les descendants directs et le rendu responsive.", "conditions": [{"type": "descendant_min", "selector": ".fr-col,[class*=\"fr-col-\"]", "min": 1, "message": "Aucune colonne DSFR n’est présente."}]
+      "rule_id": "DSFR-GRID-COLUMNS-001", "component": "grid",
+      "version_scope": "TARGET_VERSION",
+      "minimum_version": "1.15.2", "selector": ".fr-grid-row:not(.fr-grid-row--right)", "severity": "Majeur", "title": "Ligne de grille sans colonne DSFR", "expected": "Chaque fr-grid-row contient au moins une colonne fr-col ou fr-col-*.", "expected_html": "<div class=\"fr-grid-row\"><div class=\"fr-col-12\">…</div></div>", "source": "dsfr-components/references/utilities/grid.md", "recommendation": "Placer le contenu de la ligne dans des colonnes DSFR documentées.", "verification": "Inspecter les descendants directs et le rendu responsive.", "conditions": [{"type": "descendant_min", "selector": ".fr-col,[class*=\"fr-col-\"]", "min": 1, "message": "Aucune colonne DSFR n’est présente."}]
     },
     {
       "rule_id": "DSFR-BREADCRUMB-STRUCTURE-001", "component": "breadcrumb", "selector": ".fr-breadcrumb", "version_scope": "VERSION_INDEPENDENT", "severity": "Majeur", "title": "Fil d’Ariane incomplet ou non nommé", "expected": "Le fil d’Ariane est une navigation nommée avec une liste, un lien courant et un bouton de dépliage relié à son contenu.", "expected_html": "<nav class=\"fr-breadcrumb\" aria-label=\"Vous êtes ici\"><button class=\"fr-breadcrumb__button\" aria-controls=\"breadcrumb\" aria-expanded=\"false\">Voir le fil d’Ariane</button><div id=\"breadcrumb\" class=\"fr-collapse\"><ol class=\"fr-breadcrumb__list\"><li><a class=\"fr-breadcrumb__link\" aria-current=\"page\">Page</a></li></ol></div></nav>", "source": "dsfr-components/references/components/navigation/breadcrumb-advanced.md", "recommendation": "Restaurer la navigation nommée, la liste, la page courante et la relation du bouton mobile.", "verification": "Contrôler le DOM puis ouvrir et fermer le fil d’Ariane au clavier sur mobile.", "conditions": [{"type": "self_selector", "selector": "nav[aria-label]", "message": "La racine n’est pas une navigation nommée."}, {"type": "descendant_min", "selector": ".fr-breadcrumb__button[aria-controls][aria-expanded]", "min": 1, "message": "Le bouton mobile relié au contenu est absent."}, {"type": "descendant_min", "selector": ".fr-breadcrumb__list", "min": 1, "message": "La liste du fil d’Ariane est absente."}, {"type": "descendant_min", "selector": ".fr-breadcrumb__link[aria-current=\"page\"]", "min": 1, "message": "Le lien de page courante est absent."}]

@@ -20,7 +20,7 @@ borné, jamais une déclaration complète de conformité.
   délais ou autocomplete
 - Compléter un audit axe-core par des contrôles automatisés hors axe-core
 
-Ne pas utiliser pour un scan axe-core général : utiliser `audit-accessibilite-web` ou
+Ne pas utiliser pour un scan axe-core général : utiliser
 `audit-accessibilite-web`.
 
 ## Arguments

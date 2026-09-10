@@ -568,14 +568,18 @@ def generate_page_content(page_type: str, custom_content: str = "", title: str =
                             </div>
                         </fieldset>
 
-                        <div class="fr-btns-group fr-btns-group--right">
-                            <button class="fr-btn" type="submit">
-                                Envoyer
-                            </button>
-                            <button class="fr-btn fr-btn--secondary" type="reset">
-                                Annuler
-                            </button>
-                        </div>
+                        <ul class="fr-btns-group fr-btns-group--right">
+                            <li>
+                                <button class="fr-btn" type="submit">
+                                    Envoyer
+                                </button>
+                            </li>
+                            <li>
+                                <button class="fr-btn fr-btn--secondary" type="reset">
+                                    Annuler
+                                </button>
+                            </li>
+                        </ul>
                     </form>
                     {generate_deferred_validation_script("dsfr-generated-form", ["prenom", "nom", "email", "message", "conditions"])}
                     {custom_content}

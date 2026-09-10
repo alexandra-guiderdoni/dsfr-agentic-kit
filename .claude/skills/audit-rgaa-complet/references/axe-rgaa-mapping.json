@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "mapping conservatif de candidats, jamais verdict RGAA",
+  "image-alt": {"criteria": ["1.1"], "tests": ["1.1.1"], "rule_ids": ["RGAA-1-1-IMAGE-ALT-001"]},
+  "frame-title": {"criteria": ["2.1"], "tests": ["2.1.1"], "rule_ids": ["RGAA-2-1-IFRAME-TITLE-001"]},
+  "link-name": {"criteria": ["6.2"], "tests": ["6.2.1"], "rule_ids": ["RGAA-6-2-LINK-NAME-001"]},
+  "duplicate-id-aria": {"criteria": ["8.2"], "tests": ["8.2.1"], "rule_ids": ["RGAA-8-2-ID-UNIQUE-001"]},
+  "html-has-lang": {"criteria": ["8.3"], "tests": ["8.3.1"], "rule_ids": ["RGAA-8-3-DOCUMENT-LANG-001"]},
+  "document-title": {"criteria": ["8.5"], "tests": ["8.5.1"], "rule_ids": ["RGAA-8-5-DOCUMENT-TITLE-001"]},
+  "heading-order": {"criteria": ["9.1"], "tests": ["9.1.1"], "rule_ids": ["RGAA-9-1-HEADING-ORDER-002"]},
+  "label": {"criteria": ["11.1"], "tests": ["11.1.1"], "rule_ids": ["RGAA-11-1-FIELD-LABEL-001"]},
+  "form-field-multiple-labels": {"criteria": ["11.1"], "tests": ["11.1.1"], "rule_ids": ["RGAA-11-1-FIELD-LABEL-001"]},
+  "color-contrast": {"criteria": ["3.2"], "tests": ["3.2.1"]}
+}

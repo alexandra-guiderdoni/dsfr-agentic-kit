@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 1 - Images
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 9 critères et 59 tests RGAA. Décision opérationnelle : Collecter les images et leurs sources de nom ; automatiser les absences évidentes ; garder rôle réel, pertinence, CAPTCHA, image texte et description détaillée en validation humaine.
 
@@ -16,7 +16,6 @@ Priorité d’intégration : P0 - premier noyau de probes de nom accessible et d
 | `ALT` | `alt-text` | Jugement sur rôle, alternative, image-lien, CAPTCHA, image texte ou image complexe. |
 | `SRT` | `screen-reader-testing` | Validation lecteur d’écran, arbre d’accessibilité, annonces et restitution réelle. |
 | `DSFRC` | `dsfr-components` | Prévention DSFR, modèles de composants et source anti-faux-positif. |
-| `OPQ` | `opquast` | Appui qualité web et priorisation ; non normatif RGAA. |
 
 ## Sources externes, licences et réemploi
 

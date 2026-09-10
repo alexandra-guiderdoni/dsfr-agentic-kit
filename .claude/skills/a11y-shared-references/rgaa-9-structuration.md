@@ -1,6 +1,6 @@
 # RGAA 4.1.2 - Thématique 9 - Structuration de l’information
 
-**Statut** : référence partagée opérationnelle. **Source locale obligatoire** : `references/rgaa/normalized/rgaa-4.1.2.json` et `references/rgaa/checklists/rgaa-4.1.2-checklists.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
+**Statut** : référence partagée opérationnelle. **Référentiel embarqué** : `../audit-rgaa-complet/references/rgaa-4.1.2.json`. **Limite** : ce fichier organise les preuves et les reprises possibles ; il ne produit pas un verdict RGAA final sans exécution et validation humaine lorsque le test l’exige.
 
 Couverture locale : 4 critères et 9 tests RGAA. Décision opérationnelle : Produire plan de titres, listes et citations candidates ; arbitrer l’appropriation sémantique par revue humaine.
 
@@ -16,7 +16,6 @@ Priorité d’intégration : P1 - plan de document et listes candidates.
 | `APDF` | `accessible-pdf` | Production PDF/PDF-UA et points documentaires RGAA 13.3/13.4. |
 | `ADOCX` | `accessible-docx` | Production DOCX structuré et version documentaire accessible possible. |
 | `APPTX` | `accessible-pptx` | Production PPTX : ordre de lecture, langue, alternatives, tableaux et contrastes. |
-| `OPQ` | `opquast` | Appui qualité web et priorisation ; non normatif RGAA. |
 | `DSFRC` | `dsfr-components` | Prévention DSFR, modèles de composants et source anti-faux-positif. |
 
 ## Sources externes, licences et réemploi
