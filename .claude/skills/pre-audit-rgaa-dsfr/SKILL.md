@@ -1,8 +1,8 @@
 ---
 name: pre-audit-rgaa-dsfr
 description: "Utiliser quand l'utilisateur demande un pré-audit RGAA DSFR sur une page isolée avec génération en lot de fiches NC/RECO/NOTE au format ticket-rgaa. Ne pas utiliser pour audit multi-pages, ticket unitaire déjà qualifié ou audit WCAG hors secteur public."
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Bash(agent-browser:*), WebFetch, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__press_key, mcp__chrome-devtools__click, mcp__chrome-devtools__evaluate_script, mcp__chrome-devtools__emulate, mcp__accesslint__audit_url, mcp__accesslint__audit_file, mcp__accesslint__list_rules
-argument-hint: "<url> --projet <dossier-projets-actifs> --page <P01> --nom <nom-page> [--skip-scan] [--nc-only]"
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
+argument-hint: "<url> --projet <chemin-du-projet-de-sortie> --page <P01> --nom <nom-page> [--skip-scan] [--nc-only]"
 context: conversation
 ---
 
@@ -12,20 +12,20 @@ Tu es le processus qui scanne une page, identifie tous ses défauts d'accessibil
 
 ## Arguments
 
-Extraire de `$ARGUMENTS` : URL (obligatoire), `--projet` (dossier dans `projets-actifs/`), `--page` (identifiant court : P01, P02...), `--nom` (nom affiché de la page). Optionnels : `--skip-scan` (sauter phase 1), `--nc-only` (pas de RECO ni NOTE).
+Extraire de `$ARGUMENTS` : URL (obligatoire), `--projet` (chemin du projet de sortie, séparé du kit), `--page` (identifiant court : P01, P02...), `--nom` (nom affiché de la page). Optionnels : `--skip-scan` (sauter phase 1), `--nc-only` (pas de RECO ni NOTE).
 
 Si un argument obligatoire manque, demander à l'utilisateur.
 
 ## Exemple
 
 ```text
-/pre-audit-rgaa-dsfr https://bo-afa2025.bercy.actimage.net/ --projet specinov-afa --page P01 --nom "Accueil"
+/pre-audit-rgaa-dsfr https://example.gouv.fr/ --projet ../audit-example --page P01 --nom "Accueil"
 
-[PRE-AUDIT-RGAA] Phase 0/4 : Pré-vol ............... OK
-[PRE-AUDIT-RGAA] Phase 1/4 : Scan automatisé ....... OK (3 violations)
-[PRE-AUDIT-RGAA] Phase 2/4 : Inspection DOM ......... OK (11 défauts)
+[PRE-AUDIT-RGAA] Phase 0/6 : Pré-vol ............... OK
+[PRE-AUDIT-RGAA] Phase 1/6 : Scan automatisé ....... OK (3 violations)
+[PRE-AUDIT-RGAA] Phase 2/6 : Inspection DOM ......... OK (11 défauts)
   Thématiques non couvertes : 2 (cadres), 3 (couleurs partiellement), 4 (multimédia), 5 (tableaux), 13 (consultation)
-[PRE-AUDIT-RGAA] Phase 3/4 : Triage ................ OK
+[PRE-AUDIT-RGAA] Phase 3/6 : Triage ................ OK
 
 | # | Critère RGAA | Résumé | Sévérité | Type |
 |---|-------------|--------|----------|------|
@@ -33,12 +33,12 @@ Si un argument obligatoire manque, demander à l'utilisateur.
 | 2 | 1.1 | Images décoratives alt non vide | Majeur | NC |
 | 3 | 11.1 | Formulaire recherche sans label visible | Majeur | NC |
 | 4 | 6.1 | Lien "Accès rapide 2" placeholder | Majeur | NC |
-| 5 | — | URLs partage malformées | — | RECO |
+| 5 |  -  | URLs partage malformées |  -  | RECO |
 | ... | | | | |
 
 7 NC + 4 RECO + 1 NOTE = 12 fiches. Générer ? [O/n]
 
-[PRE-AUDIT-RGAA] Phase 4/4 : Génération ............ EN COURS
+[PRE-AUDIT-RGAA] Phase 4/6 : Génération ............ EN COURS
   tickets/accueil/NC-P01-001-formulaire-recherche-etiquette.md ... OK
   tickets/accueil/NC-P01-002-hierarchie-titres-cartes.md ........ OK
   [...]
@@ -58,10 +58,10 @@ Si un argument obligatoire manque, demander à l'utilisateur.
 
 ## Quand ne pas utiliser
 
-- Audit complet multi-pages avec taux de conformité : `/audit-rgaa-dsfr`
+- Audit complet multi-pages : `audit-rgaa-creator`
 - Fiche NC unique à partir d'un défaut déjà identifié : `/ticket-rgaa`
 - Audit WCAG hors secteur public : `/audit-accessibilite-web`
-- Page déjà auditée via `/audit-rgaa-dsfr` (résultats redondants)
+- Page déjà auditée via `audit-rgaa-creator` (résultats redondants)
 
 ## Références
 
@@ -71,7 +71,7 @@ Avant de commencer, lire les fichiers de référence dans `references/` :
 - `references/thematiques-rgaa-inspection.md` : checklist d'inspection DOM par thématique RGAA
 - `references/faux-positifs-dsfr.md` : patterns de faux positifs, attribution cause racine, screenshots interactifs
 - `references/templates-reco-note.md` : templates de fiches RECO, NOTE-INTERNE et NC systémique
-- `references/checklist-page-recherche-filtree.md` : checklist spécialisée pour les pages de recherche filtrée (Views Exposed Form, facettes, pagination) — inclut les patterns Drupal/DSFR récurrents
+- `references/checklist-page-recherche-filtree.md` : checklist spécialisée pour les pages de recherche filtrée (Views Exposed Form, facettes, pagination)  -  inclut les patterns Drupal/DSFR récurrents
 
 Lire aussi :
 - Skill `a11y-shared-references`, fichier `axe-core-scan-patterns.md` : stratégie de scan (3 niveaux de fallback)
@@ -80,7 +80,7 @@ Lire aussi :
 
 Source secondaire RGAA locale :
 
-- si `git-hors-workflow/ay11-pre-audit` existe à la racine du workspace, la consulter pour tout pré-audit RGAA comme source de contrats de preuves, profils RGAA, collecteurs HTML/navigateur et signaux candidats ;
+- si `AY11_ROOT` est défini, ou si `--ay11-root` est fourni, consulter cette source pour les contrats de preuves, profils RGAA, collecteurs HTML/navigateur et signaux candidats ;
 - l'utiliser pour tous les critères RGAA concernés, pas seulement pour les formulaires ;
 - ne jamais interpréter l'absence de signal AY11 comme une conformité ;
 - ne jamais transformer un signal AY11 en NC, RECO ou NOTE sans preuve DOM, arbre d'accessibilité, outil ou validation humaine.
@@ -96,11 +96,12 @@ Pour chaque composant DSFR détecté sur la page, deux sources canoniques à con
 
 ### Stratégie de récupération (3 niveaux)
 
-1. **WebFetch** sur `https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/{composant}/` — souvent bloqué par Cloudflare (403)
-2. **GitHub API** (fallback principal) : `gh api repos/GouvernementFR/dsfr/contents/{chemin} --jq '.content' | base64 -d` — fiable, pas de WAF
-3. **Sources locales** dans `opensrc/` si synchronisées via `/opensrc-sync`
+1. **WebFetch** sur `https://www.systeme-de-design.gouv.fr/composants-et-modeles/composants/{composant}/`  -  souvent bloqué par Cloudflare (403)
+2. **GitHub API** (fallback principal) : `gh api repos/GouvernementFR/dsfr/contents/{chemin} --jq '.content' | base64 -d`  -  fiable, pas de WAF
+3. **Sources locales** dans le chemin fourni par l'utilisateur ou dans
+   `DSFR_REPO_ROOT`, si un clone local de `GouvernementFR/dsfr` est disponible
 
-En pratique, le niveau 2 (GitHub API) est le plus fiable. Toujours récupérer **le template ET la doc accessibilité** — ils peuvent diverger (ex : le template `tag.ejs` génère `<p>` dans un `<li>`, mais la doc accessibilité recommande `<span>`).
+En pratique, le niveau 2 (GitHub API) est le plus fiable. Toujours récupérer **le template ET la doc accessibilité**  -  ils peuvent diverger (ex : le template `tag.ejs` génère `<p>` dans un `<li>`, mais la doc accessibilité recommande `<span>`).
 
 ### Composants courants et chemins
 
@@ -155,24 +156,24 @@ agent-browser close                         # Fermer
 1. **Essayer chrome-devtools MCP d'abord** (plus léger, intégré)
 2. Si MCP indisponible ou si l'interaction échoue → basculer sur `agent-browser`
 3. Pour les **screenshots d'états interactifs** (modale ouverte, focus visible) : `agent-browser` est souvent plus fiable car il gère les refs et les séquences click → wait → screenshot en une chaîne
-4. Pour l'**injection axe-core** : `evaluate_script` (MCP) ou `agent-browser eval` — même résultat
+4. Pour l'**injection axe-core** : `evaluate_script` (MCP) ou `agent-browser eval`  -  même résultat
 
 ## Workflow
 
 ### Phase 0 : pré-vol
 
-1. Vérifier que l'URL est accessible (HTTP 200 ou fallback navigateur si WAF — voir § Outils navigateur)
-2. Créer `projets-actifs/{projet}/tickets/{nom-page-kebab}/` si absent
+1. Vérifier que l'URL est accessible (HTTP 200 ou fallback navigateur si WAF  -  voir § Outils navigateur)
+2. Créer `<projet>/tickets/{nom-page-kebab}/` si absent
 3. Scanner les tickets existants pour cette page (éviter les doublons)
 4. Scanner les tickets des AUTRES pages pour détecter les défauts systémiques potentiels
-5. Afficher : `[PRE-AUDIT-RGAA] Phase 0/4 : Pré-vol ............... OK`
+5. Afficher : `[PRE-AUDIT-RGAA] Phase 0/6 : Pré-vol ............... OK`
 
 ### Phase 1 : scan automatisé (sauf si `--skip-scan`)
 
 1. Scanner via axe-core selon la stratégie de `axe-core-scan-patterns.md`
 2. Mapper les violations vers les critères RGAA via `resources/rgaa-mapping.md` du skill `audit-accessibilite-web`
 3. Collecter : critère RGAA, élément DOM, code source fautif, sévérité axe
-4. Afficher : `[PRE-AUDIT-RGAA] Phase 1/4 : Scan automatisé ............... OK (N violations)`
+4. Afficher : `[PRE-AUDIT-RGAA] Phase 1/6 : Scan automatisé ............... OK (N violations)`
 
 ### Phase 2 : inspection DOM et arbre d'accessibilité
 
@@ -195,7 +196,7 @@ Les tests automatisés couvrent 30-50 % des critères RGAA. Cette phase complèt
 Pour chaque composant DSFR identifié sur la page :
 
 1. Récupérer le template et la doc accessibilité via GitHub API (voir § Sources de référence DSFR)
-2. Comparer le DOM du site au markup de référence — attribut par attribut
+2. Comparer le DOM du site au markup de référence  -  attribut par attribut
 3. Vérifier les faux positifs via `references/faux-positifs-dsfr.md`
 4. Distinguer systématiquement : **défaut DSFR natif** (le template lui-même est incorrect) vs **défaut d'intégration CMS** (le template est correct mais le CMS ne le respecte pas)
 
@@ -204,15 +205,15 @@ Pour chaque composant DSFR identifié sur la page :
 Pattern courant sur les sites Drupal (Views Exposed Form) : le même formulaire est dupliqué pour gérer mobile et desktop. Vérifier systématiquement :
 
 1. **Détecter les formulaires dupliqués** : `evaluate_script` pour lister tous les `<form>` et leurs IDs. Si deux formulaires partagent la même `action` et les mêmes champs (avec suffixe `--2`), c'est un doublon responsive
-2. **Comparer les labels** (11.3 — cohérence) : les champs de même fonction doivent avoir la même étiquette dans les deux variantes
-3. **Vérifier le masquage pour les technologies d'assistance** (10.8) : le formulaire non destiné au viewport courant doit être masqué via `display: none` (ou `hidden` / `aria-hidden="true"`). Vérifier sur **chaque élément enfant**, pas seulement le `<form>` parent — un formulaire peut être visible mais certains enfants masqués
+2. **Comparer les labels** (11.3  -  cohérence) : les champs de même fonction doivent avoir la même étiquette dans les deux variantes
+3. **Vérifier le masquage pour les technologies d'assistance** (10.8) : le formulaire non destiné au viewport courant doit être masqué via `display: none` (ou `hidden` / `aria-hidden="true"`). Vérifier sur **chaque élément enfant**, pas seulement le `<form>` parent  -  un formulaire peut être visible mais certains enfants masqués
 4. **Vérifier l'unicité des IDs** (8.2) : aucun ID ne doit être dupliqué entre les deux formulaires
 5. **Vérifier les landmarks** (12.6) : si les deux formulaires contiennent `role="search"`, vérifier qu'ils ont des `aria-label` distincts
 
 #### 2d. Inspection thématique et captures
 
 1. Vérifier chaque famille de thématiques selon `references/thematiques-rgaa-inspection.md`. **Si la page est une page de recherche filtrée** (présence de formulaire de filtres, pagination, résultats structurés), utiliser en complément `references/checklist-page-recherche-filtree.md` qui couvre les critères spécifiques (11.3 cohérence labels, 10.8 masquage responsive, 7.5 messages de statut, etc.) et les patterns Drupal récurrents
-2. Prendre des screenshots d'états interactifs (modales ouvertes, menu déployé, focus visible) — pas seulement au chargement
+2. Prendre des screenshots d'états interactifs (modales ouvertes, menu déployé, focus visible)  -  pas seulement au chargement
 3. Détecter les coquilles HTML (attributs suspects par distance de Levenshtein) et orthographiques
 4. Détecter les contenus en langue étrangère non balisés (labels CMS non traduits, `title` anglais) → 8.7
 5. Afficher l'avertissement sur les thématiques non couvertes (2, 3 partiellement, 4, 5, 13)
@@ -234,7 +235,7 @@ Pattern courant sur les sites Drupal (Views Exposed Form) : le même formulaire 
 
 7. Afficher le décompte : `N NC + N RECO + N NOTE = N fiches à générer.`
 8. **ATTENDRE la validation de l'utilisateur** (il peut retirer des faux positifs, ajuster des sévérités, ajouter des défauts manqués)
-9. Afficher : `[PRE-AUDIT-RGAA] Phase 3/4 : Triage ............... OK`
+9. Afficher : `[PRE-AUDIT-RGAA] Phase 3/6 : Triage ............... OK`
 
 ### Phase 4 : génération en lot
 
@@ -266,7 +267,8 @@ Si un retour d'auditeur RGAA enrichit les constats après la génération initia
 1. Lister les critères ou qualifications supplémentaires apportés par l'expert
 2. Pour chaque ticket impacté : ajouter les critères, mettre à jour les en-têtes, enrichir l'analyse
 3. Si le retour révèle de nouveaux défauts non couverts : créer les tickets manquants
-4. Régénérer les DOCX des tickets modifiés
+4. Régénérer les DOCX des tickets modifiés uniquement si l'outil du projet hôte
+   le demande ; le kit ne rend pas de DOCX
 5. Afficher : `[PRE-AUDIT-RGAA] Phase 5/6 : Retour expert ............... OK (N tickets enrichis, M nouveaux)`
 
 ## Pièges fréquents
@@ -287,12 +289,12 @@ Si un retour d'auditeur RGAA enrichit les constats après la génération initia
 - TOUJOURS distinguer défaut DSFR natif vs défaut d'intégration CMS dans l'attribution de cause racine
 - JAMAIS invoquer `/ticket-rgaa` via Skill tool (adopter son format, ne pas le chaîner)
 - JAMAIS générer de ticket pour un comportement conforme au design system DSFR
-- TOUJOURS accentuer le français dans les fiches générées (é, è, ê, à, ç, ù, etc.) — les rules globales ne suffisent pas en génération lot, le rappel ici est nécessaire
+- TOUJOURS accentuer le français dans les fiches générées (é, è, ê, à, ç, ù, etc.)  -  les rules globales ne suffisent pas en génération lot, le rappel ici est nécessaire
 
 ## Checklist finale
 
 - [ ] Toutes les fiches écrites sur disque dans `tickets/{page}/md/`
-- [ ] DOCX générés dans `tickets/{page}/docx/` (1:1 avec les MD)
+- [ ] DOCX générés par l'outil du projet hôte si ce format est requis (optionnel)
 - [ ] Fiches NC conformes au format `/ticket-rgaa` (structure, tableau DSFR, références)
 - [ ] Sources DSFR citées (template EJS + doc accessibilité GitHub) pour chaque NC sur composant DSFR
 - [ ] Arbre d'accessibilité analysé (noms dupliqués, rôles manquants, contenu parasite)

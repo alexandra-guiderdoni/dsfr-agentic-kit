@@ -44,7 +44,7 @@ progressive_disclosure:
     ai_content: "references/sources.md"
     sources: "references/sources.md"
   secondary_sources:
-    ay11_pre_audit: "git-hors-workflow/ay11-pre-audit"
+    ay11_pre_audit: "${AY11_ROOT}"
 discovery:
   canonical_path: "design-systems/dsfr/DESIGN.md"
   relative_path: "design-systems/dsfr/DESIGN.md"
@@ -299,4 +299,5 @@ Prochaine vérification :
 
 Critère de fin : un autre agent peut reprendre le travail sans relire la conversation.
 
-Note : `git-hors-workflow/ay11-pre-audit` est un chemin relatif à la racine du workspace hôte, pas à ce dossier DSFR.
+Note : `${AY11_ROOT}` est une variable d'environnement optionnelle fournie par
+l'hôte. Le kit ne résout ni ne crée ce chemin.

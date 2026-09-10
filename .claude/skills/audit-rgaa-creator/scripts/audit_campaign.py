@@ -61,6 +61,9 @@ UniqueKeyLoader.add_constructor(
 SCRIPT = Path(__file__).resolve()
 SKILL_ROOT = SCRIPT.parents[1]
 KIT_ROOT = SCRIPT.parents[4]
+# Statuts historiques conservés uniquement pour les sorties dérivées
+# `findings.json` et `qualification.json`. Les saisies humaines canoniques
+# vivent dans `rgaa-findings.json` et `dsfr-findings.json`.
 STATUSES = {"NC-A", "C-A", "NA-A", "NT", "NOTE", "RECO"}
 PHASES = (
     "preflight",
@@ -77,12 +80,11 @@ PHASES = (
     "validate",
 )
 REQUIRED_SKILLS = (
-    "audit-a11y-complet",
-    "audit-rgaa-dsfr",
-    "audit-accessibilite-web",
+    "audit-rgaa-complet",
+    "audit-dsfr-complet",
+    "audit-report-dsfr",
     "tests-conformite-wcag",
     "screen-reader-testing",
-    "pre-audit-rgaa-dsfr",
     "ticket-rgaa",
 )
 THEMES = {
@@ -708,9 +710,13 @@ preuves humaines. Ne jamais revendiquer un taux RGAA officiel.
 
 {pages}
 
-## Statuts autorisés
+## Qualification humaine canonique
 
-`NC-A`, `C-A`, `NA-A`, `NT`, `NOTE`, `RECO`.
+Renseigner `rgaa-findings.json` avec les statuts RGAA v2 :
+`C_CONFIRMEE`, `NC_CONFIRMEE`, `NA_CONFIRMEE`, `A_RETESTER` ou `NON_TESTE`.
+Renseigner `dsfr-findings.json` séparément lorsque la phase DSFR est active.
+Les fichiers `findings.json` et `qualification.json` sont des sorties dérivées
+historiques produites par `report` ; ils ne sont pas modifiés directement.
 
 - Une absence de signal ne prouve pas `C-A`.
 - L’arbre d’accessibilité est une préqualification, pas un test NVDA/JAWS/VoiceOver.
@@ -724,8 +730,8 @@ preuves humaines. Ne jamais revendiquer un taux RGAA officiel.
    `analyses-skills/`.
 2. Tester les états conditionnels, cookies, formulaires, modales, accordéons,
    médias et téléchargements pertinents.
-3. Renseigner `findings.json` et `qualification.json` sans modifier les preuves
-   brutes.
+3. Renseigner les fichiers canoniques `rgaa-findings.json` et, si nécessaire,
+   `dsfr-findings.json`, sans modifier les preuves brutes.
 4. Lancer `audit-rgaa-creator.sh report campaign.yaml` puis `validate`.
 5. Vérifier visuellement `AUDIT-PAR-PAGE.html`.
 """

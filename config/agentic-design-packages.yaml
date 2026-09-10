@@ -86,8 +86,9 @@ product:
     - scripts/tests/check-standalone-install.sh
     - scripts/tests/check-virginie-dsfr-composants.sh
     - scripts/tests/check-virginie-project-boundary.sh
+    - scripts/tests/check-harness-conventions.sh
     - scripts/virginie_dsfr/project_paths.py
-    - virginie-livrables/PROMPT-GOAL-GOVERNOR-AUDIT-DSFR-DOUANE.md
+    - templates/PROMPT-REJEU-AUDIT-DSFR.exemple.md
 
 validation:
   product_tests:
@@ -107,6 +108,7 @@ validation:
     - scripts/tests/check-standalone-install.sh
     - scripts/tests/check-virginie-dsfr-composants.sh
     - scripts/tests/check-virginie-project-boundary.sh
+    - scripts/tests/check-harness-conventions.sh
   markdown:
     - README.md
     - DEMARRAGE-AGENT.md
@@ -116,7 +118,7 @@ validation:
     - documentation/AUDIT-RGAA-CREATOR.md
     - templates/AGENTS.md.exemple
     - templates/CLAUDE.md.exemple
-    - virginie-livrables/PROMPT-GOAL-GOVERNOR-AUDIT-DSFR-DOUANE.md
+    - templates/PROMPT-REJEU-AUDIT-DSFR.exemple.md
 
 claims:
   allowed:

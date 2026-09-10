@@ -1,8 +1,7 @@
 ---
 name: audit-rgaa-complet
 description: Auditer l’accessibilité RGAA 4.1.2 par règle, test et instance, avec preuves du DOM rendu, qualification humaine séparée, file de revue des 258 tests et rapport filtrable.
-whenToUse: Utiliser pour approfondir une campagne RGAA, réduire les critères non testés, qualifier les signaux automatiques, organiser les contrôles humains ou produire des fiches de non-conformité actionnables.
-user-invocable: true
+allowed-tools: Read, Glob, Grep, Bash, Write, Edit, WebFetch
 ---
 
 # Audit RGAA complet

@@ -786,23 +786,34 @@ def recolor_minor_content(content: str, hex_color: str, label: str) -> str:
     return updated
 
 
-def resolve_qlmanage_timeout() -> float:
-    """Délai qlmanage lu dans PICTOS_QLMANAGE_TIMEOUT (secondes, fini et > 0) ; une valeur invalide est refusée, jamais remplacée en silence."""
-    raw = os.environ.get("PICTOS_QLMANAGE_TIMEOUT", "60")
+def resolve_png_renderer_timeout() -> float:
+    """Délai du moteur PNG lu dans la variable portable dédiée."""
+    variable = "PICTOS_PNG_RENDERER_TIMEOUT"
+    raw = os.environ.get(variable)
+    if raw is None:
+        # Compatibilité avec les scripts de test et les postes ayant déjà
+        # configuré le nom historique, sans le documenter comme interface
+        # principale.
+        variable = "PICTOS_QLMANAGE_TIMEOUT"
+        raw = os.environ.get(variable, "60")
     try:
         timeout = float(raw)
     except ValueError as exc:
-        raise ValueError(f"PICTOS_QLMANAGE_TIMEOUT={raw!r} n'est pas un nombre de secondes.") from exc
+        raise ValueError(f"{variable}={raw!r} n'est pas un nombre de secondes.") from exc
     if not math.isfinite(timeout) or not timeout > 0:
-        raise ValueError(f"PICTOS_QLMANAGE_TIMEOUT={raw!r} doit être un nombre fini strictement positif.")
+        raise ValueError(f"{variable}={raw!r} doit être un nombre fini strictement positif.")
     return timeout
 
 
 def export_png(svg_path: Path, size: int) -> tuple[Path | None, str]:
-    """Rend un PNG plein cadre via qlmanage (WebKit). Retourne (chemin, moteur) ou (None, motif)."""
-    if shutil.which("qlmanage") is None:
-        return None, "NOT VERIFIED: export PNG indisponible, qlmanage absent"
-    timeout = resolve_qlmanage_timeout()
+    """Rend un PNG avec le premier moteur disponible sur le poste."""
+    renderer = next(
+        (name for name in ("qlmanage", "rsvg-convert", "inkscape") if shutil.which(name)),
+        None,
+    )
+    if renderer is None:
+        return None, "NOT VERIFIED: export PNG indisponible, qlmanage, rsvg-convert et inkscape absents"
+    timeout = resolve_png_renderer_timeout()
     target = svg_path.with_name(f"{svg_path.stem}-{size}.png")
     with tempfile.TemporaryDirectory() as tmp:
         scaled = Path(tmp) / svg_path.name
@@ -810,16 +821,25 @@ def export_png(svg_path: Path, size: int) -> tuple[Path | None, str]:
         content = re.sub(r'width="80(px)?"', f'width="{size}"', content, count=1)
         content = re.sub(r'height="80(px)?"', f'height="{size}"', content, count=1)
         scaled.write_text(content, encoding="utf-8")
+        if renderer == "qlmanage":
+            command = ["qlmanage", "-t", "-s", str(size), "-o", tmp, str(scaled)]
+            produced = Path(tmp) / f"{svg_path.name}.png"
+        elif renderer == "rsvg-convert":
+            command = ["rsvg-convert", "-w", str(size), "-h", str(size), "-o", str(target), str(scaled)]
+            produced = target
+        else:
+            command = ["inkscape", str(scaled), "--export-filename", str(target), "--export-width", str(size), "--export-height", str(size)]
+            produced = target
         try:
-            result = subprocess.run(["qlmanage", "-t", "-s", str(size), "-o", tmp, str(scaled)], capture_output=True, text=True, timeout=timeout)
+            result = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
         except subprocess.TimeoutExpired:
-            return None, f"NOT VERIFIED: export PNG interrompu, délai de {timeout:g} s dépassé par qlmanage"
-        produced = Path(tmp) / f"{svg_path.name}.png"
+            return None, f"NOT VERIFIED: export PNG interrompu, délai de {timeout:g} s dépassé par {renderer}"
         if result.returncode != 0 or not produced.exists():
             detail = (result.stderr or result.stdout or "").strip().replace("\n", " ")[:200]
-            return None, f"NOT VERIFIED: export PNG échoué avec qlmanage (code {result.returncode}) : {detail or 'aucun fichier produit'}"
-        shutil.copyfile(produced, target)
-    return target, "qlmanage (QuickLook, WebKit)"
+            return None, f"NOT VERIFIED: export PNG échoué avec {renderer} (code {result.returncode}) : {detail or 'aucun fichier produit'}"
+        if produced != target:
+            shutil.copyfile(produced, target)
+    return target, renderer
 
 
 def write_json_atomic(path: Path, data: object) -> None:
@@ -1279,7 +1299,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--size", type=int, default=256, help="Attributs width et height du SVG.")
     parser.add_argument("--prefix", default="", help="Préfixe ajouté aux noms de fichiers.")
     parser.add_argument("--minor-color", help="Couleur du calque minor parmi les -main de la palette DSFR (ex. green-emeraude-main-632) ; copies officielles seulement, tracé dans le manifeste.")
-    parser.add_argument("--export-png", type=int, help="Exporter aussi un PNG plein cadre de cette taille en pixels, via qlmanage ; tracé dans le manifeste.")
+    parser.add_argument("--export-png", type=int, help="Exporter aussi un PNG plein cadre de cette taille ; utilise qlmanage, rsvg-convert ou inkscape selon disponibilité.")
     parser.add_argument("--no-manifest", action="store_true", help="Ne pas écrire manifest.json.")
     parser.add_argument("--list", action="store_true", help="Lister les pictos disponibles.")
     parser.add_argument("--list-dsfr-names", action="store_true", help="Lister les noms DSFR connus.")
@@ -1316,7 +1336,7 @@ def main(argv: list[str] | None = None) -> int:
         resolve_minor_color(args.minor_color)
         validate_export_png_size(args.export_png)
         if args.export_png is not None:
-            resolve_qlmanage_timeout()
+            resolve_png_renderer_timeout()
         if args.source == "dsfr-artwork":
             generated = write_dsfr_artwork_icons(args)
         elif args.source == "dsfr-replica":

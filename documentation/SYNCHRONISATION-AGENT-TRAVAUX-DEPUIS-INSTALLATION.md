@@ -59,17 +59,15 @@ Fichiers principaux :
 - prise en compte de `DSFR-DISPLAY-TRIGGER-002` comme règle `VERSION_INDEPENDENT` ;
 - documentation de références DSFR 1.13.2 et 1.15.2 pour le déclencheur d’affichage.
 
-## Campagnes P01 à P09 réalisées
+## Campagnes et livrables hors kit
 
-Des campagnes isolées ont été produites pour les pages P01 à P09 du portail MOA Douane.
+Les campagnes d’audit ne sont pas distribuées avec le kit. Chaque projet
+consommateur conserve ses propres preuves, matrices, rapports, validations et
+archives dans un espace adapté à leur sensibilité.
 
-- Chaque campagne possède ses propres preuves, matrices, rapports, validation et archive ZIP.
-- P08 : Commerce international.
-- P09 : Actualité DELTA IE.
-- Les archives P01 à P09 ont été contrôlées par `unzip -tq` et hashées en SHA-256.
-- Les hashes des archives antérieures ont été recontrôlés lors de la création de chaque nouvelle archive.
-
-Important : ne pas modifier les dossiers ni archives de campagne existants lors d’une évolution du kit. Utiliser une nouvelle campagne isolée pour toute vérification.
+Important : ne pas modifier les dossiers ni archives d’une campagne existante
+lors d’une évolution du kit. Utiliser une nouvelle campagne isolée et consigner
+le commit exact du kit utilisé.
 
 ## Incidents rencontrés et corrections appliquées
 

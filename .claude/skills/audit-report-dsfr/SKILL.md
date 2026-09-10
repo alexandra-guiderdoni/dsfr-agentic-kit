@@ -1,8 +1,7 @@
 ---
 name: audit-report-dsfr
 description: Générer un portail et des rapports d’audit RGAA/DSFR avec le builder DSFR du harnais, depuis des résultats structurés, sans HTML arbitraire ni confusion entre référentiels.
-whenToUse: Utiliser pour rendre, republier ou valider les rapports HTML d’une campagne audit-rgaa-creator avec une présentation DSFR commune.
-user-invocable: true
+allowed-tools: Read, Glob, Grep, Bash, Write, Edit
 ---
 
 # Rapports d’audit construits avec le builder DSFR

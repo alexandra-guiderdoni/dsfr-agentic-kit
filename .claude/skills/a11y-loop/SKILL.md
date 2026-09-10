@@ -1,7 +1,7 @@
 ---
 name: a11y-loop
 description: "Utiliser quand une page web doit être corrigée en boucle scan-fix-verify WCAG avec Chrome DevTools, axe-core ou accesslint. Ne pas utiliser pour un audit seul, un correctif ponctuel ou une validation lecteur d'écran."
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__evaluate_script, mcp__accesslint__audit_url, mcp__accesslint__audit_html, mcp__accesslint__diff_html
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
 argument-hint: "[url] [--source dir] [--max-iterations 5] [--level AA|AAA] [--aggressive]"
 context: conversation
 ---

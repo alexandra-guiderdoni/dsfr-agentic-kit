@@ -1,7 +1,7 @@
 # Patterns de scan axe-core
 
 Reference partagee pour les skills utilisant axe-core.
-Consulte par : audit-accessibilite-web, a11y-loop, a11y-ci, audit-rgaa.
+Consulte par : audit-accessibilite-web, a11y-loop, audit-rgaa-complet.
 
 ## Strategie de scan (3 niveaux de fallback)
 

@@ -11,7 +11,7 @@ Priorité d’intégration : P0 - très rentable pour préaudit et anti-faux-pos
 | Code | Source locale | Usage attendu |
 |---|---|---|
 | `PAR` | `pre-audit-rgaa-dsfr` | Orchestration de préaudit, tri NC/RECO/NOTE, preuves DOM, DSFR et validation humaine. |
-| `ARD` | `audit-rgaa-dsfr` | Périmètre RGAA complet, statuts C/NC/NA/NT et livrables réglementaires. |
+| `ARD` | `audit-rgaa-creator` | Campagne RGAA multi-pages, orchestration et validation humaine, sans taux automatique. |
 | `SHR` | `a11y-shared-references` | Contrats communs de preuve, patterns axe et sondes de nom accessible. |
 | `SRT` | `screen-reader-testing` | Validation lecteur d’écran, arbre d’accessibilité, annonces et restitution réelle. |
 | `DSFRC` | `dsfr-components` | Prévention DSFR, modèles de composants et source anti-faux-positif. |
@@ -50,4 +50,4 @@ Abréviations de statut : `automatisable` = condition technique directement test
 - Les codes de sources externes renvoient au tableau de licences ci-dessus ; toute copie de fixture ou de helper `AR` doit rester isolée avec notice MPL-2.0.
 - Les sources `CARN`, `COP`, `TEM` ou `TPG` ne doivent pas être copiées dans les modules propres sans isolation ou validation juridique ; reprendre seulement les comportements observables et les idées de preuve.
 - Les lignes `préqualification` et `revue humaine requise` doivent toujours conserver la preuve brute, la limite et la question humaine dans le résultat du skill consommateur.
-- `pre-audit-rgaa-dsfr` peut consommer cette référence pour orienter les preuves, mais `audit-rgaa-dsfr` reste nécessaire pour un audit complet et un taux de conformité.
+- `pre-audit-rgaa-dsfr` peut consommer cette référence pour orienter les preuves, mais `audit-rgaa-creator` reste la voie pour un audit complet et une qualification humaine.

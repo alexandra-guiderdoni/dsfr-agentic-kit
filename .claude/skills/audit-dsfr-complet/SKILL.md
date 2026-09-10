@@ -1,8 +1,7 @@
 ---
 name: audit-dsfr-complet
 description: Auditer les composants et l’intégration DSFR d’un échantillon multi-pages, par règle et par instance, avec extraits HTML, références versionnées, qualification humaine et rapport actionnable.
-whenToUse: Utiliser pour un audit DSFR multi-pages, un inventaire détaillé des composants, une comparaison d’intégration ou de migration DSFR, ou des fiches d’écart avec code observé et attendu.
-user-invocable: true
+allowed-tools: Read, Glob, Grep, Bash, Write, Edit, WebFetch
 ---
 
 # Audit DSFR complet

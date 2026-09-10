@@ -23,12 +23,11 @@ l’utilisateur, jamais dans le kit.
 
 1. Identifier le chemin du kit et celui du projet de sortie.
 2. Lire les skills suivants seulement lorsque leur phase est nécessaire :
-   - `audit-a11y-complet` ;
-   - `audit-rgaa-dsfr` ;
-   - `audit-accessibilite-web` ;
+   - `audit-rgaa-complet` ;
+   - `audit-dsfr-complet` ;
+   - `audit-report-dsfr` ;
    - `tests-conformite-wcag` ;
    - `screen-reader-testing` ;
-   - `pre-audit-rgaa-dsfr` ;
    - `ticket-rgaa`.
 3. Détecter AY11 via `--ay11-root`, `AY11_ROOT`, `AY11_BIN` ou le `PATH`.
 4. Ne jamais installer un outil ou modifier le site cible sans demande explicite.
@@ -47,7 +46,7 @@ bash <kit>/scripts/audit-rgaa-creator.sh --help
 bash <kit>/scripts/audit-rgaa-creator.sh init https://example.gouv.fr \
   --output ../audit-example \
   --ay11-root ../ay11-pre-audit \
-  --skills-root ../dsfr-agentic-packs
+  --skills-root <kit>/.claude/skills
 ```
 
 ### Options d'exécution AY11
@@ -62,12 +61,12 @@ Pour fournir directement des pages :
 ```bash
 --page 'https://example.gouv.fr/::Accueil::homepage' \
 --page 'https://example.gouv.fr/contact::Contact::form'
+```
 
-Pour une campagne unitaire dont l’identifiant doit être stable, utiliser :
+Pour une campagne unitaire dont l'identifiant doit être stable, utiliser :
 
 ```bash
 --page 'P09::https://example.gouv.fr/actualite::Actualité::news-article'
-```
 ```
 
 ### Proposer un échantillon
@@ -138,7 +137,8 @@ Le runner ne fabrique pas de verdict. L’agent doit :
 1. lire `RUNBOOK-AGENT.md` ;
 2. analyser les preuves page par page ;
 3. exercer les états conditionnels pertinents ;
-4. renseigner `findings.json` et `qualification.json` ;
+4. renseigner `rgaa-findings.json` et, si la phase DSFR est active,
+   `dsfr-findings.json` ;
 5. régénérer et valider :
 
 ```bash
@@ -165,17 +165,17 @@ AY11 produit des contrats et signaux candidats : jamais une décision RGAA.
 Une commande non disponible ou en échec devient `ECHEC`, `PARTIEL` ou `IGNORÉ`,
 pas un succès implicite.
 
-## Statuts de qualification
+## Qualification humaine
 
-- `NC-A` : non-conformité instrumentée fortement étayée ;
-- `C-A` : signal favorable strictement borné ;
-- `NA-A` : aucune cible applicable après inspection documentée ;
-- `NT` : validation humaine nécessaire ;
-- `NOTE` : signal non encore qualifié ;
-- `RECO` : recommandation fonctionnelle hors NC RGAA autonome.
+`rgaa-findings.json` est le fichier de saisie canonique de la qualification
+RGAA. Ses statuts sont définis par `audit-rgaa-complet` :
+`C_CONFIRMEE`, `NC_CONFIRMEE`, `NA_CONFIRMEE`, `A_RETESTER` et `NON_TESTE`.
+Pour la phase DSFR, `dsfr-findings.json` utilise les statuts définis par
+`audit-dsfr-complet`, notamment `ECART_CONFIRME`.
 
-Une `NC-A` doit contenir au minimum une page, un critère, un test et un chemin
-de preuve. Une absence de violation axe ou AY11 ne prouve jamais `C-A`.
+`findings.json` et `qualification.json` sont des sorties dérivées historiques
+produites par `report`. Ils ne sont pas renseignés directement par l'agent.
+Une absence de violation axe ou AY11 ne prouve jamais une conformité.
 
 ## Vérification DSFR bornée
 

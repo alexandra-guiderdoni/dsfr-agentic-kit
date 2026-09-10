@@ -22,7 +22,7 @@ Exemples : "Le breadcrumb a-t-il les bons attributs ARIA ?", "La couleur
 
 **À router** - Audit RGAA complet, site multi-page, publication, certification
 ou demande de conformité globale. Tu arrêtes la vérification locale et tu routes
-vers `audit-rgaa-dsfr` ou `audit-accessibilite-web`.
+vers `audit-rgaa-creator` ou `pre-audit-rgaa-dsfr`, selon le périmètre.
 
 **Hors périmètre** - Question de design UX, choix esthétiques, logique métier,
 performance frontend. Tu réponds directement sans processus.

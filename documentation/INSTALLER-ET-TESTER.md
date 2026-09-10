@@ -54,6 +54,17 @@ bash scripts/build-plugin.sh --version 0.1.0
 La sortie va hors du dépôt. Le build échoue si les skills déclarés, les
 `SKILL.md`, les renvois relatifs ou la provenance ne sont pas cohérents.
 
+### Convention des skills
+
+Chaque `SKILL.md` commence par un frontmatter portable contenant `name` et
+`description`, puis `argument-hint` lorsque le skill accepte une commande et
+`allowed-tools` lorsque des outils sont nécessaires. Les capacités navigateur
+ou les serveurs MCP sont des options décrites dans le corps du skill ; ils ne
+sont pas annoncés comme outils obligatoires dans le frontmatter, car leur
+disponibilité dépend de l’hôte. Les clés `whenToUse`, `user-invocable`,
+`background` et les versions propres à un runtime ne font pas partie du
+contrat du kit.
+
 ## 2. Vérifier le kit
 
 ```bash

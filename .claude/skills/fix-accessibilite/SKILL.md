@@ -1,14 +1,14 @@
 ---
 name: fix-accessibilite
 description: "Utiliser après un audit accessibilité quand l'utilisateur demande de corriger des violations WCAG dans le code source. Ne pas utiliser pour auditer seul, lancer une boucle scan-fix ou tester au lecteur d'écran."
-allowed-tools: Read, Glob, Grep, Bash, Edit, Write, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__evaluate_script, mcp__accesslint__audit_html, mcp__accesslint__diff_html
+allowed-tools: Read, Glob, Grep, Bash, Edit, Write, WebFetch
 argument-hint: "[fichier-rapport] [--scope all|color|aria|keyboard] [--auto-apply]"
 context: conversation
 ---
 
 # Remédiation d'accessibilité web
 
-Corrige les violations WCAG détectées par `/audit-a11y` en modifiant le code source. Mode suggestif par défaut : les corrections à haute confiance sont appliquées, les autres sont proposées pour validation.
+Corrige les violations WCAG détectées par `audit-accessibilite-web` en modifiant le code source fourni. Mode suggestif par défaut : les corrections à haute confiance sont appliquées, les autres sont proposées pour validation.
 
 ## Declencheurs
 
@@ -18,8 +18,8 @@ Corrige les violations WCAG détectées par `/audit-a11y` en modifiant le code s
 
 ## Hors perimetre
 
-- Audit d'accessibilite (utiliser `/audit-a11y`)
-- Tests avec lecteur d'ecran (utiliser `/screen-reader-test`)
+- Audit d'accessibilité (utiliser `audit-accessibilite-web`)
+- Tests avec lecteur d'écran (utiliser `screen-reader-testing`)
 - Creation de tests automatises d'accessibilite
 - Accessibilite native mobile (iOS/Android)
 
@@ -37,7 +37,7 @@ Les arguments sont passes via `$ARGUMENTS` :
 
 | Argument | Description | Defaut |
 |----------|-------------|--------|
-| `fichier-rapport` | Rapport genere par `/audit-a11y` | obligatoire |
+| `fichier-rapport` | Rapport généré par `audit-accessibilite-web` | obligatoire |
 | `--scope` (ou "seulement les couleurs", "uniquement ARIA") | Filtrer par type : all, color, aria, keyboard, semantic | all |
 | `--auto-apply` (ou "applique tout") | Appliquer aussi les corrections Low (sans confirmation) | off |
 
@@ -51,7 +51,7 @@ Lire [violation-classification](../a11y-shared-references/violation-classificati
 
 ### Prerequis
 
-- Fichier rapport genere par `/audit-a11y` ou fourni manuellement dans un format compatible (tableau avec critere WCAG, severite, element, fichier)
+- Fichier rapport généré par `audit-accessibilite-web` ou fourni manuellement dans un format compatible (tableau avec critère WCAG, sévérité, élément, fichier)
 - Fichier `resources/implementation-playbook.md` (optionnel, enrichit les patterns de base avec la formule de contraste detaillee et des exemples supplementaires). Si absent, les patterns de fallback ci-dessous sont autonomes et suffisants. Structure attendue :
   ```
   fix-accessibilite/

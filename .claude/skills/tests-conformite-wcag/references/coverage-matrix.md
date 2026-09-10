@@ -14,6 +14,6 @@ Tests automatises Playwright et leur couverture. Ces tests completent axe-core q
 | focus | 2.4.7 | AA | Partiel | Indicateur de focus visible |
 | target | 2.5.5 / 2.5.8 | AA | Partiel | Taille minimale des cibles tactiles |
 
-## Complementarite avec /audit-a11y
+## Complémentarité avec `audit-a11y-complet`
 
-`/audit-a11y` couvre ~50 criteres WCAG via axe-core + tests manuels. `/tests-conformite-wcag` ajoute 9 tests automatises pour les criteres que axe-core ne peut pas detecter, portant la couverture automatisee totale a environ 80% des criteres WCAG 2.2 AA.
+`audit-a11y-complet` couvre les familles WCAG demandées via axe-core et des tests manuels. `tests-conformite-wcag` ajoute les tests automatisés que axe-core détecte mal ou pas du tout ; cette complémentarité ne constitue pas une couverture exhaustive.

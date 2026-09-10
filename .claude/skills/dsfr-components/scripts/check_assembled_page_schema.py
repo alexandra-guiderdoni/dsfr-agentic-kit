@@ -59,7 +59,7 @@ def ensure_jsonschema():
             if not env.get("UV_CACHE_DIR"):
                 cache_owner = os.getuid() if hasattr(os, "getuid") else "user"
                 uv_cache_dir = Path(tempfile.gettempdir()) / (
-                    f"dsfr-agentic-packs-uv-cache-{cache_owner}"
+                    f"dsfr-agentic-kit-uv-cache-{cache_owner}"
                 )
                 uv_cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
                 if hasattr(os, "getuid") and uv_cache_dir.stat().st_uid != os.getuid():

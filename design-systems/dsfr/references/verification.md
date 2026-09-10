@@ -69,16 +69,15 @@ Les skills d'accessibilité exécutent les vérifications. Ce profil DSFR ne rem
 | audit DSFR par règle et instance avec DOM rendu, structure attendue et qualification | `audit-dsfr-complet` |
 | campagne multi-pages reprenable puis portail HTML via le builder DSFR | `audit-rgaa-creator` + `audit-report-dsfr` |
 | préqualification RGAA par test et instance avec revue des 258 tests | `audit-rgaa-complet` |
-| audit RGAA cadré ou rapport réglementaire | `audit-rgaa-dsfr` |
+| audit RGAA cadré ou rapport réglementaire | `audit-rgaa-creator` puis validation humaine |
 | pré-audit RGAA, triage, fiches ou tickets | `pre-audit-rgaa-dsfr` |
 | reflow, zoom, focus, orientation, autocomplete, taille de cible | `tests-conformite-wcag` |
 | correction après rapport | `fix-accessibilite` ou `a11y-loop` |
 | test lecteur d'écran réel | `screen-reader-testing` |
 
-Pour tout audit ou pré-audit RGAA, consulter aussi, si le chemin existe depuis
-la racine du workspace :
-
-`git-hors-workflow/ay11-pre-audit`
+Pour tout audit ou pré-audit RGAA, consulter aussi `AY11_ROOT` si cette variable
+est définie ou si `--ay11-root` est fourni. Le kit ne suppose aucun chemin
+relatif particulier.
 
 AY11 est une source secondaire de preuves candidates et de contrats RGAA : référentiel local, profils `rgaa-25`, `rgaa-50`, `rgaa-106`, collecteurs HTML et navigateur, noms accessibles, signaux axe-core, DOM et arbre d'accessibilité. Il s'applique à tous les critères RGAA concernés par l'audit, pas seulement aux formulaires.
 

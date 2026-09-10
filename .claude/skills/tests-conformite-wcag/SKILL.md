@@ -8,7 +8,7 @@ context: conversation
 
 # Tests de conformité WCAG 2.2 avec Playwright
 
-Ce skill exécute des tests Playwright complémentaires à `audit-a11y` pour les
+Ce skill exécute des tests Playwright complémentaires à `audit-accessibilite-web` pour les
 critères WCAG que axe-core détecte mal ou pas du tout. Il produit un rapport
 borné, jamais une déclaration complète de conformité.
 
@@ -20,7 +20,7 @@ borné, jamais une déclaration complète de conformité.
   délais ou autocomplete
 - Compléter un audit axe-core par des contrôles automatisés hors axe-core
 
-Ne pas utiliser pour un scan axe-core général : utiliser `audit-a11y` ou
+Ne pas utiliser pour un scan axe-core général : utiliser `audit-accessibilite-web` ou
 `audit-accessibilite-web`.
 
 ## Arguments

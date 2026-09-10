@@ -1,188 +1,93 @@
 ---
 name: audit-rgaa-dsfr
-description: Utiliser quand il faut auditer un site public français selon le RGAA 4.1.2, calculer le taux de conformité et produire rapport, déclaration ou fiches de non-conformité.
-allowed-tools: Read, Glob, Grep, Bash, WebFetch, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__take_snapshot, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__press_key, mcp__chrome-devtools__click, mcp__chrome-devtools__evaluate_script, mcp__accesslint__audit_url, mcp__accesslint__audit_file, mcp__accesslint__list_rules
-argument-hint: "[url] [scope page|échantillon] [thème 1-13|all] [sortie rapport|déclaration|fiches]"
+description: "Cadrer un audit RGAA 4.1.2 d'une page ou d'un petit échantillon, avec preuves et fiches bornées. Pour un site multi-pages, utiliser audit-rgaa-creator. Ne produit ni taux officiel ni déclaration."
+allowed-tools: Read, Glob, Grep, Bash, WebFetch, Write, Edit
+argument-hint: "[url] [--scope page|echantillon] [--theme 1-13|all] [--output rapport|fiches]"
 context: conversation
 ---
 
-# Audit RGAA DSFR
+# Cadrage RGAA DSFR
 
-Réaliser un audit RGAA 4.1.2 complet ou ciblé : 106 critères, 13 thématiques,
-taux de conformité officiel et livrables réglementaires pour un service public.
+Ce skill produit une préqualification RGAA structurée pour une page ou un
+petit échantillon. Il distingue les preuves instrumentées, les limites et la
+qualification humaine. Pour une campagne multi-pages reprenable, utiliser
+`audit-rgaa-creator`.
 
 ## Déclencheurs
 
-- Demande d'audit RGAA, conformité légale, déclaration d'accessibilité ou taux
-  de conformité.
-- Site public français, service `.gouv.fr`, DSFR ou démarche réglementaire.
-- Besoin de fiches de non-conformité issues d'un audit global.
+- Demande de cadrage RGAA sur une page ou un petit échantillon.
+- Besoin de regrouper des constats RGAA et DSFR avant une campagne complète.
+- Besoin de fiches de non-conformité à partir de constats déjà étayés.
 
-## Quand NE PAS utiliser
+## Ne pas utiliser
 
-- Ne pas utiliser pour un audit WCAG générique : router vers
+- Pour un site multi-pages ou une campagne reproductible : utiliser
+  `audit-rgaa-creator`.
+- Pour un audit WCAG hors secteur public : utiliser
   `audit-accessibilite-web`.
-- Ne pas utiliser pour une fiche NC unitaire : router vers `ticket-rgaa` ou
-  `pre-audit-rgaa-dsfr`.
-- Ne jamais promettre une certification formelle par organisme agréé.
-- Ne jamais déclarer la conformité totale sans avoir couvert les 106 critères.
-- Ne jamais modifier le code source du site audité.
+- Pour une fiche unitaire déjà qualifiée : utiliser `ticket-rgaa`.
+- Pour une déclaration d'accessibilité : ce kit peut seulement fournir des
+  éléments préparatoires ; la déclaration est validée et signée par un humain.
 
 ## Arguments
 
 | Argument | Défaut | Effet |
 | --- | --- | --- |
-| `url` | requis | site ou page à auditer |
-| `--scope` | `page` | `page` ou `echantillon` |
-| `--theme` | `all` | thématique 1 à 13 ou audit complet |
-| `--output` | `rapport` | `rapport`, `declaration`, `fiches` |
-| `--niveau` | `AA` | niveau cible |
+| `url` | requis | page ou point d'entrée à examiner |
+| `--scope` | `page` | page ou petit échantillon fourni par l'humain |
+| `--theme` | `all` | une thématique RGAA ou toutes les thématiques exercées |
+| `--output` | `rapport` | rapport borné ou fiches de constats |
 
-Si l'URL manque, arrêter avec un exemple d'utilisation. Ne pas deviner la cible.
+Si l'URL manque, afficher l'utilisation et arrêter. Ne jamais inventer un
+échantillon.
 
 ## Pré-vol
 
-- Vérifier que l'URL répond.
-- Afficher le périmètre, le thème et le livrable demandé.
-- Si `--scope echantillon`, constituer 8 à 15 pages : accueil, contact,
-  mentions légales, plan du site, aide, authentification si présente, formulaire
-  principal et contenus représentatifs.
-- Nommer les limites : pages inaccessibles, outils absents, authentification ou
-  contenu dynamique non testable.
+- Vérifier l'accès à la cible et distinguer un refus du proxy d'une réponse du
+  site.
+- Afficher la cible, le périmètre, les outils disponibles et les limites.
+- Consulter `AY11_ROOT` seulement si cette variable est définie ou si
+  `--ay11-root` est fourni. AY11 reste une source secondaire de signaux
+  candidats.
+- Ne jamais installer un outil ni modifier le site audité.
 
-## Références à lire
+## Procédure
 
-Lire selon le besoin, pas par réflexe :
+1. Lire les fiches RGAA de `a11y-shared-references` correspondant aux
+   thématiques exercées.
+2. Utiliser le meilleur outil disponible : Playwright, axe-core ou une analyse
+   structurée du fichier fourni.
+3. Conserver pour chaque signal l'URL, le sélecteur, l'extrait, le critère,
+   l'outil et le chemin de preuve.
+4. Exercer les vérifications manuelles pertinentes : structure, clavier,
+   focus, formulaires, contenu dynamique et états responsive.
+5. Classer les résultats comme `PASS_CANDIDATE`, `FAIL_CANDIDATE`,
+   `A_CONFIRMER`, `REFERENCE_INDISPONIBLE` ou hors périmètre. Une absence de
+   signal automatisé ne prouve jamais la conformité.
+6. Produire un rapport borné et, si demandé, des fiches avec le skill
+   `ticket-rgaa` comme référence de structure, sans l'invoquer en chaîne.
 
-- `a11y-shared-references/axe-core-scan-patterns.md` pour la stratégie de scan ;
-- `audit-accessibilite-web/resources/rgaa-mapping.md` pour la correspondance
-  axe-core, WCAG et RGAA ;
-- `references/modele-declaration.md` seulement si `--output declaration` ;
-- les fiches `a11y-shared-references/rgaa-{theme}-*.md` pour les tests manuels
-  d'une thématique précise.
+## Sorties autorisées
 
-Source secondaire RGAA locale :
+- rapport de périmètre, outils, preuves, constats et limites ;
+- fiches de constats avec critère, preuve, impact et recommandation ;
+- tableau des tests exercés et restant à confirmer.
 
-- si `git-hors-workflow/ay11-pre-audit` existe à la racine du workspace, la
-  consulter pour tout audit RGAA comme source de contrats de preuves, profils
-  RGAA, collecteurs HTML/navigateur et signaux candidats ;
-- ne jamais interpréter l'absence de signal AY11 comme une conformité ;
-- ne jamais transformer un signal AY11 en verdict RGAA sans preuve
-  complémentaire et validation humaine.
+Ne pas produire de taux, de score global, de déclaration ou de claim de
+conformité à partir de cette préqualification.
 
-## Phase 1 : tests automatisés
+## Statuts
 
-- Scanner chaque page avec le meilleur outil disponible : AccessLint MCP,
-  injection axe-core ou CLI.
-- Mapper les violations vers les critères RGAA.
-- Identifier les critères couverts automatiquement et ceux qui restent manuels.
-- Conserver les preuves : URL, sélecteur, extrait, impact et outil utilisé.
+Les statuts de qualification humaine canoniques sont ceux de
+`audit-rgaa-complet` : `C_CONFIRMEE`, `NC_CONFIRMEE`, `NA_CONFIRMEE`,
+`A_RETESTER` et `NON_TESTE`. Les statuts candidats ci-dessus ne les remplacent
+pas.
 
-Les tests automatisés ne suffisent jamais : ils couvrent seulement une partie du
-RGAA.
+## Contrôles de fin
 
-## Phase 2 : tests manuels
-
-Tester les thématiques demandées :
-
-| Thème | Cible |
-| --- | --- |
-| 1 à 4 | images, cadres, couleurs, multimédia |
-| 5 à 8 | tableaux, liens, scripts, éléments obligatoires |
-| 9 à 10 | structure et présentation |
-| 11 à 13 | formulaires, navigation, consultation |
-
-Utiliser Chrome DevTools pour la navigation clavier, l'arbre d'accessibilité, le
-focus visible, les attributs ARIA et les changements de contexte.
-
-## Phase 3 : statuts et taux
-
-Pour chaque critère testé :
-
-- `C` : conforme sur toutes les pages testées ;
-- `NC` : au moins une non-conformité observée ;
-- `NA` : critère non applicable ;
-- `NT` : non testé. **Interdit dans un audit officiel** : tout critère
-  applicable doit être tranché `C` ou `NC`. Un `NT` résiduel signifie que
-  l'audit est incomplet.
-
-Calculer le taux :
-
-```text
-taux = C / (C + NC) * 100
-```
-
-`NA` (non applicable) est exclu du dénominateur — c'est correct et conforme au
-RGAA. `NT` ne l'est **pas** : un critère applicable non testé rend l'audit
-incomplet.
-
-- **Taux officiel** : n'est calculable que si le nombre de `NT` applicables est
-  **zéro**. Sinon, le taux produit surestime la conformité en masquant les
-  critères non évalués.
-- S'il reste des `NT`, ne pas produire de « taux officiel ». Produire un
-  **taux préliminaire** explicitement étiqueté, accompagné du décompte des
-  critères non testés (« N critères sur 106 non évalués »), et ne jamais le
-  reporter dans une déclaration de conformité.
-
-## Phase 4 : livrables
-
-Selon `--output` :
-
-- `rapport` : périmètre, outils, échantillon, taux global, taux par thème,
-  tableau des critères, détails NC, dérogations et références légales ;
-- `declaration` : état de conformité, taux, non-conformités, technologies,
-  environnement de test, voies de recours et date.
-  **Garde-fous obligatoires avant toute production de `declaration`** :
-  1. La déclaration de conformité est un acte juridique (décret 2019-768).
-     Un audit produit par un agent ne peut pas s'auto-déclarer conforme.
-     Ne produire qu'un **brouillon** de déclaration, marqué en tête
-     « BROUILLON — à valider et signer par un auditeur humain qualifié ».
-  2. Refuser de produire la déclaration si le taux n'est pas officiel
-     (voir Phase 3 : zéro `NT` applicable) ou si l'échantillon est incomplet.
-  3. Nommer explicitement le type d'audit (auto-audit de l'organisme ou audit
-     externe) et laisser l'identité de l'auditeur humain à renseigner —
-     jamais « Claude », « agent IA » ni un nom inventé ;
-- `fiches` : une fiche par non-conformité avec critère, pages, éléments, impact,
-  recommandation et priorité P0 à P4.
-
-Inclure les références légales utiles : loi du 11 février 2005, décret
-2019-768, arrêté du 20 septembre 2019, RGAA et voies de recours auprès du
-Défenseur des droits.
-
-## Gestion d'erreurs
-
-| Situation | Réponse |
-| --- | --- |
-| URL inaccessible | arrêter et demander une URL valide |
-| AccessLint indisponible | utiliser axe-core CLI ou marquer la limite |
-| Chrome DevTools indisponible | marquer les tests interactifs `NT` |
-| échantillon trop petit | demander ou proposer des pages supplémentaires |
-| aucune violation automatique | poursuivre les tests manuels |
-
-## Exemple
-
-```text
-Demande : /audit-rgaa https://www.example.gouv.fr --scope echantillon
-Sortie : échantillon documenté, violations automatisées, tests manuels,
-106 statuts C/NC/NA/NT, taux officiel et AUDIT-RGAA-REPORT.md.
-```
-
-## Pièges fréquents
-
-- Confondre absence de violation axe-core et conformité RGAA.
-- Calculer le taux en incluant les critères `NA` ou `NT`.
-- Oublier les voies de recours dans une déclaration.
-- Générer des fiches NC sans impact utilisateur.
-- Utiliser la terminologie WCAG dans un livrable RGAA.
-- Masquer les critères non testés au lieu de les justifier.
-
-## Checklist
-
-- [ ] URL, scope, thème et livrable confirmés.
-- [ ] Échantillon documenté si demandé.
-- [ ] Références RGAA utiles lues.
-- [ ] Tests automatisés et manuels distingués.
-- [ ] Les 106 critères sont `C`, `NC`, `NA` ou `NT`.
-- [ ] Le taux exclut `NA` et `NT`.
-- [ ] Livrable produit selon `--output`.
-- [ ] Limites, voies de recours et références légales documentées.
+- La cible et le périmètre sont nommés.
+- Chaque constat possède une preuve ou est marqué à confirmer.
+- Les tests non exercés sont visibles.
+- Les limites d'AY11, de navigateur, d'authentification et de contenu sont
+  explicites.
+- Aucun taux, score global ou déclaration n'est présenté comme résultat.

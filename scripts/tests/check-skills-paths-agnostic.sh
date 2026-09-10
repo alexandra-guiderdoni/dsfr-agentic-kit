@@ -80,6 +80,38 @@ for skill in "${skills[@]}"; do
     -not -path '*/__pycache__/*' -not -path '*/node_modules/*' | sort)
 done
 
+# Le contrôle de chemin ne suffit pas : un exemple peut rester portable tout
+# en révélant une mission, un poste ou une arborescence privée. Les marqueurs
+# sont assemblés pour que ce script ne se signale pas lui-même.
+marker_acti="actim""age"
+marker_spec="spec""inov"
+marker_spen="spen""inov"
+marker_afa="bo-afa""2025"
+marker_projects="projets-""actifs"
+marker_open="open""src"
+marker_git="git-hors-""workflow"
+marker_zsh=".z""shrc"
+marker_packs="dsfr-agentic-""packs"
+marker_douane="moa.""douane"
+forbidden="$marker_acti|$marker_spec|$marker_spen|$marker_afa|$marker_projects|$marker_open|$marker_git|$marker_zsh|$marker_packs|$marker_douane"
+
+portable_files=()
+while IFS= read -r -d '' file; do
+  [[ -f "$file" ]] && portable_files+=("$file")
+done < <(
+  git -C "$WORKSPACE" ls-files -z -- \
+    README.md DEMARRAGE-AGENT.md CHANGELOG.md documentation design-systems .claude/skills scripts \
+    | while IFS= read -r -d '' rel; do printf '%s\0' "$WORKSPACE/$rel"; done
+)
+
+for file in "${portable_files[@]}"; do
+  rel="${file#"$WORKSPACE/"}"
+  if grep -EqI "$forbidden" "$file" 2>/dev/null; then
+    grep -EnI "$forbidden" "$file" | cut -c1-200 | sed "s#^#[FAIL] $rel:#" >&2
+    violations=$((violations + 1))
+  fi
+done
+
 if (( violations > 0 )); then
   printf '[FAIL] %d violation(s) de portabilité des chemins de skills\n' "$violations" >&2
   exit 1

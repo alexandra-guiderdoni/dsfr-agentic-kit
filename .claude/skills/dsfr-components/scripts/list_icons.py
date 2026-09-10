@@ -86,6 +86,22 @@ def main():
     parser.add_argument("--count", action="store_true", help="Compte + catégories (comportement par défaut ; ignoré si --validate, --all ou --filter est présent)")
     args = parser.parse_args()
 
+    # Les erreurs d'arguments doivent rester déterministes, même lorsque le
+    # paquet officiel n'est pas disponible en mode hors ligne. Une garde de
+    # dépendance placée avant cette validation transformait une faute de saisie
+    # en erreur de cache et faisait échouer les tests négatifs du générateur.
+    if args.validate is not None:
+        name = args.validate.strip()
+        if not name:
+            print("Erreur : --validate exige un nom d'icône (par exemple account-circle-line)", file=sys.stderr)
+            sys.exit(2)
+        if name.startswith("ri-"):
+            print(f"Erreur : {name} est un nom Remix Icon (ri-*) ; le paquet n'expose que les classes fr-icon-* (essayer fr-icon-{name[3:]})", file=sys.stderr)
+            sys.exit(2)
+    if args.filter is not None and not args.filter.strip():
+        print("Erreur : --filter exige un terme non vide", file=sys.stderr)
+        sys.exit(2)
+
     package = resolve_package()
     if not package:
         print(
@@ -106,12 +122,6 @@ def main():
 
     if args.validate is not None:
         name = args.validate.strip()
-        if not name:
-            print("Erreur : --validate exige un nom d'icône (par exemple account-circle-line)", file=sys.stderr)
-            sys.exit(2)
-        if name.startswith("ri-"):
-            print(f"Erreur : {name} est un nom Remix Icon (ri-*) ; le paquet n'expose que les classes fr-icon-* (essayer fr-icon-{name[3:]})", file=sys.stderr)
-            sys.exit(2)
         if not name.startswith("fr-icon-"):
             name = f"fr-icon-{name}"
         if name in icons:
@@ -125,9 +135,6 @@ def main():
         return
 
     if args.filter is not None:
-        if not args.filter.strip():
-            print("Erreur : --filter exige un terme non vide", file=sys.stderr)
-            sys.exit(2)
         matched = [icon for icon in icons if args.filter.lower() in icon.lower()]
         print(f"{len(matched)} icône(s) contenant « {args.filter} » :")
         for icon in matched:

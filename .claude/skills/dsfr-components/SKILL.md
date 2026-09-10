@@ -1,10 +1,8 @@
 ---
 name: dsfr-components
-version: 2.8.0
 description: "Utiliser quand la demande explicite vise une page HTML statique DSFR, un fragment ou composant DSFR à insérer, ou une vérification DSFR ponctuelle d'un HTML local ; exclut applications front-end et audits RGAA complets."
-allowed-tools: ["Bash", "Read", "Write", "Glob", "Edit", "WebFetch"]
-context: fork
-background: false
+allowed-tools: Bash, Read, Write, Glob, Edit, WebFetch
+context: conversation
 argument-hint: "[page: standard|landing|form|dashboard|error|login|account|search|confirmation|list|detail|sitemap --title titre --output fichier.html --dark --brand-mode neutral|republique] | [component nom --variant variante|--config JSON --output fragment.html] | [field civilite|nom-prenom|email|date-unique|societe --config JSON --output fragment.html] | [audit-dsfr html-ou-composant]"
 ---
 
@@ -33,7 +31,7 @@ pointeur chargé en contexte.
 | « Crée une page HTML statique DSFR pour une demande de rendez-vous administratif. » | Utiliser ce skill, charger le profil DSFR partagé, générer une page `form`. |
 | « J'ai besoin d'un composant accordéon DSFR à intégrer dans une page service public. » | Utiliser ce skill, lire seulement la section accordéons, produire un fragment. |
 | « Vérifie si ce HTML généré respecte les composants DSFR utilisés. » | Utiliser la branche audit DSFR ponctuel, appliquer `references/prompt-conformite-dsfr.md`, produire un statut borné. |
-| « Audite la conformité RGAA complète de ce site existant. » | Ne pas générer de page ; router vers `audit-rgaa-dsfr` ou `audit-accessibilite-web`. |
+| « Audite la conformité RGAA complète de ce site existant. » | Ne pas générer de page ; router vers `audit-rgaa-creator` pour un site multi-pages ou `pre-audit-rgaa-dsfr` pour une page isolée. |
 | « Crée une page HTML pour un service public de prise de rendez-vous. » | Ne pas déclencher ce skill sans demande DSFR explicite ; demander si DSFR est requis. |
 
 ## Quand NE PAS utiliser
@@ -83,7 +81,7 @@ choisir prudemment la branche la plus étroite et nommer l'hypothèse.
 | --- | --- | --- | --- |
 | page complète | demande de page HTML statique DSFR, ou contexte service public avec besoin DSFR explicite | 1. pré-vol ; 2. lire profil DSFR partagé si présent ; 3. choisir le type ; 4. générer avec `generate_page.py` ; 5. personnaliser ; 6. vérifier | DONE-CRITERION: fichier ou stdout HTML sans `href="#"`, `<title>` et `<h1>` cohérents avec `--title`, header/main/footer présents, cibles ARIA présentes, limites nommées |
 | composant isolé | demande d'un composant ou fragment DSFR à insérer | 1. identifier le composant ; 2. lire profil DSFR partagé si présent ; 3. lire la famille ciblée ; 4. générer avec `generate_component.py` ; 5. signaler la source d'insertion ; 6. vérifier liens et ARIA | DONE-CRITERION: fragment produit sur stdout ou `--output`, composant existant nommé, aucune cible ARIA absente, aucun conteneur vide, aucune conformité revendiquée sans audit |
-| routage audit DSFR ponctuel | demande de vérification DSFR d'un HTML généré ou d'un composant DSFR | 1. vérifier que le HTML ou le fichier à contrôler est disponible ; 2. si audit RGAA complet, site multi-page, publication, certification ou conformité globale, arrêter et router vers `audit-rgaa-dsfr` ou `audit-accessibilite-web` ; 3. sinon appliquer `references/prompt-conformite-dsfr.md` ; 4. citer les sources lues ; 5. classer les écarts | DONE-CRITERION: HTML ou fichier contrôlé identifié, écarts DSFR classés, statut borné aux sources lues, inconnus marqués, ou routage explicite vers le skill d'audit adapté |
+| routage audit DSFR ponctuel | demande de vérification DSFR d'un HTML généré ou d'un composant DSFR | 1. vérifier que le HTML ou le fichier à contrôler est disponible ; 2. si audit RGAA complet ou site multi-page, arrêter et router vers `audit-rgaa-creator` ; 3. si page isolée, router vers `pre-audit-rgaa-dsfr` ; 4. sinon appliquer `references/prompt-conformite-dsfr.md` ; 5. citer les sources lues ; 6. classer les écarts | DONE-CRITERION: HTML ou fichier contrôlé identifié, écarts DSFR classés, statut borné aux sources lues, inconnus marqués, ou routage explicite vers le skill d'audit adapté |
 
 Une demande de comparaison de versions, de changelog ou de préparation de migration sort du périmètre de ce skill : router vers `dsfr-changelog`. Ne pas modifier la version cible depuis les seules références de composants.
 

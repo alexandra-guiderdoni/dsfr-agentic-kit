@@ -109,6 +109,11 @@ avec les instructions existantes, jamais à écraser par-dessus elles.
 | Auditer selon WCAG 2.2 | URL ou HTML | rapport WCAG avec limites |
 | Corriger après audit | audit existant et code autorisé | correctifs puis vérification |
 
+Règle de routage accessibilité : un site public multi-pages utilise
+`audit-rgaa-creator` ; une page publique isolée utilise
+`pre-audit-rgaa-dsfr` ; une page ou un fichier hors secteur public avec demande
+WCAG explicite utilise `audit-accessibilite-web`.
+
 Le point d’entrée DSFR est `design-systems/dsfr/DESIGN.md`. Chaque capacité
 spécialisée possède ensuite son propre `.claude/skills/<nom>/SKILL.md`.
 

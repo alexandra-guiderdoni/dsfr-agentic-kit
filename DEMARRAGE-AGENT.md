@@ -45,13 +45,18 @@ DSFR.
 
 Pour un audit, choisir le skill selon le résultat attendu :
 
-- `pre-audit-rgaa-dsfr` pour une page isolée et des premières fiches ;
+- site public multi-pages : `audit-rgaa-creator`, qui délègue aux skills RGAA,
+  DSFR et rapport ;
+- page publique isolée : `pre-audit-rgaa-dsfr` pour une préqualification et des
+  fiches candidates ;
+- page ou fichier hors secteur public, avec demande WCAG explicite :
+  `audit-accessibilite-web` ;
+
 - `audit-dsfr-complet` pour un audit DSFR par règle et par instance avec code observé et attendu ;
 - `audit-report-dsfr` pour rendre un portail commun RGAA/DSFR via le builder assemblé ;
 - `audit-rgaa-complet` pour une préqualification RGAA par test et instance avec revue des 258 tests ;
 - `audit-rgaa-creator` pour créer et reprendre une campagne RGAA multi-pages avec AY11 et une vérification DSFR bornée sur le même échantillon ;
-- `audit-rgaa-dsfr` pour un audit RGAA cadré ;
-- `audit-accessibilite-web` pour un audit WCAG d’une URL ou d’un HTML ;
+- `audit-rgaa-dsfr` pour un cadrage RGAA ponctuel lorsque le creator n'est pas nécessaire ;
 - `fix-accessibilite` seulement après audit et autorisation de modifier le
   code du projet.
 

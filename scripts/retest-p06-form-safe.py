@@ -38,18 +38,8 @@ DELIVERY = ROOT / "virginie-livrables"
 OUTPUT = DELIVERY / "P06-FORMULAIRES/preuves"
 STAGING_ROOT = ROOT / "visual-tests/_results/staging"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
-P06_URL = "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
-PAGE_URLS = {
-    "P01": "https://moa.douane.gouv.fr/",
-    "P02": "https://moa.douane.gouv.fr/plan-du-site",
-    "P03": "https://moa.douane.gouv.fr/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
-    "P04": "https://moa.douane.gouv.fr/mentions-legales",
-    "P05": "https://moa.douane.gouv.fr/pied-de-page/donnees-personnelles",
-    "P06": P06_URL,
-    "P07": "https://moa.douane.gouv.fr/particuliers/voyages-letranger",
-    "P08": "https://moa.douane.gouv.fr/professionnels/commerce-international",
-    "P09": "https://moa.douane.gouv.fr/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
-}
+P06_URL = ""
+PAGE_URLS: dict[str, str] = {}
 PAGE_EXPECTATIONS = {
     "P01": {
         "title": "Accueil | Portail de la Direction Générale des Douanes et Droits Indirects",
@@ -107,6 +97,29 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def configure_site_urls() -> None:
+    """Construit les URLs depuis la configuration du projet consommateur."""
+    global P06_URL, PAGE_URLS
+    base_url = os.environ.get("DSFR_AUDIT_SITE_BASE_URL", "").rstrip("/")
+    if not base_url:
+        raise SystemExit(
+            "Hôte audité absent : définir DSFR_AUDIT_SITE_BASE_URL dans le projet "
+            "avant de lancer cette recette."
+        )
+    P06_URL = f"{base_url}/formulaire-infos-douane-service"
+    PAGE_URLS = {
+        "P01": f"{base_url}/",
+        "P02": f"{base_url}/plan-du-site",
+        "P03": f"{base_url}/pied-de-page/declaration-daccessibilite-du-portail-dounegouvfr",
+        "P04": f"{base_url}/mentions-legales",
+        "P05": f"{base_url}/pied-de-page/donnees-personnelles",
+        "P06": P06_URL,
+        "P07": f"{base_url}/particuliers/voyages-letranger",
+        "P08": f"{base_url}/professionnels/commerce-international",
+        "P09": f"{base_url}/actualites/point-dactualite-sur-le-deploiement-de-delta-ie-import-et-export-au-5-fevrier-2026",
+    }
+
+
 def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
     """Place les preuves, le staging et le verrou sous le projet."""
     project_root = require_project_root(args.project_root)
@@ -131,6 +144,7 @@ def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
     OUTPUT = output
     STAGING_ROOT = staging_root
     PIPELINE_LOCK = safe_pipeline_lock(project_root)
+    configure_site_urls()
     args.project_root = project_root
     return args
 EXPECTED_REPEATED_CONTROLS = {

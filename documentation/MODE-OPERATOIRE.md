@@ -16,10 +16,12 @@ sortie attendue et le niveau de vérification demandé.
 
 ### Pipelines de livrables
 
-Les générateurs Virginie et le retest P06 exigent un projet de travail
-existant, fourni par `--project-root` ou `DSFR_PROJECT_ROOT`. Le clone du kit
-reste réservé au code et aux références ; les archives, livrables, captures,
-fiches de revue et verrous sont écrits dans le projet.
+Les générateurs `generate-virginie-*` exigent un projet de travail existant,
+fourni par `--project-root` ou `DSFR_PROJECT_ROOT`. Le clone du kit reste
+réservé au code et aux références ; les archives, livrables, captures, fiches
+de revue et verrous sont écrits dans le projet. Les recettes de formulaire
+historiques demandent en plus `DSFR_AUDIT_SITE_BASE_URL`, fourni par le projet
+consommateur ; aucun hôte métier n'est codé dans le kit.
 
 ```bash
 export DSFR_PROJECT_ROOT="/chemin/vers/mon-projet"
@@ -105,9 +107,9 @@ Choisir le skill selon le résultat attendu :
 | Portail et rapports d’audit générés avec le builder DSFR | `audit-report-dsfr` |
 | Préqualification RGAA par test et instance avec revue des 258 tests | `audit-rgaa-complet` |
 | Campagne RGAA multi-pages avec vérification DSFR bornée sur le même échantillon | `audit-rgaa-creator` |
-| Audit RGAA cadré | `audit-rgaa-dsfr` |
+| Audit RGAA cadré ponctuel | `audit-rgaa-dsfr` |
 | Audit WCAG d’une URL ou d’un HTML | `audit-accessibilite-web` |
-| Orchestration de plusieurs phases | `audit-a11y-complet` |
+| Orchestration de plusieurs phases hors campagne | `audit-a11y-complet` |
 | Tests ciblés complémentaires | `tests-conformite-wcag` |
 | Vérification spécialisée | `screen-reader-testing` |
 | Correction après un audit autorisé | `fix-accessibilite` ou `a11y-loop` |

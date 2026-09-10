@@ -1,5 +1,19 @@
 # Journal des versions
 
+## Nettoyage du harnais et portabilité
+
+- alignement du routage et de la qualification sur les skills RGAA/DSFR v2,
+  sans taux ou score global produit par les skills unitaires ;
+- suppression des données de mission tierce, des transcripts de conversation
+  et du prompt de campagne propre à un site audité ;
+- ajout d’un gabarit neutre de rejeu, d’un contrôle de frontmatter, de renvois
+  morts, de clôture Markdown et de chemins personnels ;
+- sortie PNG des pictogrammes portable entre macOS et Linux, avec moteur
+  réellement utilisé tracé ;
+- les générateurs `generate-virginie-*` restent livrés pour la sortie par
+  composant demandée par Virginie, tandis que leurs hôtes de campagne sont
+  fournis par le projet consommateur.
+
 ## Fiabilité du rejeu et diagnostics navigateur
 
 - invalidation explicite des phases de rapport dérivées lorsqu’une phase amont
@@ -89,7 +103,9 @@ contrôles eux-mêmes.
 
 Contrôle complet exercé sur un clone neuf, hors du poste d'origine :
 `scripts/check-agentic-design-pack.sh` se termine par `[OK] DSFR Agentic Kit
-standalone`, 134 contrôles au vert et aucun échec.
+standalone`, sans échec ; les contrôles produits incluent désormais le
+générateur DSFR par composant, sa frontière projet/kit et les conventions du
+harnais.
 
 ## Synthèse DSFR par composant
 
@@ -106,7 +122,7 @@ standalone`, 134 contrôles au vert et aucun échec.
 - rendu HTML sous thème DSFR et Markdown, manifeste, empreintes, carte
   idempotente dans l’index général des livrables, contrôle des classes émises
   contre la version cible ;
-- tests `scripts/tests/check-virginie-dsfr-composants.sh`, 18 cas sur fixture
-  synthétique. Script dédié d'abord ; passage dans le builder différé.
+- tests `scripts/tests/check-virginie-dsfr-composants.sh`, 22 cas sur fixture
+  synthétique, intégrés à la validation produit canonique.
 
 Ce prototype local n’est pas une release publiée.

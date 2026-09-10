@@ -13,7 +13,7 @@ archives/
 
 # Livrables et sorties de run : produits par le kit, jamais livrés avec lui.
 virginie-livrables/*
-# Exception : ce prompt de reprise est une recette versionnée, pas une sortie.
-!virginie-livrables/PROMPT-GOAL-GOVERNOR-AUDIT-DSFR-DOUANE.md
+# Toute sortie Virginie est produite dans le projet consommateur, jamais dans
+# le kit versionné.
 virginie-livrables.zip
 visual-tests/_results/

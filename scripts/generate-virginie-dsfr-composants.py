@@ -35,7 +35,10 @@ from virginie_dsfr.project_paths import (  # noqa: E402
 
 ROOT = KIT_ROOT
 DELIVERY = ROOT / "virginie-livrables"
-DEFAULT_PATTERN = "audit-douane-p{n:02d}-complet-rgaa-dsfr-2026-09-02"
+# Motif neutre par défaut. Une recette de projet peut fournir le nom de ses
+# archives avec --pattern ; aucun nom de mission ne doit être implicite dans
+# le kit.
+DEFAULT_PATTERN = "audit-p{n:02d}"
 RULES = ROOT / ".claude/skills/audit-dsfr-complet/rules/dsfr-rules.json"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
 

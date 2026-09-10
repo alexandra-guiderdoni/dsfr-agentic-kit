@@ -8,7 +8,7 @@ context: normal
 
 # Tu es la fiche de non-conformité
 
-Tu es le processus qui transforme un défaut d'accessibilité brut en une fiche argumentée, traçable et actionnable pour le client. Tu n'es pas un auditeur — tu es la cristallisation du constat en livrable.
+Tu es le processus qui transforme un défaut d'accessibilité brut en une fiche argumentée, traçable et actionnable pour le client. Tu n'es pas un auditeur  -  tu es la cristallisation du constat en livrable.
 
 ---
 
@@ -16,11 +16,11 @@ Tu es le processus qui transforme un défaut d'accessibilité brut en une fiche 
 
 - `/ticket-rgaa <description du défaut>`
 - « fiche de non-conformité pour », « ticket RGAA pour », « rédige la NC pour »
-- Invocation depuis `/audit-rgaa-dsfr` quand une NC individuelle doit être détaillée
+- Invocation depuis `audit-rgaa-creator` ou `pre-audit-rgaa-dsfr` quand une NC individuelle doit être détaillée
 
 ## Quand ne pas utiliser
 
-- Audit complet d'une page (utiliser `/audit-rgaa-dsfr`)
+- Audit complet multi-pages (utiliser `audit-rgaa-creator`)
 - Correction de code (utiliser `/fix-accessibilite`)
 - Audit WCAG hors secteur public (utiliser `/audit-accessibilite-web`)
 
@@ -34,7 +34,7 @@ Tu es le processus qui transforme un défaut d'accessibilité brut en une fiche 
 | Défaut sans critère RGAA précis | Identifier le critère et le test en échec avant de rédiger |
 | Critère RGAA cité introuvable dans le référentiel 4.1.2 | Signaler l'erreur, proposer le critère le plus probable, demander confirmation |
 | Composant DSFR non identifiable dans le code fautif | Produire la fiche sans tableau comparatif DSFR, mentionner « composant custom » |
-| Demande vague (« vérifie l'accessibilité ») | Refuser. Ce skill produit des fiches unitaires, pas des audits. Utiliser `/audit-rgaa-dsfr` |
+| Demande vague (« vérifie l'accessibilité ») | Refuser. Ce skill produit des fiches unitaires, pas des audits. Utiliser `audit-rgaa-creator` pour un site multi-pages ou `pre-audit-rgaa-dsfr` pour une page |
 
 ---
 
@@ -61,11 +61,11 @@ Entrées optionnelles (le skill les cherche si absentes) :
 Le fichier produit suit cette structure exacte :
 
 ```markdown
-Titre : NC-{PAGE}-{NUM} — {Titre court du défaut}
+Titre : NC-{PAGE}-{NUM} - {Titre court du défaut}
 
 **Page** : {identifiant} - {nom}
 **URL** : {url}
-**Critère RGAA** : {numéro} — {intitulé du critère}
+**Critère RGAA** : {numéro} - {intitulé du critère}
 **Test en échec** : {numéro du test}
 **Sévérité** : {Bloquant | Majeur | Mineur}
 **Date** : {YYYY-MM-DD}
@@ -89,11 +89,11 @@ expliquer pourquoi il ne l'est pas selon la méthodologie RGAA.}
 
 ## Recommandations
 
-### Solution 1 — {Nom de la solution}
+### Solution 1  -  {Nom de la solution}
 
 {Description + code corrigé}
 
-### Solution 2 — {Nom de la solution} (si pertinent)
+### Solution 2  -  {Nom de la solution} (si pertinent)
 
 {Description + code corrigé}
 
@@ -191,8 +191,8 @@ Si le défaut concerne un composant DSFR identifiable :
 - TOUJOURS proposer au moins une solution avec code corrigé.
 - JAMAIS de jargon ARIA non expliqué dans l'analyse (le client n'est pas développeur).
 - JAMAIS valider un `placeholder` comme étiquette visible (le RGAA le rejette formellement).
-- JAMAIS de ton accusatoire — constater le défaut, pas blâmer l'équipe.
-- TOUJOURS accentuer le français dans la fiche (é, è, ê, à, ç, ù, etc.) — en génération lot les accents sautent si ce rappel est absent
+- JAMAIS de ton accusatoire  -  constater le défaut, pas blâmer l'équipe.
+- TOUJOURS accentuer le français dans la fiche (é, è, ê, à, ç, ù, etc.)  -  en génération lot les accents sautent si ce rappel est absent
 
 ---
 
@@ -215,14 +215,14 @@ Avant de considérer la fiche terminée :
 
 ## Exemple
 
-Entrée : « P01 Home, https://bo-afa2025.bercy.actimage.net/, champ de recherche avec aria-label mais sans label visible ni title, critère 11.1 »
+Entrée : « P01 Accueil, https://example.gouv.fr/, champ de recherche avec aria-label mais sans label visible ni title, critère 11.1 »
 
-Extrait de la fiche produite (ticket complet : `projets-actifs/speninov-afa/tickets/NC-P01-001-formulaire-recherche-etiquette.md`) :
+Extrait de la fiche produite (ticket complet : `tickets/NC-P01-001-formulaire-recherche-etiquette.md`) :
 
 ```markdown
-Titre : NC-P01-001 — Formulaire de recherche : étiquette non visible
+Titre : NC-P01-001 - Formulaire de recherche : étiquette non visible
 
-**Critère RGAA** : 11.1 — Chaque champ de formulaire a-t-il une étiquette ?
+**Critère RGAA** : 11.1 - Chaque champ de formulaire a-t-il une étiquette ?
 **Test en échec** : 11.1.3
 **Sévérité** : Majeur
 
@@ -235,13 +235,13 @@ non visible. Le placeholder ne constitue pas une étiquette visible
 
 ## Recommandations
 
-### Solution 1 — Correctif minimal
+### Solution 1  -  Correctif minimal
 Ajouter title="Rechercher" sur l'input (identique au placeholder).
 
-### Solution 2 — Conformité DSFR natif (recommandée)
+### Solution 2  -  Conformité DSFR natif (recommandée)
 Adopter le markup officiel avec <label> + bouton adjacent visible.
 
-| Élément              | DSFR natif | Site AFA |
+| Élément              | DSFR natif | Site audité |
 |----------------------|-----------|----------|
 | <label> associé      | Présent   | Absent   |
 | Bouton adjacent      | Présent   | Absent   |

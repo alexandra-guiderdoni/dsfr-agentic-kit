@@ -10,7 +10,7 @@ composant : `SKILL.md` suffit alors.
 | --- | --- | --- | --- | --- | --- | --- |
 | page complète | lire profil partagé si présent, vérifier type, sortie, template et HTML généré | commande lancée, fichier ou stdout inspecté, limites citées | si deux variantes de page réclament des workflows incompatibles | non observée après clarification type/sortie | aucun | garder dans ce skill |
 | composant isolé | chercher la section exacte, vérifier variante, générer, inspecter liens/ARIA | nom du composant, référence ciblée, fragment produit | si un composant exige une logique métier autonome | non observée ; la recherche ciblée suffit | aucun | garder dans ce skill |
-| audit DSFR ponctuel | distinguer vérification DSFR locale, audit RGAA complet, conformité globale et publication | tableau d'écarts borné sans statut `conforme`, ou routage vers `audit-rgaa-dsfr` / `audit-accessibilite-web` | si l'audit devient remédiation multi-fichiers ou audit complet | possible hors génération | invocation | ne pas importer les grilles RGAA ici : router vers le skill d'audit dont le mot conducteur est l'audit, ce qui évite le coût de contexte permanent |
+| audit DSFR ponctuel | distinguer vérification DSFR locale, audit RGAA complet, conformité globale et publication | tableau d'écarts borné sans statut `conforme`, ou routage vers `audit-rgaa-creator` / `audit-accessibilite-web` | si l'audit devient remédiation multi-fichiers ou audit complet | possible hors génération | invocation | ne pas importer les grilles RGAA ici : router vers le skill d'audit dont le mot conducteur est l'audit, ce qui évite le coût de contexte permanent |
 
 ## COLOCATION
 

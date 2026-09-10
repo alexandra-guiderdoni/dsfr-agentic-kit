@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Génère l’annexe probatoire P06 « Formulaires » dans virginie-livrables.
+"""Génère une annexe probatoire de formulaire dans le projet de travail.
 
 Le générateur ne modifie ni les archives, ni le site audité. Il rapproche :
 - les 34 tests RGAA 4.1.2 du thème 11 ;
@@ -35,7 +35,7 @@ from virginie_dsfr.project_paths import (  # noqa: E402
 ROOT = KIT_ROOT
 PROJECT_ROOT = ROOT
 DELIVERY = ROOT / "virginie-livrables"
-ARCHIVE = ROOT / "archives/audit-douane-p06-complet-rgaa-dsfr-2026-09-02"
+ARCHIVE = ROOT / "archives"
 OUTPUT = ROOT / "virginie-livrables/P06-FORMULAIRES"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
 EVIDENCE = OUTPUT / "preuves/P06-RETEST-SAFE.json"
@@ -47,7 +47,7 @@ ARCHIVED_SERVER_STATE = (
 ARCHIVED_COMPANY_STATE = (
     ARCHIVE / "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json"
 )
-P06_URL = "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
+P06_URL = ""
 OFFICIAL_RGAA = "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/"
 EXPECTED_ERROR_MARKUP = """<div class="fr-alert fr-alert--error" role="alert">
   <p>…message d’erreur précis…</p>
@@ -66,7 +66,7 @@ def parse_args() -> argparse.Namespace:
         "--archive",
         type=Path,
         default=None,
-        help="archive P06 ; défaut : <project-root>/archives/...",
+        help="archive de la page formulaire ; défaut : <project-root>/archives",
     )
     parser.add_argument(
         "--output",
@@ -75,6 +75,18 @@ def parse_args() -> argparse.Namespace:
         help="dossier de sortie ; défaut : <project-root>/virginie-livrables/P06-FORMULAIRES",
     )
     return parser.parse_args()
+
+
+def configure_site_url() -> None:
+    """Résout l'hôte audité fourni par le projet, jamais par le kit."""
+    global P06_URL
+    base_url = os.environ.get("DSFR_AUDIT_SITE_BASE_URL", "").rstrip("/")
+    if not base_url:
+        raise SystemExit(
+            "Hôte audité absent : définir DSFR_AUDIT_SITE_BASE_URL dans le projet "
+            "avant de lancer cette recette."
+        )
+    P06_URL = f"{base_url}/formulaire-infos-douane-service"
 
 
 def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
@@ -90,7 +102,7 @@ def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
     global MANUAL_REVIEWS, ARCHIVED_SERVER_STATE, ARCHIVED_COMPANY_STATE
     PROJECT_ROOT = project_root
     DELIVERY = output.parent
-    ARCHIVE = args.archive or project_root / "archives/audit-douane-p06-complet-rgaa-dsfr-2026-09-02"
+    ARCHIVE = args.archive or project_root / "archives"
     OUTPUT = output
     PIPELINE_LOCK = safe_pipeline_lock(project_root)
     EVIDENCE = OUTPUT / "preuves/P06-RETEST-SAFE.json"
@@ -103,6 +115,7 @@ def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
         project_root=project_root,
         label="preuves P06",
     )
+    configure_site_url()
     args.project_root = project_root
     return args
 

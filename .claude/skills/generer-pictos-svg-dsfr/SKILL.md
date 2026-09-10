@@ -45,7 +45,7 @@ Arrêts et replis, codes à reprendre tels quels :
 - `NOT VERIFIED: insertion SVG non supportée` : moteur PPT non testé ; jamais de PNG à la place sans demande explicite.
 - `NOT VERIFIED: export PNG indisponible` : `--export-png` sans moteur de rendu sur le poste.
 - Avertissement de l’audit : justification par une référence officielle précise, ou reprise du SVG.
-- V2 visuellement faible ou refusée : bifurcation `prompt-image`, puis reconstruction en SVG natif `80x80`.
+- V2 visuellement faible ou refusée : reformuler la direction visuelle, puis reconstruire en SVG natif `80x80`.
 
 Portabilité : ne pas écrire de chemin personnel dans les exemples. Exécuter les commandes depuis le dossier du skill, ou remplacer `scripts/generate_pictos_svg.py` par le chemin réel après installation.
 
@@ -57,7 +57,7 @@ Lire d’abord `pictos-svg/dsfr-officiels/manifest.json`.
 
 Si le nom demandé existe, utiliser `--source dsfr-replica`. Ne pas redessiner.
 
-Si les SVG officiels ne sont pas embarqués (distribution qui ne redistribue pas les Ressources DSFR, par exemple le pack `agentic-design-dsfr-pack`), le mode `dsfr-replica` les résout depuis le paquet officiel en cache : `DSFR_OFFICIAL_CACHE_DIR` (défaut `~/.cache/dsfr-official-cache`), dossier `gouvfr-dsfr-<version>/package/dist/artwork/pictograms`, version lue dans `pictos-svg/dsfr-officiels/manifest.json` (`dsfr_version`), avec contrôle du `sha256` de chaque fichier contre le manifeste. Sans cache, le script répond `NOT VERIFIED: source officielle absente` avec la commande `npm pack @gouvfr/dsfr@<version> --ignore-scripts` et n’écrit rien.
+Si les SVG officiels ne sont pas embarqués, le mode `dsfr-replica` les résout depuis le paquet officiel en cache : `DSFR_OFFICIAL_CACHE_DIR` (défaut `~/.cache/dsfr-official-cache`), dossier `gouvfr-dsfr-<version>/package/dist/artwork/pictograms`, version lue dans `pictos-svg/dsfr-officiels/manifest.json` (`dsfr_version`), avec contrôle du `sha256` de chaque fichier contre le manifeste. Sans cache, le script répond `NOT VERIFIED: source officielle absente` avec la commande `npm pack @gouvfr/dsfr@<version> --ignore-scripts` et n’écrit rien.
 
 Si la demande exige un officiel et que le nom est absent du corpus embarqué, chercher une source locale DSFR contenant `dist/artwork/pictograms`. Si aucune source vérifiable n’est disponible, répondre `NOT VERIFIED: source officielle absente` et ne pas générer de substitut.
 
@@ -106,7 +106,7 @@ python3 scripts/generate_pictos_svg.py \
   --output-dir assets/pictos
 ```
 
-Le script valide `viewBox="0 0 80 80"`, taille `80px` ou `80`, trois symboles dans l’ordre canonique, couleurs `fr-artwork-*`, trois `<use>`, absence de `fill`/`stroke` sur les chemins, de primitives non DSFR, de `DOCTYPE` et d’entités XML. Toutes les sources sont validées avant la première copie, les options le sont avant toute écriture, et un `manifest.json` existant est fusionné dans tous les modes, `generated` compris : entrées non régénérées et annotations humaines conservées, origine portée par chaque entrée, en-tête `source: mixed` et `official: false` si un dossier mélange copies officielles et créations, fichier illisible refusé plutôt qu’écrasé. Deux options tracées dans le manifeste, pour les copies officielles seulement : `--minor-color <nom>` recolore le calque `minor` avec une couleur à indice `-main` de la palette DSFR (ex. `green-emeraude-main-632`, valeur du thème clair ; personnalisation autorisée par la documentation « Pictogramme » ; contraste sur blanc contrôlé, avertissement sous `3:1`), statut `exact-copy-minor-recolored` ; `--export-png <taille>` produit en plus un PNG plein cadre rendu par `qlmanage`, ou répond `NOT VERIFIED: export PNG indisponible`.
+Le script valide `viewBox="0 0 80 80"`, taille `80px` ou `80`, trois symboles dans l’ordre canonique, couleurs `fr-artwork-*`, trois `<use>`, absence de `fill`/`stroke` sur les chemins, de primitives non DSFR, de `DOCTYPE` et d’entités XML. Toutes les sources sont validées avant la première copie, les options le sont avant toute écriture, et un `manifest.json` existant est fusionné dans tous les modes, `generated` compris : entrées non régénérées et annotations humaines conservées, origine portée par chaque entrée, en-tête `source: mixed` et `official: false` si un dossier mélange copies officielles et créations, fichier illisible refusé plutôt qu’écrasé. Deux options tracées dans le manifeste, pour les copies officielles seulement : `--minor-color <nom>` recolore le calque `minor` avec une couleur à indice `-main` de la palette DSFR (ex. `green-emeraude-main-632`, valeur du thème clair ; personnalisation autorisée par la documentation « Pictogramme » ; contraste sur blanc contrôlé, avertissement sous `3:1`), statut `exact-copy-minor-recolored` ; `--export-png <taille>` produit en plus un PNG plein cadre avec le premier moteur disponible parmi `qlmanage`, `rsvg-convert` et `inkscape`, ou répond `NOT VERIFIED: export PNG indisponible`.
 
 ### 4. Créer un original DSFR-like
 
@@ -132,7 +132,7 @@ Rejeter la création si le dessin est trop pauvre par rapport aux références :
 
 Signature visuelle attendue : un sujet bleu dominant, composé de formes remplies qui simulent des traits de 2 px par la géométrie ; un signal rouge `minor` visible qui précise l’action, le statut ou le détail actif, éventuellement par plusieurs formes coordonnées ; un décor périphérique discret ; une occupation du carré proche des références inspectées, sans petit objet isolé au centre sauf justification par une référence officielle sobre.
 
-Pipeline de prompt DSFR-like, inspiré de `prompt-image` mais spécialisé SVG :
+Pipeline de direction visuelle DSFR-like spécialisé SVG :
 
 1. Fidélité sémantique : comprendre le pictogramme demandé, prouver son absence officielle et lever toute ambiguïté qui changerait le sujet.
 2. Traduction pictographique : convertir le concept en sujet `major`, accent `minor`, décor `decorative`, composition `80x80`, stratégie de chemins et densité cible.
@@ -201,7 +201,7 @@ Boucle qualité obligatoire pour `original-dsfr-like` :
 2. Générer la preview `80`, `40` et `24 px`.
 3. Rédiger une critique courte : proximité DSFR, richesse du `major`, dosage du `minor`, lisibilité à `24 px`.
 4. Produire une V2 si la V1 ressemble à une icône générique, si le rouge domine, si le rouge est trop discret par rapport aux références, si la silhouette est trop pauvre, ou si le rendu s’éloigne des références.
-5. Si la V2 ne plaît pas ou reste visuellement faible, utiliser `prompt-image` comme outil de reformulation de direction visuelle, puis reconstruire une V3 en SVG natif.
+5. Si la V2 ne plaît pas ou reste visuellement faible, reformuler la direction visuelle, puis reconstruire une V3 en SVG natif.
 6. Livrer la meilleure version ou marquer `review-needed` avec la limite nommée.
 
 Avant revue humaine, lancer aussi l’audit de structure, de complexité et d’occupation du carré, dont les seuils calibrés sur le corpus sont lus dans `references/dsfr-style-profile.json` (codes de sortie : `0` conforme, `1` erreurs, `2` avertissements en `--strict`, `3` erreur d’exécution) :
@@ -288,7 +288,7 @@ Avant de conclure, vérifier :
 - [ ] Pour un rendu haute fidélité, chaque création originale nomme un `primary_archetype`, le `semantic_delta` et le `visual_delta_check`.
 - [ ] Les créations visant la production ont un score `production_score` avec `dsfr_native_feel`, `semantic_delta_integration`, `red_accent_sobriety`, `small_size_legibility` et `standalone_usability`.
 - [ ] Les créations originales ont suivi la boucle V1 -> preview -> critique -> V2, ou la V1 est explicitement justifiée comme suffisante.
-- [ ] Si la preview ou le retour utilisateur invalide la direction visuelle, `prompt-image` a été utilisé comme étape de reformulation avant reconstruction SVG.
+- [ ] Si la preview ou le retour utilisateur invalide la direction visuelle, celle-ci a été reformulée avant reconstruction SVG.
 - [ ] Le manifeste des créations originales porte `official: false` et `review-needed` par défaut ; `production-candidate` n’apparaît qu’après score suffisant et revue humaine explicite.
 - [ ] Les créations originales citent trois à cinq références officielles inspectées.
 - [ ] L’audit `audit_original_pictos.py --strict` passe, ou chaque avertissement est justifié par une référence officielle inspectée.

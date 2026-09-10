@@ -19,11 +19,10 @@ conformité DSFR globale.
 ```bash
 KIT=/chemin/dsfr-agentic-kit
 AY11=/chemin/ay11-pre-audit
-PACKS=/chemin/dsfr-agentic-packs
 AUDIT=/chemin/projet/audit-example
 
 bash "$KIT/scripts/audit-rgaa-creator.sh" init https://example.gouv.fr \
-  --output "$AUDIT" --ay11-root "$AY11" --skills-root "$PACKS"
+  --output "$AUDIT" --ay11-root "$AY11" --skills-root "$KIT/.claude/skills"
 
 # Relire et compléter l’échantillon avant l’exécution.
 bash "$KIT/scripts/audit-rgaa-creator.sh" sample "$AUDIT/campaign.yaml" --max-pages 10
@@ -36,18 +35,16 @@ Organisation de travail claire avec `ay11-pre-audit` en source externe :
 
 ```text
 <workspace>/
-├── git-hors-workflow/
-│   └── ay11-pre-audit/
-├── projets-heberges/
-    ├── dsfr-agentic-kit/
-    └── dsfr-agentic-packs/
+├── ay11-pre-audit/
+├── dsfr-agentic-kit/
+└── audit-example/
 ```
 
 Dans `dsfr-agentic-kit`, crée (ou adapte) `.env.local` :
 
 ```bash
-cd <workspace>/projets-heberges/dsfr-agentic-kit
-export AY11_ROOT="<workspace>/git-hors-workflow/ay11-pre-audit"
+cd <workspace>/dsfr-agentic-kit
+export AY11_ROOT="<workspace>/ay11-pre-audit"
 # Optionnel :
 export AY11_EXPECTED_VERSION="1.3.0"
 ```
