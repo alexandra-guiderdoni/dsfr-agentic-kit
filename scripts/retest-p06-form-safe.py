@@ -9,6 +9,7 @@ utilisés sont synthétiques. Les preuves sont écrites dans virginie-livrables.
 from __future__ import annotations
 
 import atexit
+import argparse
 import fcntl
 import hashlib
 import json
@@ -24,8 +25,18 @@ from typing import Any
 
 from playwright.sync_api import Browser, BrowserContext, Page, TimeoutError, sync_playwright
 
-ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "virginie-livrables/P06-FORMULAIRES/preuves"
+from virginie_dsfr.project_paths import (  # noqa: E402
+    KIT_ROOT,
+    require_project_root,
+    safe_pipeline_lock,
+    safe_write_path,
+)
+
+ROOT = KIT_ROOT
+PROJECT_ROOT = ROOT
+DELIVERY = ROOT / "virginie-livrables"
+OUTPUT = DELIVERY / "P06-FORMULAIRES/preuves"
+STAGING_ROOT = ROOT / "visual-tests/_results/staging"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
 P06_URL = "https://moa.douane.gouv.fr/formulaire-infos-douane-service"
 PAGE_URLS = {
@@ -77,6 +88,51 @@ PAGE_EXPECTATIONS = {
         "h1": "Point d'actualité sur le déploiement de DELTA IE (import et export) au 5 février 2026",
     },
 }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=None,
+        help="projet de travail existant ; défaut : DSFR_PROJECT_ROOT",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="dossier de preuves ; défaut : <project-root>/virginie-livrables/P06-FORMULAIRES/preuves",
+    )
+    return parser.parse_args()
+
+
+def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
+    """Place les preuves, le staging et le verrou sous le projet."""
+    project_root = require_project_root(args.project_root)
+    delivery = safe_write_path(
+        project_root / "virginie-livrables",
+        project_root=project_root,
+        label="livrables P06",
+    )
+    output = safe_write_path(
+        args.output or delivery / "P06-FORMULAIRES/preuves",
+        project_root=project_root,
+        label="preuves P06",
+    )
+    staging_root = safe_write_path(
+        project_root / "visual-tests/_results/staging",
+        project_root=project_root,
+        label="staging P06",
+    )
+    global PROJECT_ROOT, DELIVERY, OUTPUT, STAGING_ROOT, PIPELINE_LOCK
+    PROJECT_ROOT = project_root
+    DELIVERY = delivery
+    OUTPUT = output
+    STAGING_ROOT = staging_root
+    PIPELINE_LOCK = safe_pipeline_lock(project_root)
+    args.project_root = project_root
+    return args
 EXPECTED_REPEATED_CONTROLS = {
     "input|search|query": {"accessible_name": "Rechercher", "label_text": "Rechercher"},
     "input|radio|fr-radios-theme-light": {
@@ -805,7 +861,7 @@ def multipage_labels(page: Page) -> dict[str, Any]:
 
 
 def invalidate_package_validation() -> None:
-    tickets_root = ROOT / "virginie-livrables/TICKETS-RGAA"
+    tickets_root = DELIVERY / "TICKETS-RGAA"
     tickets_root.mkdir(parents=True, exist_ok=True)
     checksum = tickets_root / "SHA256SUMS"
     validation_path = tickets_root / "VALIDATION-TICKETS-RGAA.json"
@@ -854,7 +910,6 @@ def new_page(context: BrowserContext, errors: list[dict[str, str]], scenario: st
 
 def _run_locked() -> int:
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    staging_root = ROOT / "visual-tests/_results/staging"
     staging_root.mkdir(parents=True, exist_ok=True)
     started_at = datetime.now(timezone.utc)
     collector_path = Path(__file__).resolve()
@@ -1022,7 +1077,7 @@ def _run_locked() -> int:
     os.replace(temporary_output, output)
 
     print(json.dumps({
-        "output": str(output.relative_to(ROOT)),
+        "output": str(output.relative_to(PROJECT_ROOT)),
         "run_id": run_id,
         "collector_sha256": collector_sha256,
         "blocked_unsafe_method_requests": len(blocked),
@@ -1035,6 +1090,7 @@ def _run_locked() -> int:
 
 
 def main() -> int:
+    configure_paths(parse_args())
     with p06_pipeline_lock():
         return _run_locked()
 

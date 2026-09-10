@@ -7,6 +7,7 @@ racine. Les sorties client ne contiennent aucun chemin absolu local.
 
 from __future__ import annotations
 
+import argparse
 import fcntl
 import hashlib
 import html
@@ -22,7 +23,14 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+from virginie_dsfr.project_paths import (  # noqa: E402
+    KIT_ROOT,
+    require_project_root,
+    safe_pipeline_lock,
+    safe_write_path,
+)
+
+ROOT = KIT_ROOT
 ARCHIVES = ROOT / "archives"
 DELIVERY = ROOT / "virginie-livrables"
 TICKETS_ROOT = DELIVERY / "TICKETS-RGAA"
@@ -59,6 +67,62 @@ def rgaa_reference() -> Path:
     return resolve_ay11_root() / "references/rgaa/normalized/rgaa-4.1.2.json"
 
 PAGE_IDS = [f"P{i:02d}" for i in range(1, 10)]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=None,
+        help="projet de travail existant ; défaut : DSFR_PROJECT_ROOT",
+    )
+    parser.add_argument(
+        "--archives",
+        type=Path,
+        default=None,
+        help="dossier d’archives ; défaut : <project-root>/archives",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="dossier de livraison ; défaut : <project-root>/virginie-livrables",
+    )
+    parser.add_argument("--delivery-date", default=date.today().isoformat())
+    return parser.parse_args()
+
+
+def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
+    """Place toutes les destinations de génération sous le projet."""
+    project_root = require_project_root(args.project_root)
+    delivery = safe_write_path(
+        args.output or project_root / "virginie-livrables",
+        project_root=project_root,
+        label="livrables RGAA",
+    )
+    global ARCHIVES, DELIVERY, TICKETS_ROOT, PIPELINE_LOCK, MD_ROOT, HTML_ROOT, DELIVERY_DATE
+    ARCHIVES = args.archives or project_root / "archives"
+    DELIVERY = delivery
+    TICKETS_ROOT = safe_write_path(
+        delivery / "TICKETS-RGAA",
+        project_root=project_root,
+        label="tickets RGAA",
+    )
+    MD_ROOT = safe_write_path(
+        TICKETS_ROOT / "markdown",
+        project_root=project_root,
+        label="tickets RGAA Markdown",
+    )
+    HTML_ROOT = safe_write_path(
+        TICKETS_ROOT / "html",
+        project_root=project_root,
+        label="tickets RGAA HTML",
+    )
+    PIPELINE_LOCK = safe_pipeline_lock(project_root)
+    DELIVERY_DATE = args.delivery_date
+    args.project_root = project_root
+    return args
 
 
 def clean_reference_text(value: str) -> str:
@@ -2323,6 +2387,7 @@ def verifier_donnees_entree() -> None:
 
 
 def main() -> int:
+    configure_paths(parse_args())
     verifier_donnees_entree()
     with p06_pipeline_lock():
         return _run_locked()

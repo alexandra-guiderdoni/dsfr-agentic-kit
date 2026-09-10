@@ -85,6 +85,8 @@ product:
     - scripts/demo-dsfr-vitrine.sh
     - scripts/tests/check-standalone-install.sh
     - scripts/tests/check-virginie-dsfr-composants.sh
+    - scripts/tests/check-virginie-project-boundary.sh
+    - scripts/virginie_dsfr/project_paths.py
     - virginie-livrables/PROMPT-GOAL-GOVERNOR-AUDIT-DSFR-DOUANE.md
 
 validation:
@@ -104,6 +106,7 @@ validation:
     - scripts/tests/check-audit-rgaa-creator.sh
     - scripts/tests/check-standalone-install.sh
     - scripts/tests/check-virginie-dsfr-composants.sh
+    - scripts/tests/check-virginie-project-boundary.sh
   markdown:
     - README.md
     - DEMARRAGE-AGENT.md

@@ -14,6 +14,23 @@ Indiquer à l’agent deux chemins distincts :
 Utiliser le prompt de `DEMARRAGE-AGENT.md` et préciser l’entrée disponible, la
 sortie attendue et le niveau de vérification demandé.
 
+### Pipelines de livrables
+
+Les générateurs Virginie et le retest P06 exigent un projet de travail
+existant, fourni par `--project-root` ou `DSFR_PROJECT_ROOT`. Le clone du kit
+reste réservé au code et aux références ; les archives, livrables, captures,
+fiches de revue et verrous sont écrits dans le projet.
+
+```bash
+export DSFR_PROJECT_ROOT="/chemin/vers/mon-projet"
+python3 "$KIT_ROOT/scripts/generate-virginie-dsfr-composants.py" \
+  --project-root "$DSFR_PROJECT_ROOT"
+```
+
+Les destinations explicites sont contrôlées après résolution des liens
+symboliques. Une destination qui se trouve dans le kit, ou hors du projet de
+travail, est refusée avant toute écriture.
+
 ## 1. Écrire un mini-brief
 
 Un brief utile tient en quelques réponses :

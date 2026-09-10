@@ -1,5 +1,11 @@
 # Journal des versions
 
+## Frontière d’écriture des pipelines
+
+- les quatre pipelines Virginie/P06 exigent un projet de travail séparé,
+  partagent une garde de destination et déplacent leurs sorties et leur verrou
+  hors du clone du kit ;
+
 ## Validation canonique du générateur
 
 - intégration du contrôle du générateur DSFR à la validation produit canonique,

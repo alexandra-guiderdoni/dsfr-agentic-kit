@@ -11,6 +11,7 @@ Le générateur ne modifie ni les archives, ni le site audité. Il rapproche :
 
 from __future__ import annotations
 
+import argparse
 import fcntl
 import hashlib
 import html
@@ -24,7 +25,16 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+from virginie_dsfr.project_paths import (  # noqa: E402
+    KIT_ROOT,
+    require_project_root,
+    safe_pipeline_lock,
+    safe_write_path,
+)
+
+ROOT = KIT_ROOT
+PROJECT_ROOT = ROOT
+DELIVERY = ROOT / "virginie-livrables"
 ARCHIVE = ROOT / "archives/audit-douane-p06-complet-rgaa-dsfr-2026-09-02"
 OUTPUT = ROOT / "virginie-livrables/P06-FORMULAIRES"
 PIPELINE_LOCK = ROOT / "visual-tests/_results/.p06-pipeline.lock"
@@ -42,6 +52,59 @@ OFFICIAL_RGAA = "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tes
 EXPECTED_ERROR_MARKUP = """<div class="fr-alert fr-alert--error" role="alert">
   <p>…message d’erreur précis…</p>
 </div>"""
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=None,
+        help="projet de travail existant ; défaut : DSFR_PROJECT_ROOT",
+    )
+    parser.add_argument(
+        "--archive",
+        type=Path,
+        default=None,
+        help="archive P06 ; défaut : <project-root>/archives/...",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="dossier de sortie ; défaut : <project-root>/virginie-livrables/P06-FORMULAIRES",
+    )
+    return parser.parse_args()
+
+
+def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
+    """Place l’annexe, ses preuves et son verrou sous le projet."""
+    project_root = require_project_root(args.project_root)
+    output = safe_write_path(
+        args.output
+        or project_root / "virginie-livrables/P06-FORMULAIRES",
+        project_root=project_root,
+        label="annexe P06",
+    )
+    global PROJECT_ROOT, DELIVERY, ARCHIVE, OUTPUT, PIPELINE_LOCK, EVIDENCE, DECISIONS
+    global MANUAL_REVIEWS, ARCHIVED_SERVER_STATE, ARCHIVED_COMPANY_STATE
+    PROJECT_ROOT = project_root
+    DELIVERY = output.parent
+    ARCHIVE = args.archive or project_root / "archives/audit-douane-p06-complet-rgaa-dsfr-2026-09-02"
+    OUTPUT = output
+    PIPELINE_LOCK = safe_pipeline_lock(project_root)
+    EVIDENCE = OUTPUT / "preuves/P06-RETEST-SAFE.json"
+    DECISIONS = ARCHIVE / "rgaa/P06-DECISIONS-258.json"
+    MANUAL_REVIEWS = ARCHIVE / "rgaa/REVUE-MANUELLE-258.json"
+    ARCHIVED_SERVER_STATE = ARCHIVE / "preuves-p06-complet/P06-ETATS-FORMULAIRE-COMPLEMENTAIRES.json"
+    ARCHIVED_COMPANY_STATE = ARCHIVE / "preuves-p06-complet/P06-CHAMP-SOCIETE-OPTIONNEL.json"
+    safe_write_path(
+        OUTPUT / "preuves",
+        project_root=project_root,
+        label="preuves P06",
+    )
+    args.project_root = project_root
+    return args
 
 
 def resolve_ay11_root() -> Path:
@@ -1151,7 +1214,7 @@ def validate_html(path: Path) -> list[str]:
 
 
 def invalidate_package_validation() -> None:
-    tickets_root = ROOT / "virginie-livrables/TICKETS-RGAA"
+    tickets_root = DELIVERY / "TICKETS-RGAA"
     tickets_root.mkdir(parents=True, exist_ok=True)
     checksum = tickets_root / "SHA256SUMS"
     validation_path = tickets_root / "VALIDATION-TICKETS-RGAA.json"
@@ -1257,9 +1320,9 @@ def _run_locked() -> int:
                 "client_transmission_ready": doc["client_transmission_ready"],
                 "package_validation_invalidated": True,
                 "changed_outputs": [
-                    str(path.relative_to(ROOT)) for path in changed_paths
+                    str(path.relative_to(PROJECT_ROOT)) for path in changed_paths
                 ],
-                "outputs": [str(path.relative_to(ROOT)) for path in output_paths],
+                "outputs": [str(path.relative_to(PROJECT_ROOT)) for path in output_paths],
             },
             ensure_ascii=False,
             indent=2,
@@ -1285,6 +1348,7 @@ def verifier_donnees_entree() -> None:
 
 
 def main() -> int:
+    configure_paths(parse_args())
     verifier_donnees_entree()
     with p06_pipeline_lock():
         return _run_locked()

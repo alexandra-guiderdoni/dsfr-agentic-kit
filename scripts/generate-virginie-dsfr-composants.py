@@ -26,8 +26,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from virginie_dsfr import collect, gaps, migration, publish, qualify, render_html, render_markdown, verdict  # noqa: E402
+from virginie_dsfr.project_paths import (  # noqa: E402
+    KIT_ROOT,
+    require_project_root,
+    safe_pipeline_lock,
+    safe_write_path,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = KIT_ROOT
 DELIVERY = ROOT / "virginie-livrables"
 DEFAULT_PATTERN = "audit-douane-p{n:02d}-complet-rgaa-dsfr-2026-09-02"
 RULES = ROOT / ".claude/skills/audit-dsfr-complet/rules/dsfr-rules.json"
@@ -47,11 +53,17 @@ def parse_pages(spec: str) -> list[int]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--archives", type=Path, default=ROOT / "archives")
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=None,
+        help="projet de travail existant ; défaut : DSFR_PROJECT_ROOT",
+    )
+    parser.add_argument("--archives", type=Path, default=None)
     parser.add_argument("--pattern", default=DEFAULT_PATTERN, help="motif de dossier d'archive, avec {n:02d}")
     parser.add_argument("--pages", default="1-9", help="numéros de pages, ex. 1-9 ou 1,2,6")
-    parser.add_argument("--output", type=Path, default=DELIVERY / "DSFR-COMPOSANTS")
-    parser.add_argument("--work-dir", type=Path, default=DELIVERY / "DSFR-COMPOSANTS-TRAVAIL")
+    parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument("--work-dir", type=Path, default=None)
     parser.add_argument("--review-sheet", type=Path, default=None, help="défaut : <work-dir>/REVUE-A-QUALIFIER.md")
     parser.add_argument("--cache-dir", type=Path, default=Path(os.environ.get("DSFR_OFFICIAL_CACHE_DIR") or "~/.cache/dsfr-official-cache").expanduser())
     parser.add_argument("--rules", type=Path, default=RULES)
@@ -59,6 +71,42 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--allow-pending", action="store_true", help="rendre malgré des signaux non arbitrés (Non vérifié)")
     parser.add_argument("--no-index", action="store_true", help="ne pas toucher à INDEX-LIVRABLES.html")
     return parser.parse_args()
+
+
+def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
+    """Place toutes les destinations d’écriture sous le projet de travail."""
+    project_root = require_project_root(args.project_root)
+    delivery = safe_write_path(
+        project_root / "virginie-livrables",
+        project_root=project_root,
+        label="livrables",
+    )
+    args.project_root = project_root
+    args.archives = args.archives or project_root / "archives"
+    args.output = safe_write_path(
+        args.output or delivery / "DSFR-COMPOSANTS",
+        project_root=project_root,
+        label="sortie DSFR",
+    )
+    args.work_dir = safe_write_path(
+        args.work_dir or delivery / "DSFR-COMPOSANTS-TRAVAIL",
+        project_root=project_root,
+        label="travail DSFR",
+    )
+    args.review_sheet = safe_write_path(
+        args.review_sheet or args.work_dir / "REVUE-A-QUALIFIER.md",
+        project_root=project_root,
+        label="fiche de revue",
+    )
+    global DELIVERY, PIPELINE_LOCK
+    DELIVERY = delivery
+    PIPELINE_LOCK = safe_pipeline_lock(project_root)
+    safe_write_path(
+        DELIVERY / "INDEX-LIVRABLES.html",
+        project_root=project_root,
+        label="index des livrables",
+    )
+    return args
 
 
 @contextmanager
@@ -130,7 +178,7 @@ def review_hints(collection: collect.Collection, groups: list, cache_dir: Path) 
 
 
 def main() -> int:
-    args = parse_args()
+    args = configure_paths(parse_args())
     with pipeline_lock():
         collection = load_collection(args)
         sheet, overrides = resolve_review(args, collection)
