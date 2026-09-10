@@ -1206,6 +1206,62 @@ class CreatorTests(unittest.TestCase):
         self.run_cli("resume", campaign, "--only", "report")
         self.assertTrue(list((self.project / ".creator/history").glob("state-*.json")))
 
+    def test_resume_replays_report_after_upstream_phase_changes(self):
+        campaign = self.init()
+        protocol = self.project / "protocol.py"
+        protocol.write_text(
+            "import json, pathlib, sys\n"
+            "context = json.loads(pathlib.Path(sys.argv[1]).read_text())\n"
+            "output = pathlib.Path(context['campaign_root']) / context['protocol']['output'].format(page_id=context['page']['id'])\n"
+            "output.parent.mkdir(parents=True, exist_ok=True)\n"
+            "output.write_text(json.dumps({'page': context['page'], 'revision': 1}))\n",
+            encoding="utf-8",
+        )
+        config = yaml.safe_load(campaign.read_text(encoding="utf-8"))
+        config["protocols"] = [
+            {
+                "id": "versioned-proof",
+                "script": "protocol.py",
+                "output": "preuves-protocoles/{page_id}/result.json",
+            }
+        ]
+        campaign.write_text(
+            yaml.safe_dump(config, allow_unicode=True, sort_keys=False),
+            encoding="utf-8",
+        )
+        self.run_cli("run", campaign, "--only", "protocols,report,validate")
+
+        state_path = self.project / ".creator/state.json"
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        self.assertEqual("OK", state["phases"]["report"]["status"])
+        initial_validate_status = state["phases"]["validate"]["status"]
+        self.assertIn(initial_validate_status, {"OK", "PARTIEL"})
+        protocol.write_text(
+            protocol.read_text(encoding="utf-8").replace("revision': 1", "revision': 2"),
+            encoding="utf-8",
+        )
+        state["phases"]["protocols"]["status"] = "ECHEC"
+        state_path.write_text(json.dumps(state), encoding="utf-8")
+
+        result = self.run_cli(
+            "resume", campaign, "--only", "protocols,report,validate"
+        )
+        self.assertIn("phases invalidées", result.stdout)
+        self.assertEqual(
+            2,
+            json.loads(
+                (self.project / "preuves-protocoles/P01/result.json").read_text(
+                    encoding="utf-8"
+                )
+            )["revision"],
+        )
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        self.assertEqual("OK", state["phases"]["report"]["status"])
+        self.assertEqual(initial_validate_status, state["phases"]["validate"]["status"])
+        self.assertEqual(
+            [], json.loads((self.project / "VALIDATION.json").read_text())["errors"]
+        )
+
     def test_human_only_rgaa_finding_is_included_in_report(self):
         campaign = self.init()
         finding = {

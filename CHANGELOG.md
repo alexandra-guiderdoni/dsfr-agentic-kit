@@ -1,5 +1,15 @@
 # Journal des versions
 
+## Fiabilité du rejeu et diagnostics navigateur
+
+- invalidation explicite des phases de rapport dérivées lorsqu’une phase amont
+  est rejouée, avec le statut `À REJOUER` et régénération automatique lorsque
+  ces phases sont sélectionnées ;
+- contrôle distinct de Playwright Python, importé par les collecteurs RGAA/DSFR,
+  et de Playwright Node utilisé par les démos JavaScript ;
+- checklist Virginie alignée sur les clés réelles du manifeste et documentation
+  du lien parent non résolu en mode `--no-index`.
+
 ## Frontière d’écriture des pipelines
 
 - les quatre pipelines Virginie/P06 exigent un projet de travail séparé,

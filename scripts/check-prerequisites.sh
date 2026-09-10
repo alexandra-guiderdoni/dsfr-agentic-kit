@@ -85,21 +85,30 @@ for outil in npm npx; do
   fi
 done
 
-# Playwright : contrôles navigateur ; sans lui, ils sont signalés comme sautés.
-playwright_dir=""
+# Playwright Python : les collecteurs RGAA/DSFR importent playwright.async_api.
+# Le paquet Node seul ne satisfait pas ce prérequis.
+playwright_python_path=""
+if [[ -n "$python_version" ]] && playwright_python_path="$(python3 -c 'import playwright; print(playwright.__file__)' 2>/dev/null)"; then
+  optionnel_ok "Playwright Python présent ($playwright_python_path)"
+else
+  optionnel_absent "Playwright Python absent : installer python -m pip install playwright puis python -m playwright install chromium ; les contrôles navigateur Python seront sautés"
+fi
+
+# Playwright Node : utilisé par les démos et contrôles JavaScript du kit.
+playwright_node_dir=""
 if [[ -n "${PLAYWRIGHT_PACKAGE_DIR:-}" && -f "${PLAYWRIGHT_PACKAGE_DIR}/package.json" ]]; then
-  playwright_dir="$PLAYWRIGHT_PACKAGE_DIR"
+  playwright_node_dir="$PLAYWRIGHT_PACKAGE_DIR"
 elif [[ -n "$node_version" ]] && node -e "require.resolve('playwright/package.json')" >/dev/null 2>&1; then
-  playwright_dir="$(node -e "const p=require('path');console.log(p.dirname(require.resolve('playwright/package.json')))" 2>/dev/null || true)"
+  playwright_node_dir="$(node -e "const p=require('path');console.log(p.dirname(require.resolve('playwright/package.json')))" 2>/dev/null || true)"
 else
   for candidat in "$HOME"/.npm/_npx/*/node_modules/playwright; do
-    [[ -f "$candidat/package.json" ]] && { playwright_dir="$candidat"; break; }
+    [[ -f "$candidat/package.json" ]] && { playwright_node_dir="$candidat"; break; }
   done
 fi
-if [[ -n "$playwright_dir" ]]; then
-  optionnel_ok "playwright présent ($playwright_dir)"
+if [[ -n "$playwright_node_dir" ]]; then
+  optionnel_ok "Playwright Node présent ($playwright_node_dir)"
 else
-  optionnel_absent "playwright absent : npx --yes playwright install chromium ; sans lui, les contrôles navigateur sont sautés"
+  optionnel_absent "Playwright Node absent : npx --yes playwright install chromium ; les contrôles navigateur JavaScript seront sautés"
 fi
 
 # Cache DSFR officiel : téléchargé par npm pack au premier contrôle, ou SKIP explicite hors ligne.

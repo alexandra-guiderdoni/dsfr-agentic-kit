@@ -93,6 +93,9 @@ pas copier une version arbitraire du script depuis un autre projet.
   humaines réellement disponibles.
 - Ne pas utiliser `--no-index` pour masquer une erreur ; ici il sert seulement
   à éviter de modifier l’index général du Projet Cowork.
+- Avec `--no-index`, le lien `../INDEX-LIVRABLES.html` peut rester non résolu
+  lorsque l’index parent n’est pas fourni dans `OUT_DIR` ; c’est attendu dans
+  ce mode et ne constitue pas une erreur du livrable.
 - Toute absence de cache DSFR, de navigateur, d’archives, de dépendance ou de
   source doit apparaître en `SKIP`, `NON VÉRIFIÉ` ou `NO-GO` selon le cas, avec
   sa cause. Un contrôle non exécuté n’est pas un contrôle réussi.
@@ -192,8 +195,11 @@ Ne pas conclure au seul code retour du générateur. Vérifier séparément :
   `CONTRADICTION` ;
 - le regroupement des contradictions par page, état et variante DOM ;
 - le nombre de composants, de groupes, de pages et de signaux en attente ;
-- `errors: []` dans le manifeste, ou la liste exacte des erreurs si ce n’est
-  pas le cas.
+- les clés réelles du manifeste : `verdict_counts`, `catalog_status`,
+  `uncovered_components` et `expected_absent` ;
+- si le générateur produit un résumé JSON complémentaire avec une clé
+  `errors`, le contrôler dans ce résumé distinct, jamais en l’exigeant dans
+  `MANIFESTE-DSFR-COMPOSANTS.json`.
 
 Contrôler aussi que la fiche de revue reste inchangée si aucune décision
 humaine n’a été fournie. Comparer son empreinte avant/après.

@@ -43,16 +43,20 @@ else
   ko "requis inutilisable (exit $rc)"
 fi
 
-# 3. Un optionnel absent (Playwright introuvable) : avertissement, exit 0.
-mkdir -p "$tmp/home" "$tmp/vide"
+# 3. Le paquet Node seul ne valide pas Playwright Python : deux diagnostics
+#    indépendants doivent apparaître, exit 0.
+mkdir -p "$tmp/home" "$tmp/vide" "$tmp/playwright-node"
+printf '{}\n' > "$tmp/playwright-node/package.json"
 set +e
-sortie="$(cd "$tmp/vide" && HOME="$tmp/home" PLAYWRIGHT_PACKAGE_DIR= NODE_PATH= bash "$DIAG" 2>&1)"; rc=$?
+sortie="$(cd "$tmp/vide" && HOME="$tmp/home" PYTHONNOUSERSITE=1 PLAYWRIGHT_PACKAGE_DIR="$tmp/playwright-node" NODE_PATH= bash "$DIAG" 2>&1)"; rc=$?
 set -e
-if [[ "$rc" -eq 0 ]] && grep -q '^\[OPTIONNEL\] playwright absent' <<<"$sortie"; then
-  ok "optionnel absent : avertissement, exit 0"
+if [[ "$rc" -eq 0 ]] \
+  && grep -qi '^\[OPTIONNEL\] playwright python absent' <<<"$sortie" \
+  && grep -qi '^\[OPTIONNEL\] playwright node présent' <<<"$sortie"; then
+  ok "Playwright Node seul : Playwright Python signalé absent, exit 0"
 else
   printf '%s\n' "$sortie" | grep -i playwright >&2 || true
-  ko "optionnel absent (exit $rc)"
+  ko "Playwright Python/Node indépendants (exit $rc)"
 fi
 
 if (( echecs > 0 )); then

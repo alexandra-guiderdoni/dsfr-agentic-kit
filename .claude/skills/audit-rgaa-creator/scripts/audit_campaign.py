@@ -412,6 +412,30 @@ def record(state: dict[str, Any], phase: str, status: str, **details: Any) -> No
     }
 
 
+def invalidate_downstream_phases(
+    state: dict[str, Any], phase: str
+) -> list[str]:
+    """Marque les phases dérivées d’une phase rejouée comme à régénérer."""
+    try:
+        first_downstream = PHASES.index(phase) + 1
+    except ValueError:
+        return []
+    invalidated: list[str] = []
+    for downstream in PHASES[first_downstream:]:
+        details = state.get("phases", {}).get(downstream)
+        if not details or details.get("status") != "OK":
+            continue
+        record(
+            state,
+            downstream,
+            "À REJOUER",
+            invalidated_by=phase,
+            reason=f"La phase {phase} a été rejouée ; ses sorties dérivées doivent être régénérées.",
+        )
+        invalidated.append(downstream)
+    return invalidated
+
+
 def run_command(
     argv: list[str], log_path: Path, cwd: Path | None = None, dry_run: bool = False
 ) -> tuple[int, str, str]:
@@ -921,9 +945,17 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
     resume = bool(args.resume)
 
     def skip(phase: str) -> bool:
-        return phase not in selected or (
-            resume and state.get("phases", {}).get(phase, {}).get("status") == "OK"
-        )
+        if phase not in selected:
+            return True
+        if resume and state.get("phases", {}).get(phase, {}).get("status") == "OK":
+            return True
+        invalidated = invalidate_downstream_phases(state, phase)
+        if invalidated:
+            save_state(root, state)
+            print(
+                f"[INFO] {phase} rejouée : phases invalidées, à régénérer : {', '.join(invalidated)}"
+            )
+        return False
 
     if not skip("preflight") and not preflight(
         config,

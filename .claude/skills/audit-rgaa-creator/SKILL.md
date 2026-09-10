@@ -118,8 +118,10 @@ La phase `dsfr`, activée par `phases.dsfr_checks`, utilise exactement le même
 observables contre les références locales DSFR 1.15.2 et écrit ses résultats
 séparément dans `dsfr/`.
 
-Une reprise ignore seulement les phases `OK`. Les captures AY11 utilisent un
-répertoire de tentative distinct afin de ne pas écraser les preuves brutes.
+Une reprise ignore seulement les phases `OK`. Lorsqu’une phase est rejouée,
+les phases dérivées déjà marquées `OK` passent à `À REJOUER` puis sont
+régénérées si elles font partie de la sélection. Les captures AY11 utilisent
+un répertoire de tentative distinct afin de ne pas écraser les preuves brutes.
 
 Si `campaign.yaml` change après démarrage, la reprise est refusée :
 

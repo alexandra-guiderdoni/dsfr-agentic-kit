@@ -15,7 +15,7 @@
         "type": "object",
         "required": ["status", "updated_at"],
         "properties": {
-          "status": {"enum": ["OK", "PARTIEL", "ECHEC", "IGNORÉ", "BLOQUÉ"]},
+          "status": {"enum": ["OK", "PARTIEL", "ECHEC", "IGNORÉ", "BLOQUÉ", "À REJOUER"]},
           "updated_at": {"type": "string"}
         }
       }
