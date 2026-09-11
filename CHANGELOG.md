@@ -54,6 +54,8 @@
 - test des prérequis indépendant de l’emplacement système ou utilisateur de
   Playwright Python, import tardif du retest P06 et correction de son chemin de
   staging ;
+- diagnostic Playwright sans effet de bord, avec suggestion utilisant
+  l’interpréteur sélectionné et test portable sous Linux ;
 - manifeste Virginie enrichi de `errors`, checklist alignée sur les clés
   réellement livrées et suppression du lien parent en mode `--no-index`.
 

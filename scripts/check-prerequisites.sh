@@ -121,7 +121,7 @@ if [[ -n "$selected_python" ]] \
   && playwright_python_path="$("$selected_python" -c 'import playwright.async_api; print(playwright.__file__)' 2>/dev/null)"; then
   optionnel_ok "Playwright Python présent avec $selected_python ($playwright_python_path)"
 else
-  optionnel_absent "Playwright Python absent ou inutilisable avec ${selected_python:-python3} : installer avec cet interpréteur puis lancer `python -m playwright install chromium` ; les contrôles navigateur Python seront sautés"
+  optionnel_absent "Playwright Python absent ou inutilisable avec ${selected_python:-python3} : installer Playwright avec cet interpréteur, puis lancer la commande « ${selected_python:-python3} -m playwright install chromium » ; les contrôles navigateur Python seront sautés"
 fi
 
 # Playwright Node : utilisé par les démos et contrôles JavaScript du kit.
