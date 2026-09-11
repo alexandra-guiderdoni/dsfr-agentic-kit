@@ -84,6 +84,10 @@ nb="$(printf '%s' "$concernes" | grep -c . || true)"
   printf '  Corriger de preference dans le workspace source, puis resynchroniser.\n'
   printf '  Si la correction doit rester ici, la declarer en mirror_owned_paths.\n'
   printf '\n'
+  printf '  Commit de synchronisation (prefixe sync: ou sync(standalone):) : ces\n'
+  printf '  fichiers viennent justement de la source ; lancer le commit avec\n'
+  printf '  UPSTREAM_ZONE_GUARD=off, comme le conseillent le sync et l export.\n'
+  printf '\n'
   printf '  UPSTREAM_ZONE_GUARD=off pour ignorer, =block pour refuser le commit.\n'
   printf '\n'
 } >&2
