@@ -101,16 +101,16 @@ check "versions"   "$(val "$TMP/t7.json" "d['changelog']['versions_couvertes']")
 check "items"      "$(val "$TMP/t7.json" "d['changelog']['items_total']")" "53"
 check "sources"    "$(val "$TMP/t7.json" "d['changelog']['sources']")" "{'v1.15.0': 'changelog.yml@v1.15.0', 'v1.15.1': 'changelog.yml@v1.15.2', 'v1.15.2': 'changelog.yml@v1.15.2'}"
 
-echo "T10 version patch v1.15.2 -> v1.15.3 : neuf PR, quatre absentes de la note, écart d'attribution"
-python3 "$S" --repo "$REPO" --from v1.15.2 --to v1.15.3 ${NOTE3:+--note "v1.15.3=$NOTE3"} > "$TMP/t10.json"
-check "versions"   "$(val "$TMP/t10.json" "d['changelog']['versions_couvertes']")" "['v1.15.3']"
-check "items"      "$(val "$TMP/t10.json" "d['changelog']['items_total']")" "9"
-check "bornes"     "$(val "$TMP/t10.json" "d['bornes']['status']")" "BOUNDARY_OK"
-check "types"      "$(val "$TMP/t10.json" "sorted(d['changelog']['par_type'])")" "['chore', 'docs', 'feat', 'fix']"
+echo "T22 version patch v1.15.2 -> v1.15.3 : neuf PR, quatre absentes de la note, écart d'attribution"
+python3 "$S" --repo "$REPO" --from v1.15.2 --to v1.15.3 ${NOTE3:+--note "v1.15.3=$NOTE3"} > "$TMP/t22.json"
+check "versions"   "$(val "$TMP/t22.json" "d['changelog']['versions_couvertes']")" "['v1.15.3']"
+check "items"      "$(val "$TMP/t22.json" "d['changelog']['items_total']")" "9"
+check "bornes"     "$(val "$TMP/t22.json" "d['bornes']['status']")" "BOUNDARY_OK"
+check "types"      "$(val "$TMP/t22.json" "sorted(d['changelog']['par_type'])")" "['chore', 'docs', 'feat', 'fix']"
 if [ -n "$NOTE3" ]; then
-  check "silencieux" "$(val "$TMP/t10.json" "len(d['changements_silencieux']['silencieux'])")" "4"
-  check "cites"      "$(val "$TMP/t10.json" "d['changements_silencieux']['cites_dans_la_note']")" "5"
-  check "ids-silencieux" "$(val "$TMP/t10.json" "sorted(i['id'] for i in d['changements_silencieux']['silencieux'])")" "['1507', '1512', '1516', '1524']"
+  check "silencieux" "$(val "$TMP/t22.json" "len(d['changements_silencieux']['silencieux'])")" "4"
+  check "cites"      "$(val "$TMP/t22.json" "d['changements_silencieux']['cites_dans_la_note']")" "5"
+  check "ids-silencieux" "$(val "$TMP/t22.json" "sorted(i['id'] for i in d['changements_silencieux']['silencieux'])")" "['1507', '1512', '1516', '1524']"
 else
   printf '  SKIP  silencieux 1.15.3 : aucune note v1.15.3 fournie en 3e argument\n'
   skipped=$((skipped+1))
@@ -132,9 +132,9 @@ check "fichiers"   "$(val "$TMP/t9-rc.json" "d['diff']['fichiers_total']")" "780
 
 echo "T10 identifiant de pull request court"
 printf '#10\n' > "$TMP/note-pr-10.md"
-python3 "$S" --repo "$REPO" --from v1.0.0 --to v1.1.0 --note "$TMP/note-pr-10.md" > "$TMP/t10.json"
-check "cites"      "$(val "$TMP/t10.json" "d['changements_silencieux']['cites_dans_la_note']")" "1"
-check "silencieux" "$(val "$TMP/t10.json" "any(i['id'] == '10' for i in d['changements_silencieux']['silencieux'])")" "False"
+python3 "$S" --repo "$REPO" --from v1.0.0 --to v1.1.0 --note "$TMP/note-pr-10.md" > "$TMP/t22.json"
+check "cites"      "$(val "$TMP/t22.json" "d['changements_silencieux']['cites_dans_la_note']")" "1"
+check "silencieux" "$(val "$TMP/t22.json" "any(i['id'] == '10' for i in d['changements_silencieux']['silencieux'])")" "False"
 
 echo "T11 notes associées aux versions"
 printf '#1483\n#1486\n' > "$TMP/note-1.15.1.md"
