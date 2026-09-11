@@ -35,6 +35,12 @@ except ImportError as exc:  # pragma: no cover - traité par le wrapper du kit
     ) from exc
 
 from audit_report_builder import BUILDER, BUILDER_SCHEMA, generate_audit_portal
+from browser_launch import (
+    BrowserLaunchConfigError,
+    browser_launch_options,
+    browser_launch_summary,
+    check_playwright_python,
+)
 from engine_coverage import generate_engine_coverage
 
 
@@ -559,6 +565,7 @@ def init_campaign(args: argparse.Namespace) -> int:
             "screenshots": True,
             "form_interactions": True,
             "axe": True,
+            "launch": {"headless": True},
         },
         "limits": {
             "authenticated_scope": False,
@@ -807,6 +814,39 @@ def preflight(
     for skill in REQUIRED_SKILLS:
         if not any((candidate / skill / "SKILL.md").is_file() for candidate in roots):
             warnings.append(f"Skill non trouvé : {skill}")
+    browser_phases = (
+        ("browser_checks", "browser"),
+        ("rgaa_checks", "rgaa"),
+        ("dsfr_checks", "dsfr"),
+    )
+    active_browser_phases = [
+        phase_name
+        for config_key, phase_name in browser_phases
+        if config.get("phases", {}).get(config_key, False)
+    ]
+    browser_python: dict[str, Any] = {
+        "required": bool(active_browser_phases),
+        "phases": active_browser_phases,
+        "interpreter": None,
+        "playwright_import": None,
+    }
+    try:
+        browser_launch_options(config)
+        browser_python["launch"] = browser_launch_summary(config)
+    except BrowserLaunchConfigError as exc:
+        browser_python["launch"] = {"error": str(exc)}
+        if active_browser_phases:
+            errors.append(str(exc))
+    if active_browser_phases:
+        selected_python = find_python_for_ay11(ay11)
+        browser_python["interpreter"] = str(selected_python)
+        import_ok, detail = check_playwright_python(selected_python)
+        browser_python["playwright_import"] = detail or None
+        if not import_ok:
+            errors.append(
+                "Playwright Python absent ou inutilisable dans l’interpréteur "
+                f"sélectionné ({selected_python}) : {detail or 'import échoué'}"
+            )
     network_checks: list[dict[str, Any]] = []
     blocked_infra: list[dict[str, str]] = []
     unreachable: list[dict[str, str]] = []
@@ -864,6 +904,7 @@ def preflight(
         network_checks=network_checks,
         blocked_infra=blocked_infra,
         unreachable=unreachable,
+        browser_python=browser_python,
     )
     save_state(root, state)
     return not errors
@@ -1329,7 +1370,14 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
             python = find_python_for_ay11(ay11)
             script = SKILL_ROOT / "scripts/browser_checks.py"
             runtime_config = root / ".creator/browser-runtime.json"
-            write_json(runtime_config, {**config, "_campaign_root": str(root)})
+            write_json(
+                runtime_config,
+                {
+                    **config,
+                    "_campaign_root": str(root),
+                    "_browser_launch": browser_launch_summary(config),
+                },
+            )
             argv = [str(python), str(script), str(runtime_config)]
             code, out, err = run_command(
                 argv, root / "logs/browser-checks.json", dry_run=args.dry_run
@@ -1350,7 +1398,14 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
             python = find_python_for_ay11(ay11)
             script = SKILL_ROOT / "scripts/rgaa_checks.py"
             runtime_config = root / ".creator/browser-runtime.json"
-            write_json(runtime_config, {**config, "_campaign_root": str(root)})
+            write_json(
+                runtime_config,
+                {
+                    **config,
+                    "_campaign_root": str(root),
+                    "_browser_launch": browser_launch_summary(config),
+                },
+            )
             argv = [str(python), str(script), str(runtime_config)]
             code, out, err = run_command(
                 argv, root / "logs/rgaa-checks.json", dry_run=args.dry_run
@@ -1371,7 +1426,14 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
             python = find_python_for_ay11(ay11)
             script = SKILL_ROOT / "scripts/dsfr_checks.py"
             runtime_config = root / ".creator/browser-runtime.json"
-            write_json(runtime_config, {**config, "_campaign_root": str(root)})
+            write_json(
+                runtime_config,
+                {
+                    **config,
+                    "_campaign_root": str(root),
+                    "_browser_launch": browser_launch_summary(config),
+                },
+            )
             argv = [str(python), str(script), str(runtime_config)]
             code, out, err = run_command(
                 argv, root / "logs/dsfr-checks.json", dry_run=args.dry_run
@@ -3378,7 +3440,17 @@ def validate_campaign(
         )
         catalog_status = dsfr_catalog_status(root)
         if catalog_status["status"] != "A_JOUR":
-            warnings.append(catalog_status["message"])
+            message = (
+                "Catalogue de règles DSFR non exploitable pour la validation : "
+                + catalog_status["message"]
+            )
+            if catalog_status["status"] in {
+                "CATALOGUE_OBSOLETE",
+                "CATALOGUES_MULTIPLES",
+            }:
+                errors.append(message)
+            else:
+                warnings.append(catalog_status["message"])
         for index, qualification in enumerate(dsfr_findings_doc.get("findings", []), 1):
             unknown_pages = set(qualification.get("pages", [])) - set(ids)
             if unknown_pages:

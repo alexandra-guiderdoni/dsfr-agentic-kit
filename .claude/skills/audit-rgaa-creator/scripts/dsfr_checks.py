@@ -25,6 +25,7 @@ except ImportError as exc:
     ) from exc
 
 from navigation import goto_checked
+from browser_launch import browser_launch_options, browser_launch_summary
 
 
 COMPONENTS: dict[str, tuple[str, str]] = {
@@ -978,7 +979,7 @@ async def main(config_path: Path) -> int:
     catalog, catalog_metadata = load_rules_with_metadata()
     failures: list[dict[str, str]] = []
     async with async_playwright() as playwright:
-        browser = await playwright.chromium.launch(headless=True)
+        browser = await playwright.chromium.launch(**browser_launch_options(config))
         for page_info in config["sample"]:
             try:
                 result = await inspect_page(
@@ -997,6 +998,7 @@ async def main(config_path: Path) -> int:
             "rules": len(catalog["rules"]),
             "target_version": catalog["target_version"],
             "rule_catalog": catalog_metadata,
+            "browser_launch": browser_launch_summary(config),
         },
     )
     return 1 if failures else 0

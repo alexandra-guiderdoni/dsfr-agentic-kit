@@ -597,9 +597,25 @@ class RenderTests(unittest.TestCase):
             "Aucun écart sur la règle exécutée contre DSFR 1.13.2.",
         )
 
+    def test_no_index_render_has_no_broken_parent_link(self):
+        rendered = render_html.render_index(self.report, include_parent_index=False)
+        self.assertNotIn("../INDEX-LIVRABLES.html", rendered)
+
+    def test_manifest_errors_are_persisted_after_output_verification(self):
+        from virginie_dsfr import publish
+
+        output = Path(self.tmp.name) / "DSFR-COMPOSANTS"
+        publish.write_outputs(self.report, output)
+        publish.update_manifest(output, self.report, ["erreur contrôlée"])
+        manifest = json.loads(
+            (output / "MANIFESTE-DSFR-COMPOSANTS.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(manifest["errors"], ["erreur contrôlée"])
+
     def test_manifest_counts_match_report(self):
         manifest = verdict.build_manifest(self.report)
         self.assertEqual(manifest["component_count"], len(self.report.components))
+        self.assertEqual(manifest["errors"], [])
         self.assertEqual(manifest["verdict_counts"]["NON_CONFORME"], 1)
         self.assertEqual(manifest["pages"], ["P01", "P02"])
         self.assertEqual(manifest["observed_versions"], ["1.13.2"])

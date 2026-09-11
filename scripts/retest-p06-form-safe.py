@@ -23,8 +23,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from playwright.sync_api import Browser, BrowserContext, Page, TimeoutError, sync_playwright
-
 from virginie_dsfr.project_paths import (  # noqa: E402
     KIT_ROOT,
     require_project_root,
@@ -147,6 +145,25 @@ def configure_paths(args: argparse.Namespace) -> argparse.Namespace:
     configure_site_urls()
     args.project_root = project_root
     return args
+
+
+def load_playwright() -> None:
+    """Importe Playwright après le contrôle de frontière du projet."""
+    global Browser, BrowserContext, Page, TimeoutError, sync_playwright
+    try:
+        from playwright.sync_api import (
+            Browser,
+            BrowserContext,
+            Page,
+            TimeoutError,
+            sync_playwright,
+        )
+    except ImportError as exc:
+        raise SystemExit(
+            "Playwright est absent de l’environnement Python sélectionné"
+        ) from exc
+
+
 EXPECTED_REPEATED_CONTROLS = {
     "input|search|query": {"accessible_name": "Rechercher", "label_text": "Rechercher"},
     "input|radio|fr-radios-theme-light": {
@@ -924,12 +941,12 @@ def new_page(context: BrowserContext, errors: list[dict[str, str]], scenario: st
 
 def _run_locked() -> int:
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    staging_root.mkdir(parents=True, exist_ok=True)
+    STAGING_ROOT.mkdir(parents=True, exist_ok=True)
     started_at = datetime.now(timezone.utc)
     collector_path = Path(__file__).resolve()
     collector_sha256 = sha256(collector_path)
     run_id = started_at.strftime("%Y%m%dT%H%M%S%fZ") + f"-{collector_sha256[:8]}"
-    staging = Path(tempfile.mkdtemp(prefix=f"p06-{run_id}-", dir=staging_root))
+    staging = Path(tempfile.mkdtemp(prefix=f"p06-{run_id}-", dir=STAGING_ROOT))
     atexit.register(lambda: shutil.rmtree(staging, ignore_errors=True))
     blocked: list[dict[str, str]] = []
     blocked_websockets: list[dict[str, str]] = []
@@ -1105,6 +1122,7 @@ def _run_locked() -> int:
 
 def main() -> int:
     configure_paths(parse_args())
+    load_playwright()
     with p06_pipeline_lock():
         return _run_locked()
 

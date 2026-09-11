@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / ".claude/skills/audit-rgaa-creator/scripts/audit_campaign.py"
 sys.path.insert(0, str(CLI.parent))
 from audit_campaign import preflight, probe_network_url  # noqa: E402
+from browser_launch import browser_launch_options, browser_launch_summary  # noqa: E402
 from navigation import goto_checked  # noqa: E402
 
 
@@ -534,6 +535,8 @@ class CreatorTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("Catalogue de règles à vérifier", document)
+        result = self.run_cli("validate", campaign, ok=False)
+        self.assertIn("Catalogue de règles DSFR non exploitable", result.stderr)
 
     def test_dsfr_rule_catalog_has_unique_instance_rules(self):
         catalog = json.loads(
@@ -1362,6 +1365,47 @@ class CreatorTests(unittest.TestCase):
         self.assertNotEqual(0, result.returncode)
         self.assertIn("propriété inconnue", result.stderr)
 
+    def test_preflight_requires_playwright_in_selected_interpreter(self):
+        campaign = self.init()
+        config = yaml.safe_load(campaign.read_text(encoding="utf-8"))
+        state = {"phases": {}, "pages": {}}
+        with patch(
+            "audit_campaign.check_playwright_python",
+            return_value=(False, "No module named playwright"),
+        ):
+            self.assertFalse(preflight(config, self.project, state, dry_run=True))
+        self.assertEqual("ECHEC", state["phases"]["preflight"]["status"])
+        self.assertIn("interpréteur sélectionné", state["phases"]["preflight"]["errors"][0])
+        self.assertEqual(["browser", "rgaa", "dsfr"], state["phases"]["preflight"]["browser_python"]["phases"])
+
+    def test_browser_launch_configuration_is_shared_and_redacted(self):
+        config = {
+            "browser": {
+                "launch": {
+                    "headless": False,
+                    "args": ["--no-sandbox"],
+                    "channel": "chrome",
+                    "executable_path": "/opt/chrome/chrome",
+                    "proxy": {
+                        "server": "http://proxy.example:8080",
+                        "bypass": "localhost",
+                        "username_env": "PROXY_USER",
+                        "password_env": "PROXY_PASSWORD",
+                    },
+                }
+            }
+        }
+        environment = {"PROXY_USER": "alice", "PROXY_PASSWORD": "secret"}
+        options = browser_launch_options(config, environment)
+        self.assertEqual(False, options["headless"])
+        self.assertEqual("chrome", options["channel"])
+        self.assertEqual("alice", options["proxy"]["username"])
+        self.assertEqual("secret", options["proxy"]["password"])
+        summary = browser_launch_summary(config, environment)
+        self.assertTrue(summary["proxy"]["username_present"])
+        self.assertNotIn("alice", json.dumps(summary))
+        self.assertNotIn("secret", json.dumps(summary))
+
     def test_replan_uses_next_existing_capture_attempt(self):
         fake_root = Path(self.tmp.name) / "fake-ay11"
         fake_bin = fake_root / ".venv/bin/ay11"
@@ -1424,12 +1468,22 @@ class CreatorTests(unittest.TestCase):
             protocol.read_text(encoding="utf-8").replace("revision': 1", "revision': 2"),
             encoding="utf-8",
         )
+        for phase in (
+            "preflight",
+            "catalog",
+            "plan",
+            "capture",
+            "collect",
+            "browser",
+            "rgaa",
+            "dsfr",
+            "report_capture",
+        ):
+            state["phases"][phase] = {"status": "OK"}
         state["phases"]["protocols"]["status"] = "ECHEC"
         state_path.write_text(json.dumps(state), encoding="utf-8")
 
-        result = self.run_cli(
-            "resume", campaign, "--only", "protocols,report,validate"
-        )
+        result = self.run_cli("resume", campaign)
         self.assertIn("phases invalidées", result.stdout)
         self.assertEqual(
             2,

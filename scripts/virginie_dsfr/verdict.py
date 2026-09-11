@@ -196,7 +196,7 @@ def _not_verified(collection: Collection, reference_available: bool) -> list[str
     return kept + [LOCAL_SOURCE_NOTE.format(observed=observed)]
 
 
-def build_manifest(report: Report) -> dict:
+def build_manifest(report: Report, errors: list[str] | None = None) -> dict:
     counts = Counter(report.verdicts[name].status for name in report.components)
     return {
         "schema_version": 1,
@@ -207,6 +207,7 @@ def build_manifest(report: Report) -> dict:
         "observed_versions": report.collection.observed_versions,
         "target_version": report.collection.target_version,
         "component_count": len(report.components),
+        "errors": list(errors or []),
         "verdict_counts": {status: counts.get(status, 0) for status in ORDER},
         "claim": report.warning,
         "components": [

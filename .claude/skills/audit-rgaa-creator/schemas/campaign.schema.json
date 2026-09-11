@@ -94,7 +94,28 @@
         "tabs_per_page": {"type": "integer", "minimum": 1, "maximum": 300},
         "screenshots": {"type": "boolean"},
         "form_interactions": {"type": "boolean"},
-        "axe": {"type": "boolean"}
+        "axe": {"type": "boolean"},
+        "launch": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "headless": {"type": "boolean"},
+            "args": {"type": "array", "items": {"type": "string"}, "maxItems": 64},
+            "channel": {"type": "string", "minLength": 1},
+            "executable_path": {"type": "string", "minLength": 1},
+            "proxy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["server"],
+              "properties": {
+                "server": {"type": "string", "minLength": 1},
+                "bypass": {"type": "string"},
+                "username_env": {"type": "string", "minLength": 1},
+                "password_env": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
       }
     },
     "limits": {

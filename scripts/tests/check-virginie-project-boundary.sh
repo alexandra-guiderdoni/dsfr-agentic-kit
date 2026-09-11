@@ -41,6 +41,10 @@ assert_rejected "racine absente — annexe P06" \
   python3 "$WORKSPACE/scripts/generate-p06-form-annex.py"
 assert_rejected "racine absente — retest P06" \
   python3 "$WORKSPACE/scripts/retest-p06-form-safe.py"
+# Le contrôle de frontière doit précéder l’import Playwright : ce cas reste
+# testable dans un environnement Python minimal sans dépendance navigateur.
+assert_rejected "racine absente — retest P06 sans Playwright" \
+  python3 -S "$WORKSPACE/scripts/retest-p06-form-safe.py"
 
 assert_rejected "racine égale au kit — générateur DSFR" \
   python3 "$WORKSPACE/scripts/generate-virginie-dsfr-composants.py" \

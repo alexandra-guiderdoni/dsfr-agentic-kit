@@ -135,7 +135,7 @@ def shell(
     title: str,
     description: str,
     body: str,
-    back_href: str,
+    back_href: str | None,
     back_label: str,
     report: Report,
     main_class: str = "fr-container",
@@ -146,6 +146,11 @@ def shell(
         else ""
     )
     warning_container_close = "</div></div>" if warning_container_open else ""
+    back = (
+        f'<p><a class="fr-link fr-icon-arrow-left-line fr-link--icon-left" href="{e(back_href)}">{e(back_label)}</a></p>'
+        if back_href
+        else ""
+    )
     return f"""<!doctype html>
 <html lang="fr" data-fr-scheme="system">
 <head>
@@ -159,7 +164,7 @@ def shell(
 </head>
 <body>
 <div class="fr-skiplinks"><nav class="fr-container" role="navigation" aria-label="Accès rapide"><ul class="fr-skiplinks__list"><li><a class="fr-link" href="#contenu">Contenu</a></li></ul></nav></div>
-<header role="banner"><div class="fr-container fr-mt-4w"><p><a class="fr-link fr-icon-arrow-left-line fr-link--icon-left" href="{e(back_href)}">{e(back_label)}</a></p><h1>{e(title)}</h1><p class="fr-text--sm">{e(description)}</p></div></header>
+<header role="banner"><div class="fr-container fr-mt-4w">{back}<h1>{e(title)}</h1><p class="fr-text--sm">{e(description)}</p></div></header>
 <main id="contenu" class="{e(main_class)} fr-mb-4w">
 {warning_container_open}
 <div class="fr-alert fr-alert--warning fr-mb-4w"><h2 class="fr-alert__title">Lecture du verdict</h2><p>{e(report.warning)}</p></div>
@@ -304,7 +309,7 @@ def render_fiche(report: Report, name: str) -> str:
     )
 
 
-def render_index(report: Report) -> str:
+def render_index(report: Report, include_parent_index: bool = True) -> str:
     coll = report.collection
     counts = {
         status: sum(
@@ -403,7 +408,7 @@ def render_index(report: Report) -> str:
         "Synthèse DSFR par composant - portail Douane",
         f"Verdict par composant DSFR sur {len(report.pages)} pages de préproduction.",
         "\n".join(body),
-        "../INDEX-LIVRABLES.html",
+        "../INDEX-LIVRABLES.html" if include_parent_index else None,
         "Index général des livrables",
         report,
         main_class="fr-container--fluid",

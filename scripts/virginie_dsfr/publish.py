@@ -29,7 +29,9 @@ def clean_generated(folder: Path, suffix: str) -> list[Path]:
     return removed
 
 
-def write_outputs(report: Report, output: Path) -> list[Path]:
+def write_outputs(
+    report: Report, output: Path, include_parent_index: bool = True
+) -> list[Path]:
     written: list[Path] = []
     (output / "composants").mkdir(parents=True, exist_ok=True)
     (output / "markdown").mkdir(parents=True, exist_ok=True)
@@ -40,13 +42,27 @@ def write_outputs(report: Report, output: Path) -> list[Path]:
         path.write_text(text, encoding="utf-8")
         written.append(path)
 
-    write(output / "INDEX-DSFR-COMPOSANTS.html", render_html.render_index(report))
+    write(
+        output / "INDEX-DSFR-COMPOSANTS.html",
+        render_html.render_index(report, include_parent_index=include_parent_index),
+    )
     write(output / "SYNTHESE-DSFR-COMPOSANTS.md", render_markdown.render_synthese(report))
     write(output / "MANIFESTE-DSFR-COMPOSANTS.json", json.dumps(build_manifest(report), ensure_ascii=False, indent=2) + "\n")
     for name in report.components:
         write(output / "composants" / f"{name}.html", render_html.render_fiche(report, name))
         write(output / "markdown" / f"{name}.md", render_markdown.render_fiche(report, name))
     return written
+
+
+def update_manifest(output: Path, report: Report, errors: list[str]) -> Path:
+    """Réécrit le manifeste avec les erreurs observées après publication."""
+    target = output / "MANIFESTE-DSFR-COMPOSANTS.json"
+    target.write_text(
+        json.dumps(build_manifest(report, errors=errors), ensure_ascii=False, indent=2)
+        + "\n",
+        encoding="utf-8",
+    )
+    return target
 
 
 def insert_index_card(index_path: Path, card: str) -> str:

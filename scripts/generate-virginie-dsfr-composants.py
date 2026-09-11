@@ -199,7 +199,9 @@ def main() -> int:
         kinds, details, diffs, index = compute_kinds(collection, args.cache_dir)
         verdicts = verdict.component_verdicts(collection, kinds)
         report = verdict.build_report(collection, verdicts, details, args.delivery_date, diffs, reference_available=index.available)
-        written = publish.write_outputs(report, args.output)
+        written = publish.write_outputs(
+            report, args.output, include_parent_index=not args.no_index
+        )
         (args.work_dir / "qualification-virginie-dsfr.json").write_text(json.dumps({
             "schema_version": 1, "reviewed_at": args.delivery_date, "source_sheet": sheet.name,
             "decisions": [{"group_id": gid, "qualification_status": status, "rule_id": collection.groups[gid].rule_id,
@@ -209,6 +211,7 @@ def main() -> int:
         (args.work_dir / "COUVERTURE-HARNAIS.md").write_text(render_markdown.render_couverture(report, coverage), encoding="utf-8")
         index_state = "skipped" if args.no_index else publish.insert_index_card(DELIVERY / "INDEX-LIVRABLES.html", render_html.render_index_card(report))
         errors = publish.verify_outputs(written, index.target_classes)
+        publish.update_manifest(args.output, report, errors)
         checksums = publish.write_checksums(args.output, written)
         receipt = {
             "delivery_date": args.delivery_date, "pages": [p.id for p in collection.pages], "components": len(report.components),

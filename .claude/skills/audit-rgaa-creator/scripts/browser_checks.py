@@ -21,6 +21,7 @@ except ImportError as exc:
     raise SystemExit("Playwright est absent de l’environnement Python sélectionné") from exc
 
 from navigation import goto_checked
+from browser_launch import browser_launch_options, browser_launch_summary
 
 
 def dump(path: Path, value: Any) -> None:
@@ -179,7 +180,7 @@ async def main(config_path: Path) -> int:
     config = json.loads(config_path.read_text(encoding="utf-8")); root = Path(config.pop("_campaign_root")).resolve()
     failures = []
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(**browser_launch_options(config))
         axe_source, axe_source_name = resolve_axe_source()
         for page in config["sample"]:
             try:
@@ -187,7 +188,14 @@ async def main(config_path: Path) -> int:
             except Exception as exc:
                 failures.append({"page": page["id"], "error": str(exc)}); print(f"{page['id']} ECHEC: {exc}", file=sys.stderr)
         await browser.close()
-    dump(root / "logs/browser-checks-summary.json", {"failures": failures, "pages": len(config["sample"])})
+    dump(
+        root / "logs/browser-checks-summary.json",
+        {
+            "failures": failures,
+            "pages": len(config["sample"]),
+            "browser_launch": browser_launch_summary(config),
+        },
+    )
     return 1 if failures else 0
 
 

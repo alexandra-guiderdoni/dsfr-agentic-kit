@@ -18,6 +18,7 @@ except ImportError as exc:
     ) from exc
 
 from navigation import goto_checked
+from browser_launch import browser_launch_options, browser_launch_summary
 
 
 SOURCE = "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/"
@@ -660,7 +661,7 @@ async def main(config_path: Path) -> int:
     (root / "rgaa/preuves").mkdir(parents=True, exist_ok=True)
     failures = []
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(**browser_launch_options(config))
         for page in config["sample"]:
             try:
                 result = await inspect_page(browser, page, config, root)
@@ -671,7 +672,12 @@ async def main(config_path: Path) -> int:
         await browser.close()
     dump(
         root / "logs/rgaa-checks-summary.json",
-        {"failures": failures, "pages": len(config["sample"]), "rules": len(RULES)},
+        {
+            "failures": failures,
+            "pages": len(config["sample"]),
+            "rules": len(RULES),
+            "browser_launch": browser_launch_summary(config),
+        },
     )
     return 1 if failures else 0
 

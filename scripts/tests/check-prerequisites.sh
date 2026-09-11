@@ -44,11 +44,23 @@ else
 fi
 
 # 3. Le paquet Node seul ne valide pas Playwright Python : deux diagnostics
-#    indépendants doivent apparaître, exit 0.
+#    indépendants doivent apparaître, exit 0. Le lanceur Python temporaire
+#    masque uniquement les modules de site pour la sonde Playwright ; les
+#    prérequis Python généraux restent ceux de l’environnement courant.
 mkdir -p "$tmp/home" "$tmp/vide" "$tmp/playwright-node"
 printf '{}\n' > "$tmp/playwright-node/package.json"
+python_reel="$(command -v python3)"
+mkdir -p "$tmp/python-bin"
+printf '%s\n' \
+  '#!/bin/sh' \
+  'case "${2:-}" in' \
+  "  *playwright*) exec env -u PYTHONPATH \"$python_reel\" -S \"\$@\" ;;" \
+  'esac' \
+  "exec \"$python_reel\" \"\$@\"" \
+  > "$tmp/python-bin/python3"
+chmod +x "$tmp/python-bin/python3"
 set +e
-sortie="$(cd "$tmp/vide" && HOME="$tmp/home" PYTHONNOUSERSITE=1 PLAYWRIGHT_PACKAGE_DIR="$tmp/playwright-node" NODE_PATH= bash "$DIAG" 2>&1)"; rc=$?
+sortie="$(cd "$tmp/vide" && PATH="$tmp/python-bin:$PATH" HOME="$tmp/home" PYTHONNOUSERSITE=1 PLAYWRIGHT_PACKAGE_DIR="$tmp/playwright-node" NODE_PATH= bash "$DIAG" 2>&1)"; rc=$?
 set -e
 if [[ "$rc" -eq 0 ]] \
   && grep -qi '^\[OPTIONNEL\] playwright python absent' <<<"$sortie" \

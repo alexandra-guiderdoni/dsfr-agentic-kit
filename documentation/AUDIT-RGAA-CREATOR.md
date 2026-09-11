@@ -75,6 +75,45 @@ preflight → catalog → plan → capture → collect → browser → rgaa → 
 - `report` dérive matrices, pages et tickets, puis délègue à `audit-report-dsfr` le portail commun, les rapports complets et les vues par page via `generate_assembled_page.py` ;
 - `validate` vérifie cohérence, preuves, ancres et garde-fous.
 
+Lorsque la phase DSFR est active, `validate` échoue si les pages portent une
+empreinte obsolète ou si plusieurs catalogues sont mélangés. Une empreinte
+absente reste un avertissement d’audit incomplet. Un changement du catalogue
+impose donc un rejeu de la phase DSFR, puis de `report` et `validate`.
+
+### Prérequis navigateur et configuration de lancement
+
+Lorsque `browser_checks`, `rgaa_checks` ou `dsfr_checks` est actif, le prévol
+importe Playwright Python dans l’interpréteur réellement sélectionné pour la
+campagne. L’absence de cet import est bloquante avant toute collecte. Le
+module Playwright Node, utilisé par certaines démonstrations, est contrôlé
+séparément et reste optionnel pour le runner.
+
+Les options de lancement sont gouvernées dans `campaign.yaml` par le bloc
+`browser.launch` :
+
+```yaml
+browser:
+  launch:
+    headless: true
+    channel: chromium
+    args:
+      - --no-sandbox
+    executable_path: /chemin/vers/chromium
+    proxy:
+      server: http://proxy.example:8080
+      bypass: localhost,127.0.0.1
+      username_env: AUDIT_PROXY_USERNAME
+      password_env: AUDIT_PROXY_PASSWORD
+```
+
+`headless` vaut `true` par défaut. `channel`, `executable_path`, les arguments
+et le proxy sont facultatifs ; ils sont appliqués de façon identique par les
+contrôles `browser`, `rgaa` et `dsfr`. Les secrets ne doivent jamais être
+écrits dans la campagne : seuls les noms de variables d’environnement sont
+déclarés, puis leurs valeurs sont lues au lancement. La configuration effective
+est tracée sous forme expurgée dans les résumés de prévol, de phase et dans
+`.creator/browser-runtime.json`.
+
 Les nouvelles campagnes activent `phases.rgaa_checks: true` et
 `phases.dsfr_checks: true`. Une ancienne campagne reste rétrocompatible :
 ajouter le champ souhaité puis exécuter `replan` pour activer la phase
@@ -112,6 +151,11 @@ bash "$KIT/scripts/audit-rgaa-creator.sh" resume "$AUDIT/campaign.yaml"
 ```
 
 L’état précédent est archivé ; les preuves sont conservées.
+
+Le rejeu d’une phase invalide automatiquement les phases qui en dépendent.
+Ainsi, un rejeu de `dsfr` marque le rapport et la validation comme `À REJOUER`
+et régénère le rapport avant la validation. Une phase explicitement demandée
+est toujours rejouée, même si son dernier statut était `OK`.
 
 ## Qualification
 

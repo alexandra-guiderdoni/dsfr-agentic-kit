@@ -29,8 +29,11 @@ automatique. Toute validation humaine restante doit être visible.
 2. vérifier l'empreinte du commit du kit ;
 3. conserver les preuves par page et par état ;
 4. vérifier `VALIDATION.json` et les liens relatifs ;
-5. relire visuellement le rapport HTML si un rapport est produit ;
-6. consigner les outils absents, les phases ignorées et les résultats non
+5. si la sortie Virginie est produite, vérifier
+   `MANIFESTE-DSFR-COMPOSANTS.json`, notamment `errors`, `verdict_counts`,
+   `catalog_status`, `expected_absent` et `uncovered_components` ;
+6. relire visuellement le rapport HTML si un rapport est produit ;
+7. consigner les outils absents, les phases ignorées et les résultats non
    exercés.
 
 ## Reprise

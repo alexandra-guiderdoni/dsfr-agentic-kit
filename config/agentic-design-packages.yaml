@@ -66,6 +66,7 @@ product:
     - .claude/skills/audit-rgaa-creator/schemas/state.schema.json
     - .claude/skills/audit-rgaa-creator/scripts/audit_campaign.py
     - .claude/skills/audit-rgaa-creator/scripts/audit_report_builder.py
+    - .claude/skills/audit-rgaa-creator/scripts/browser_launch.py
     - .claude/skills/audit-rgaa-creator/scripts/browser_checks.py
     - .claude/skills/audit-rgaa-creator/scripts/dsfr_checks.py
     - .claude/skills/audit-rgaa-creator/scripts/rgaa_checks.py
