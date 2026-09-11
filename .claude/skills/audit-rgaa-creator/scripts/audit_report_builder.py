@@ -834,7 +834,7 @@ def generate_audit_portal(config: dict[str, Any], root: Path) -> dict[str, Any]:
         "builder_schema": str(BUILDER_SCHEMA.relative_to(SKILLS_ROOT)),
         "builder_schema_sha256": _digest(BUILDER_SCHEMA),
         "brand_mode": "neutral",
-        "dsfr_assets": "CDN @gouvfr/dsfr 1.15.2 ; contenu lisible sans CSS/JS",
+        "dsfr_assets": "CDN @gouvfr/dsfr 1.15.3 ; contenu lisible sans CSS/JS",
         "dsfr_rule_catalog": catalog_status["current"],
         "dsfr_catalog_status": catalog_status,
         "inputs": [

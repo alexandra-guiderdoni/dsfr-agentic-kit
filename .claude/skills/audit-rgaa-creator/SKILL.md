@@ -120,7 +120,7 @@ par page sont tous produits via le bloc structuré `audit_report` de
 
 La phase `dsfr`, activée par `phases.dsfr_checks`, utilise exactement le même
 échantillon que le RGAA. Elle inventorie les composants, vérifie des invariants
-observables contre les références locales DSFR 1.15.2 et écrit ses résultats
+observables contre les références locales DSFR 1.15.3 et écrit ses résultats
 séparément dans `dsfr/`.
 
 Une reprise ignore seulement les phases `OK`. Lorsqu’une phase est rejouée,

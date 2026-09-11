@@ -2721,7 +2721,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
     matrix = [
         "# Matrice de respect DSFR",
         "",
-        "> Vérification bornée aux sources locales DSFR 1.15.2 lues. Aucun statut « conforme DSFR ».",
+        "> Vérification bornée aux sources locales DSFR 1.15.3 lues. Aucun statut « conforme DSFR ».",
         "",
         "| Page | Élément | Type | Statut | Sévérité | Constat | Source |",
         "|---|---|---|---|---|---|---|",
@@ -2820,7 +2820,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
     report = f"""# Rapport consolidé DSFR — {config["campaign"]["name"]}
 
 - **Échantillon :** {len(config["sample"])} page(s), identique à la campagne RGAA
-- **Référence locale :** DSFR 1.15.2
+- **Référence locale :** DSFR 1.15.3
 - **Statut borné :** {overall}
 - **Types de composants inventoriés :** {len(inventory)}
 - **Écarts observés :** {len(differences)}

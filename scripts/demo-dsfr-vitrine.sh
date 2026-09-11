@@ -19,7 +19,7 @@ Generates a complete local DSFR showcase directory:
   assets/dsfr/
 
 The DSFR asset cache must exist at:
-  ${DSFR_OFFICIAL_CACHE_DIR:-$HOME/.cache/dsfr-official-cache}/gouvfr-dsfr-${DSFR_OFFICIAL_VERSION:-1.15.2}/package/dist
+  ${DSFR_OFFICIAL_CACHE_DIR:-$HOME/.cache/dsfr-official-cache}/gouvfr-dsfr-${DSFR_OFFICIAL_VERSION:-1.15.3}/package/dist
 
 Run the DSFR package check first if the cache is missing.
 EOF
@@ -103,7 +103,7 @@ BUILDER="$WORKSPACE/.claude/skills/dsfr-components/scripts/generate_assembled_pa
 command -v python3 >/dev/null 2>&1 || fail "python3 introuvable dans le PATH"
 
 DSFR_CACHE_ROOT="${DSFR_OFFICIAL_CACHE_DIR:-$HOME/.cache/dsfr-official-cache}"
-DSFR_VERSION="${DSFR_OFFICIAL_VERSION:-1.15.2}"
+DSFR_VERSION="${DSFR_OFFICIAL_VERSION:-1.15.3}"
 DSFR_DIST="$DSFR_CACHE_ROOT/gouvfr-dsfr-$DSFR_VERSION/package/dist"
 if [[ ! -d "$DSFR_DIST" ]]; then
   fail "DSFR asset cache missing: $DSFR_DIST. Run: bash scripts/check-agentic-design-pack.sh"
