@@ -18,12 +18,14 @@ Si ce profil contredit la documentation officielle ou le code DSFR installé, su
 
 ## Version
 
-- Documentation officielle consultée : branche DSFR `1.15`, vérifiée le 2026-08-28.
-- Package npm/CDN stable consulté : `@gouvfr/dsfr` `1.15.2`.
+- Documentation officielle consultée : branche DSFR `1.15`, vérifiée le 2026-08-28 ; note de version 1.15 relue le 2026-09-11 pour la version patch 1.15.3.
+- Package npm/CDN stable consulté : `@gouvfr/dsfr` `1.15.3`, publié le 2026-09-09 (tag `v1.15.3`, commit `bfd32c25d94e`) ; mesuré contre `1.15.2` le 2026-09-11 : une classe CSS ajoutée (`fr-search-bar--labelled`), aucune retirée, JavaScript inchangé, 16 fichiers de la police Marianne remplacés, pictogrammes et icônes identiques.
+- Changements de markup officiel apportés par 1.15.3 : bandeau d'information (`notice`) en `div` > titre `h2` par défaut + `p.fr-notice__desc`, `role` réservé à l'insertion dynamique (#1521, #1504) ; badges en groupe en `span` (#1498) ; variante `fr-search-bar--labelled` et messages dans la barre de recherche (#1516) ; classes d'état `fr-input--error` / `--valid` posées sur le champ seulement hors groupe (#1516) ; niveau de titre paramétrable de l'accordéon.
+- Écart entre la note publiée et le dépôt : la note attribue la variante de recherche à #1521, le dépôt à #1516 ; quatre PR du dépôt sont absentes de la note (#1524, #1512, #1507, #1516).
 - Des versions RC peuvent être visibles sur CDN ou dépôt : ne pas les utiliser comme référence de production sauf si le projet les utilise déjà.
 - Écart paquet / documentation : aucun au 2026-08-28. La branche de
   documentation officielle est en `1.15` et le paquet de référence du pack est
-  `1.15.2`, publié le 2026-08-12. La documentation officielle n'est pas lisible
+  `1.15.3`, publié le 2026-09-09 (précédent `1.15.2`, 2026-08-12). La documentation officielle n'est pas lisible
   automatiquement depuis ce poste, son site étant protégé par un pare-feu
   applicatif : ce constat vient d'une vérification humaine, pas d'une mesure
   rejouable ici.

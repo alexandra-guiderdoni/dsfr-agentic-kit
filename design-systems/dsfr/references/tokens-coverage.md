@@ -24,7 +24,7 @@ sert à décider quoi charger, quoi vérifier et quoi marquer `à vérifier`.
 |---|---|---|---|
 | `100 % tokens CSS DSFR` | skill `dsfr-components` : `evals/official-coverage-inventory.md`, `references/tokens.md`, `references/tokens-advanced.md` | inventaire officiel rejoué, version citée | `non revendiqué` |
 | `100 % classes utilitaires` | skill `dsfr-components` : `evals/official-coverage-inventory.md`, `references/utilities.md` et sous-référence utile | classe attestée ou absence vérifiée dans le paquet | `à vérifier` |
-| `100 % composants` | skill `dsfr-components` : `evals/official-coverage-inventory.md` (1.15.2), `evals/couverture-officielle-1-14-4.md` (instantané 1.14.4 conservé tel quel, périmètre 46/46 revérifié en 1.15.2) | périmètre `46/46` et variantes couvertes cités | couverture locale bornée |
+| `100 % composants` | skill `dsfr-components` : `evals/official-coverage-inventory.md` (1.15.3), `evals/couverture-officielle-1-14-4.md` (instantané 1.14.4 conservé tel quel, périmètre 46/46 revérifié en 1.15.2) | périmètre `46/46` et variantes couvertes cités | couverture locale bornée |
 | `prêt publication` | `verification.md`, `page-shell.md`, `sources.md` | checklist publication, liens réels et mandat marque | prototype à vérifier |
 | `conforme RGAA` | `verification.md` puis skill d'audit adapté | rapport spécialisé, taux ou décision humaine | `non revendiqué` |
 

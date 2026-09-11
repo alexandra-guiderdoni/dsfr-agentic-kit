@@ -1,6 +1,6 @@
 # Options des scripts
 
-Référence des options des scripts de génération DSFR 1.15.2 du skill. Pour les
+Référence des options des scripts de génération DSFR 1.15.3 du skill. Pour les
 paramètres détaillés de chaque composant, voir `references/components.md`, puis
 l'index de famille et le sous-fichier ciblé. La sortie de `--list` donne le
 catalogue générable.
@@ -15,7 +15,7 @@ toute la chaîne. Ne rien poser laisse le comportement inchangé.
 Les générateurs `generate_page.py` et `generate_layout.py` l'emploient pour les
 URL du CDN écrites dans le HTML produit, `list_icons.py` pour le paquet
 interrogé et `playwright_dsfr_helpers.js` pour les vérifications en navigateur ;
-tous quatre retombent sur `1.15.2`, la version figée du skill, quand elle est
+tous quatre retombent sur `1.15.3`, la version figée du skill, quand elle est
 absente.
 
 `check_generated_outputs.py` s'en sert autrement : elle lui fournit sa version
@@ -24,7 +24,7 @@ script ne compare rien au paquet officiel et se limite à ses contrôles
 structurels.
 
 ```bash
-DSFR_OFFICIAL_VERSION=1.15.2 python3 "$SKILL_DIR/scripts/generate_page.py" --type standard --title Test
+DSFR_OFFICIAL_VERSION=1.15.3 python3 "$SKILL_DIR/scripts/generate_page.py" --type standard --title Test
 ```
 
 Son intérêt est de garder générateurs et contrôle sur la même version. Les
@@ -100,7 +100,7 @@ indisponible et uv introuvable : installer jsonschema>=4.22,<5 ».
 Deux modes :
 
 - **Mode natif** (46 composants paramétrables) : tous les composants officiels
-  DSFR 1.15.2, via `--config` JSON. Lister avec `--list`.
+  DSFR 1.15.3, via `--config` JSON. Lister avec `--list`.
 - **Mode bibliothèque** (variantes figées) : variantes de
   `assets/dsfr_complete_library.json`, via `--variant`. Arbitrage : les
   variantes `with_error` (`input`, `select`, `upload`) démontrent un état
@@ -145,7 +145,7 @@ qui l'acceptent (`container`, `grid`, `col`, `spacing`, `color`) : ne pas y
 passer de contenu non fiable. `col` accepte `offset` (1 à 11) et les décalages
 par point de rupture `offset_sm`, `offset_md`, `offset_lg`, `offset_xl`
 (`fr-col-offset-{bp}-N`). `spacing` borne `size` selon l'unité du paquet
-1.15.2 : 0 à 32 pour `v`, 0 à 16 pour `w` ; hors plage, erreur courte en code 1.
+1.15.3 : 0 à 32 pour `v`, 0 à 16 pour `w` ; hors plage, erreur courte en code 1.
 `pictogram` filtre `src` par la liste blanche d'URL du skill (un schéma
 `javascript:` est neutralisé en `/`).
 
@@ -167,7 +167,7 @@ python3 "$SKILL_DIR/scripts/generate_atom.py" pictogram --config '{"src":"/dsfr/
 
 Note : `container` émet `fr-container[-{sm|md|lg|xl}][--fluid]` (séparateur
 simple). `color` en mode texte, échelles relevées dans `utility.min.css`
-1.15.2 (table `UTILITY_COLOR_SCALES` de `generate_atom.py`) : `action-high`
+1.15.3 (table `UTILITY_COLOR_SCALES` de `generate_atom.py`) : `action-high`
 (défaut) et `label` acceptent la palette Marianne ; `inverted` accepte la
 palette Marianne, `grey` et les états ; `default` n'accepte que
 `{error, grey, info, success, warning}` ; `mention` n'accepte que `grey` ;
@@ -191,7 +191,7 @@ pointer-only (l'art SVG relève du skill `generer-pictos-svg-dsfr`).
 5 blocs : `civilite`, `nom-prenom`, `email`, `date-unique`, `societe`. Sourcés
 des pages officielles `blocs-fonctionnels` (consultées le 2026-07-07, branche
 1.14) puis confrontés le 2026-08-28 aux exemples rendus
-`example/layout/pattern/*` du paquet 1.15.2 : structure (légendes,
+`example/layout/pattern/*` du paquet 1.15.3 : structure (légendes,
 `aria-labelledby`, groupes de messages), aides, `autocomplete` et `aria-live`
 alignés ; validation différée (aucune contrainte native au repos). Seules
 différences : l'ordre prénom puis nom par défaut (voir ci-dessous) et la taille
@@ -205,7 +205,7 @@ standard des radios de civilité.
 | `--list` | Lister les blocs |
 
 Note de source sur `nom-prenom` : défaut `order: "prenom-nom"` (convention
-skill) ; l'ordre officiel 1.15.2 (nom d'abord) est disponible via
+skill) ; l'ordre officiel 1.15.3 (nom d'abord) est disponible via
 `--config '{"order":"nom-prenom"}'`.
 
 ## list_icons.py — icônes RI (énumération/validation au runtime)
@@ -219,7 +219,7 @@ paquet via `DSFR_OFFICIAL_PACKAGE_DIR` puis `DSFR_OFFICIAL_CACHE_DIR`.
 | `--filter` | Icônes contenant le terme |
 | `--validate NOM` | Exit 0 si `NOM` (ou `fr-icon-NOM`) est une icône officielle du paquet lu, 1 sinon, 2 si l'argument est vide ou de la forme Remix `ri-*` (non exposée par le paquet). |
 | `--count` | Compte et catégories (comportement par défaut ; ignoré avec `--validate`, `--all` ou `--filter`) |
-| `--all` | Liste complète (1044 classes en 1.15.2) |
+| `--all` | Liste complète (1044 classes en 1.15.3) |
 
 La version affichée est celle du paquet réellement lu (`package.json`), pas la
 cible `DSFR_OFFICIAL_VERSION`. `DSFR_OFFICIAL_PACKAGE_DIR` accepte `~` et
@@ -229,7 +229,7 @@ doit pointer vers un paquet extrait valide, sinon sortie 2.
 
 | Script | Rôle |
 |--------|------|
-| `check_generated_outputs.py` | Contrats structurels (pages, racines composants, composants critiques) + invariants (ARIA, `href="#"`, contraintes au repos, IDs uniques, gestionnaires inline, markup équilibré) + page assemblée du builder ; `--official-version 1.15.2` valide toutes les classes émises (pages + bibliothèque + natifs + atomes + gabarits + builder) contre le paquet. Options : `--official-package <dossier>` (paquet extrait), `--official-version x.y.z` (cache `npm pack`), `--official-cache-dir <dossier>` (défaut `DSFR_OFFICIAL_CACHE_DIR` ou `~/.cache/dsfr-official-cache`), `--pages-only` et `--forms-only` (contrôles partiels : les sorties natives, atomes, gabarits et builder sont alors sautées) |
+| `check_generated_outputs.py` | Contrats structurels (pages, racines composants, composants critiques) + invariants (ARIA, `href="#"`, contraintes au repos, IDs uniques, gestionnaires inline, markup équilibré) + page assemblée du builder ; `--official-version 1.15.3` valide toutes les classes émises (pages + bibliothèque + natifs + atomes + gabarits + builder) contre le paquet. Options : `--official-package <dossier>` (paquet extrait), `--official-version x.y.z` (cache `npm pack`), `--official-cache-dir <dossier>` (défaut `DSFR_OFFICIAL_CACHE_DIR` ou `~/.cache/dsfr-official-cache`), `--pages-only` et `--forms-only` (contrôles partiels : les sorties natives, atomes, gabarits et builder sont alors sautées) |
 | `check_assembled_page_schema.py` | Validation JSON Schema du builder assemblé : schéma, `examples/assembled/*/page.json`, puis `generate_assembled_page.py --check` par exemple |
 | `inventory_official_coverage.py` | Inventaire chiffré du paquet officiel : variables CSS, classes utilitaires, icônes, pictogrammes, composants et couverture locale. Options : `--official-package <dossier>` (ou `DSFR_OFFICIAL_PACKAGE_DIR`), `--official-version x.y.z` (cache `npm pack`), `--official-cache-dir`, `--format markdown\|json`, `--output <fichier>` (régénère le fichier : c'est le seul script qui écrase, l'inventaire versionné étant sa sortie) |
 | `check_pictograms_doc.sh` | Chaque pictogramme (`famille/nom.svg`) et icône (`fr-icon-*`) cité par `references/pictograms.md` et `references/icons.md` existe dans le paquet officiel du cache ; SKIP explicite en code 2 sans paquet |

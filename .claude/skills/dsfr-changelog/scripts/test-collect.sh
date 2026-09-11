@@ -20,6 +20,7 @@
 set -uo pipefail
 REPO="${1:?chemin du clone DSFR attendu}"
 NOTE="${2:-}"
+NOTE3="${3:-}"
 skipped=0
 
 if [ ! -d "$REPO" ] || ! git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1; then
@@ -99,6 +100,21 @@ python3 "$S" --repo "$REPO" --from v1.14.4 --to v1.15.2 > "$TMP/t7.json"
 check "versions"   "$(val "$TMP/t7.json" "d['changelog']['versions_couvertes']")" "['v1.15.0', 'v1.15.1', 'v1.15.2']"
 check "items"      "$(val "$TMP/t7.json" "d['changelog']['items_total']")" "53"
 check "sources"    "$(val "$TMP/t7.json" "d['changelog']['sources']")" "{'v1.15.0': 'changelog.yml@v1.15.0', 'v1.15.1': 'changelog.yml@v1.15.2', 'v1.15.2': 'changelog.yml@v1.15.2'}"
+
+echo "T10 version patch v1.15.2 -> v1.15.3 : neuf PR, quatre absentes de la note, écart d'attribution"
+python3 "$S" --repo "$REPO" --from v1.15.2 --to v1.15.3 ${NOTE3:+--note "v1.15.3=$NOTE3"} > "$TMP/t10.json"
+check "versions"   "$(val "$TMP/t10.json" "d['changelog']['versions_couvertes']")" "['v1.15.3']"
+check "items"      "$(val "$TMP/t10.json" "d['changelog']['items_total']")" "9"
+check "bornes"     "$(val "$TMP/t10.json" "d['bornes']['status']")" "BOUNDARY_OK"
+check "types"      "$(val "$TMP/t10.json" "sorted(d['changelog']['par_type'])")" "['chore', 'docs', 'feat', 'fix']"
+if [ -n "$NOTE3" ]; then
+  check "silencieux" "$(val "$TMP/t10.json" "len(d['changements_silencieux']['silencieux'])")" "4"
+  check "cites"      "$(val "$TMP/t10.json" "d['changements_silencieux']['cites_dans_la_note']")" "5"
+  check "ids-silencieux" "$(val "$TMP/t10.json" "sorted(i['id'] for i in d['changements_silencieux']['silencieux'])")" "['1507', '1512', '1516', '1524']"
+else
+  printf '  SKIP  silencieux 1.15.3 : aucune note v1.15.3 fournie en 3e argument\n'
+  skipped=$((skipped+1))
+fi
 
 echo "T8 intervalle inverse"
 python3 "$S" --repo "$REPO" --from v1.15.2 --to v1.15.0 > "$TMP/t8.json"; code=$?

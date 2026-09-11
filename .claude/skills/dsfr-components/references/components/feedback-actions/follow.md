@@ -47,7 +47,7 @@ Permet à l'utilisateur de s'abonner aux mises à jour d'une page ou d'un servic
 ```
 
 **Règles** :
-- Le bloc d'abonnement du paquet officiel 1.15.2 ne contient pas de formulaire :
+- Le bloc d'abonnement du paquet officiel 1.15.3 ne contient pas de formulaire :
   le bouton « S'abonner » ouvre le parcours d'abonnement du projet. Avec
   `newsletter_url`, `generate_component.py follow` rend à sa place un
   `<a class="fr-btn" href="…" title="S'abonner à notre lettre d'information">`

@@ -1,11 +1,11 @@
 ---
 name: DSFR
 version: "1.15"
-documentation_version_ref: "1.15.2"
-package_version_ref: "1.15.2"
+documentation_version_ref: "1.15.3"
+package_version_ref: "1.15.3"
 status: canonical-local-router
 language: fr-FR
-source_checked_at: "2026-08-28"
+source_checked_at: "2026-09-11"
 refresh_when:
   - nouvelle_version_dsfr
   - publication
@@ -108,7 +108,7 @@ Il s'inspire du concept `DESIGN.md` comme charte lisible par agent, mais son con
 
 Le DSFR vise les sites et services numériques de l'État et les contextes de service public autorisés. Si le périmètre est incertain, produire une composition administrative neutre sans bloc marque, ou demander le contexte seulement si une publication, un droit d'usage ou une reprise de page publique est en jeu.
 
-Ce profil est une **couche de routage et d'abstraction**, pas un miroir de la surface interne des skills routés (comptes de composants natifs, atomes, types de page, générateurs). Cette surface vit dans chaque skill (`SKILL.md` + `--list`) et n'a pas à être réalignée ici quand un skill évolue. Synchroniser uniquement la version DSFR (1.15.2 figée) et les claims/tokens partagés.
+Ce profil est une **couche de routage et d'abstraction**, pas un miroir de la surface interne des skills routés (comptes de composants natifs, atomes, types de page, générateurs). Cette surface vit dans chaque skill (`SKILL.md` + `--list`) et n'a pas à être réalignée ici quand un skill évolue. Synchroniser uniquement la version DSFR (1.15.3 figée) et les claims/tokens partagés.
 
 ## Méthode DESIGN.md adoptée
 

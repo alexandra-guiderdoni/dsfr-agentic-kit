@@ -8,12 +8,12 @@
     <meta name="description" content="Démo du builder DSFR assemblé : brief, JSON, page HTML et preuve locale.">
 
     <!-- DSFR CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/utility/icons/icons.min.css">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/apple-touch-icon.png">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/favicon.svg" type="image/svg+xml">
 </head>
 <body id="top">
 
@@ -113,11 +113,11 @@
 <div class="fr-notice fr-notice--info">
     <div class="fr-container">
         <div class="fr-notice__body">
-            <p>
-                <span class="fr-notice__title">Démo sans droit de marque</span>
-                <span class="fr-notice__desc">Le mode neutre est utilisé par défaut. Le bloc marque République française reste hors périmètre sans droit d&#x27;usage établi.</span>
+            <div>
+                <h2 class="fr-notice__title">Démo sans droit de marque</h2>
+                <p class="fr-notice__desc">Le mode neutre est utilisé par défaut. Le bloc marque République française reste hors périmètre sans droit d&#x27;usage établi.</p>
                 <a class="fr-notice__link" href="#preuve">Lire les limites</a>
-            </p>
+            </div>
         </div>
     </div>
 </div>
@@ -228,8 +228,9 @@
         <span class="fr-hint-text">Renseignez-le si vous avez déjà un dossier.</span>
         
     </label>
-    <input class="fr-input" type="text" id="numero-dossier" name="numero-dossier" />
-    
+    <input class="fr-input" type="text" id="numero-dossier" name="numero-dossier" aria-describedby="numero-dossier-messages" />
+    <div class="fr-messages-group" id="numero-dossier-messages" aria-live="polite">
+    </div>
 </div>
                             
 <div class="fr-select-group">
@@ -303,24 +304,29 @@
                         if (message) {
                           field.setAttribute('aria-invalid', 'true');
                           field.setAttribute('aria-describedby', id);
-                          if (field.classList.contains('fr-input')) field.classList.add('fr-input--error');
                           if (group && group.classList.contains('fr-input-group')) group.classList.add('fr-input-group--error');
                           if (group && group.classList.contains('fr-select-group')) group.classList.add('fr-select-group--error');
                           if (!err) {
                             err = document.createElement('p');
                             err.id = id;
-                            err.className = 'fr-error-text';
-                            if (group) {
-                              group.appendChild(err);
-                            } else {
-                              field.insertAdjacentElement('afterend', err);
+                            err.className = 'fr-message fr-message--error';
+                            var messages = group ? group.querySelector('.fr-messages-group') : null;
+                            if (!messages) {
+                              messages = document.createElement('div');
+                              messages.className = 'fr-messages-group';
+                              messages.setAttribute('aria-live', 'polite');
+                              if (group) {
+                                group.appendChild(messages);
+                              } else {
+                                field.insertAdjacentElement('afterend', messages);
+                              }
                             }
+                            messages.appendChild(err);
                           }
                           err.textContent = message;
                         } else {
                           field.removeAttribute('aria-invalid');
                           field.removeAttribute('aria-describedby');
-                          field.classList.remove('fr-input--error');
                           if (group) group.classList.remove('fr-input-group--error', 'fr-select-group--error');
                           if (err) err.remove();
                         }
@@ -442,7 +448,7 @@
 </footer>
 
     <!-- DSFR JS -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.module.min.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.nomodule.min.js"></script>
 </body>
 </html>

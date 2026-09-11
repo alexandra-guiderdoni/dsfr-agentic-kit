@@ -36,3 +36,11 @@ Référence extraite de `../navigation.md`.
 **Note** : Combiner `aria-expanded="true"` sur le bouton ET `fr-collapse--expanded` sur le contenu.
 
 ---
+
+## Niveau de titre
+
+Le titre de l'accordéon est un niveau d'entête `h2` à `h6` (par défaut `h3`)
+selon sa place dans la page. La documentation DSFR 1.15.3 tolère
+« éventuellement `<p>` » ; le générateur `generate_component.py accordion`
+reste volontairement plus strict et n'accepte que `heading_level` de 2 à 6.
+

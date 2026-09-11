@@ -5,9 +5,9 @@ const path = require('path');
 const Module = require('module');
 
 const VERSION_RE = /^\d+\.\d+\.\d+(?:[.-][0-9A-Za-z.]+)?$/;
-const DSFR_VERSION = process.env.DSFR_OFFICIAL_VERSION || '1.15.2';
+const DSFR_VERSION = process.env.DSFR_OFFICIAL_VERSION || '1.15.3';
 if (!VERSION_RE.test(DSFR_VERSION)) {
-  throw new Error(`DSFR_OFFICIAL_VERSION invalide (${JSON.stringify(DSFR_VERSION.slice(0, 40))}) : numéro de version attendu, par exemple 1.15.2`);
+  throw new Error(`DSFR_OFFICIAL_VERSION invalide (${JSON.stringify(DSFR_VERSION.slice(0, 40))}) : numéro de version attendu, par exemple 1.15.3`);
 }
 const DEFAULT_CACHE_DIR = expandHome(process.env.DSFR_OFFICIAL_CACHE_DIR || path.join(os.homedir(), '.cache', 'dsfr-official-cache'));
 const PYTHON = process.env.PYTHON || 'python3';

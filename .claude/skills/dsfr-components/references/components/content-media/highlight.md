@@ -13,7 +13,7 @@ Référence extraite de `../content-media.md`.
 
 ## Tailles
 
-Aucune variante de taille n'existe en DSFR 1.15.2 : `fr-highlight--sm` et
+Aucune variante de taille n'existe en DSFR 1.15.3 : `fr-highlight--sm` et
 `fr-highlight--lg` ne sont pas des classes officielles (vérifié dans
 `dist/dsfr.min.css`). Seules les couleurs d'accentuation ci-dessous sont
 disponibles.

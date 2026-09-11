@@ -20,7 +20,7 @@ Une distribution peut omettre les fichiers `.svg` de `pictos-svg/dsfr-officiels/
 
 Avant une publication institutionnelle, vérifier la source officielle courante du DSFR ou une distribution locale contrôlée. Le snapshot embarqué facilite le travail, mais ne remplace pas une vérification de version quand la conformité officielle est l’enjeu.
 
-Version de référence du corpus : `@gouvfr/dsfr@1.15.2`, vérifiée le 28 août 2026 ; le lot initial `1.14.4` lui est identique octet pour octet. La procédure de vérification d’une nouvelle version est décrite dans `pictos-svg/dsfr-officiels/SOURCE.md` ; la version de référence ne change qu’après cette vérification explicite.
+Version de référence du corpus : `@gouvfr/dsfr@1.15.3`, vérifiée le 11 septembre 2026 (102 pictogrammes identiques octet pour octet à `1.15.2`, elle-même identique au lot initial `1.14.4`). La procédure de vérification d’une nouvelle version est décrite dans `pictos-svg/dsfr-officiels/SOURCE.md` ; la version de référence ne change qu’après cette vérification explicite.
 
 Pour obtenir une source officielle locale sans exécuter de script d’installation, utiliser `npm pack @gouvfr/dsfr@<version> --ignore-scripts` puis extraire l’archive. Depuis `1.15.0`, `npm install @gouvfr/dsfr` exécute `scripts/preinstall.js`, qui interrompt l’installation (`process.exit(1)`) tant que les modalités d’utilisation en vigueur n’ont pas été acceptées, par un fichier `.dsfr.yml` portant `accept-license: <version des modalités>` à la racine du projet ou par la variable `DSFR_ACCEPT_LICENSE=1`. Un poste dont `~/.npmrc` porte `ignore-scripts=true` ne voit pas ce contrôle. Les releases GitHub ne fournissent plus le code compilé depuis `1.15.0`.
 
@@ -28,7 +28,7 @@ Pour obtenir une source officielle locale sans exécuter de script d’installat
 
 Les pictogrammes officiels restent soumis aux conditions du DSFR et de leur distribution d’origine. Ce skill ne confère aucun droit supplémentaire, ne crée pas de label officiel et ne permet pas de produire des logos, emblèmes, Marianne, sceaux ou marques institutionnelles.
 
-État vérifié dans le dépôt amont `GouvernementFR/dsfr` à `v1.15.2` (28 août 2026) :
+État vérifié dans le dépôt amont `GouvernementFR/dsfr` à `v1.15.2` (28 août 2026), inchangé à `v1.15.3` (11 septembre 2026, diff `dist/artwork/pictograms` vide) :
 
 - le code est publié sous licence Etalab 2.0 (Licence Ouverte 2.0) depuis `1.15.1` (`LICENSE.md`, `package.json`, `publiccode.yml`), alors que `1.14.4` déclarait la licence MIT ;
 - l’usage est encadré par les modalités d’utilisation `1.0.1` du 20 juillet 2026 (`doc/legal/cgu.md`, champ `cguVersion`), qui remplacent les anciennes CGU ;

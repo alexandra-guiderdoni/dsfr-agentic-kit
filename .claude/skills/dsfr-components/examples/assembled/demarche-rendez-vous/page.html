@@ -8,12 +8,12 @@
     <meta name="description" content="Prototype de page de prise de rendez-vous administratif générée par le builder assemblé DSFR.">
 
     <!-- DSFR CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/utility/icons/icons.min.css">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
-    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/apple-touch-icon.png">
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/favicon.svg" type="image/svg+xml">
 </head>
 <body id="top">
 
@@ -110,11 +110,11 @@
 <div class="fr-notice fr-notice--info">
     <div class="fr-container">
         <div class="fr-notice__body">
-            <p>
-                <span class="fr-notice__title">Avant de commencer</span>
-                <span class="fr-notice__desc">Munissez-vous des informations nécessaires à votre demande.</span>
+            <div>
+                <h2 class="fr-notice__title">Avant de commencer</h2>
+                <p class="fr-notice__desc">Munissez-vous des informations nécessaires à votre demande.</p>
                 <a class="fr-notice__link" href="#pieces">Voir les pièces utiles</a>
-            </p>
+            </div>
         </div>
     </div>
 </div>
@@ -299,24 +299,29 @@
                         if (message) {
                           field.setAttribute('aria-invalid', 'true');
                           field.setAttribute('aria-describedby', id);
-                          if (field.classList.contains('fr-input')) field.classList.add('fr-input--error');
                           if (group && group.classList.contains('fr-input-group')) group.classList.add('fr-input-group--error');
                           if (group && group.classList.contains('fr-select-group')) group.classList.add('fr-select-group--error');
                           if (!err) {
                             err = document.createElement('p');
                             err.id = id;
-                            err.className = 'fr-error-text';
-                            if (group) {
-                              group.appendChild(err);
-                            } else {
-                              field.insertAdjacentElement('afterend', err);
+                            err.className = 'fr-message fr-message--error';
+                            var messages = group ? group.querySelector('.fr-messages-group') : null;
+                            if (!messages) {
+                              messages = document.createElement('div');
+                              messages.className = 'fr-messages-group';
+                              messages.setAttribute('aria-live', 'polite');
+                              if (group) {
+                                group.appendChild(messages);
+                              } else {
+                                field.insertAdjacentElement('afterend', messages);
+                              }
                             }
+                            messages.appendChild(err);
                           }
                           err.textContent = message;
                         } else {
                           field.removeAttribute('aria-invalid');
                           field.removeAttribute('aria-describedby');
-                          field.classList.remove('fr-input--error');
                           if (group) group.classList.remove('fr-input-group--error', 'fr-select-group--error');
                           if (err) err.remove();
                         }
@@ -429,7 +434,7 @@
 </footer>
 
     <!-- DSFR JS -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.module.min.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.nomodule.min.js"></script>
 </body>
 </html>

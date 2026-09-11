@@ -4,7 +4,7 @@ Référence extraite de `../content-media.md`.
 
 ---
 
-**Composant déprécié en DSFR 1.15.2.** Le paquet officiel ne sert plus ce
+**Composant déprécié en DSFR 1.15.3.** Le paquet officiel ne sert plus ce
 markup que sous `example/component/download/deprecated/`. La fonctionnalité
 « téléchargement de fichier » est désormais portée par deux composants
 courants :
@@ -66,7 +66,7 @@ reste documentée pour la maintenance de l'existant.
 - Le niveau de titre `<h3>` est celui de l'exemple officiel ; l'adapter à la
   hiérarchie réelle de la page
 
-**Note** : le titre de groupe `fr-downloads-group__title` n'existe en 1.15.2 que dans le gabarit déprécié du composant (`src/dsfr/component/download/deprecated/`) ; le générateur ne l'émet pas, à dessein. Détail historique : `generate_component.py download` pose bien le conteneur
+**Note** : le titre de groupe `fr-downloads-group__title` n'existe en 1.15.3 que dans le gabarit déprécié du composant (`src/dsfr/component/download/deprecated/`) ; le générateur ne l'émet pas, à dessein. Détail historique : `generate_component.py download` pose bien le conteneur
 `fr-download` autour du lien, en mode simple comme en mode `items`, mais place
 le `<a class="fr-download__link">` sans le `<h3>` de l'exemple officiel, et le
 mode `items` n'émet pas de `fr-downloads-group__title`. Ajouter le titre du

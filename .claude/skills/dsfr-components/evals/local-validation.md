@@ -111,13 +111,13 @@ Comparaison officielle cacheable à lancer avant publication ou recalage du
 catalogue local :
 
 ```bash
-python3 -B "$SKILL_DIR/scripts/check_generated_outputs.py" --official-version 1.15.2
-python3 -B "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1.15.2 --output "$SKILL_DIR/evals/official-coverage-inventory.md"
+python3 -B "$SKILL_DIR/scripts/check_generated_outputs.py" --official-version 1.15.3
+python3 -B "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1.15.3 --output "$SKILL_DIR/evals/official-coverage-inventory.md"
 ```
 
 Le cache officiel est rempli par `npm pack`, qui n'exécute pas le hook
 `preinstall` ajouté en 1.15. Vérifié le 2026-08-29 dans un dossier jetable :
-`npm pack @gouvfr/dsfr@1.15.2 --ignore-scripts=false --loglevel=verbose` sort en
+`npm pack @gouvfr/dsfr@1.15.3 --ignore-scripts=false --loglevel=verbose` sort en
 code 0, produit `gouvfr-dsfr-1.15.2.tgz` (22,8 Mo) sans aucune ligne de cycle
 de vie (`preinstall`, `prepare`), alors que le `package.json` du paquet déclare
 `"preinstall": "node scripts/preinstall.js"` ; `--ignore-scripts=false` neutralise
@@ -176,11 +176,11 @@ correctifs markup `toggle`, `notice`, `tooltip`, `follow`.
 | composants HTML | smoke `alert` et `accordion` (`check_generated_outputs.py`, `iter_native_component_defaults`) | inclus dans `PASS generated outputs` |
 | blocs fonctionnels | `generate_field.py date-unique`, `civilite` et `societe` exercés par `check_generated_outputs.py` (`iter_fields`, `FIELD_NEGATIVE_ARGS`) | inclus dans `PASS generated outputs` : ARIA `aria-describedby`/`aria-labelledby` résolus, aucune contrainte au repos, entrées vides ou inconnues refusées |
 | variantes riches + golden | `generate_component.py` header (tools/languages, search, menu), navigation (mega-menu), footer (partenaires) + `check_golden_outputs.py` | `PASS golden: 21 cas inchangés + invariants OK` ; aucune régénération de baseline |
-| composants à risque | `check_generated_outputs.py --official-version 1.15.2` + cas natifs adversariaux `toggle`, `notice`, `tooltip`, `follow` | `PASS generated outputs: pages=12 components=136` ; messages group et ARIA des toggles, `fr-notice__desc`/`fr-notice__link`, tooltip sans `aria-hidden` statique, abonnement en bouton et `fr-btn--twitter-x` vérifiés statiquement |
-| inventaire officiel | `inventory_official_coverage.py --official-version 1.15.2` | 1090 variables CSS, 1517 classes utilitaires dont 221 hors icônes/artwork, 1044 classes `fr-icon-*`, 154 classes legacy `fr-fi-*`, 102 pictogrammes SVG et 46/46 composants officiels couverts localement |
+| composants à risque | `check_generated_outputs.py --official-version 1.15.3` + cas natifs adversariaux `toggle`, `notice`, `tooltip`, `follow` | `PASS generated outputs: pages=12 components=136` ; messages group et ARIA des toggles, `fr-notice__desc`/`fr-notice__link`, tooltip sans `aria-hidden` statique, abonnement en bouton et `fr-btn--twitter-x` vérifiés statiquement |
+| inventaire officiel | `inventory_official_coverage.py --official-version 1.15.3` | 1090 variables CSS, 1517 classes utilitaires dont 221 hors icônes/artwork, 1044 classes `fr-icon-*`, 154 classes legacy `fr-fi-*`, 102 pictogrammes SVG et 46/46 composants officiels couverts localement |
 | atomes et gabarits | smoke `generate_atom.py grid` et `generate_layout.py card-grid` dans le bloc minimal | `PASS` : aucun href="#", aucune contrainte au repos, cibles ARIA résolues |
 | interactif header/navigation | `node scripts/check_header_navigation_playwright.js` (vrais fragments, viewport mobile+desktop) | `PASS` : modales search/menu ouvrent (`fr-modal--opened`) puis ferment, translate/menu/mega `aria-expanded` false→true, collapses `fr-collapse--expanded`, 0 erreur console |
-| P3 pictogram + analytics | `generate_atom.py pictogram` + `references/analytics.md` | atom pictogram pointer-only (11 atomes, classes `fr-artwork*` vérifiées) ; référence analytics (9 attributs `data-fr-analytics-*` sourcés du paquet) ; `check_generated_outputs.py` PASS local et `--official-version 1.15.2`, `check_golden_outputs.py` PASS 21 cas |
+| P3 pictogram + analytics | `generate_atom.py pictogram` + `references/analytics.md` | atom pictogram pointer-only (11 atomes, classes `fr-artwork*` vérifiées) ; référence analytics (9 attributs `data-fr-analytics-*` sourcés du paquet) ; `check_generated_outputs.py` PASS local et `--official-version 1.15.3`, `check_golden_outputs.py` PASS 21 cas |
 | page account + icon-list | `generate_page.py --type account` + `list_icons.py` | page création de compte (FranceConnect + form prénom-puis-nom/email/new-password, validation différée, 0 contrainte au repos) ; `check` pages 11→12 ; icon-list runtime (1044 icônes, 18 catégories, `--filter`/`--validate` exit 0/1) |
 | footer et liens externes | contrôle `target_blank_without_noopener` de `check_generated_outputs.py` sur toutes les sorties | inclus dans `PASS generated outputs` |
 | cibles ARIA statiques | scan `aria-controls`, `aria-labelledby`, `aria-describedby`, `for` et ancres locales des sorties minimales, ids uniques | `aria_targets PASS` |

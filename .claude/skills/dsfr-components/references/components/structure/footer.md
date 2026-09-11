@@ -91,7 +91,7 @@ les inventer.
     </div>
 </div>
 ```
-Source : `example/component/footer/index.html` du paquet 1.15.2. Le générateur
+Source : `example/component/footer/index.html` du paquet 1.15.3. Le générateur
 `generate_component.py footer` ne produit pas ce bloc : l'ajouter à la main
 selon ce markup.
 

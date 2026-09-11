@@ -1,8 +1,8 @@
 {
   "source": "pictos-svg/dsfr-officiels",
   "source_package": "@gouvfr/dsfr",
-  "source_version": "1.15.2",
-  "analysis_date": "2026-08-29",
+  "source_version": "1.15.3",
+  "analysis_date": "2026-09-11",
   "icon_count": 102,
   "corpus_svg_count": 102,
   "corpus_sha256": "7b410644fca7c5f3f84d677b26a64599a11f8c389dd7ed12b1261ecf18e9cd11",

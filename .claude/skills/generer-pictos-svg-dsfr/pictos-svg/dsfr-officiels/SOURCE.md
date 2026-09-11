@@ -1,6 +1,6 @@
 # Source des pictogrammes officiels DSFR
 
-Version de référence vérifiée : `@gouvfr/dsfr@1.15.2` (tag amont `v1.15.2`, SHA `ae35a0c8cdc6`, 12 août 2026). Vérification réalisée le 28 août 2026 avec le skill `dsfr-changelog`.
+Version de référence vérifiée : `@gouvfr/dsfr@1.15.3` (tag amont `v1.15.3`, SHA `bfd32c25d94e`, 9 septembre 2026 ; précédente `1.15.2`, `ae35a0c8cdc6`, 12 août 2026, vérifiée le 28 août 2026). Vérification 1.15.3 réalisée le 11 septembre 2026 avec le skill `dsfr-changelog`.
 
 Lot initial récupéré le 13 juin 2026 depuis le paquet npm `@gouvfr/dsfr@1.14.4`, dossier `dist/artwork/pictograms`. Le lot n’a pas été modifié depuis : les 102 SVG de `1.14.4` et de `1.15.2` sont identiques octet pour octet.
 
@@ -55,3 +55,11 @@ Observations du snapshot : 94 fichiers utilisent `80px`, 8 utilisent `80`, et 4 
 ## Conditions d’utilisation
 
 Les conditions d’utilisation du DSFR restent applicables. Depuis `1.15.1`, le code est publié sous licence Etalab 2.0 et son usage est encadré par les modalités d’utilisation `1.0.1` du 20 juillet 2026 ; voir `DISTRIBUTION.md`. Ce lot sert de référence d’analyse et de comparaison pour améliorer le générateur de pictogrammes du skill.
+
+## Preuves de la vérification 1.15.3
+
+Vérification réalisée le 11 septembre 2026, paquet `@gouvfr/dsfr@1.15.3` (tag amont `v1.15.3`, SHA `bfd32c25d94e`, 9 septembre 2026) :
+
+- `diff -rq` entre `gouvfr-dsfr-1.15.2/package/dist/artwork/pictograms` et `gouvfr-dsfr-1.15.3/package/dist/artwork/pictograms` : vide, 102 SVG à chaque borne ;
+- `git -C <clone> diff --name-status v1.15.2 v1.15.3 -- src/dsfr/core/asset/artwork/pictograms` : vide ;
+- `manifest.json` : `dsfr_version` porté à `1.15.3`, SHA256 des 102 entrées inchangés.

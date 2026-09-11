@@ -468,7 +468,7 @@ def check_button_types(scope: str, facts: MarkupFacts) -> list[Issue]:
 def check_external_links(scope: str, facts: MarkupFacts) -> list[Issue]:
     """target=_blank (quelle que soit la casse) exige rel=noopener et une annonce
     « nouvelle fenêtre » dans le title (SKILL.md, Contraintes DSFR ; exemples
-    officiels share/footer 1.15.2)."""
+    officiels share/footer 1.15.3)."""
     issues: list[Issue] = []
     blank = [
         element for element in facts.elements
@@ -518,7 +518,7 @@ def check_table_header_scope(scope: str, facts: MarkupFacts) -> list[Issue]:
 def check_form_control_names(scope: str, facts: MarkupFacts) -> list[Issue]:
     """Tout contrôle soumis porte un name. Exemptés : boutons, interrupteurs
     (fr-toggle) et cases « afficher le mot de passe » (fr-password__checkbox),
-    sans name dans les exemples officiels 1.15.2."""
+    sans name dans les exemples officiels 1.15.3."""
     missing = []
     for element in facts.elements:
         if element.tag not in {"input", "select", "textarea"} or "name" in element.attrs:
@@ -579,7 +579,7 @@ def check_select_placeholder_values(scope: str, facts: MarkupFacts) -> list[Issu
 
 
 def check_range_double_names(scope: str, facts: MarkupFacts) -> list[Issue]:
-    """Curseur double (exemple officiel range 1.15.2) : chaque input porte un
+    """Curseur double (exemple officiel range 1.15.3) : chaque input porte un
     id et un aria-label propres (Valeur minimale / Valeur maximale)."""
     problems = []
     for container in find_elements(facts, tag="div", class_name="fr-range--double"):
@@ -600,7 +600,7 @@ def check_range_double_names(scope: str, facts: MarkupFacts) -> list[Issue]:
 
 
 def check_modal_title_level(scope: str, facts: MarkupFacts) -> list[Issue]:
-    """Le titre d'une modale est un h2 (example/component/modal et consent 1.15.2)."""
+    """Le titre d'une modale est un h2 (example/component/modal et consent 1.15.3)."""
     bad = sorted({element.tag for element in facts.elements if "fr-modal__title" in element.classes and element.tag != "h2"})
     if bad:
         return [Issue("modal_title_level", scope, "fr-modal__title must be h2, got " + ", ".join(bad))]
@@ -608,7 +608,7 @@ def check_modal_title_level(scope: str, facts: MarkupFacts) -> list[Issue]:
 
 
 def check_table_structure(scope: str, facts: MarkupFacts) -> list[Issue]:
-    """fr-table > fr-table__wrapper > fr-table__container > fr-table__content (1.15.2)."""
+    """fr-table > fr-table__wrapper > fr-table__container > fr-table__content (1.15.3)."""
     for element in facts.elements:
         if element.tag == "div" and "fr-table" in element.classes and not all(
             has_descendant_class(facts, element, class_name)
@@ -646,7 +646,7 @@ def check_select_options_contract(scope: str, facts: MarkupFacts) -> list[Issue]
 
 
 def check_range_contract(scope: str, _variant: str, facts: MarkupFacts) -> list[Issue]:
-    """Curseur DSFR 1.15.2 (gabarit range.ejs, #1407) : `fr-range` est un
+    """Curseur DSFR 1.15.3 (gabarit range.ejs, #1407) : `fr-range` est un
     conteneur `div` autour de l'input, avec sortie, bornes et messages."""
     missing: list[str] = []
     if not has_element(facts, class_name="fr-range-group"):
@@ -863,7 +863,7 @@ def check_modal_contract(scope: str, variant: str, facts: MarkupFacts) -> list[I
         modal_id = dialog.attrs.get("id", "")
         if not modal_id:
             missing.append("modal id")
-        # Exemples officiels modal/consent 1.15.2 : <dialog> sans role redondant.
+        # Exemples officiels modal/consent 1.15.3 : <dialog> sans role redondant.
         if "role" in dialog.attrs:
             missing.append("modal dialog carries a redundant role")
         title_id = dialog.attrs.get("aria-labelledby", "")
@@ -942,6 +942,14 @@ def check_notice_contract(scope: str, facts: MarkupFacts) -> list[Issue]:
     missing: list[str] = []
     if (scope.endswith(".basic") or scope.startswith("native-config:notice")) and not has_element(facts, class_name="fr-notice--info"):
         missing.append(".fr-notice--info")
+    # DSFR 1.15.3 (#1521) : le titre porte un niveau de titre (h2 par défaut,
+    # h1 à h6 ou p) et la description est un paragraphe ; plus de span.
+    for title in find_elements(facts, class_name="fr-notice__title"):
+        if title.tag not in {"h1", "h2", "h3", "h4", "h5", "h6", "p"}:
+            missing.append("fr-notice__title on h1-h6 or p (DSFR 1.15.3)")
+    for desc in find_elements(facts, class_name="fr-notice__desc"):
+        if desc.tag != "p":
+            missing.append("p.fr-notice__desc (DSFR 1.15.3)")
     if scope.endswith(".desc_link") or scope.endswith(".info"):
         if not has_element(facts, class_name="fr-notice__desc"):
             missing.append(".fr-notice__desc")
@@ -1068,6 +1076,11 @@ def check_badge_contract(scope: str, _variant: str, facts: MarkupFacts) -> list[
         facts, tag="ul", class_name="fr-badges-group"
     ):
         missing.append("ul.fr-badges-group")
+    # DSFR 1.15.3 (#1498) : dans un groupe, chaque badge est un span, pas un p.
+    for badge in find_elements(facts, tag="p", class_name="fr-badge"):
+        if has_ancestor_class(facts, badge, "fr-badges-group"):
+            missing.append("span.fr-badge inside .fr-badges-group (DSFR 1.15.3)")
+            break
     return [Issue("structure_contract", scope, ", ".join(missing))] if missing else []
 
 
@@ -1339,7 +1352,7 @@ LAYOUT_NEGATIVE_ARGS: list[tuple[str, list[str], str]] = [
 ]
 LAYOUT_EXPECTATIONS: list[tuple[str, list[str], dict[str, str], list[str], list[str]]] = [
     ("layout-expect:card-grid-string-items", ["card-grid", "--config", '{"cards":["Carte A","Carte B"]}'], {}, [">Carte A<"], []),
-    ("layout-expect:version-empty-fallback", ["skeleton", "--config", "{}"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.2/dist"], ["dsfr@/dist"]),
+    ("layout-expect:version-empty-fallback", ["skeleton", "--config", "{}"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.3/dist"], ["dsfr@/dist"]),
     ("layout-expect:tile-grid-content-container", ["tile-grid", "--config", '{"tiles":[{"title":"A","href":"/a"}]}'], {}, ['<div class="fr-tile__content">'], []),
 ]
 # Cas négatifs des pages : le préfixe --assets est interpolé dans des attributs
@@ -1368,7 +1381,7 @@ PAGE_EXPECTATIONS: list[tuple[str, list[str], dict[str, str], list[str], list[st
     ("page-expect:brand-neutral", ["--type", "standard", "--title", "T"], {}, [], ['class="fr-logo"']),
     ("page-expect:dark", ["--type", "standard", "--title", "T", "--dark"], {}, ['data-fr-scheme="dark"'], []),
     ("page-expect:sitemap-title", ["--type", "sitemap", "--title", "Mon plan"], {}, ["<h1>Mon plan</h1>"], ["<h1>Plan du site</h1>"]),
-    ("page-expect:version-empty-fallback", ["--type", "standard", "--title", "T"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.2/dist/"], ["dsfr@/dist"]),
+    ("page-expect:version-empty-fallback", ["--type", "standard", "--title", "T"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.3/dist/"], ["dsfr@/dist"]),
     ("page-expect:deferred-script-keeps-server-errors", ["--type", "form", "--title", "T"], {}, ["dropClientConstraints();"], []),
     ("page-expect:landing-tile-content", ["--type", "landing", "--title", "T"], {}, ['<div class="fr-tile__content">'], ['fr-tile--vertical"']),
     ("page-expect:content-code-preserved", ["--type", "standard", "--title", "T", "--content", '<p><code>href="#"</code></p>'], {}, ['<code>href="#"</code>'], []),
@@ -1403,8 +1416,8 @@ TOOL_NEGATIVE_CASES: list[tuple[str, Path, list[str], dict[str, str], str]] = [
 ]
 # Variables d'environnement piégées : refus nommé, jamais interpolées.
 ENV_NEGATIVE_CASES: list[tuple[str, Path, list[str], dict[str, str], str]] = [
-    ("page-negative:version-injection", PAGE_SCRIPT, ["--type", "standard", "--title", "T"], {"DSFR_OFFICIAL_VERSION": '1.15.2/x"><script>alert(1)</script><link href="'}, "DSFR_OFFICIAL_VERSION"),
-    ("layout-negative:version-injection", LAYOUT_SCRIPT, ["skeleton", "--config", "{}"], {"DSFR_OFFICIAL_VERSION": '1.15.2/x"><script>alert(1)</script><link href="'}, "DSFR_OFFICIAL_VERSION"),
+    ("page-negative:version-injection", PAGE_SCRIPT, ["--type", "standard", "--title", "T"], {"DSFR_OFFICIAL_VERSION": '1.15.3/x"><script>alert(1)</script><link href="'}, "DSFR_OFFICIAL_VERSION"),
+    ("layout-negative:version-injection", LAYOUT_SCRIPT, ["skeleton", "--config", "{}"], {"DSFR_OFFICIAL_VERSION": '1.15.3/x"><script>alert(1)</script><link href="'}, "DSFR_OFFICIAL_VERSION"),
 ]
 # Cas négatifs du générateur de composants : entrées utilisateur prévisibles qui
 # doivent produire une erreur courte (code 1, sans trace Python).
@@ -1454,7 +1467,7 @@ COMPONENT_EXPECTATIONS: list[tuple[str, list[str], list[str]]] = [
     ("component-expect:tile-content-container", ["tile"], ['<div class="fr-tile__content">']),
     ("component-expect:header-language-label", ["header", "--config", '{"service_title":"S","languages":[{"code":"FR","label":"Français","href":"/fr","active":true},{"code":"EN","label":"English","href":"/en"}]}'], ['>FR<span class="fr-hidden-lg">&nbsp;- Français</span>', 'id="header-translate-menu"']),
     ("component-expect:header-translate-id", ["header", "--config", '{"languages":[{"code":"FR","label":"Français","href":"/fr"}],"translate_id":"langues"}'], ['aria-controls="langues"']),
-    ("component-expect:input-slug-and-spacing", ["input", "--config", '{"label":"Nom / Prénom"}'], ['id="nom---prénom"', 'name="nom---prénom" />']),
+    ("component-expect:input-slug-and-spacing", ["input", "--config", '{"label":"Nom / Prénom"}'], ['id="nom---prénom"', 'name="nom---prénom" aria-describedby="nom---prénom-messages" />']),
     ("component-expect:checkbox-item-id", ["checkbox", "--config", '{"legend":"Choix","items":[{"label":"A","id":"explicite"}]}'], ['id="explicite"', 'for="explicite"']),
     ("component-expect:radio-item-id", ["radio", "--config", '{"legend":"Choix","items":[{"label":"A","id":"radio-a"}]}'], ['id="radio-a"', 'for="radio-a"']),
     ("component-expect:select-label-only-option", ["select", "--config", '{"label":"Nom","options":[{"value":"a"},{"label":"b"}]}'], ['<option value="b">b</option>']),
@@ -1478,8 +1491,14 @@ COMPONENT_EXPECTATIONS: list[tuple[str, list[str], list[str]]] = [
     ("component-expect:logo-operator-responsive", ["logo", "--config", '{"operator_src":"/logo.svg","operator_alt":"Op"}'], ['<img class="fr-responsive-img" style="max-width:3.5rem;" src="/logo.svg" alt="Op">']),
     ("component-expect:modal-buttons-group", ["modal"], ['<ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg">', '<dialog id="fr-modal" class="fr-modal" aria-labelledby="fr-modal-title">']),
     ("component-expect:tag-color", ["tag", "--config", '{"label":"T","color":"green-menthe"}'], ['class="fr-tag fr-tag--green-menthe"']),
-    ("component-expect:input-error-state", ["input", "--config", '{"label":"Nom","error":"Champ requis"}'], ['fr-input-group--error', 'class="fr-input fr-input--error"', 'aria-describedby="nom-error"']),
-    ("component-expect:input-valid-state", ["input", "--config", '{"label":"Nom","valid":"Bien reçu"}'], ['fr-input-group--valid', 'class="fr-input fr-input--valid"', 'class="fr-valid-text"']),
+    # DSFR 1.15.3 (#1516) : en groupe, l'état est porté par fr-input-group--*
+    # seulement ; le message est un p.fr-message--* dans fr-messages-group.
+    ("component-expect:input-error-state", ["input", "--config", '{"label":"Nom","error":"Champ requis"}'], ['fr-input-group--error', 'class="fr-input"', 'aria-describedby="nom-messages"', 'class="fr-messages-group"', 'class="fr-message fr-message--error"']),
+    ("component-expect:input-valid-state", ["input", "--config", '{"label":"Nom","valid":"Bien reçu"}'], ['fr-input-group--valid', 'class="fr-input"', 'class="fr-message fr-message--valid"']),
+    ("component-expect:notice-heading-default-h2", ["notice", "--config", '{"title":"Fermeture exceptionnelle","description":"Le service rouvre lundi."}'], ['<h2 class="fr-notice__title">Fermeture exceptionnelle</h2>', '<p class="fr-notice__desc">Le service rouvre lundi.</p>']),
+    ("component-expect:notice-heading-param", ["notice", "--config", '{"title":"Info","heading":"h3"}'], ['<h3 class="fr-notice__title">Info</h3>']),
+    ("component-expect:badge-span-markup", ["badge", "--config", '{"label":"Nouveau","markup":"span"}'], ['<span class="fr-badge">Nouveau</span>']),
+    ("component-expect:search-labelled", ["search", "--config", '{"labelled":true}'], ['class="fr-search-bar fr-search-bar--labelled"']),
     ("component-expect:alert-close-without-aria-label", ["alert", "--config", '{"closable":true}'], ['<button type="button" class="fr-btn--close fr-btn" title="Masquer le message">']),
     ("component-expect:content-media", ["content", "--config", '{"title":"Légende","image":"/img.png","image_alt":"Vue"}'], ['<figure role="group" class="fr-content-media" aria-label="Légende">', '<figcaption class="fr-content-media__caption">Légende</figcaption>']),
     ("component-expect:content-media-video", ["content", "--config", '{"title":"Présentation","video":"https://www.youtube.com/embed/x","video_title":"Vidéo de présentation - voir transcription"}'], ['<iframe title="Vidéo de présentation - voir transcription" class="fr-responsive-vid" src="https://www.youtube.com/embed/x" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>']),
@@ -1804,6 +1823,7 @@ BUILDER_EXPECTATIONS: list[tuple[str, dict, list[str], list[str], dict[str, int]
     ("builder-expect:download-default-detail", {"title": "T", "sections": [_h1_section(), {"block": "download", "label": "Rapport", "href": "/r.pdf"}]}, [], ['<span class="fr-download__detail">\n                    \n'], {}),
     ("builder-expect:orphan-endtag-still-counts-h1", {"title": "T", "auto_h1": False, "sections": [{"block": "content", "title": "Brut", "allow_raw_html": True, "body": "<p>Texte</p></div></div></div>"}, _h1_section("Titre")]}, [], [], {}),
     ("builder-expect:input-name", {"title": "T", "sections": [_h1_section(), {"block": "form", "fields": [{"type": "input", "label": "Courriel", "name": "email"}]}]}, ['name="email"'], [], {}),
+    ("builder-expect:badges-group-span", {"title": "T", "sections": [_h1_section(), {"block": "badges", "items": [{"label": "Nouveau"}, {"label": "Urgent", "variant": "error"}]}]}, ['<li><span class="fr-badge">Nouveau</span></li>', '<span class="fr-badge fr-badge--error">Urgent</span>'], ['<p class="fr-badge'], {}),
     ("builder-expect:notice-id-with-container", {"title": "T", "sections": [_h1_section(), {"block": "notice", "id": "bandeau2", "container": True, "title": "Autre", "description": "Texte"}]}, ['id="bandeau2"'], [], {'id="bandeau2"': 1}),
     ("builder-expect:accordion-explicit-prefix-collision", {"title": "T", "sections": [_h1_section(), {"block": "accordion", "id_prefix": "accordion-2", "heading_level": 2, "items": [{"title": "A", "content": "a"}]},
         {"block": "accordion", "heading_level": 2, "items": [{"title": "B", "content": "b"}]}, {"block": "accordion", "heading_level": 2, "items": [{"title": "C", "content": "c"}]}]}, [], [], {}),
@@ -2228,7 +2248,7 @@ def check_tool_cases() -> list[Issue]:
                 issues.append(Issue("tool_negative_case_passed", scope, "expected refusal"))
             elif "Traceback" in output or expected not in output:
                 issues.append(Issue("tool_negative_case_wrong_error", scope, output.strip().replace("\n", " ")[-160:]))
-    official = DEFAULT_OFFICIAL_CACHE_DIR / "gouvfr-dsfr-1.15.2" / "package"
+    official = DEFAULT_OFFICIAL_CACHE_DIR / "gouvfr-dsfr-1.15.3" / "package"
     if official_package_complete(official):
         # Sortie JSON de l'inventaire pure (aucun message parasite sur stdout).
         result = subprocess.run([sys.executable, str(INVENTORY_SCRIPT), "--official-package", str(official), "--format", "json"], cwd=WORKSPACE, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
@@ -2245,7 +2265,7 @@ def check_tool_cases() -> list[Issue]:
         older = DEFAULT_OFFICIAL_CACHE_DIR / f"gouvfr-dsfr-{historical_version}" / "package"
         if official_package_complete(older):
             returncode, output = run_script_check(ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": str(older)})
-            if returncode != 0 or historical_version not in output or "1.15.2" in output:
+            if returncode != 0 or historical_version not in output or "1.15.3" in output:
                 issues.append(Issue("tool_expectation_missing", "icons-expect:version-of-package-read", output.strip().replace("\n", " ")[:160]))
     return issues
 
@@ -2301,17 +2321,17 @@ def check_validator_self_guards() -> list[Issue]:
         # 2. Version de cache piégée : refusée avant tout accès disque.
         victim = tmp_path / "victime"; victim.mkdir(); (victim / "precieux.txt").write_text("x", encoding="utf-8")
         try:
-            resolve_official_package("1.15.2/../../victime", tmp_path / "cache")
+            resolve_official_package("1.15.3/../../victime", tmp_path / "cache")
             issues.append(Issue("self_guard", "validator:version-traversal", "unsafe version accepted"))
         except SystemExit:
             pass
         if not (victim / "precieux.txt").exists():
             issues.append(Issue("self_guard", "validator:version-traversal", "victim directory was deleted"))
         # 3. Cache tronqué : refusé avec un message, jamais accepté.
-        truncated = tmp_path / "cache-tronque" / "gouvfr-dsfr-1.15.2" / "package" / "dist" / "component" / "button"
+        truncated = tmp_path / "cache-tronque" / "gouvfr-dsfr-1.15.3" / "package" / "dist" / "component" / "button"
         truncated.mkdir(parents=True)
         try:
-            if resolve_official_package("1.15.2", tmp_path / "cache-tronque") is not None:
+            if resolve_official_package("1.15.3", tmp_path / "cache-tronque") is not None:
                 issues.append(Issue("self_guard", "validator:truncated-cache", "truncated cache accepted as official package"))
         except SystemExit:
             pass
@@ -2602,7 +2622,7 @@ def check_common(scope: str, html: str, allow_error_state: bool = False) -> list
         issues.append(Issue("stale_footer_link", scope, "service-public.fr still present"))
 
     issues.extend(check_select_options_contract(scope, facts))
-    # Contrat officiel 1.15.2 (search/_part/doc/code/index.md) : la barre de
+    # Contrat officiel 1.15.3 (search/_part/doc/code/index.md) : la barre de
     # recherche vit dans un <form>, pour fonctionner sans JavaScript.
     issues.extend(check_search_bar_contract(scope, facts, require_form=True))
 
@@ -2610,7 +2630,7 @@ def check_common(scope: str, html: str, allow_error_state: bool = False) -> list
 
 
 def check_button_group_structure(scope: str, facts: MarkupFacts) -> list[Issue]:
-    """Vérifie le contrat DSFR 1.15.2 des groupes d'actions."""
+    """Vérifie le contrat DSFR 1.15.3 des groupes d'actions."""
     issues: list[Issue] = []
     for group in find_elements(facts, class_name="fr-btns-group"):
         if group.tag != "ul":
@@ -2864,7 +2884,7 @@ def resolve_official_package(version: str, cache_dir: Path) -> Path | None:
     then not exercised, which the caller must report, never silently pass.
     """
     if not OFFICIAL_VERSION_RE.fullmatch(str(version)):
-        raise SystemExit(f"invalid official version {version!r}: expected a version number such as 1.15.2")
+        raise SystemExit(f"invalid official version {version!r}: expected a version number such as 1.15.3")
     package_root = cache_dir / f"gouvfr-dsfr-{version}"
     package_path = package_root / "package"
     if package_root.exists():

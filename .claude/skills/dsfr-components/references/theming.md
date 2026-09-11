@@ -1,4 +1,4 @@
-# Theming DSFR 1.15.2
+# Theming DSFR 1.15.3
 
 Le DSFR supporte nativement les thèmes clair et sombre via l'attribut `data-fr-scheme` et les CSS custom properties.
 
@@ -29,7 +29,7 @@ Le DSFR suit la préférence `prefers-color-scheme` du navigateur/OS.
 Le DSFR fournit un composant natif de paramètres d'affichage : un bouton
 d'ouverture et une modale `fr-modal` qui porte l'`id` `fr-theme-modal` et
 le titre `fr-theme-modal-title` (sortie de `generate_component.py display`,
-structure de `example/component/display/index.html` du paquet 1.15.2) :
+structure de `example/component/display/index.html` du paquet 1.15.3) :
 
 ```html
 <button aria-controls="fr-theme-modal" data-fr-opened="false" title="Paramètres d'affichage" type="button" class="fr-btn--display fr-btn">
@@ -113,7 +113,7 @@ formulaire au lieu d'ouvrir la modale.
 
 Le DSFR utilise des custom properties qui s'adaptent automatiquement au thème.
 
-Valeurs relevées dans `dist/dsfr.min.css` de `@gouvfr/dsfr@1.15.2` (blocs
+Valeurs relevées dans `dist/dsfr.min.css` de `@gouvfr/dsfr@1.15.3` (blocs
 `:root` et `:root[data-fr-theme=dark]`, alias `var()` résolus) ; le CSS abrège
 `#ffffff` en `#fff`.
 

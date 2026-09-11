@@ -32,7 +32,7 @@ l'info-bulle ne s'ouvre pas. C'est aussi la classe posée par
 | `fr-placement--bottom` | En dessous |
 
 Seules les positions `top` et `bottom` sont fournies par le paquet
-`@gouvfr/dsfr@1.15.2` (`left`/`right` n'existent pas ; vérifié dans
+`@gouvfr/dsfr@1.15.3` (`left`/`right` n'existent pas ; vérifié dans
 `dist/dsfr.min.css`).
 
 **Règles** :

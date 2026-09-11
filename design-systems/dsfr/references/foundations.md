@@ -29,7 +29,7 @@ Décisions courantes :
 
 ## Typographie
 
-- Marianne est la police principale.
+- Marianne est la police principale. Depuis DSFR 1.15.3 (#1513), les 16 fichiers de fonte sont remplacés par une nouvelle version qui apporte l'espace insécable ; les pages chargent les fontes par le paquet, aucune version de fonte n'est à déclarer.
 - Spectral est secondaire et réservée aux usages éditoriaux justifiés.
 - Déclarer `lang="fr"` pour les artefacts HTML.
 - Garder une hiérarchie de titres sans saut.

@@ -1,4 +1,4 @@
-# Design tokens DSFR 1.15.2
+# Design tokens DSFR 1.15.3
 
 Les tokens sont des **variables CSS** (`--…`) exposées au `:root` par
 `dist/dsfr.min.css`. Ils se **consomment en CSS** (`color: var(--…)`), on ne
@@ -6,7 +6,7 @@ les émet pas en HTML : ce fichier est une **référence**, pas un générateur.
 Frontière token/utilitaire/composant : voir `references/strate-artefact.md`.
 
 Source de vérité : `:root` de `dist/dsfr.min.css` du paquet
-`@gouvfr/dsfr@1.15.2`, consulté le 2026-08-28. La liste exhaustive vit dans le
+`@gouvfr/dsfr@1.15.3`, consulté le 2026-08-28. La liste exhaustive vit dans le
 paquet ; ce document en donne la **structure** et des exemples vérifiés.
 Breakpoints, transitions et variables internes : voir
 `references/tokens-advanced.md`.
@@ -101,4 +101,4 @@ pas écrire `var(--radius-*)` — la variable n'existe pas. **Pas** d'utilitaire
   sont listées. Pour une variable précise, vérifier dans `dist/dsfr.min.css`.
 - Les tokens ne produisent rien en HTML statique : ce fichier est une
   référence de consommation.
-- Version figée : 1.15.2.
+- Version figée : 1.15.3.

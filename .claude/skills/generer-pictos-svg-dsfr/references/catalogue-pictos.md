@@ -9,7 +9,7 @@ Sources à vérifier au moment de l’usage :
 - documentation officielle DSFR « Pictogramme » : `https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/pictogramme` ;
 - dépôt officiel : `https://github.com/GouvernementFR/dsfr-artwork` ;
 - paquet public DSFR `@gouvfr/dsfr`, qui expose `dist/artwork/pictograms` ; le récupérer avec `npm pack @gouvfr/dsfr@<version> --ignore-scripts` puis l’extraire, car `npm install` exécute depuis `1.15.0` un script `preinstall` qui exige l’acceptation des modalités d’utilisation (voir `DISTRIBUTION.md`) ;
-- clone du dépôt amont `GouvernementFR/dsfr`, dossier `src/dsfr/core/asset/artwork/pictograms`, identique au `dist` publié pour `1.14.4` et `1.15.2` ;
+- clone du dépôt amont `GouvernementFR/dsfr`, dossier `src/dsfr/core/asset/artwork/pictograms`, identique au `dist` publié pour `1.14.4`, `1.15.2` et `1.15.3` ;
 - distribution locale contrôlée contenant `dist/artwork/pictograms`. Depuis `1.15.0`, les releases GitHub ne fournissent plus le code compilé (note publiée `v1.15.0`) ; une archive de release n’est donc plus une source de pictogrammes.
 
 Conséquence opérationnelle : ne jamais promettre une copie officielle sans dossier local vérifié ou sans reproduction depuis le corpus embarqué. Utiliser `--source dsfr-artwork --dsfr-artwork-root <chemin>` seulement si le dossier contient des fichiers `famille/nom.svg`. Utiliser `--source dsfr-replica` si le nom existe dans `pictos-svg/dsfr-officiels/manifest.json`. Ne pas supposer qu’un paquet NPM `@gouvfr/dsfr-artwork` est disponible : vérifier le dépôt, l’archive ou le dossier local au moment de l’usage.
@@ -18,7 +18,7 @@ Le skill embarque un snapshot officiel sous `pictos-svg/dsfr-officiels/`. Les co
 
 ## Noms DSFR connus
 
-La liste complète embarquée dans le script correspond au snapshot récupéré depuis `@gouvfr/dsfr@1.14.4`, vérifié identique dans `@gouvfr/dsfr@1.15.2` le 28 août 2026 (`pictos-svg/dsfr-officiels/SOURCE.md`) : utiliser `python3 scripts/generate_pictos_svg.py --list-dsfr-names` pour l’afficher.
+La liste complète embarquée dans le script correspond au snapshot récupéré depuis `@gouvfr/dsfr@1.14.4`, vérifié identique dans `@gouvfr/dsfr@1.15.2` le 28 août 2026 et dans `@gouvfr/dsfr@1.15.3` le 11 septembre 2026 (`pictos-svg/dsfr-officiels/SOURCE.md`) : utiliser `python3 scripts/generate_pictos_svg.py --list-dsfr-names` pour l’afficher.
 
 Pour la revue unitaire du corpus récupéré, utiliser `pictos-svg/dsfr-officiels/INDEX.md`. Le script accepte aussi un futur nom `famille/nom` si le fichier correspondant existe dans la source DSFR fournie.
 
@@ -26,7 +26,7 @@ La liste ci-dessous reste un aperçu pratique des familles fréquentes.
 
 ## Reproduction embarquée
 
-Le corpus `pictos-svg/dsfr-officiels/` contient 102 pictogrammes officiels issus de `@gouvfr/dsfr@1.14.4`, inchangés dans `1.15.2`. Pour reproduire un pictogramme existant, utiliser :
+Le corpus `pictos-svg/dsfr-officiels/` contient 102 pictogrammes officiels issus de `@gouvfr/dsfr@1.14.4`, inchangés dans `1.15.2` et `1.15.3`. Pour reproduire un pictogramme existant, utiliser :
 
 ```bash
 python3 scripts/generate_pictos_svg.py \

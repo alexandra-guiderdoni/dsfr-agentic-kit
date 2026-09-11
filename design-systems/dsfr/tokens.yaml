@@ -1,9 +1,9 @@
 name: DSFR tokens locaux
 version: "1.15"
-package_version_ref: "1.15.2"
+package_version_ref: "1.15.3"
 status: local-decision-token-subset
-source_checked_at: "2026-08-28"
-official_reference_check: "Références locales présentes dans @gouvfr/dsfr@1.15.2 ; exhaustivité officielle non revendiquée."
+source_checked_at: "2026-09-11"
+official_reference_check: "Références locales présentes dans @gouvfr/dsfr@1.15.3 ; exhaustivité officielle non revendiquée."
 local_scope: "Sélection de tokens de décision pour agents ; pas catalogue officiel complet du DSFR."
 design_md_projection:
   google_format: "inspired_not_compliant"

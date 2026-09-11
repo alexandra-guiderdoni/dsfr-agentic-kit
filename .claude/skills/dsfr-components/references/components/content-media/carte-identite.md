@@ -27,7 +27,7 @@ générable ; elle s'écrit à la main.
             <p class="fr-card__desc">Description de l'organisme ou du service</p>
             <div class="fr-card__start">
                 <ul class="fr-badges-group">
-                    <li><p class="fr-badge fr-badge--green-emeraude">Actif</p></li>
+                    <li><span class="fr-badge fr-badge--green-emeraude">Actif</span></li>
                 </ul>
             </div>
             <div class="fr-card__end">

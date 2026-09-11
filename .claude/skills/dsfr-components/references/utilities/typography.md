@@ -14,7 +14,7 @@ Référence extraite de `../utilities.md`.
 
 Le DSFR déclare des interlignages en rem, pas en ratio, et la bascule
 desktop se fait à `@media (min-width: 48em)`. Valeurs relevées dans
-`dist/dsfr.min.css` du paquet 1.15.2, sous la forme
+`dist/dsfr.min.css` du paquet 1.15.3, sous la forme
 `taille / interlignage` :
 
 | Classe | Desktop (≥ 48em) | Mobile |
@@ -62,7 +62,7 @@ Deux valeurs par classe, comme pour les titres : bascule à
 
 ## Alignement, transformation et décoration
 
-Le paquet `@gouvfr/dsfr@1.15.2` local ne fournit pas de classes attestées
+Le paquet `@gouvfr/dsfr@1.15.3` local ne fournit pas de classes attestées
 `fr-text--left`, `fr-text--center`, `fr-text--uppercase`,
 `fr-text--underline` ou équivalentes. Ne pas inventer ces utilitaires :
 utiliser la grille DSFR, les composants natifs ou du CSS projet vérifié quand
@@ -70,7 +70,7 @@ un alignement, une casse ou une décoration de texte est nécessaire.
 
 ## Styles de liste
 
-Aucun utilitaire de liste n'est fourni par le paquet `@gouvfr/dsfr@1.15.2`
+Aucun utilitaire de liste n'est fourni par le paquet `@gouvfr/dsfr@1.15.3`
 (`fr-list--no-marker` n'existe pas ; vérifié dans `dist/dsfr.min.css`). Pour une
 liste sans puces, utiliser du CSS projet vérifié (`list-style: none`) ou un
 composant DSFR approprié.

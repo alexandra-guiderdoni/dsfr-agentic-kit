@@ -19,7 +19,7 @@ Référence extraite de `../feedback-actions.md`.
 <p class="fr-tag fr-icon-arrow-right-line fr-tag--icon-left">Libellé</p>
 ```
 
-Seul `fr-tag--icon-left` est officiel en DSFR 1.15.2 (`fr-tag--icon-right`
+Seul `fr-tag--icon-left` est officiel en DSFR 1.15.3 (`fr-tag--icon-right`
 n'existe pas ; vérifié dans `dist/dsfr.min.css`).
 
 ## Tailles

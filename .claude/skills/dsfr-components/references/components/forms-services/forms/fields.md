@@ -32,12 +32,28 @@ décrire la règle en clair dans le `fr-hint-text`.
 </div>
 ```
 
+## Statut du champ (DSFR 1.15.3)
+
+Documentation `input/_part/doc/code` de 1.15.3 (#1516) : l'état **erreur** ou
+**succès** est porté par le conteneur, `fr-input-group--error` ou
+`fr-input-group--valid`, et le message est un `<p class="fr-message
+fr-message--error">` ou `--valid` placé dans le `div.fr-messages-group` relié
+au champ par `aria-describedby`. Les classes `fr-input--error` et
+`fr-input--valid` ne sont posées sur le champ que **hors groupe**
+(`input.ejs` : `if (!input.hasGroup)`) ; ne pas les ajouter à un champ contenu
+dans un `fr-input-group`. Les messages d'information ou d'avertissement
+(`fr-message--info`, `--warning`) suivent la même forme sans changer l'état.
+Le générateur `generate_component.py input` et `generate_field.py` émettent
+cette forme.
+
 ## Champs avec erreur
 ```html
 <div class="fr-input-group fr-input-group--error">
     <label class="fr-label" for="input-error">Label</label>
-    <input class="fr-input fr-input--error" type="text" id="input-error" aria-describedby="input-error-message">
-    <p id="input-error-message" class="fr-error-text">Message d'erreur</p>
+    <input class="fr-input" type="text" id="input-error" aria-describedby="input-error-messages">
+    <div class="fr-messages-group" id="input-error-messages" aria-live="polite">
+        <p class="fr-message fr-message--error" id="input-error-message-error">Message d'erreur</p>
+    </div>
 </div>
 ```
 
@@ -45,8 +61,10 @@ décrire la règle en clair dans le `fr-hint-text`.
 ```html
 <div class="fr-input-group fr-input-group--valid">
     <label class="fr-label" for="input-valid">Label</label>
-    <input class="fr-input fr-input--valid" type="text" id="input-valid" aria-describedby="input-valid-msg">
-    <p id="input-valid-msg" class="fr-valid-text">Champ valide</p>
+    <input class="fr-input" type="text" id="input-valid" aria-describedby="input-valid-messages">
+    <div class="fr-messages-group" id="input-valid-messages" aria-live="polite">
+        <p class="fr-message fr-message--valid" id="input-valid-message-valid">Champ valide</p>
+    </div>
 </div>
 ```
 

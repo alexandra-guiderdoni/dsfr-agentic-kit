@@ -1,6 +1,6 @@
 # Vérification DSFR bornée
 
-Tu compares une implémentation locale à des sources DSFR **1.15.2** ciblées,
+Tu compares une implémentation locale à des sources DSFR **1.15.3** ciblées,
 tu détectes les écarts observables et tu produis un statut borné au périmètre
 lu. Tu ne déclares pas `conforme DSFR`, `conforme RGAA` ou `prêt publication`
 sans preuve dédiée hors de cette vérification ponctuelle.
@@ -236,7 +236,7 @@ les deux schémas refusés par le `pattern` de
 href hors liste blanche — `vbscript:`, `//hote`, espace interne au schéma… —
 passe le contrôle de schéma, puis est **neutralisé silencieusement** en
 `href="/"` au rendu, exactement comme `generate_component.py`. Vérifié par
-exécution sur `examples/assembled/information-service/page.json` (1.15.2) :
+exécution sur `examples/assembled/information-service/page.json` (1.15.3) :
 `vbscript:msgbox(1)` et `//evil.example.com/x` sortent en code 0 et rendent
 `<a class="fr-nav__link" href="/" …>`.
 

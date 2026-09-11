@@ -1,9 +1,9 @@
 # Gestionnaire de consentement
 
-Référence vérifiée dans les exemples officiels DSFR 1.13.2 et 1.15.2 :
+Référence vérifiée dans les exemples officiels DSFR 1.13.2 et 1.15.3 :
 
 - https://unpkg.com/@gouvfr/dsfr@1.13.2/example/component/consent/index.html
-- https://unpkg.com/@gouvfr/dsfr@1.15.2/example/component/consent/index.html
+- https://unpkg.com/@gouvfr/dsfr@1.15.3/example/component/consent/index.html
 
 ## Bandeau
 

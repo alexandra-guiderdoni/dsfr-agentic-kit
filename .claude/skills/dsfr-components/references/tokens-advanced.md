@@ -1,8 +1,8 @@
-# Tokens avancés DSFR 1.15.2
+# Tokens avancés DSFR 1.15.3
 
 Complément de `references/tokens.md` : ombres, arrondis, transitions et
 breakpoints. Source de vérité : `:root` et composants de
-`@gouvfr/dsfr@1.15.2/dist/dsfr.main.css`, consulté le 2026-08-28.
+`@gouvfr/dsfr@1.15.3/dist/dsfr.main.css`, consulté le 2026-08-28.
 
 Ce fichier est une **référence de consommation** (CSS `var(--…)`), pas un
 générateur : on n'émet aucun token en HTML. Aucune variable listée ici n'est

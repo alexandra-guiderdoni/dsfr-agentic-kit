@@ -71,7 +71,7 @@ Référence extraite de `../content-media.md`.
             <p class="fr-card__desc">Description</p>
             <div class="fr-card__start">
                 <ul class="fr-badges-group">
-                    <li><p class="fr-badge fr-badge--info fr-badge--sm">Nouveau</p></li>
+                    <li><span class="fr-badge fr-badge--info fr-badge--sm">Nouveau</span></li>
                 </ul>
             </div>
         </div>

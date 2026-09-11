@@ -73,6 +73,6 @@ sémantique (cartes, tuiles). `generate_atom.py grid` accepte `tag: "ul"` ou
 
 `fr-grid-row--center` centre les colonnes par flexbox. Pour ancrer un contenu
 sur la grille, utiliser les offsets `fr-col-offset-{breakpoint}-{n}` vérifiés
-contre la version DSFR chargée. Avec le DSFR 1.15.2, la forme
+contre la version DSFR chargée. Avec le DSFR 1.15.3, la forme
 `fr-col-lg-offset-*` est une classe morte : vérifier la syntaxe par grep du CSS
 réel ou par computed style quand la version DSFR change.

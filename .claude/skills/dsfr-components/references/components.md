@@ -1,4 +1,4 @@
-# Référence des composants DSFR 1.15.2
+# Référence des composants DSFR 1.15.3
 
 Index de progressive disclosure pour les composants DSFR. Pour un composant
 précis, ouvrir seulement le fichier de famille, puis le sous-fichier du
@@ -19,9 +19,9 @@ composant demandé.
   aussi les noms des dossiers officiels `dist/component/<nom>`.
 - `back_to_top` et `button_group` sont des helpers locaux composés avec des
   classes DSFR officielles, pas des dossiers de composant autonomes du paquet
-  `@gouvfr/dsfr@1.15.2`.
+  `@gouvfr/dsfr@1.15.3`.
 - `segmented` est présent dans le catalogue générable depuis le paquet officiel
-  DSFR 1.15.2.
+  DSFR 1.15.3.
 
 ## Règle de lecture ciblée
 

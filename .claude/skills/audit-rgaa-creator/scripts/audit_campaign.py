@@ -2203,11 +2203,11 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
                 "page": page,
                 "version": {
                     "observed": [],
-                    "target": "1.15.2",
+                    "target": "1.15.3",
                     "comparison_mode": "REFERENCE_VERSION_INDISPONIBLE",
                     "exact_observed_reference_available": False,
                 },
-                "reference_version": "1.15.2",
+                "reference_version": "1.15.3",
                 "detected_versions": [],
                 "status": "REFERENCE_INDISPONIBLE",
                 "claim": "Aucune conformité DSFR globale n’est revendiquée.",
@@ -2295,7 +2295,7 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
             item.setdefault("assessed_against", "REFERENCE_VERSION_INDISPONIBLE")
             item.setdefault("observed_versions", data.get("detected_versions", []))
             item.setdefault(
-                "reference_target_version", data.get("reference_version", "1.15.2")
+                "reference_target_version", data.get("reference_version", "1.15.3")
             )
             for qualification in qualifications:
                 if page["id"] not in qualification.get(
@@ -2420,7 +2420,7 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
         {
             str(
                 (data.get("version") or {}).get("target")
-                or data.get("reference_version", "1.15.2")
+                or data.get("reference_version", "1.15.3")
             )
             for data in pages_data
         }
@@ -2641,7 +2641,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
             data = {
                 "schema_version": 1,
                 "page": page,
-                "reference_version": "1.15.2",
+                "reference_version": "1.15.3",
                 "detected_versions": [],
                 "status": "RÉFÉRENCE NON VÉRIFIABLE",
                 "claim": "non vérifié",
@@ -2703,7 +2703,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
         dsfr_root / "INVENTAIRE-COMPOSANTS.json",
         {
             "schema_version": 1,
-            "reference_version": "1.15.2",
+            "reference_version": "1.15.3",
             "pages": len(config["sample"]),
             "components": inventory,
         },

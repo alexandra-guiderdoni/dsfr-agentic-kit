@@ -19,8 +19,8 @@ Ce que la preuve couvre :
 - la page référence ses ressources DSFR en relatif (`assets_prefix: "assets/dsfr"`)
   et ne dépend pas du CDN ; le dossier `assets/dsfr` n'est pas versionné : le
   peupler depuis le paquet officiel avant d'ouvrir la page (`mkdir -p assets/dsfr
-  && cp -R ~/.cache/dsfr-official-cache/gouvfr-dsfr-1.15.2/package/dist/. assets/dsfr/`,
-  après `check_generated_outputs.py --official-version 1.15.2` qui remplit le cache) ;
+  && cp -R ~/.cache/dsfr-official-cache/gouvfr-dsfr-1.15.3/package/dist/. assets/dsfr/`,
+  après `check_generated_outputs.py --official-version 1.15.3` qui remplit le cache) ;
 - le schéma SVG local est référencé sans `ratio`, afin d'éviter un rognage de
   diagramme ;
 - les ancres locales de navigation et de sommaire ont une cible ;

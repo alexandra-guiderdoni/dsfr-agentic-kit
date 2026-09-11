@@ -1,7 +1,7 @@
 {
   "source": "dsfr-artwork",
   "source_root": "dist/artwork/pictograms",
-  "dsfr_version": "1.15.2",
+  "dsfr_version": "1.15.3",
   "expected_layers": [
     "artwork-decorative",
     "artwork-minor",

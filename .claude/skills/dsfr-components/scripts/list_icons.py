@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Énumère et valide les icônes DSFR (Remix Icon) du paquet @gouvfr/dsfr@1.15.2.
+"""Énumère et valide les icônes DSFR (Remix Icon) du paquet @gouvfr/dsfr@1.15.3.
 
-Lit `dist/utility` AU RUNTIME — la liste (1044 classes en 1.15.2) n'est jamais
+Lit `dist/utility` AU RUNTIME — la liste (1044 classes en 1.15.3) n'est jamais
 embarquée dans le script ni chargée en contexte. Résout le paquet via
 `DSFR_OFFICIAL_PACKAGE_DIR` puis le cache officiel
 (`DSFR_OFFICIAL_CACHE_DIR`, peuplé par
-`check_generated_outputs.py --official-version 1.15.2`).
+`check_generated_outputs.py --official-version 1.15.3`).
 
 Usage :
   python3 list_icons.py                       # compte + catégories (défaut)
   python3 list_icons.py --filter account      # icônes contenant "account"
   python3 list_icons.py --validate account-circle-line   # exit 0 si officielle
-  python3 list_icons.py --all                 # liste complète (1044 en 1.15.2)
+  python3 list_icons.py --all                 # liste complète (1044 en 1.15.3)
 """
 
 import argparse
@@ -20,7 +20,7 @@ import re
 import sys
 from pathlib import Path
 
-DSFR_VERSION = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.2"
+DSFR_VERSION = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.3"
 DEFAULT_CACHE = os.path.expanduser(os.environ.get("DSFR_OFFICIAL_CACHE_DIR") or "~/.cache/dsfr-official-cache")
 # L'échappement CSS `\@` fait partie du nom des classes à point de rupture
 # (`fr-cell--fixed@sm`…) : sans lui, la classe est tronquée au `@` et repliée
@@ -79,9 +79,9 @@ def categories(package):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Énumère et valide les icônes DSFR 1.15.2 (runtime).")
+    parser = argparse.ArgumentParser(description="Énumère et valide les icônes DSFR 1.15.3 (runtime).")
     parser.add_argument("--filter", help="Ne garder que les icônes contenant ce terme")
-    parser.add_argument("--validate", help="Sortie 0 si l'icône est officielle 1.15.2, 1 sinon")
+    parser.add_argument("--validate", help="Sortie 0 si l'icône est officielle 1.15.3, 1 sinon")
     parser.add_argument("--all", action="store_true", help="Liste complète")
     parser.add_argument("--count", action="store_true", help="Compte + catégories (comportement par défaut ; ignoré si --validate, --all ou --filter est présent)")
     args = parser.parse_args()

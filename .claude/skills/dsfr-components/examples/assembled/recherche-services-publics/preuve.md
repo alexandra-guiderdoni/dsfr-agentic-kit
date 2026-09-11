@@ -8,7 +8,7 @@ marque de l'État.
 
 Vérification DSFR bornée : **AUCUN ÉCART OBSERVÉ DANS LE PÉRIMÈTRE LU** pour
 les structures page, formulaire, sélecteur, tags, cartes et liens contrôlées
-avec les références locales DSFR 1.15.2. Ce statut n'est pas une conformité
+avec les références locales DSFR 1.15.3. Ce statut n'est pas une conformité
 globale.
 
 ## Commandes de génération et de contrôle
@@ -68,7 +68,7 @@ python3 "$SKILL_DIR/scripts/check_golden_outputs.py"
   `?q=logement&type=aide` sans JavaScript ;
 - clavier : focus du tag visible (`outline` bleu continu de 2 px), puis `Tab`
   déplace le focus vers `Démarches en ligne` ;
-- console : aucune erreur navigateur ; initialisation DSFR 1.15.2 observée.
+- console : aucune erreur navigateur ; initialisation DSFR 1.15.3 observée.
 
 ## Limites
 

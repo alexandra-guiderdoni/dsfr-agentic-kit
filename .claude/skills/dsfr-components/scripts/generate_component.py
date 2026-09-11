@@ -2,7 +2,7 @@
 """
 Générateur de composants DSFR
 Crée des fragments HTML alignés avec le Design System de l'État français
-(DSFR 1.15.2), sans revendiquer une conformité sans audit dédié.
+(DSFR 1.15.3), sans revendiquer une conformité sans audit dédié.
 
 Mode 1 : Composants natifs — génération paramétrable avec fonctions Python
 Mode 2 : Bibliothèque JSON — injection directe depuis dsfr_complete_library.json
@@ -16,13 +16,13 @@ import re
 import sys
 from html import escape
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LIBRARY_PATH = str(Path(__file__).resolve().parent.parent / "assets" / "dsfr_complete_library.json")
 sys.dont_write_bytecode = True
-import dsfr_component_registry as registry  # noqa: E402
+import dsfr_component_registry as registry
 
 
 def esc(text: str) -> str:
@@ -144,7 +144,7 @@ NEW_WINDOW_SUFFIX = " - nouvelle fenêtre"
 def _link_attrs(label: str, target=None, rel=None, title=None) -> str:
     """Attributs title/target/rel d'un lien. Une cible `_blank` (casse et
     espaces ignorés) impose `rel=noopener` et un `title` qui annonce la
-    nouvelle fenêtre, comme les exemples officiels 1.15.2 (share, footer)."""
+    nouvelle fenêtre, comme les exemples officiels 1.15.3 (share, footer)."""
     target_value = str(target or "").strip()
     rel_values = str(rel or "").split()
     title_value = str(title or "").strip()
@@ -232,7 +232,7 @@ def render_rich_content(content, default: str = "") -> str:
     return "\n    ".join(fragments)
 
 
-def load_library() -> Dict[str, Any]:
+def load_library() -> dict[str, Any]:
     """Charge la bibliothèque JSON des composants DSFR."""
     try:
         with open(LIBRARY_PATH, "r", encoding="utf-8") as f:
@@ -248,7 +248,7 @@ def load_library() -> Dict[str, Any]:
     return library
 
 
-def list_components(library: Dict[str, Any]) -> None:
+def list_components(library: dict[str, Any]) -> None:
     """Affiche la liste des composants disponibles."""
     native = sorted(NATIVE_COMPONENTS.keys())
     json_components = sorted(library.get("components", {}).keys())
@@ -264,7 +264,7 @@ def list_components(library: Dict[str, Any]) -> None:
         print(f"  - {c} ({comp.get('count', 0)} variantes : {variants})")
 
 
-def generate_from_library(library: Dict[str, Any], component: str, variant: str | None = None) -> str:
+def generate_from_library(library: dict[str, Any], component: str, variant: str | None = None) -> str:
     """Génère un composant depuis la bibliothèque JSON."""
     components = library.get("components", {})
     component = registry.canonical_name(component)
@@ -328,7 +328,7 @@ def generate_alert(alert_type: str = "info", title: str = "", description: str =
                    heading_level: int = 3, live: bool = False) -> str:
     """Génère une alerte DSFR. Sans rôle par défaut (exemple officiel) ; `live`
     réserve `role=alert` (error/warning) ou `role=status` (success/info) aux
-    alertes ajoutées après le chargement (doc accessibilité officielle 1.15.2)."""
+    alertes ajoutées après le chargement (doc accessibilité officielle 1.15.3)."""
     alert_class = f"fr-alert fr-alert--{esc(alert_type)}"
     role_attr = ""
     if live:
@@ -388,7 +388,7 @@ def generate_accordion(items: list, id_prefix: str = "accordion", heading_level:
 
 def generate_card(title: str = "", description: str = "", image: str | None = None, link: str = "/",
                   orientation: str = "vertical", image_alt: str = "") -> str:
-    """Génère une carte DSFR (exemple officiel card 1.15.2) : le bloc image
+    """Génère une carte DSFR (exemple officiel card 1.15.3) : le bloc image
     `fr-card__header` suit `fr-card__body` dans le DOM ; horizontale sur demande."""
     if orientation not in {"vertical", "horizontal"}:
         raise ValueError(f"orientation '{orientation}' inconnue : vertical ou horizontal")
@@ -449,20 +449,24 @@ def generate_form_input(label: str, input_type: str = "text", required: bool = F
                         id: str | None = None, name: str | None = None,
                         valid: str | None = None) -> str:
     """Génère un champ de formulaire DSFR ; `name` vaut l'identifiant par défaut.
-    `error` ou `valid` posent l'état sur le groupe ET sur l'input (fiche fields)."""
+    DSFR 1.15.3 (#1516, input.ejs / input-group.ejs) : dans un `fr-input-group`,
+    `error` ou `valid` posent l'état sur le groupe seulement, jamais
+    `fr-input--error` / `--valid` sur le champ (réservés au champ hors groupe).
+    Le message est un `p.fr-message.fr-message--error` / `--valid` dans le
+    `fr-messages-group` relié par `aria-describedby`, comme generate_field."""
     input_id = id or _slug(str(label), "input")
     input_name = name or input_id
     if error and valid:
         raise ValueError("error et valid sont exclusifs")
     required_hint = '<span class="fr-hint-text">Champ obligatoire</span>' if required else ''
     error_class = ' fr-input-group--error' if error else (' fr-input-group--valid' if valid else '')
-    input_state = ' fr-input--error' if error else (' fr-input--valid' if valid else '')
-    describedby = f' aria-describedby="{input_id}-error"' if error else (f' aria-describedby="{input_id}-valid"' if valid else '')
 
     hint_html = f'<span class="fr-hint-text">{esc(hint)}</span>' if hint else ''
-    error_html = f'<p id="{input_id}-error" class="fr-error-text">{esc(error)}</p>' if error else ''
-    if valid:
-        error_html = f'<p id="{input_id}-valid" class="fr-valid-text">{esc(valid)}</p>'
+    message_html = ''
+    if error:
+        message_html = f'\n        <p class="fr-message fr-message--error" id="{esc(input_id)}-message-error">{esc(error)}</p>'
+    elif valid:
+        message_html = f'\n        <p class="fr-message fr-message--valid" id="{esc(input_id)}-message-valid">{esc(valid)}</p>'
 
     return f"""
 <div class="fr-input-group{error_class}">
@@ -471,8 +475,9 @@ def generate_form_input(label: str, input_type: str = "text", required: bool = F
         {hint_html}
         {required_hint}
     </label>
-    <input class="fr-input{input_state}" type="{esc(input_type)}" id="{esc(input_id)}" name="{esc(input_name)}"{describedby} />
-    {error_html}
+    <input class="fr-input" type="{esc(input_type)}" id="{esc(input_id)}" name="{esc(input_name)}" aria-describedby="{esc(input_id)}-messages" />
+    <div class="fr-messages-group" id="{esc(input_id)}-messages" aria-live="polite">{message_html}
+    </div>
 </div>"""
 
 
@@ -507,17 +512,22 @@ def generate_breadcrumb(items: list, id_prefix: str = "breadcrumb") -> str:
     return breadcrumb_html
 
 
-def generate_badge(label: str = "Badge", variant: str | None = None, sm: bool = False) -> str:
-    """Génère un badge DSFR"""
+def generate_badge(label: str = "Badge", variant: str | None = None, sm: bool = False,
+                   markup: str = "p") -> str:
+    """Génère un badge DSFR. `markup` vaut `p` (badge isolé, défaut de
+    badge.ejs) ou `span` : obligatoire dans un `fr-badges-group` et dès que le
+    badge est dans un élément à sémantique propre (DSFR 1.15.3, #1498)."""
+    if markup not in ("p", "span"):
+        raise ValueError("markup : p ou span attendu")
     classes = ["fr-badge"]
     if variant:
         classes.append(f"fr-badge--{esc(variant)}")
     if sm:
         classes.append("fr-badge--sm")
-    return f'<p class="{" ".join(classes)}">{esc(label)}</p>'
+    return f'<{markup} class="{" ".join(classes)}">{esc(label)}</{markup}>'
 
 
-# Accentuations de tag du paquet 1.15.2 (dist/component/tag/tag.min.css).
+# Accentuations de tag du paquet 1.15.3 (dist/component/tag/tag.min.css).
 TAG_COLORS = (
     "beige-gris-galet", "blue-cumulus", "blue-ecume", "brown-cafe-creme", "brown-caramel", "brown-opera",
     "green-archipel", "green-bourgeon", "green-emeraude", "green-menthe", "green-tilleul-verveine",
@@ -576,16 +586,34 @@ def generate_highlight(text: str = "", size: str | None = None) -> str:
 </div>"""
 
 
+NOTICE_HEADINGS = ("h1", "h2", "h3", "h4", "h5", "h6", "p")
+NOTICE_DEFAULT_TITLE = "Information importante"
+
+
 def generate_notice(title: str = "", variant: str = "info", closable: bool = False,
                     description: str | None = None, desc: str | None = None,
-                    link: dict | str = None, id: str | None = None) -> str:
-    """Génère un bandeau d'information (notice) DSFR"""
+                    link: dict | str = None, id: str | None = None,
+                    heading: str = "h2") -> str:
+    """Génère un bandeau d'information (notice) DSFR 1.15.3 (#1521, #1504) :
+    `fr-notice__body` > `div` > titre `h2` par défaut (`heading` : h1 à h6 ou
+    p) + `p.fr-notice__desc` + `a.fr-notice__link`. Aucun `role` : il n'est
+    attendu qu'en insertion dynamique. Doctrine d'accessibilité : le titre
+    explicite la nature du message ; un titre absent ou laissé au défaut est
+    signalé sur stderr sans bloquer."""
+    if heading not in NOTICE_HEADINGS:
+        raise ValueError("heading : h1 à h6 ou p attendu (h2 par défaut)")
+    if not title or title.strip() == NOTICE_DEFAULT_TITLE:
+        print(
+            "Avertissement : bandeau notice sans titre explicite ; la doctrine DSFR 1.15.3 "
+            "demande d'expliciter la nature du message (information, avertissement, alerte).",
+            file=sys.stderr,
+        )
     classes = ["fr-notice"]
     if variant:
         classes.append(f"fr-notice--{esc(variant)}")
     id_attr = f' id="{esc(id)}"' if id else ""
     description_text = description if description is not None else desc
-    desc_html = f'\n                <span class="fr-notice__desc">{esc(description_text)}</span>' if description_text else ""
+    desc_html = f'\n                <p class="fr-notice__desc">{esc(description_text)}</p>' if description_text else ""
     link_html = ""
     if link:
         if isinstance(link, dict):
@@ -614,9 +642,9 @@ def generate_notice(title: str = "", variant: str = "info", closable: bool = Fal
 <div class="{" ".join(classes)}"{id_attr}>
     <div class="fr-container">
         <div class="fr-notice__body">
-            <p>
-                <span class="fr-notice__title">{esc(title) or 'Information importante'}</span>{desc_html}{link_html}
-            </p>{close_button}
+            <div>
+                <{heading} class="fr-notice__title">{esc(title) or NOTICE_DEFAULT_TITLE}</{heading}>{desc_html}{link_html}
+            </div>{close_button}
         </div>
     </div>
 </div>"""
@@ -768,7 +796,7 @@ def generate_toggle(label: str = "Label de l'interrupteur", hint: str | None = N
                     disabled: bool = False, checked: bool = False,
                     id: str | None = None, items: list | None = None, legend: str | None = None,
                     name: str | None = None) -> str:
-    """Génère un interrupteur DSFR (fidèle au template toggle.ejs 1.15.2)"""
+    """Génère un interrupteur DSFR (fidèle au template toggle.ejs 1.15.3)"""
     if items is not None or legend is not None:
         group_id = id or _slug(legend or "toggle-group", "toggle-group")
         legend_text = legend or "Légende pour l'ensemble des éléments"
@@ -830,13 +858,18 @@ def generate_toggle(label: str = "Label de l'interrupteur", hint: str | None = N
 
 def generate_search(label: str = "Rechercher", placeholder: str = "Rechercher",
                     size: str | None = None, name: str = "search", id: str | None = None,
-                    action: str = "/recherche") -> str:
+                    action: str = "/recherche", labelled: bool = False) -> str:
     """Génère une barre de recherche DSFR dans son <form> (fonctionnement sans JS,
-    search/_part/doc/code du paquet 1.15.2)."""
+    search/_part/doc/code du paquet 1.15.3). `labelled` pose
+    `fr-search-bar--labelled` (#1516) : le libellé, masqué par défaut, devient
+    visible. À ne pas utiliser pour la recherche globale du header, où le
+    libellé est déjà porté par le bouton."""
     field_id = id or "search"
     classes = ["fr-search-bar"]
     if size == "lg":
         classes.append("fr-search-bar--lg")
+    if labelled:
+        classes.append("fr-search-bar--labelled")
     return f"""
 <form action="{esc_href(action)}" method="get">
     <div class="{" ".join(classes)}" role="search">
@@ -851,7 +884,7 @@ def generate_range(label: str = "Label du curseur", min: int = 0, max: int = 100
                    value=None, step=None, name: str | None = None, id: str | None = None,
                    hint: str | None = None, size: str | None = None,
                    disabled: bool = False) -> str:
-    """Génère un curseur (range) DSFR 1.15.2.
+    """Génère un curseur (range) DSFR 1.15.3.
 
     Structure du gabarit officiel `range.ejs` (#1407, 1.15.0) : `fr-range-group`
     > label lié par `for`/`id` (+ `fr-hint-text`), conteneur `div.fr-range`
@@ -860,7 +893,7 @@ def generate_range(label: str = "Label du curseur", min: int = 0, max: int = 100
     `fr-range__max`, puis `fr-messages-group` en `aria-live="polite"`. La
     classe `fr-range` va sur le conteneur, jamais sur l'input : le script du
     composant la cible pour positionner la sortie. Source : exemple rendu
-    `example/component/range/index.html` du paquet @gouvfr/dsfr@1.15.2.
+    `example/component/range/index.html` du paquet @gouvfr/dsfr@1.15.3.
     """
     field_id = id or _slug(label, "range")
     name_attr = name or field_id
@@ -931,7 +964,7 @@ def generate_stepper(current: int = 1, total: int = 4, title: str = "Titre de l'
     details = ""
     if next:
         details = f'\n    <p class="fr-stepper__details"><span class="fr-text--bold">Étape suivante :</span> {esc(next)}</p>'
-    # Exemple officiel stepper 1.15.2 : le titre précède l'état dans le h2.
+    # Exemple officiel stepper 1.15.3 : le titre précède l'état dans le h2.
     return f"""
 <div class="fr-stepper">
     <h2 class="fr-stepper__title">
@@ -1000,7 +1033,7 @@ def generate_quote(text: str = "", author: str = "", source: str | None = None,
                    cite: str | None = None, image: str | None = None) -> str:
     """Génère une citation DSFR"""
     cite_attr = f' cite="{esc(cite)}"' if cite else ""
-    # Exemple officiel quote 1.15.2 : l'image illustrative (alt vide) suit
+    # Exemple officiel quote 1.15.3 : l'image illustrative (alt vide) suit
     # l'auteur et la source, et la figure prend `fr-quote--column`.
     img_html = ""
     if image:
@@ -1057,7 +1090,7 @@ CSS_LENGTH_RE = re.compile(r"^\d+(\.\d+)?(rem|em|px)$")
 def generate_logo(brand: str = "republique", operator_src: str | None = None, operator_alt: str | None = None,
                   operator_max_width: str = "3.5rem") -> str:
     """Génère un bloc marque DSFR (République française ou opérateur). Le logo
-    opérateur suit l'exemple officiel header 1.15.2 : `fr-responsive-img` et
+    opérateur suit l'exemple officiel header 1.15.3 : `fr-responsive-img` et
     une largeur maximale en ligne."""
     if brand == "operator" or operator_src:
         if not CSS_LENGTH_RE.match(str(operator_max_width)):
@@ -1082,7 +1115,7 @@ def generate_connect(brand: str = "plus", help_url: str | None = None,
                      help_label: str | None = None) -> str:
     """Génère un bouton FranceConnect ou ProConnect DSFR.
 
-    `brand` vaut `default`, `plus` ou `pro` (variantes officielles 1.15.2).
+    `brand` vaut `default`, `plus` ou `pro` (variantes officielles 1.15.3).
     `help_url` et `help_label` surchargent le lien d'aide de la variante.
     """
     if brand not in CONNECT_VARIANTS:
@@ -1117,7 +1150,7 @@ def generate_download(label: str = "Télécharger le document", href: str = "/do
                      f'\n                    <span class="fr-download__detail">\n                        {esc(it.get("detail", ""))}'
                      f'\n                    </span>\n                </a>\n            </div>\n        </li>')
         return f'<div class="fr-downloads-group">\n    <ul>{rows}\n    </ul>\n</div>'
-    # Conteneur fr-download (classe stylée du paquet 1.15.2) autour du lien.
+    # Conteneur fr-download (classe stylée du paquet 1.15.3) autour du lien.
     return f"""<div class="fr-download">
     <a class="fr-download__link" href="{esc_href(href)}" download>
         {esc(label)}
@@ -1135,7 +1168,7 @@ def generate_content(title: str = "Titre de niveau 2", lead: str | None = None,
                      video: str | None = None, video_title: str | None = None) -> str:
     """Génère un bloc de contenu éditorial DSFR, ou, avec `image` ou `video`, le
     composant officiel « Contenu média » (figure.fr-content-media, exemple
-    content 1.15.2 ; la vidéo est un iframe fr-responsive-vid dont le title
+    content 1.15.3 ; la vidéo est un iframe fr-responsive-vid dont le title
     décrit le média).
 
     `body` est inséré brut (HTML non échappé) : c'est du contenu éditorial
@@ -1211,7 +1244,7 @@ def generate_share(title: str = "Partager la page", items: list | None = None) -
         it = _as_item(it, "platform")
         label = str(it.get("label", "Partager"))
         href = str(it.get("href", "/"))
-        # Exemple officiel share 1.15.2 : nouvelle fenêtre annoncée dans le
+        # Exemple officiel share 1.15.3 : nouvelle fenêtre annoncée dans le
         # title pour les réseaux ; l'envoi par courriel reste dans l'onglet.
         attrs = _link_attrs(label, None if href.startswith("mailto:") else "_blank", None, None if href.startswith("mailto:") else label)
         rows += (f'\n        <li>\n            <a class="fr-share__link fr-share__link--{esc(it.get("platform", ""))}"'
@@ -1225,14 +1258,14 @@ def generate_share(title: str = "Partager la page", items: list | None = None) -
 
 def generate_translate(current: str = "FR", languages: list | None = None,
                        id: str = "translate-menu") -> str:
-    """Génère un sélecteur de langue DSFR 1.15.2.
+    """Génère un sélecteur de langue DSFR 1.15.3.
 
     Structure de la documentation officielle depuis 1.15.0 (#1431) :
     `div.fr-translate.fr-nav` (plus de `nav` ni de `role="navigation"`)
     contenant un `fr-nav__item` avec le bouton `fr-translate__btn` et le menu
     `fr-collapse`. La classe `fr-translate__language` est réservée aux liens.
     Chaque langue : `code`, `label` (nom complet) et `href` optionnel. Source :
-    exemple rendu `example/component/translate/index.html` du paquet 1.15.2.
+    exemple rendu `example/component/translate/index.html` du paquet 1.15.3.
     """
     languages = languages or [
         {"code": "fr", "label": "Français", "href": "/fr/"},
@@ -1274,7 +1307,7 @@ def generate_transcription(label: str = "Transcription", content: str = "Contenu
     id_prefix = _slug(id_prefix, "transcription")
     tid = f"{id_prefix}-1"
     modal_id = f"fr-transcription-modal-{tid}"
-    # Exemple officiel transcription 1.15.2 : le bouton « Agrandir » ouvre une
+    # Exemple officiel transcription 1.15.3 : le bouton « Agrandir » ouvre une
     # modale plein écran qui reprend le titre et le contenu.
     return f"""<div class="fr-transcription">
     <button type="button" class="fr-transcription__btn" aria-expanded="false" aria-controls="{tid}">
@@ -1318,7 +1351,7 @@ def generate_password(label: str = "Mot de passe", id: str = "password-input",
     """Génère un champ de mot de passe DSFR (champ masqué, neutre au repos)"""
     show_id = f"{id}-show"
     autocomplete = "new-password" if new else autocomplete
-    # Exemple officiel password 1.15.2 : le groupe de messages porte un id et
+    # Exemple officiel password 1.15.3 : le groupe de messages porte un id et
     # l'input le référence par aria-describedby (vide au repos sans `new`).
     messages_id = f"{id}-messages"
     if new:
@@ -1514,7 +1547,7 @@ def generate_header(brand_mode: str = "neutral", service_title: str = "Nom du se
       fr-header__search fr-modal + fr-search-bar).
     - navigation : menu modale (fr-header__navbar bouton fr-btn--menu +
       fr-header__menu fr-modal contenant la navigation).
-    Sources : paquet @gouvfr/dsfr@1.15.2 header.ejs / header-brand.ejs /
+    Sources : paquet @gouvfr/dsfr@1.15.3 header.ejs / header-brand.ejs /
     header-navbar.ejs / header-menu.ejs / search.ejs, et header de
     generate_page.py comme référence locale validée.
     search et navigation exigent brand-top + fr-header__navbar, émis seulement
@@ -1672,7 +1705,7 @@ def generate_footer(brand_mode: str = "neutral", service_name: str = "Nom du ser
     Variantes riches (P2 PRD-140), optionnelles et opt-in :
     - partners : bloc fr-footer__partners (titre, partenaire principal, sous-partenaires).
     - bottom_links + copyright : bloc fr-footer__bottom (liens légaux + copyright).
-    Sources : paquet @gouvfr/dsfr@1.15.2 footer.ejs / footer-partners.ejs / footer-bottom.ejs.
+    Sources : paquet @gouvfr/dsfr@1.15.3 footer.ejs / footer-partners.ejs / footer-bottom.ejs.
     Sans ces paramètres, la sortie reste identique au footer minimal (baseline golden stable).
     """
     if brand_mode == "neutral":
@@ -2004,7 +2037,7 @@ def native_option_names(component: str) -> list[str]:
     return list(dict.fromkeys(options))
 
 
-def print_component_options(component: str, library: Dict[str, Any]) -> None:
+def print_component_options(component: str, library: dict[str, Any]) -> None:
     """Affiche les clés de configuration sans produire de markup."""
     canonical = registry.canonical_name(component)
     if canonical in NATIVE_COMPONENTS:

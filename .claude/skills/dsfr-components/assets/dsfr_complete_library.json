@@ -1,5 +1,5 @@
 {
-  "version": "1.15.2",
+  "version": "1.15.3",
   "generated": "2025-09-05T14:57:06.499727",
   "total_components": 48,
   "total_variants": 136,
@@ -169,8 +169,8 @@
         "tel": "<div class=\"fr-input-group\">\n    <label class=\"fr-label\" for=\"tel-input\">\n        Téléphone\n        <span class=\"fr-hint-text\">Format : 01 23 45 67 89</span>\n    </label>\n    <input class=\"fr-input\" type=\"tel\" id=\"tel-input\" name=\"tel\">\n</div>",
         "date": "<div class=\"fr-input-group\">\n    <label class=\"fr-label\" for=\"date-input\">\n        Date\n    </label>\n    <input class=\"fr-input\" type=\"date\" id=\"date-input\" name=\"date\">\n</div>",
         "textarea": "<div class=\"fr-input-group\">\n    <label class=\"fr-label\" for=\"textarea\">\n        Message\n        <span class=\"fr-hint-text\">Maximum 500 caractères</span>\n    </label>\n    <textarea class=\"fr-input\" id=\"textarea\" name=\"message\" rows=\"5\"></textarea>\n</div>",
-        "with_error": "<div class=\"fr-input-group fr-input-group--error\">\n    <label class=\"fr-label\" for=\"error-input\">\n        Label du champ\n    </label>\n    <input class=\"fr-input fr-input--error\" type=\"text\" id=\"error-input\" name=\"error-input\" aria-invalid=\"true\" aria-describedby=\"error-input-error\">\n    <p id=\"error-input-error\" class=\"fr-error-text\">\n        Message d'erreur\n    </p>\n</div>",
-        "with_success": "<div class=\"fr-input-group fr-input-group--valid\">\n    <label class=\"fr-label\" for=\"valid-input\">\n        Label du champ\n    </label>\n    <input class=\"fr-input fr-input--valid\" type=\"text\" id=\"valid-input\" name=\"valid-input\" aria-describedby=\"valid-input-valid\">\n    <p id=\"valid-input-valid\" class=\"fr-valid-text\">\n        Message de validation\n    </p>\n</div>",
+        "with_error": "<div class=\"fr-input-group fr-input-group--error\">\n    <label class=\"fr-label\" for=\"error-input\">\n        Label du champ\n    </label>\n    <input class=\"fr-input\" type=\"text\" id=\"error-input\" name=\"error-input\" aria-describedby=\"error-input-messages\">\n    <div class=\"fr-messages-group\" id=\"error-input-messages\" aria-live=\"polite\">\n        <p class=\"fr-message fr-message--error\" id=\"error-input-message-error\">Message d'erreur</p>\n    </div>\n</div>",
+        "with_success": "<div class=\"fr-input-group fr-input-group--valid\">\n    <label class=\"fr-label\" for=\"valid-input\">\n        Label du champ\n    </label>\n    <input class=\"fr-input\" type=\"text\" id=\"valid-input\" name=\"valid-input\" aria-describedby=\"valid-input-messages\">\n    <div class=\"fr-messages-group\" id=\"valid-input-messages\" aria-live=\"polite\">\n        <p class=\"fr-message fr-message--valid\" id=\"valid-input-message-valid\">Message de validation</p>\n    </div>\n</div>",
         "disabled": "<div class=\"fr-input-group fr-input-group--disabled\">\n    <label class=\"fr-label\" for=\"disabled-input\">\n        Champ désactivé\n    </label>\n    <input class=\"fr-input\" type=\"text\" id=\"disabled-input\" name=\"disabled-input\" disabled>\n</div>"
       }
     },
@@ -235,12 +235,14 @@
     "search": {
       "variants": [
         "basic",
-        "lg"
+        "lg",
+        "labelled"
       ],
-      "count": 2,
+      "count": 3,
       "html": {
         "basic": "<form action=\"/recherche\" method=\"get\">\n    <div class=\"fr-search-bar\" role=\"search\">\n        <label class=\"fr-label\" for=\"search\">\n            Rechercher\n        </label>\n        <input class=\"fr-input\" placeholder=\"Rechercher\" type=\"search\" id=\"search\" name=\"search\">\n        <button type=\"submit\" class=\"fr-btn\" title=\"Rechercher\">\n            Rechercher\n        </button>\n    </div>\n</form>",
-        "lg": "<form action=\"/recherche\" method=\"get\">\n    <div class=\"fr-search-bar fr-search-bar--lg\" role=\"search\">\n        <label class=\"fr-label\" for=\"search-lg\">\n            Rechercher\n        </label>\n        <input class=\"fr-input\" placeholder=\"Que recherchez-vous ?\" type=\"search\" id=\"search-lg\" name=\"search\">\n        <button type=\"submit\" class=\"fr-btn\" title=\"Rechercher\">\n            Rechercher\n        </button>\n    </div>\n</form>"
+        "lg": "<form action=\"/recherche\" method=\"get\">\n    <div class=\"fr-search-bar fr-search-bar--lg\" role=\"search\">\n        <label class=\"fr-label\" for=\"search-lg\">\n            Rechercher\n        </label>\n        <input class=\"fr-input\" placeholder=\"Que recherchez-vous ?\" type=\"search\" id=\"search-lg\" name=\"search\">\n        <button type=\"submit\" class=\"fr-btn\" title=\"Rechercher\">\n            Rechercher\n        </button>\n    </div>\n</form>",
+        "labelled": "<form action=\"/recherche\" method=\"get\">\n    <div class=\"fr-search-bar fr-search-bar--labelled\" role=\"search\">\n        <label class=\"fr-label\" for=\"search\">\n            Rechercher\n        </label>\n        <input class=\"fr-input\" placeholder=\"Rechercher\" type=\"search\" id=\"search\" name=\"search\">\n        <button type=\"submit\" class=\"fr-btn\" title=\"Rechercher\">\n            Rechercher\n        </button>\n    </div>\n</form>"
       }
     },
     "upload": {
@@ -343,7 +345,7 @@
         "error": "<p class=\"fr-badge fr-badge--error\">Erreur</p>",
         "new": "<p class=\"fr-badge fr-badge--new\">Nouveau</p>",
         "sm": "<p class=\"fr-badge fr-badge--sm\">Petit badge</p>",
-        "group": "<ul class=\"fr-badges-group\">\n    <li>\n        <p class=\"fr-badge fr-badge--info\">Badge 1</p>\n    </li>\n    <li>\n        <p class=\"fr-badge fr-badge--success\">Badge 2</p>\n    </li>\n    <li>\n        <p class=\"fr-badge fr-badge--new\">Badge 3</p>\n    </li>\n</ul>"
+        "group": "<ul class=\"fr-badges-group\">\n    <li>\n        <span class=\"fr-badge fr-badge--info\">Badge 1</span>\n    </li>\n    <li>\n        <span class=\"fr-badge fr-badge--success\">Badge 2</span>\n    </li>\n    <li>\n        <span class=\"fr-badge fr-badge--new\">Badge 3</span>\n    </li>\n</ul>"
       }
     },
     "callout": {
@@ -371,7 +373,7 @@
       "html": {
         "basic": "<div class=\"fr-card fr-enlarge-link\">\n    <div class=\"fr-card__body\">\n        <div class=\"fr-card__content\">\n            <h3 class=\"fr-card__title\">\n                <a href=\"#\">Titre de la carte</a>\n            </h3>\n            <p class=\"fr-card__desc\">\n                Description de la carte\n            </p>\n            <p class=\"fr-card__detail\">Détail</p>\n        </div>\n    </div>\n</div>",
         "horizontal": "<div class=\"fr-card fr-card--horizontal fr-enlarge-link\">\n    <div class=\"fr-card__body\">\n        <div class=\"fr-card__content\">\n            <h3 class=\"fr-card__title\">\n                <a href=\"#\">Carte horizontale</a>\n            </h3>\n            <p class=\"fr-card__desc\">\n                Description de la carte horizontale\n            </p>\n        </div>\n    </div>\n    <div class=\"fr-card__header\">\n        <div class=\"fr-card__img\">\n            <img class=\"fr-responsive-img\" src=\"/placeholder.jpg\" alt=\"\">\n        </div>\n    </div>\n</div>",
-        "with_image": "<div class=\"fr-card fr-enlarge-link\">\n    <div class=\"fr-card__header\">\n        <div class=\"fr-card__img\">\n            <img class=\"fr-responsive-img\" src=\"/placeholder.jpg\" alt=\"\">\n        </div>\n        <ul class=\"fr-badges-group\">\n            <li>\n                <p class=\"fr-badge fr-badge--new\">Nouveau</p>\n            </li>\n        </ul>\n    </div>\n    <div class=\"fr-card__body\">\n        <div class=\"fr-card__content\">\n            <h3 class=\"fr-card__title\">\n                <a href=\"#\">Carte avec image</a>\n            </h3>\n            <p class=\"fr-card__desc\">\n                Description\n            </p>\n        </div>\n    </div>\n</div>",
+        "with_image": "<div class=\"fr-card fr-enlarge-link\">\n    <div class=\"fr-card__header\">\n        <div class=\"fr-card__img\">\n            <img class=\"fr-responsive-img\" src=\"/placeholder.jpg\" alt=\"\">\n        </div>\n        <ul class=\"fr-badges-group\">\n            <li>\n                <span class=\"fr-badge fr-badge--new\">Nouveau</span>\n            </li>\n        </ul>\n    </div>\n    <div class=\"fr-card__body\">\n        <div class=\"fr-card__content\">\n            <h3 class=\"fr-card__title\">\n                <a href=\"#\">Carte avec image</a>\n            </h3>\n            <p class=\"fr-card__desc\">\n                Description\n            </p>\n        </div>\n    </div>\n</div>",
         "no_link": "<div class=\"fr-card\">\n    <div class=\"fr-card__body\">\n        <div class=\"fr-card__content\">\n            <h3 class=\"fr-card__title\">Carte sans lien</h3>\n            <p class=\"fr-card__desc\">\n                Cette carte n'est pas cliquable\n            </p>\n        </div>\n    </div>\n</div>",
         "download": "<div class=\"fr-card fr-card--download fr-enlarge-link\">\n    <div class=\"fr-card__body\">\n        <div class=\"fr-card__content\">\n            <h3 class=\"fr-card__title\">\n                <a href=\"/document.pdf\" download>\n                    Document à télécharger\n                </a>\n            </h3>\n            <p class=\"fr-card__desc\">Description du document</p>\n            <p class=\"fr-card__detail\">\n                <span class=\"fr-icon-download-line\" aria-hidden=\"true\"></span>\n                PDF - 2.5 Mo\n            </p>\n        </div>\n    </div>\n</div>"
       }
@@ -419,9 +421,9 @@
       ],
       "count": 3,
       "html": {
-        "basic": "<div class=\"fr-notice fr-notice--info\">\n    <div class=\"fr-container\">\n        <div class=\"fr-notice__body\">\n            <p>\n                <span class=\"fr-notice__title\">Information importante concernant le site</span>\n            </p>\n        </div>\n    </div>\n</div>",
-        "info": "<div class=\"fr-notice fr-notice--info\">\n    <div class=\"fr-container\">\n        <div class=\"fr-notice__body\">\n            <p>\n                <span class=\"fr-notice__title\">Bandeau d'information</span>\n                <span class=\"fr-notice__desc\">Texte de description</span>\n                <a class=\"fr-notice__link\" href=\"/plus-d-informations\">En savoir plus</a>\n            </p>\n            <button class=\"fr-btn--close fr-btn\" title=\"Masquer le message\" type=\"button\">Masquer le message</button>\n        </div>\n    </div>\n</div>",
-        "warning": "<div class=\"fr-notice fr-notice--warning\" role=\"alert\">\n    <div class=\"fr-container\">\n        <div class=\"fr-notice__body\">\n            <p>\n                <span class=\"fr-notice__title\">Site en maintenance</span>\n            </p>\n        </div>\n    </div>\n</div>"
+        "basic": "<div class=\"fr-notice fr-notice--info\">\n    <div class=\"fr-container\">\n        <div class=\"fr-notice__body\">\n            <div>\n                <h2 class=\"fr-notice__title\">Information importante concernant le site</h2>\n            </div>\n        </div>\n    </div>\n</div>",
+        "info": "<div class=\"fr-notice fr-notice--info\">\n    <div class=\"fr-container\">\n        <div class=\"fr-notice__body\">\n            <div>\n                <h2 class=\"fr-notice__title\">Bandeau d'information</h2>\n                <p class=\"fr-notice__desc\">Texte de description</p>\n                <a class=\"fr-notice__link\" href=\"/plus-d-informations\">En savoir plus</a>\n            </div>\n            <button class=\"fr-btn--close fr-btn\" title=\"Masquer le message\" type=\"button\">Masquer le message</button>\n        </div>\n    </div>\n</div>",
+        "warning": "<div class=\"fr-notice fr-notice--warning\">\n    <div class=\"fr-container\">\n        <div class=\"fr-notice__body\">\n            <div>\n                <h2 class=\"fr-notice__title\">Site en maintenance</h2>\n            </div>\n        </div>\n    </div>\n</div>"
       }
     },
     "quote": {

@@ -42,7 +42,7 @@ complet masqué en desktop.
 </div>
 ```
 
-Source : `example/component/translate/index.html` du paquet 1.15.2 ;
+Source : `example/component/translate/index.html` du paquet 1.15.3 ;
 générateur `generate_component.py translate` (options `current`, `languages`
 avec `code`, `label`, `href`, et `id` du menu).
 

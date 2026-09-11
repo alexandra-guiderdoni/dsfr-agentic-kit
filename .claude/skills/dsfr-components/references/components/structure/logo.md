@@ -24,7 +24,7 @@ l'État et si la livraison vérifie le cadre de publication.
 **Note** : le logo opérateur se place dans `fr-header__operator` dans le
 header, à côté du logo République Française. `generate_component.py logo
 --config '{"operator_src": "…"}'` pose `3.5rem`, la largeur de l'exemple
-officiel au ratio 3x4, et l'expose par `operator_max_width` ; le paquet 1.15.2
+officiel au ratio 3x4, et l'expose par `operator_max_width` ; le paquet 1.15.3
 utilise aussi `8rem` et `9.0625rem` pour les logos au ratio 16x9.
 
 ---

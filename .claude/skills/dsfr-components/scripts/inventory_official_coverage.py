@@ -248,7 +248,7 @@ def main() -> int:
     parser.add_argument("--official-package", type=Path, help="chemin du paquet extrait")
     parser.add_argument(
         "--official-version",
-        default=os.environ.get("DSFR_OFFICIAL_VERSION", "1.15.2"),
+        default=os.environ.get("DSFR_OFFICIAL_VERSION", "1.15.3"),
         help="version npm",
     )
     parser.add_argument("--official-cache-dir", type=Path, default=None,

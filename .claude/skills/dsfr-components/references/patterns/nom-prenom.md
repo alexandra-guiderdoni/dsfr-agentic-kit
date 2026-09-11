@@ -7,7 +7,7 @@ Référence extraite de `../patterns.md`.
 ## Pattern recommandé
 
 Sortie exacte de `python3 scripts/generate_field.py nom-prenom`, alignée sur
-l'exemple officiel `example/layout/pattern/name` du paquet 1.15.2 : légende
+l'exemple officiel `example/layout/pattern/name` du paquet 1.15.3 : légende
 masquée `fr-sr-only` liée par `aria-labelledby`, un `fr-messages-group` par
 champ relié par `aria-describedby`, `name` égal au jeton `autocomplete`, et
 `spellcheck="false"`.
@@ -34,7 +34,7 @@ champ relié par `aria-describedby`, `name` égal au jeton `autocomplete`, et
 ```
 
 Le champ « Nom d'usage » ci-dessous est une **extension hors bloc officiel** :
-ni le générateur ni l'exemple 1.15.2 ne le produisent. Le reprendre suppose de
+ni le générateur ni l'exemple 1.15.3 ne le produisent. Le reprendre suppose de
 l'ajouter à la main, avec son propre groupe de messages.
 
 ```html

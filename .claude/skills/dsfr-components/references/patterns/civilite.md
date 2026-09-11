@@ -6,7 +6,7 @@ Référence extraite de `../patterns.md`.
 
 ## Pattern recommandé
 
-Le bloc fonctionnel officiel « civilité » du DSFR 1.15.2
+Le bloc fonctionnel officiel « civilité » du DSFR 1.15.3
 (`example/layout/pattern/civility`) demande le sexe, avec deux boutons radio
 Féminin / Masculin. C'est la structure produite par
 `scripts/generate_field.py civilite` : fieldset relié par `aria-labelledby` à

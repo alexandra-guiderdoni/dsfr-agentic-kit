@@ -77,7 +77,7 @@ async function main() {
   }
   const { dir: dsfrPackage, version: dsfrVersion, error: dsfrError } = resolveDsfrPackage();
   if (!dsfrPackage) {
-    printSkipped(`${dsfrError}. Run check_generated_outputs.py --official-version 1.15.2 to seed the cache.`, { file: absolutePath });
+    printSkipped(`${dsfrError}. Run check_generated_outputs.py --official-version 1.15.3 to seed the cache.`, { file: absolutePath });
     return;
   }
 

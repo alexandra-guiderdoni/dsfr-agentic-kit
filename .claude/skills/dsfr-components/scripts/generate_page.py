@@ -23,9 +23,9 @@ DSFR_VERSION_RE = re.compile(r"^\d+\.\d+\.\d+(?:[.-][0-9A-Za-z.]+)?$")
 
 def _dsfr_version() -> str:
     """Version DSFR cible : DSFR_OFFICIAL_VERSION si elle est un numéro de version, sinon le repli."""
-    raw = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.2"
+    raw = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.3"
     if not DSFR_VERSION_RE.fullmatch(raw):
-        raise SystemExit(f"Erreur : DSFR_OFFICIAL_VERSION invalide ({raw[:40]!r}) : numéro de version attendu, par exemple 1.15.2")
+        raise SystemExit(f"Erreur : DSFR_OFFICIAL_VERSION invalide ({raw[:40]!r}) : numéro de version attendu, par exemple 1.15.3")
     return raw
 
 
@@ -128,24 +128,29 @@ def generate_deferred_validation_script(form_id: str, required_ids: list[str]) -
                         if (message) {{
                           field.setAttribute('aria-invalid', 'true');
                           field.setAttribute('aria-describedby', id);
-                          if (field.classList.contains('fr-input')) field.classList.add('fr-input--error');
                           if (group && group.classList.contains('fr-input-group')) group.classList.add('fr-input-group--error');
                           if (group && group.classList.contains('fr-select-group')) group.classList.add('fr-select-group--error');
                           if (!err) {{
                             err = document.createElement('p');
                             err.id = id;
-                            err.className = 'fr-error-text';
-                            if (group) {{
-                              group.appendChild(err);
-                            }} else {{
-                              field.insertAdjacentElement('afterend', err);
+                            err.className = 'fr-message fr-message--error';
+                            var messages = group ? group.querySelector('.fr-messages-group') : null;
+                            if (!messages) {{
+                              messages = document.createElement('div');
+                              messages.className = 'fr-messages-group';
+                              messages.setAttribute('aria-live', 'polite');
+                              if (group) {{
+                                group.appendChild(messages);
+                              }} else {{
+                                field.insertAdjacentElement('afterend', messages);
+                              }}
                             }}
+                            messages.appendChild(err);
                           }}
                           err.textContent = message;
                         }} else {{
                           field.removeAttribute('aria-invalid');
                           field.removeAttribute('aria-describedby');
-                          field.classList.remove('fr-input--error');
                           if (group) group.classList.remove('fr-input-group--error', 'fr-select-group--error');
                           if (err) err.remove();
                         }}
@@ -956,7 +961,7 @@ def generate_page_content(page_type: str, custom_content: str = "", title: str =
                                     <p class="fr-card__desc">Description du premier service disponible.</p>
                                     <div class="fr-card__start">
                                         <ul class="fr-badges-group">
-                                            <li><p class="fr-badge fr-badge--info fr-badge--sm">En ligne</p></li>
+                                            <li><span class="fr-badge fr-badge--info fr-badge--sm">En ligne</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -973,7 +978,7 @@ def generate_page_content(page_type: str, custom_content: str = "", title: str =
                                     <p class="fr-card__desc">Description du deuxième service disponible.</p>
                                     <div class="fr-card__start">
                                         <ul class="fr-badges-group">
-                                            <li><p class="fr-badge fr-badge--success fr-badge--sm">Gratuit</p></li>
+                                            <li><span class="fr-badge fr-badge--success fr-badge--sm">Gratuit</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -990,7 +995,7 @@ def generate_page_content(page_type: str, custom_content: str = "", title: str =
                                     <p class="fr-card__desc">Description du troisième service disponible.</p>
                                     <div class="fr-card__start">
                                         <ul class="fr-badges-group">
-                                            <li><p class="fr-badge fr-badge--warning fr-badge--sm">Maintenance</p></li>
+                                            <li><span class="fr-badge fr-badge--warning fr-badge--sm">Maintenance</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1030,8 +1035,8 @@ def generate_page_content(page_type: str, custom_content: str = "", title: str =
                     <div class="fr-col-12 fr-col-md-8">
                         <h1>{heading}</h1>
                         <ul class="fr-badges-group fr-mb-4w">
-                            <li><p class="fr-badge fr-badge--info">Catégorie</p></li>
-                            <li><p class="fr-badge fr-badge--success">Disponible</p></li>
+                            <li><span class="fr-badge fr-badge--info">Catégorie</span></li>
+                            <li><span class="fr-badge fr-badge--success">Disponible</span></li>
                         </ul>
 
                         <p class="fr-text--lead">Description détaillée du service avec toutes les informations nécessaires pour l'usager.</p>

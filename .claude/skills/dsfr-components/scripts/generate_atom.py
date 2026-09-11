@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Générateur d'atomes DSFR (DSFR 1.15.2).
+Générateur d'atomes DSFR (DSFR 1.15.3).
 
 Atomes = primitives sous le niveau composant :
 - typographie : title, text, lead, bold
@@ -188,7 +188,7 @@ def generate_spacing(content: str = "", kind: str = "margin",
     prefix = "p" if kind == "padding" else "m"
     direction = _choice(direction or "", "direction", SPACING_DIRECTIONS)
     unit = _choice(unit, "unit", ("w", "v"))
-    # Échelle du paquet 1.15.2 : v de 0 à 32, w de 0 à 16 (fr-mb-30w n'existe pas).
+    # Échelle du paquet 1.15.3 : v de 0 à 32, w de 0 à 16 (fr-mb-30w n'existe pas).
     size = _int_in_range(size, "size", 0, 32 if unit == "v" else 16)
     return f'<div class="fr-{prefix}{direction}-{size}{unit}">\n    {content}\n</div>'
 
@@ -202,7 +202,7 @@ def generate_pictogram(src: str | None = None, size=80) -> str:
     `src` doit être servi depuis la même origine que la page : un `<use href>`
     vers un domaine tiers n'est résolu par aucun navigateur moderne et donne un
     pictogramme vide, sans erreur. D'où le défaut en chemin absolu d'origine.
-    Source : references/pictograms.md + paquet @gouvfr/dsfr@1.15.2.
+    Source : references/pictograms.md + paquet @gouvfr/dsfr@1.15.3.
     """
     src = src or "/dsfr/artwork/pictograms/digital/internet.svg"
     size = _int_in_range(size if size else 80, "size", 16, 512)
@@ -214,7 +214,7 @@ def generate_pictogram(src: str | None = None, size=80) -> str:
 
 
 # Échelles de couleur réellement fournies par les utilitaires DSFR, relevées sur
-# `dist/utility/utility.css` du paquet 1.15.2. Elles sont irrégulières : chaque
+# `dist/utility/utility.css` du paquet 1.15.3. Elles sont irrégulières : chaque
 # couple rôle/variante a la sienne, et aucune règle simple ne les résume. Émettre
 # une combinaison absente produirait un markup sans style et sans erreur.
 # `red-marianne` n'y figure plus pour `background`, `text` et `border` depuis
@@ -252,7 +252,7 @@ UTILITY_COLOR_SCALES: dict[tuple[str, str], frozenset[str]] = {
 def generate_color(kind: str = "background", variant: str | None = None,
                    color: str = "blue-france", content: str = "Texte",
                    tag: str | None = None) -> str:
-    """Génère un élément portant un utilitaire couleur DSFR 1.15.2.
+    """Génère un élément portant un utilitaire couleur DSFR 1.15.3.
 
     kind="background" -> fr-background-{variant}[--{color}] (variant par défaut
     "alt" ; variants officiels : alt, default, contrast, flat).
@@ -264,7 +264,7 @@ def generate_color(kind: str = "background", variant: str | None = None,
     `color` doit appartenir à l'échelle du couple rôle/variante : voir
     UTILITY_COLOR_SCALES, relevée sur le paquet. Sans `color`, seule la base
     sémantique est émise.
-    Sources : dist/utility/utility.css du paquet @gouvfr/dsfr@1.15.2 (107
+    Sources : dist/utility/utility.css du paquet @gouvfr/dsfr@1.15.3 (107
     classes background distinctes, 657 déclarations, + les classes text). Le check --official-version valide
     que la classe émise est officielle.
     """
@@ -279,14 +279,14 @@ def generate_color(kind: str = "background", variant: str | None = None,
         variant = variant or "alt"
         element = tag or "div"
     if (kind, variant) not in UTILITY_COLOR_SCALES:
-        raise ValueError(f"variant '{variant}' inconnu pour '{kind}' en DSFR 1.15.2")
+        raise ValueError(f"variant '{variant}' inconnu pour '{kind}' en DSFR 1.15.3")
     _choice(element, "tag", COLOR_TAGS)
     base = f"fr-text-{variant}" if kind == "text" else f"fr-background-{variant}"
     if color:
         scale = UTILITY_COLOR_SCALES.get((kind, variant))
         if scale is None or color not in scale:
             raise ValueError(
-                f"couleur '{color}' indisponible pour '{base}' en DSFR 1.15.2"
+                f"couleur '{color}' indisponible pour '{base}' en DSFR 1.15.3"
             )
     cls = f"{base}--{esc(color)}" if color else base
     # `content` est inséré brut, même sémantique que container, col, spacing et grid.

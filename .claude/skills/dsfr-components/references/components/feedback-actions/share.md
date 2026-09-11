@@ -1,9 +1,9 @@
 # Partage
 
-Référence vérifiée dans les exemples officiels DSFR 1.13.2 et 1.15.2 :
+Référence vérifiée dans les exemples officiels DSFR 1.13.2 et 1.15.3 :
 
 - https://unpkg.com/@gouvfr/dsfr@1.13.2/example/component/share/index.html
-- https://unpkg.com/@gouvfr/dsfr@1.15.2/example/component/share/index.html
+- https://unpkg.com/@gouvfr/dsfr@1.15.3/example/component/share/index.html
 
 ## Boutons de partage par défaut
 
@@ -36,4 +36,4 @@ Référence vérifiée dans les exemples officiels DSFR 1.13.2 et 1.15.2 :
 - Le groupe actuel utilise `fr-btns-group`.
 - Les actions utilisent `fr-btn` et un modificateur de plateforme ou d’action.
 - Les liens réellement ouverts dans une nouvelle fenêtre utilisent `target="_blank"` et `rel="noopener external"`.
-- La variante historique avec `fr-share__group` et `fr-share__link` est dépréciée dans les exemples 1.13.2 et 1.15.2.
+- La variante historique avec `fr-share__group` et `fr-share__link` est dépréciée dans les exemples 1.13.2 et 1.15.3.

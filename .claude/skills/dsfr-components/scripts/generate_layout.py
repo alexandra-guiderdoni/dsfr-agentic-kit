@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Générateur de gabarits DSFR (DSFR 1.15.2).
+Générateur de gabarits DSFR (DSFR 1.15.3).
 
 Gabarits = agencements structurels composant atomes et composants :
 - skeleton  : charpente de page complète (head + assets DSFR + slots)
@@ -30,9 +30,9 @@ DSFR_VERSION_RE = re.compile(r"^\d+\.\d+\.\d+(?:[.-][0-9A-Za-z.]+)?$")
 
 
 def _dsfr_version() -> str:
-    raw = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.2"
+    raw = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.3"
     if not DSFR_VERSION_RE.fullmatch(raw):
-        raise SystemExit(f"Erreur : DSFR_OFFICIAL_VERSION invalide ({raw[:40]!r}) : numéro de version attendu, par exemple 1.15.2")
+        raise SystemExit(f"Erreur : DSFR_OFFICIAL_VERSION invalide ({raw[:40]!r}) : numéro de version attendu, par exemple 1.15.3")
     return raw
 
 
@@ -53,7 +53,7 @@ def generate_skeleton(title: str = "Nom du service", brand_mode: str = "neutral"
         raise ValueError(f"brand_mode '{brand_mode}' inconnu : utiliser neutral ou republique")
     if not str(title or "").strip():
         raise ValueError("title : titre obligatoire (il alimente <title> et le nom du lien de marque)")
-    # Structure officielle 1.15.2 (header/_part/doc/code) : body-row et
+    # Structure officielle 1.15.3 (header/_part/doc/code) : body-row et
     # brand-top obligatoires ; le slot de navigation porte l'id ciblé par le
     # lien d'évitement « Menu ».
     nav_slot = ('        <div class="fr-header__menu fr-modal" id="header-menu">\n'

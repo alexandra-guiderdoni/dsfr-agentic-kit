@@ -1,10 +1,10 @@
-# Table strate × artefact (DSFR 1.15.2)
+# Table strate × artefact (DSFR 1.15.3)
 
 Lève la frontière floue **token / utilitaire / composant** (retour validation
 croisée #5 du PRD-140) pour décider, par besoin, quel générateur émet quoi — et
 éviter les doublons (ex. « token couleur » vs « utilitaire background »).
 
-Source de vérité : paquet `@gouvfr/dsfr@1.15.2` (`dist/component`,
+Source de vérité : paquet `@gouvfr/dsfr@1.15.3` (`dist/component`,
 `dist/utility/utility.css`, `:root` de `dist/dsfr.min.css`), consulté le
 2026-07-07.
 
@@ -22,7 +22,7 @@ Règle de frontière :
 - un **utilitaire** est une classe appliquée à un élément HTML → **atom**.
 - un **composant** a sa propre structure sémantique → `generate_component.py`.
 
-## Utilitaires réellement fournis par DSFR 1.15.2
+## Utilitaires réellement fournis par DSFR 1.15.3
 
 Sourcé depuis `dist/utility/utility.css` + `dist/dsfr.min.css`. Le DSFR n'est
 **pas** un framework utilitaire type Tailwind : beaucoup de classes

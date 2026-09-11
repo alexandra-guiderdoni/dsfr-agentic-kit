@@ -1,4 +1,4 @@
-# Inventaire officiel DSFR 1.15.2
+# Inventaire officiel DSFR 1.15.3
 
 Inventaire généré depuis le paquet npm extrait localement. Il mesure la
 surface officielle disponible ; il ne prouve pas une conformité RGAA ni
@@ -6,13 +6,13 @@ un droit de publication.
 
 ## Source
 
-- Paquet : `@gouvfr/dsfr@1.15.2`
-- Chemin : `~/.cache/dsfr-official-cache/gouvfr-dsfr-1.15.2/package`
+- Paquet : `@gouvfr/dsfr@1.15.3`
+- Chemin : `~/.cache/dsfr-official-cache/gouvfr-dsfr-1.15.3/package`
 - Commande :
 
 ```bash
 SKILL_DIR=.claude/skills/dsfr-components  # adapter à l'emplacement d'installation
-python3 "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1.15.2 --output "$SKILL_DIR/evals/official-coverage-inventory.md"
+python3 "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1.15.3 --output "$SKILL_DIR/evals/official-coverage-inventory.md"
 ```
 
 ## Synthèse
@@ -20,7 +20,7 @@ python3 "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1
 | Surface | Total officiel | Couverture locale | Statut |
 | --- | --- | --- | --- |
 | Variables CSS `dsfr.min.css` | 1090 | références `tokens.md` / `tokens-advanced.md` | inventaire officiel, pas catalogue embarqué |
-| Classes `dsfr.min.css` | 3383 | validation des classes générées | preuve de présence, pas audit visuel |
+| Classes `dsfr.min.css` | 3384 | validation des classes générées | preuve de présence, pas audit visuel |
 | Classes utilitaires `utility.min.css` | 1517 | `utilities.md` + sous-références | charger la famille utile |
 | Utilitaires hors icônes/artwork | 221 | `generate_atom.py` + références | couverture partielle bornée |
 | Icônes `fr-icon-*` | 1044 classes, 18 familles, 1038 SVG | `list_icons.py` | validation runtime possible |

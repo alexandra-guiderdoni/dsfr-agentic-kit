@@ -100,7 +100,7 @@ centralisées dans `CONTEXT-POINTERS` ci-dessous, indexées par référence.
 | page thème sombre | `references/theming.md` | seulement avec `--dark` ou demande de thème | appliquer les attributs et contrôles de thème documentés | HTML avec thème sombre inspecté |
 | mise en page | `references/utilities.md`, puis sous-référence exacte dans `references/utilities/` | si la demande touche grille, espacements, couleurs ou responsive | choisir les classes `fr-col-*`, espacements et utilitaires utiles | classes citées ou visibles dans le HTML |
 | mesure d'audience | `references/analytics.md` | si la demande porte sur la mesure d'audience DSFR (attributs `data-fr-analytics-*`, intégration script) | documenter l'intégration et les attributs à poser ; ne pas générer la configuration | attributs et source paquet cités |
-| frontière strate | `references/strate-artefact.md` | si la demande touche un token/utilitaire/composant ambigu ou un utilitaire possiblement absent (display, flex, position, radius, shadow) | distinguer token (CSS var) / utilitaire (classe) / composant ; n'inventer aucune classe absente du paquet 1.15.2 | strate décidée ou absence documentée |
+| frontière strate | `references/strate-artefact.md` | si la demande touche un token/utilitaire/composant ambigu ou un utilitaire possiblement absent (display, flex, position, radius, shadow) | distinguer token (CSS var) / utilitaire (classe) / composant ; n'inventer aucune classe absente du paquet 1.15.3 | strate décidée ou absence documentée |
 | design tokens | `references/tokens.md` | si la demande porte sur les variables CSS DSFR (couleurs Marianne sémantiques/brutes, espacement, ombres, arrondis) | consommer `var(--…)` en CSS ; ne pas émettre de token en HTML | catégories sourcées du `:root` |
 | couverture officielle | `evals/official-coverage-inventory.md` | si la demande exige 100 %, exhaustivité, taux ou périmètre chiffré | lire l'inventaire généré, puis rejouer la commande si le claim doit être actualisé | chiffres cités, commande rejouée ou limite nommée |
 | composant isolé | `references/components.md`, puis index de famille dans `references/components/*.md`, puis sous-fichier ciblé | après identification du composant demandé | lire l'index, ouvrir la famille utile, puis le sous-fichier du composant | composant nommé et source ciblée citée |
@@ -153,7 +153,7 @@ Composant isolé :
 python3 "$SKILL_DIR/scripts/generate_component.py" alert --config '{"type":"warning","title":"Maintenance","description":"Service indisponible de 2 h à 6 h."}'
 ```
 
-Les 46 composants officiels DSFR 1.15.2 acceptent une génération native
+Les 46 composants officiels DSFR 1.15.3 acceptent une génération native
 paramétrable par `--config` ; la CLI en liste 48, les 2 de plus
 (`back_to_top`, `button_group`) n'existant qu'en variante de bibliothèque. Sans `--variant`, le générateur natif est utilisé
 pour les 46 composants officiels ; `back_to_top` et `button_group` répondent toujours depuis la
@@ -215,7 +215,7 @@ composant concerné, citer l'URL et ne pas charger le catalogue entier.
 
 - Utiliser `lang="fr"` sur `<html>`.
 - Inclure charset, viewport, CSS et JS DSFR.
-- Cibler DSFR 1.15.2 (repli figé dans `scripts/generate_page.py`, surchargeable
+- Cibler DSFR 1.15.3 (repli figé dans `scripts/generate_page.py`, surchargeable
   par `DSFR_OFFICIAL_VERSION`) ; ne pas
   changer de version sans raison donnée.
 - Utiliser `--brand-mode neutral` par défaut ; choisir `--brand-mode

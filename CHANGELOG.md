@@ -1,5 +1,30 @@
 # Journal des versions
 
+## Migration DSFR 1.15.3
+
+Premier export appliqué depuis la source par `export-dsfr-agentic-kit.sh` ;
+les zones propres du kit (outillage et livrables Virginie, tickets, tests
+visuels, documents) ne sont ni comparées ni écrites par l'export.
+
+- cible du kit portée de `@gouvfr/dsfr@1.15.2` à `1.15.3` : profil, routeur,
+  sources, typographie (nouvelle Marianne), `runtime.dsfr_version` de
+  l'amorçage cloud, replis de version des générateurs et des contrôles ;
+- bandeau d'information aligné sur `notice.ejs` 1.15.3 : titre porté par un
+  niveau de titre (`h2` par défaut, paramètre `heading`), description en
+  paragraphe, aucun `role`, avertissement si le titre n'explicite pas la
+  nature du message ;
+- badges en `span` dans les groupes ; état des champs porté par le groupe
+  seulement, message dans `fr-messages-group`, validation client alignée ;
+  variante `fr-search-bar--labelled` ;
+- catalogue de règles DSFR : cible 1.15.3, structure du bandeau, règle du
+  champ en groupe recentrée (`DSFR-INPUT-ERROR-STATE-002`) et nouvelle règle
+  du champ hors groupe (`DSFR-INPUT-ERROR-STATE-003`) ; toute archive
+  d'audit portant l'ancienne empreinte devient `CATALOGUE_OBSOLETE`, la
+  campagne Douane P01 à P09 reste figée en 1.15.2 ;
+- pages assemblées régénérées, inventaire de couverture et profil de style
+  des pictogrammes régénérés sur le paquet 1.15.3, cas `v1.15.2 → v1.15.3`
+  du collecteur de changelog.
+
 ## Fiabilisation des audits DSFR et RGAA
 
 - correction du markup généré des groupes de boutons DSFR en `ul/li`, avec

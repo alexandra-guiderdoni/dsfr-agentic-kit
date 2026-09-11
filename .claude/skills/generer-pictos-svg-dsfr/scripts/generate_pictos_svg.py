@@ -701,7 +701,7 @@ def resolve_pictograms_dir(root: str | None) -> Path:
 
 
 # Couleurs à indice -main de la palette DSFR, valeur du thème clair, relevées dans
-# @gouvfr/dsfr v1.15.2 src/module/color/variable/_options.scss. La documentation
+# @gouvfr/dsfr v1.15.3 (inchangé depuis v1.15.2) src/module/color/variable/_options.scss. La documentation
 # « Pictogramme » du DSFR autorise la personnalisation du calque minor avec l'indice -main.
 DSFR_MAIN_PALETTE = {
     "grey-main-525": "#7B7B7B",

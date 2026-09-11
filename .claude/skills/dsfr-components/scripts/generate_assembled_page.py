@@ -578,7 +578,7 @@ def block_stepper(s):
 def block_badges(s):
     items = s.get("items", [])
     lis = "".join(
-        f"\n                    <li>{gc.generate_badge(label=it.get('label', 'Badge'), variant=it.get('variant'), sm=it.get('sm', False))}</li>"
+        f"\n                    <li>{gc.generate_badge(label=it.get('label', 'Badge'), variant=it.get('variant'), sm=it.get('sm', False), markup='span')}</li>"
         for it in items
     )
     return f'<ul class="fr-badges-group">{lis}\n            </ul>'

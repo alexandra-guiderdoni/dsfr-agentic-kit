@@ -7,7 +7,7 @@ Référence extraite de `../utilities.md`.
 ## Échelle des valeurs
 
 L'échelle n'est pas une liste courte, c'est une règle. Relevé dans
-`dist/dsfr.min.css` du paquet 1.15.2, identique pour les quatorze préfixes
+`dist/dsfr.min.css` du paquet 1.15.3, identique pour les quatorze préfixes
 (`fr-m`, `fr-mt`, `fr-mb`, `fr-ml`, `fr-mr`, `fr-mx`, `fr-my` et leurs
 équivalents `fr-p*`) :
 

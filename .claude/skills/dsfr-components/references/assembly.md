@@ -122,7 +122,7 @@ suivent la palette Marianne officielle (cf. `references/components.md`).
 
 ## Assets locaux et Marianne
 
-Par défaut, les pages générées pointent vers le CDN DSFR 1.15.2. Pour une page
+Par défaut, les pages générées pointent vers le CDN DSFR 1.15.3. Pour une page
 locale ou partageable sans CDN DSFR, fournir `assets_prefix`, par exemple
 `"assets_prefix": "assets/dsfr"`, puis servir le paquet DSFR extrait au même
 emplacement que la page. Ce mode charge aussi les polices locales du paquet

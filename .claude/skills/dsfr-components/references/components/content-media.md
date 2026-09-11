@@ -9,7 +9,7 @@ Index court pour les composants de contenus et médias. Ouvrir uniquement le sou
 | Tuiles | [`content-media/tiles.md`](content-media/tiles.md) |
 | Mise en exergue (Highlight) | [`content-media/highlight.md`](content-media/highlight.md) |
 | Citation (Quote) | [`content-media/quote.md`](content-media/quote.md) |
-| Téléchargement (Download), déprécié en 1.15.2 | [`content-media/download.md`](content-media/download.md) |
+| Téléchargement (Download), déprécié en 1.15.3 | [`content-media/download.md`](content-media/download.md) |
 | Transcription | [`content-media/transcription.md`](content-media/transcription.md) |
 | Contenu multimédia (Content) | [`content-media/content.md`](content-media/content.md) |
 | Carte horizontale tier | [`content-media/carte-identite.md`](content-media/carte-identite.md) |

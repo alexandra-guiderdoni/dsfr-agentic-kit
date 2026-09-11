@@ -50,7 +50,7 @@ Référence extraite de `../patterns.md`.
 
 ## Règles
 - Proposer un champ de recherche avec autocomplétion BAN (api-adresse.data.gouv.fr).
-  Le DSFR 1.15.2 ne fournit aucun attribut `data-fr-*` ni script pour cela :
+  Le DSFR 1.15.3 ne fournit aucun attribut `data-fr-*` ni script pour cela :
   l'autocomplétion est à brancher par le projet (voir l'exemple ci-dessous).
 - Toujours laisser la saisie manuelle possible (fallback si l'API est indisponible)
 - `autocomplete` : `street-address`, `address-line2`, `postal-code`, `address-level2` (WCAG 1.3.5)
@@ -58,7 +58,7 @@ Référence extraite de `../patterns.md`.
   `pattern="[0-9]{5}"` jusqu'au premier `submit` si une validation client est
   nécessaire
 - Complément d'adresse : toujours optionnel
-- Largeur du code postal : le DSFR 1.15.2 ne fournit pas d'utilitaire
+- Largeur du code postal : le DSFR 1.15.3 ne fournit pas d'utilitaire
   `fr-input--w*` ; dimensionner via la grille (`fr-col-*`) ou du CSS projet
   vérifié (`max-width`), et garder `maxlength="5"`.
 

@@ -59,7 +59,7 @@ Le libellé reste « FranceConnect » : le signe `+` est ajouté par le style
 </div>
 ```
 
-Source : `example/component/connect/index.html` du paquet 1.15.2 ; générateur
+Source : `example/component/connect/index.html` du paquet 1.15.3 ; générateur
 `generate_component.py connect --config '{"brand":"default|plus|pro"}'`.
 
 **Règles** :

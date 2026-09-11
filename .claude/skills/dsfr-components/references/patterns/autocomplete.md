@@ -26,6 +26,6 @@ prescrit pas d'attribut sur un contrôle où le jeton n'a pas de sens.
 `honorific-prefix` est un jeton d'autofill textuel : il s'applique à un champ
 texte ou à une liste de civilité, pas à un groupe de `<input type="radio">`.
 Le bloc `generate_field.py civilite` et l'exemple officiel
-`example/layout/pattern/civility` du paquet 1.15.2 n'en posent aucun ;
+`example/layout/pattern/civility` du paquet 1.15.3 n'en posent aucun ;
 `patterns/civilite.md` le donne comme facultatif (« peut être ajouté sur une
 civilité si pertinent »).

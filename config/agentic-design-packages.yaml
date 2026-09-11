@@ -10,7 +10,7 @@ runtime:
   language: fr-FR
   python_minimum: "3.10"
   node_minimum: "20"
-  dsfr_version: "1.15.2"
+  dsfr_version: "1.15.3"
   canonical_skill_root: ".claude/skills"
   portable_usage: >-
     Tout agent capable de lire des fichiers locaux peut suivre les SKILL.md ;

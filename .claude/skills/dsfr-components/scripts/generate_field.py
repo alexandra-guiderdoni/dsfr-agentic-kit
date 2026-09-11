@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Générateur de blocs fonctionnels DSFR (DSFR 1.15.2).
+Générateur de blocs fonctionnels DSFR (DSFR 1.15.3).
 
 Les blocs fonctionnels sont des patterns de champ pré-construits officiels
 (https://www.systeme-de-design.gouv.fr/version-courante/fr/modeles/blocs-fonctionnels),
@@ -13,7 +13,7 @@ premier submit, cf. references/patterns.md).
 
 Sources : pages officielles consultées le 2026-07-07 (branche 1.14), puis
 chaque bloc confronté le 2026-08-28 aux exemples rendus
-`example/layout/pattern/*` du paquet @gouvfr/dsfr@1.15.2 (aides, autocomplete,
+`example/layout/pattern/*` du paquet @gouvfr/dsfr@1.15.3 (aides, autocomplete,
 aria-live) et alignés sur leur structure (légendes, liaisons
 `aria-labelledby` / `aria-describedby`, groupes de messages). Seuls restent
 l'ordre prénom puis nom par défaut (convention du skill, `order` configurable)
@@ -65,7 +65,7 @@ def generate_civilite(legend: str = "Sexe", options: list | None = None,
     """Bloc civilité — fieldset de radios (légende par défaut : « Sexe »).
 
     Source : blocs-fonctionnels/civilite, confronté à
-    `example/layout/pattern/civility` (1.15.2). La civilité binaire
+    `example/layout/pattern/civility` (1.15.3). La civilité binaire
     madame/monsieur est déconseillée par le DSFR ; ce bloc modélise la
     structure officielle : fieldset lié par `aria-labelledby` à sa légende
     (`fr-fieldset__legend--regular`) et à son groupe de messages, radios,
@@ -112,11 +112,11 @@ def generate_nom_prenom(order: str = "prenom-nom",
     """Bloc nom et prénom.
 
     Source : blocs-fonctionnels/nom-et-prenom, confronté à
-    `example/layout/pattern/name` (1.15.2) : légende masquée `fr-sr-only`
+    `example/layout/pattern/name` (1.15.3) : légende masquée `fr-sr-only`
     liée par `aria-labelledby` avec le groupe de messages, un
     `fr-messages-group` par champ relié par `aria-describedby`,
     `autocomplete`, `spellcheck` et `aria-live` alignés.
-    Conflit de source tranché (décision 2026-07-07) : le défaut officiel 1.15.2
+    Conflit de source tranché (décision 2026-07-07) : le défaut officiel 1.15.3
     met le Nom en premier, mais la convention du skill (references/patterns.md
     et generate_page.py) est prénom puis nom. Le défaut suit la convention
     skill (order=\"prenom-nom\") ; l'ordre officiel reste disponible via
@@ -156,7 +156,7 @@ def generate_email(label: str = "Adresse électronique",
     """Bloc adresse électronique.
 
     Source : blocs-fonctionnels/adresse-electronique, confronté à
-    `example/layout/pattern/email` (1.15.2) : type=email, spellcheck off,
+    `example/layout/pattern/email` (1.15.3) : type=email, spellcheck off,
     autocomplete="email", aide « nom@example.com » et groupe de messages
     relié par `aria-describedby` alignés.
     """
@@ -174,10 +174,10 @@ def generate_email(label: str = "Adresse électronique",
 def generate_date_unique(legend: str = "Date de naissance",
                          hint: str = "Texte de description additionnel",
                          id: str = "date") -> str:
-    """Bloc date unique — 3 sous-champs Jour/Mois/Année (défaut officiel 1.15.2).
+    """Bloc date unique — 3 sous-champs Jour/Mois/Année (défaut officiel 1.15.3).
 
     Source : blocs-fonctionnels/date-unique, confronté à
-    `example/layout/pattern/date` (1.15.2) : structure inline, aides et
+    `example/layout/pattern/date` (1.15.3) : structure inline, aides et
     `autocomplete="bday-*"` alignés. Variante alternative possible : un champ
     unique type=\"date\" (non générée ici).
     """
@@ -198,7 +198,7 @@ def generate_date_unique(legend: str = "Date de naissance",
             </div>
         </div>"""
 
-    # Exemple officiel pattern/date 1.15.2 : Jour et Mois en `--number` (6 rem),
+    # Exemple officiel pattern/date 1.15.3 : Jour et Mois en `--number` (6 rem),
     # Année en `--inline-grow --year` (8 rem), jamais les deux sur un même champ.
     jour = part("Jour", "14", "day", f"{id}-day", "bday-day", " fr-fieldset__element--number")
     mois = part("Mois", "12", "month", f"{id}-month", "bday-month", " fr-fieldset__element--number")
@@ -215,7 +215,7 @@ def generate_societe(kind: str = "siret", id: str = "siret") -> str:
     """Bloc société.
 
     Source : blocs-fonctionnels/societe, confronté à
-    `example/layout/pattern/company` (1.15.2) : légende masquée `fr-sr-only`
+    `example/layout/pattern/company` (1.15.3) : légende masquée `fr-sr-only`
     liée par `aria-labelledby` avec le groupe de messages. kind=\"siret\"
     (défaut) : numéro de SIRET + lien annuaire des entreprises.
     kind=\"type\" : liste dérivée Type de société.

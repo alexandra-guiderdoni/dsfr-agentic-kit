@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Laboratoire composants DSFR - Prototype de validation</title>
   <meta name="description" content="Page de test DSFR couvrant les composants stables, les composants bêta et les limites de validation du harnais.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css">
-  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/apple-touch-icon.png">
-  <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.svg" type="image/svg+xml">
-  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/favicon/manifest.webmanifest" crossorigin="use-credentials">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/utility/icons/icons.min.css">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/apple-touch-icon.png">
+  <link rel="icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/favicon/manifest.webmanifest" crossorigin="use-credentials">
   <style>
     .lab-band {
       background: var(--background-alt-blue-france);
@@ -297,7 +297,7 @@
         </nav>
         <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
           <div class="fr-col-12 fr-col-lg-8">
-            <p class="fr-badge fr-badge--info fr-mb-2w">DSFR 1.15.2</p>
+            <p class="fr-badge fr-badge--info fr-mb-2w">DSFR 1.15.3</p>
             <h1>Page laboratoire pour valider le skill et le DESIGN.md DSFR</h1>
             <p class="fr-text--lead">Cette page rassemble les composants DSFR stables, les composants bêta déclarés par la documentation officielle et les limites à vérifier avant publication.</p>
           </div>
@@ -498,7 +498,9 @@
                   <div class="fr-notice fr-notice--info">
                     <div class="fr-container">
                       <div class="fr-notice__body">
-                        <p class="fr-notice__title">Bandeau prioritaire pour information temporaire.</p>
+                        <div>
+                          <h4 class="fr-notice__title">Information : bandeau prioritaire pour information temporaire.</h4>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -698,8 +700,10 @@
                       <label class="fr-label" for="phone">Téléphone
                         <span class="fr-hint-text">Format attendu : 0102030405</span>
                       </label>
-                      <input class="fr-input fr-input--error" type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="phone-error" value="0102">
-                      <p id="phone-error" class="fr-error-text">Le numéro doit contenir dix chiffres.</p>
+                      <input class="fr-input" type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="phone-messages" value="0102">
+                      <div class="fr-messages-group" id="phone-messages" aria-live="polite">
+                        <p class="fr-message fr-message--error" id="phone-message-error">Le numéro doit contenir dix chiffres.</p>
+                      </div>
                     </div>
                   </div>
                   <div class="fr-col-12 fr-col-md-6">
@@ -1124,7 +1128,7 @@
             </div>
             <ul>
               <li>Documentation officielle DSFR v1.15 : liste des composants.</li>
-              <li>Package utilisé : `@gouvfr/dsfr` 1.15.2 via CDN jsDelivr.</li>
+              <li>Package utilisé : `@gouvfr/dsfr` 1.15.3 via CDN jsDelivr.</li>
               <li>Références locales : `design-systems/dsfr/DESIGN.md`, `tokens.yaml` et `references/`.</li>
               <li>Bibliothèque locale du skill `dsfr-components` : 48 composants et variantes.</li>
             </ul>
@@ -1210,8 +1214,8 @@
     </div>
   </footer>
 
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.module.min.js"></script>
-  <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.2/dist/dsfr.nomodule.min.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.module.min.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/dsfr.nomodule.min.js"></script>
   <script>
     document.querySelectorAll('[data-dismiss-consent-preview]').forEach((button) => {
       button.addEventListener('click', () => {

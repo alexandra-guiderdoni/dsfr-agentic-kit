@@ -8,7 +8,7 @@ Référence extraite de `../utilities.md`.
 
 Les classes `fr-display--xs` à `fr-display--xl` listées dans
 [typographie](typography.md) sont des styles typographiques, pas des
-utilitaires CSS `display`. Le paquet `@gouvfr/dsfr@1.15.2` local ne fournit
+utilitaires CSS `display`. Le paquet `@gouvfr/dsfr@1.15.3` local ne fournit
 pas `fr-display--none`, `fr-display--block`, `fr-display--flex` ou
 `fr-display--inline-flex`. Pour le display, utiliser la grille DSFR ou du CSS
 projet vérifié.

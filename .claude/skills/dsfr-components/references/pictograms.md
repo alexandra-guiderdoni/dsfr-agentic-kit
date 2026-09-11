@@ -1,8 +1,8 @@
-# Pictogrammes DSFR 1.15.2
+# Pictogrammes DSFR 1.15.3
 
 Les pictogrammes sont des illustrations vectorielles SVG plus détaillées que les icônes. Ils servent à illustrer des concepts dans les tuiles, callouts et pages d'information.
 
-Source dans le paquet : `@gouvfr/dsfr@1.15.2/dist/artwork/pictograms/`.
+Source dans le paquet : `@gouvfr/dsfr@1.15.3/dist/artwork/pictograms/`.
 
 **Les pictogrammes doivent être servis depuis la même origine que la page.**
 Un `<use href>` pointant vers un domaine tiers, CDN compris, n'est résolu par
@@ -10,7 +10,7 @@ aucun navigateur moderne : le `<svg>` occupe sa boîte mais reste vide, sans
 erreur visible. Mesuré le 2026-08-28 sur une page servie en HTTP, avec le même
 pictogramme des deux façons : depuis un CDN tiers la boîte englobante rendue est
 de 0 × 0, depuis la même origine elle est de 60 × 64. Résultat identique en
-1.14.4 et en 1.15.2 — ce n'est pas un effet du durcissement de 1.15.0, qui ne
+1.14.4 et en 1.15.3 — ce n'est pas un effet du durcissement de 1.15.0, qui ne
 concerne que le polyfill d'injection sur Internet Explorer 11.
 
 Copier donc `dist/artwork/pictograms/` dans les assets du service et référencer
@@ -60,7 +60,7 @@ absent du DSFR se crée avec ce même skill, toujours `official: false`.
 ## Catalogue par famille
 
 <!-- Catalogue généré depuis dist/artwork/pictograms du paquet officiel
-     @gouvfr/dsfr@1.15.2 ; vérifié par scripts/check_pictograms_doc.sh du skill
+     @gouvfr/dsfr@1.15.3 ; vérifié par scripts/check_pictograms_doc.sh du skill
      du dépôt de développement, script non distribué avec le skill.
      Ne pas ajouter un nom à la main : un pictogramme absent du paquet
      documenté comme officiel est exactement le mode d'échec --bf500. -->
@@ -199,7 +199,7 @@ absent du DSFR se crée avec ce même skill, toujours `official: false`.
 
 ## Tailles
 
-Deux tailles seulement sont attestées dans le paquet 1.15.2 :
+Deux tailles seulement sont attestées dans le paquet 1.15.3 :
 
 - `width="80" height="80"` : taille par défaut, artboard officiel des 102 SVG
   (`viewBox="0 0 80 80"`). Les 102 fichiers de `dist/artwork/pictograms`

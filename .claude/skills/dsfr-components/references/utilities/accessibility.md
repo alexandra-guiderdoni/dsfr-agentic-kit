@@ -11,7 +11,7 @@ Référence extraite de `../utilities.md`.
 - `fr-responsive-img` : Image responsive
 
 `fr-sr-only-focusable` et `fr-link--no-underline` ne sont pas des classes
-officielles DSFR 1.15.2 (vérifié dans `dist/dsfr.min.css`) : les retirer du
+officielles DSFR 1.15.3 (vérifié dans `dist/dsfr.min.css`) : les retirer du
 vocabulaire du skill.
 
 ## Attributs ARIA importants

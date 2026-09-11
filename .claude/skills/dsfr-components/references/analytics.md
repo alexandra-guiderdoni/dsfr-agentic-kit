@@ -1,6 +1,6 @@
-# Mesure d'audience DSFR 1.15.2 (analytics)
+# Mesure d'audience DSFR 1.15.3 (analytics)
 
-Le module `analytics` du paquet `@gouvfr/dsfr@1.15.2` assure la mesure
+Le module `analytics` du paquet `@gouvfr/dsfr@1.15.3` assure la mesure
 d'audience (compatible Eulerian, tarteaucitron, etc.). C'est un runtime JS :
 ce document est une **référence d'intégration**, pas un générateur. Aucun
 attribut ci-dessous n'est inventé — tous proviennent du paquet.
@@ -109,11 +109,11 @@ Depuis 1.15.0, la valeur `reduce` s'ajoute à ce jeu, des deux côtés :
   éligibles. L'amont la destine aux pages dont le nombre d'éléments génère de
   la latence.
 
-## API JS (introspection runtime, agent-browser + paquet 1.15.2, 2026-08-28)
+## API JS (introspection runtime, agent-browser + paquet 1.15.3, 2026-08-28)
 
 `window.dsfr.analytics` est une **interface d'initialisation asynchrone**, pas
 un sac de méthodes directes. Introspection sur une page chargeant
-`dsfr.module.min.js` puis `analytics/analytics.module.min.js` en 1.15.2 : les
+`dsfr.module.min.js` puis `analytics/analytics.module.min.js` en 1.15.3 : les
 clés exposées sont `_isReady` (booléen), `_readiness` (objet), `_resolve` et
 `_reject` (fonctions), `_config` et `_init` (objets), plus les deux
 énumérations ci-dessous.
@@ -137,9 +137,9 @@ documentation officielle DSFR analytics pour les signatures d'événement.
   et les attributs à poser manuellement.
 - Le consentement (CMP) et le domaine de suivi dépendent du déploiement
   cible ; ne pas revendiquer la conformité RGPD/CNIL sans audit dédié.
-- Version : 1.15.2, document entièrement rejoué le 2026-08-28. Les neuf
+- Version : 1.15.3, document entièrement rejoué le 2026-08-28. Les neuf
   attributs `data-fr-analytics-*` ont été vérifiés identiques entre 1.14.4 et
-  1.15.2 sur le dépôt amont ; l'API JS a été réintrospectée en navigateur sur
-  le paquet 1.15.2. Les 47 fichiers JavaScript modifiés entre les deux
+  1.15.3 sur le dépôt amont ; l'API JS a été réintrospectée en navigateur sur
+  le paquet 1.15.3. Les 47 fichiers JavaScript modifiés entre les deux
   versions n'ont changé ni les clés exposées ni les valeurs des deux
   énumérations.

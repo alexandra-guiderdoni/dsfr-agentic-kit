@@ -82,7 +82,7 @@ Toujours séparer :
 2. **migration** : différence entre la version DSFR observée et la version cible.
 
 Une page en DSFR 1.13.2 n’est pas automatiquement mal intégrée parce que la
-référence courante est 1.15.2. Le rapport nomme la version observée, la cible et
+référence courante est 1.15.3. Le rapport nomme la version observée, la cible et
 l’absence éventuelle d’une source locale correspondant exactement à la version
 installée.
 

@@ -1,8 +1,8 @@
-# Icônes DSFR 1.15.2
+# Icônes DSFR 1.15.3
 
 Format : `fr-icon-[nom]-[style]` avec `-line` (contour) ou `-fill` (rempli).
 
-CDN : `@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css`
+CDN : `@gouvfr/dsfr@1.15.3/dist/utility/icons/icons.min.css`
 
 > Liste indicative d'exemples (1047 icônes officielles). Les noms exacts varient
 > (ex. `folder-2-line`, `ship-2-line`, `store-line`). Valider toute icône avec
@@ -205,7 +205,7 @@ CDN : `@gouvfr/dsfr@1.15.2/dist/utility/icons/icons.min.css`
 
 ## Tailles
 
-Valeurs de `--icon-size` relevées dans `dist/dsfr.min.css` du paquet 1.15.2
+Valeurs de `--icon-size` relevées dans `dist/dsfr.min.css` du paquet 1.15.3
 (source SCSS : `src/dsfr/core/style/icon/_setting.scss`, `$icon-size-map`) :
 
 - Par défaut, icône seule hors bouton, badge et lien externe : 1.5rem (24px)
@@ -218,5 +218,5 @@ Dans un bouton, un badge ou un lien externe, la règle du composant reprend la
 main : la taille effective y est contextualisée (1rem pour `fr-btn--icon-left`
 ou `fr-badge--icon-left`, par exemple), indépendamment de ces classes.
 
-`fr-icon--xl` n'existe pas en DSFR 1.15.2 (tailles officielles : `xs`, `sm`,
+`fr-icon--xl` n'existe pas en DSFR 1.15.3 (tailles officielles : `xs`, `sm`,
 `md`, `lg` ; vérifié dans `dist/dsfr.min.css`).

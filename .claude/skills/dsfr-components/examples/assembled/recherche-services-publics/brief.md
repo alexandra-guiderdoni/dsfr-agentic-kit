@@ -9,7 +9,7 @@
   déroulantes et utiliser des tags comme raccourcis de filtrage.
 - **Artefact** : une page HTML statique complète générée par le builder DSFR
   assemblé du kit.
-- **Fidélité** : composants et classes du paquet DSFR 1.15.2, sans CSS
+- **Fidélité** : composants et classes du paquet DSFR 1.15.3, sans CSS
   personnalisé et sans bloc marque République française.
 - **Contenu** : exemples fictifs destinés à éprouver la hiérarchie, la densité
   et les états de la page ; aucune donnée administrative ne fait foi.

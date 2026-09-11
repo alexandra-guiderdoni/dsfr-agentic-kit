@@ -53,7 +53,7 @@ Référence extraite de `../patterns.md`.
 ## Règles
 - Préférer les 3 champs séparés pour les dates de naissance (meilleure accessibilité, pas de date picker)
 - `inputmode="numeric"` au lieu de `type="number"` (évite les spinners inutiles)
-- Largeur des champs : le DSFR 1.15.2 ne fournit pas d'utilitaire de largeur
+- Largeur des champs : le DSFR 1.15.3 ne fournit pas d'utilitaire de largeur
   d'input (`fr-input--w*` n'existe pas) ; dimensionner via la grille
   (`fr-col-*`) ou le conteneur `fr-fieldset__element`, ou du CSS projet vérifié.
 - `role="group"` sur le fieldset pour signaler le regroupement
@@ -64,7 +64,7 @@ Référence extraite de `../patterns.md`.
 
 Arbitrage `inputmode` et `maxlength` : le bloc `generate_field.py date-unique`
 n'en pose aucun, parce que l'exemple officiel
-`example/layout/pattern/date/index.html` du paquet 1.15.2 n'en pose pas non
+`example/layout/pattern/date/index.html` du paquet 1.15.3 n'en pose pas non
 plus (vérifié : aucune occurrence). La règle ci-dessus vise la saisie manuelle
 d'un formulaire écrit à la main ; l'ajouter au bloc généré l'écarterait de
 l'officiel. Les deux artefacts divergent donc volontairement.
