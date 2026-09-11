@@ -874,7 +874,8 @@ def generate_search(label: str = "Rechercher", placeholder: str = "Rechercher",
 <form action="{esc_href(action)}" method="get">
     <div class="{" ".join(classes)}" role="search">
         <label class="fr-label" for="{esc(field_id)}">{esc(label)}</label>
-        <input class="fr-input" placeholder="{esc(placeholder)}" type="search" id="{esc(field_id)}" name="{esc(name)}">
+        <input class="fr-input" placeholder="{esc(placeholder)}" type="search" id="{esc(field_id)}" name="{esc(name)}" aria-describedby="{esc(field_id)}-messages">
+        <div class="fr-messages-group" id="{esc(field_id)}-messages" aria-live="polite"></div>
         <button type="submit" class="fr-btn" title="{esc(label)}">{esc(label)}</button>
     </div>
 </form>"""
@@ -1661,7 +1662,8 @@ def generate_header(brand_mode: str = "neutral", service_title: str = "Nom du se
                            f'                                <label class="fr-label" for="header-search-input">\n'
                            f'                                    {label}\n'
                            f'                                </label>\n'
-                           f'                                <input class="fr-input" type="search" id="header-search-input" name="search">\n'
+                           f'                                <input class="fr-input" type="search" id="header-search-input" name="search" aria-describedby="header-search-input-messages">\n'
+                           f'                                <div class="fr-messages-group" id="header-search-input-messages" aria-live="polite"></div>\n'
                            f'                                <button type="submit" class="fr-btn" title="{label}">\n'
                            f'                                    {label}\n'
                            f'                                </button>\n'

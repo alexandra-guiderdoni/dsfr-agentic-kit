@@ -41,7 +41,8 @@ search` accepte `labelled`.
 ```html
 <div class="fr-search-bar fr-search-bar--labelled" id="search-3" role="search">
     <label class="fr-label" for="search-labelled">Rechercher un service</label>
-    <input class="fr-input" placeholder="Rechercher" type="search" id="search-labelled" name="search">
+    <input class="fr-input" placeholder="Rechercher" type="search" id="search-labelled" name="search" aria-describedby="search-labelled-messages">
+    <div class="fr-messages-group" id="search-labelled-messages" aria-live="polite"></div>
     <button type="submit" class="fr-btn" title="Rechercher">
         Rechercher
     </button>
@@ -50,8 +51,9 @@ search` accepte `labelled`.
 
 La même version documente un message d'erreur ou de succès dans la barre : un
 `div.fr-messages-group` relié au champ par `aria-describedby`, contenant un
-`p.fr-message.fr-message--error` ou `--valid`. Le générateur ne l'émet pas ;
-l'ajouter à la main si le service renvoie un état sur la recherche.
+`p.fr-message.fr-message--error` ou `--valid`. Comme les exemples officiels
+1.15.3, le générateur émet ce groupe vide, `id="<champ>-messages"`, relié par
+`aria-describedby` ; le service y insère son message s'il renvoie un état.
 
 **Obligatoire** : `role="search"` sur le conteneur, `type="search"` sur l'input,
 un `<label>` associé (même masqué visuellement via `fr-label`) et, depuis DSFR

@@ -54,8 +54,10 @@ async function readState(page) {
       // aria-required="false" n'est pas une contrainte ; pattern="" en est une.
       ariaRequiredCount: controls.filter((control) => control.ariaRequired === 'true').length,
       patternCount: controls.filter((control) => control.hasPattern).length,
-      errorMessageCount: scope.querySelectorAll('.fr-error-text').length,
-      visibleErrorMessageCount: Array.from(scope.querySelectorAll('.fr-error-text')).filter(visible).length,
+      // DSFR 1.15.3 : message d'état en p.fr-message--error dans fr-messages-group ;
+      // fr-error-text reste compté pour les pages tierces encore en forme héritée.
+      errorMessageCount: scope.querySelectorAll('.fr-message--error, .fr-error-text').length,
+      visibleErrorMessageCount: Array.from(scope.querySelectorAll('.fr-message--error, .fr-error-text')).filter(visible).length,
     };
   });
 }

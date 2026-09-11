@@ -90,6 +90,11 @@ dynamiquement dans le DOM après le chargement de la page, comme pour l'alerte.
 </div>
 ```
 
+**Fermeture** : l'exemple officiel pose un `onclick` en ligne sur le bouton
+`fr-btn--close`. Le générateur ne l'émet pas : le contrôle des sorties refuse
+tout gestionnaire d'événement en ligne (`check_no_inline_event_handlers`). Le
+comportement de fermeture est à fournir par un script séparé du service.
+
 ## Notice sans icône
 ```html
 <div class="fr-notice fr-notice--info fr-notice--no-icon">

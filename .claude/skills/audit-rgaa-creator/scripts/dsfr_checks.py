@@ -559,48 +559,83 @@ async def inspect_page(
             if state_evidence not in differences[-1]["evidence"]:
                 differences[-1]["evidence"].append(state_evidence)
         error_state = extended_states.get("server_error_state", {})
-        for instance, field in enumerate(
-            (
-                item
-                for item in error_state.get("errors", [])
-                if item.get("tag") in {"input", "textarea"}
-                and "fr-input" in str(item.get("class", "")).split()
-                and "fr-input--error" not in str(item.get("class", "")).split()
-            ),
-            1,
-        ):
+        # DSFR 1.15.3 (input.ejs, input-group.ejs) : dans un fr-input-group, l’état
+        # erreur est porté par le groupe (fr-input-group--error) et fr-input--error
+        # n’est pas posé sur le champ ; hors groupe, le champ porte fr-input--error.
+        error_fields = [
+            item
+            for item in error_state.get("errors", [])
+            if item.get("tag") in {"input", "textarea"}
+            and "fr-input" in str(item.get("class", "")).split()
+        ]
+        for instance, field in enumerate(error_fields, 1):
+            classes = str(field.get("class", "")).split()
+            parent_html = str(field.get("parentHtml") or "")
+            parent_open = re.match(r"\s*<[a-zA-Z0-9]+[^>]*>", parent_html)
+            parent_class_attr = (
+                re.search(r'class="([^"]*)"', parent_open.group(0)) if parent_open else None
+            )
+            parent_classes = parent_class_attr.group(1).split() if parent_class_attr else []
+            in_group = "fr-input-group" in parent_classes
+            if in_group and "fr-input-group--error" in parent_classes:
+                continue
+            if not in_group and "fr-input--error" in classes:
+                continue
             selector = (
                 f"#{field.get('id')}"
                 if field.get("id")
                 else ".fr-input[aria-invalid=true]"
             )
-            add(
-                "DSFR-INPUT-ERROR-STATE-002",
+            nature = (
                 "migration"
                 if requires_migration(
                     {"version_scope": "TARGET_VERSION", "minimum_version": target_version},
                     observed_versions,
                     target_version,
                 )
-                else "integration",
-                "input",
-                "Majeur",
-                "Champ en erreur sans modificateur DSFR",
-                "Le groupe et le champ portent leurs modificateurs error et le message est relié",
-                "fr-input--error absent",
-                "dsfr-components/references/components/forms-services/forms/fields.md",
-                selector=selector,
-                observed_html=str(field.get("parentHtml") or field.get("html") or ""),
-                expected_html='<div class="fr-input-group fr-input-group--error"><input class="fr-input fr-input--error" aria-invalid="true" aria-describedby="champ-erreur"><p id="champ-erreur" class="fr-error-text">Erreur</p></div>',
-                recommendation="Ajouter fr-input--error au champ tout en conservant le groupe et le message relié.",
-                verification="Déclencher la validation serveur puis inspecter chaque champ en erreur.",
-                failed_conditions=["Le champ en erreur ne porte pas fr-input--error."],
-                instance=instance,
-                observed_html_origin="RENDERED_DOM",
+                else "integration"
             )
-            state_component_rules.setdefault("input", set()).add(
-                "DSFR-INPUT-ERROR-STATE-002"
-            )
+            if in_group:
+                rule_id = "DSFR-INPUT-ERROR-STATE-002"
+                add(
+                    rule_id,
+                    nature,
+                    "input",
+                    "Majeur",
+                    "Champ en erreur dans un groupe sans état de groupe DSFR",
+                    "Dans un fr-input-group, l’état erreur est porté par fr-input-group--error et le message est relié ; fr-input--error n’est pas attendu sur le champ en groupe",
+                    "fr-input-group--error absent sur le groupe",
+                    "dsfr-components/references/components/forms-services/forms/fields.md",
+                    selector=selector,
+                    observed_html=parent_html or str(field.get("html") or ""),
+                    expected_html='<div class="fr-input-group fr-input-group--error"><input class="fr-input" aria-invalid="true" aria-describedby="champ-messages"><div class="fr-messages-group" id="champ-messages" aria-live="polite"><p class="fr-message fr-message--error">Erreur</p></div></div>',
+                    recommendation="Poser fr-input-group--error sur le groupe et relier le champ à son message par aria-describedby ; ne pas ajouter fr-input--error au champ en groupe.",
+                    verification="Déclencher la validation serveur puis inspecter le groupe de chaque champ en erreur.",
+                    failed_conditions=["Le groupe du champ en erreur ne porte pas fr-input-group--error."],
+                    instance=instance,
+                    observed_html_origin="RENDERED_DOM",
+                )
+            else:
+                rule_id = "DSFR-INPUT-ERROR-STATE-003"
+                add(
+                    rule_id,
+                    nature,
+                    "input",
+                    "Majeur",
+                    "Champ en erreur hors groupe sans modificateur DSFR",
+                    "Hors fr-input-group, le champ en erreur porte fr-input--error et référence son message",
+                    "fr-input--error absent sur le champ hors groupe",
+                    "dsfr-components/references/components/forms-services/forms/fields.md",
+                    selector=selector,
+                    observed_html=parent_html or str(field.get("html") or ""),
+                    expected_html='<input class="fr-input fr-input--error" aria-invalid="true" aria-describedby="champ-messages">',
+                    recommendation="Ajouter fr-input--error au champ hors groupe et relier le message par aria-describedby, ou placer le champ dans un fr-input-group portant l’état.",
+                    verification="Déclencher la validation serveur puis inspecter chaque champ en erreur hors groupe.",
+                    failed_conditions=["Le champ en erreur hors groupe ne porte pas fr-input--error."],
+                    instance=instance,
+                    observed_html_origin="RENDERED_DOM",
+                )
+            state_component_rules.setdefault("input", set()).add(rule_id)
             state_evidence = str(extended_state_path.relative_to(root))
             if state_evidence not in differences[-1]["evidence"]:
                 differences[-1]["evidence"].append(state_evidence)
