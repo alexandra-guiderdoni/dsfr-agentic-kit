@@ -71,7 +71,7 @@ preflight → catalog → plan → capture → collect → browser → rgaa → 
 - `collect` exécute les collecteurs et probes AY11 ;
 - `browser` mesure structure, contraste candidat, clavier et neuf contrats WCAG ;
 - `rgaa` exécute les règles de préqualification par instance, conserve le code observé et alimente la revue des 258 tests ;
-- `dsfr` inventorie chaque instance, exécute le catalogue versionné de `audit-dsfr-complet`, conserve le sélecteur et le DOM rendu, puis sépare intégration et migration vers la référence locale DSFR 1.15.2 ;
+- `dsfr` inventorie chaque instance, exécute le catalogue versionné de `audit-dsfr-complet`, conserve le sélecteur et le DOM rendu, puis sépare intégration et migration vers la référence locale DSFR 1.15.3 ;
 - `report` dérive matrices, pages et tickets, puis délègue à `audit-report-dsfr` le portail commun, les rapports complets et les vues par page via `generate_assembled_page.py` ;
 - `validate` vérifie cohérence, preuves, ancres et garde-fous.
 
