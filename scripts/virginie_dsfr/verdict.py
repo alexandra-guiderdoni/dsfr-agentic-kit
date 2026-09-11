@@ -135,6 +135,8 @@ class Report:
             warning += " " + str(
                 catalog.get("message", "Le catalogue de règles doit être vérifié.")
             )
+        if catalog.get("stale_catalog_allowed"):
+            warning += " Exception explicitement autorisée par --allow-stale-catalog ; le rejeu frais reste non prouvé."
         return warning
 
     @property
@@ -208,6 +210,9 @@ def build_manifest(report: Report, errors: list[str] | None = None) -> dict:
         "target_version": report.collection.target_version,
         "component_count": len(report.components),
         "errors": list(errors or []),
+        "stale_catalog_allowed": bool(
+            report.catalog_status.get("stale_catalog_allowed")
+        ),
         "verdict_counts": {status: counts.get(status, 0) for status in ORDER},
         "claim": report.warning,
         "components": [

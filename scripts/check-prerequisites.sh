@@ -8,6 +8,7 @@ set -euo pipefail
 #
 # Usage : bash scripts/check-prerequisites.sh [--quiet]
 #   --quiet : n'affiche que les manques et les avertissements.
+#   DSFR_AUDIT_PYTHON : interpréteur Python à sonder, comme celui de la campagne.
 
 QUIET=0
 [[ "${1:-}" == "--quiet" ]] && QUIET=1
@@ -88,10 +89,39 @@ done
 # Playwright Python : les collecteurs RGAA/DSFR importent playwright.async_api.
 # Le paquet Node seul ne satisfait pas ce prérequis.
 playwright_python_path=""
-if [[ -n "$python_version" ]] && playwright_python_path="$(python3 -c 'import playwright; print(playwright.__file__)' 2>/dev/null)"; then
-  optionnel_ok "Playwright Python présent ($playwright_python_path)"
+selected_python="${DSFR_AUDIT_PYTHON:-}"
+python_from_ay11() {
+  local ay11_bin="$1"
+  local ay11_dir
+  ay11_dir="$(cd -- "$(dirname -- "$ay11_bin")" && pwd -P)" || return 1
+  if [[ -x "$ay11_dir/python" ]]; then
+    printf '%s\n' "$ay11_dir/python"
+  fi
+}
+if [[ -z "$selected_python" && -n "${AY11_BIN:-}" \
+  && -f "$AY11_BIN" && -x "$AY11_BIN" ]]; then
+  selected_python="$(python_from_ay11 "$AY11_BIN" || true)"
+fi
+if [[ -z "$selected_python" && -n "${AY11_ROOT:-}" ]]; then
+  for prefix in "$AY11_ROOT/.venv/bin" "$AY11_ROOT/venv/bin"; do
+    candidat="$prefix/python"
+    if [[ -f "$prefix/ay11" && -x "$prefix/ay11" && -x "$candidat" ]]; then
+      selected_python="$candidat"
+      break
+    fi
+  done
+fi
+if [[ -z "$selected_python" ]] && command -v ay11 >/dev/null 2>&1; then
+  selected_python="$(python_from_ay11 "$(command -v ay11)" || true)"
+fi
+if [[ -z "$selected_python" ]] && command -v python3 >/dev/null 2>&1; then
+  selected_python="$(command -v python3)"
+fi
+if [[ -n "$selected_python" ]] \
+  && playwright_python_path="$("$selected_python" -c 'import playwright.async_api; print(playwright.__file__)' 2>/dev/null)"; then
+  optionnel_ok "Playwright Python présent avec $selected_python ($playwright_python_path)"
 else
-  optionnel_absent "Playwright Python absent : installer python -m pip install playwright puis python -m playwright install chromium ; les contrôles navigateur Python seront sautés"
+  optionnel_absent "Playwright Python absent ou inutilisable avec ${selected_python:-python3} : installer avec cet interpréteur puis lancer `python -m playwright install chromium` ; les contrôles navigateur Python seront sautés"
 fi
 
 # Playwright Node : utilisé par les démos et contrôles JavaScript du kit.

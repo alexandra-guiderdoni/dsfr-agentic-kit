@@ -1300,24 +1300,15 @@ class CreatorTests(unittest.TestCase):
             )
 
     def test_preflight_records_machine_status_for_network_block(self):
+        campaign = self.init()
+        config = yaml.safe_load(campaign.read_text(encoding="utf-8"))
+        config["phases"]["ay11"] = False
+        config["tooling"]["skills_roots"] = []
         state = {
             "schema_version": 1,
             "campaign_digest": "a" * 64,
             "phases": {},
             "pages": {},
-        }
-        config = {
-            "campaign": {"target": "https://example.test/"},
-            "sample": [
-                {
-                    "id": "P01",
-                    "name": "Accueil",
-                    "url": "https://example.test/",
-                    "type": "homepage",
-                }
-            ],
-            "phases": {"ay11": False},
-            "tooling": {"skills_roots": []},
         }
         with patch(
             "audit_campaign.probe_network_url",
@@ -1365,6 +1356,31 @@ class CreatorTests(unittest.TestCase):
         self.assertNotEqual(0, result.returncode)
         self.assertIn("propriété inconnue", result.stderr)
 
+    def test_run_rejects_invalid_browser_config_before_runtime_write(self):
+        campaign = self.init()
+        config = yaml.safe_load(campaign.read_text(encoding="utf-8"))
+        config["browser"]["launch"]["proxy"] = {
+            "server": "http://proxy.example:8080",
+            "password": "SECRET_NE_DOIT_PAS_PERSISTEr",
+        }
+        campaign.write_text(
+            yaml.safe_dump(config, allow_unicode=True, sort_keys=False),
+            encoding="utf-8",
+        )
+
+        result = self.run_cli("run", campaign, "--only", "browser", ok=False)
+
+        self.assertEqual(2, result.returncode)
+        self.assertIn("password", result.stderr)
+        self.assertFalse((self.project / ".creator/browser-runtime.json").exists())
+        state = json.loads(
+            (self.project / ".creator/state.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            "CONFIGURATION_INVALIDE",
+            state["phases"]["preflight"]["cause"],
+        )
+
     def test_preflight_requires_playwright_in_selected_interpreter(self):
         campaign = self.init()
         config = yaml.safe_load(campaign.read_text(encoding="utf-8"))
@@ -1377,6 +1393,44 @@ class CreatorTests(unittest.TestCase):
         self.assertEqual("ECHEC", state["phases"]["preflight"]["status"])
         self.assertIn("interpréteur sélectionné", state["phases"]["preflight"]["errors"][0])
         self.assertEqual(["browser", "rgaa", "dsfr"], state["phases"]["preflight"]["browser_python"]["phases"])
+
+    def test_resume_only_reports_unreplayed_downstream_phases(self):
+        campaign = self.init()
+        state_path = self.project / ".creator/state.json"
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        state["phases"] = {
+            phase: {"status": "OK"}
+            for phase in (
+                "preflight",
+                "catalog",
+                "plan",
+                "capture",
+                "collect",
+                "browser",
+                "rgaa",
+                "dsfr",
+                "protocols",
+                "report",
+                "report_capture",
+                "validate",
+            )
+        }
+        state_path.write_text(json.dumps(state), encoding="utf-8")
+
+        result = self.run_cli(
+            "resume", campaign, "--only", "protocols", ok=False
+        )
+
+        self.assertEqual(3, result.returncode)
+        self.assertIn("Phases invalidées non rejouées", result.stderr)
+        final_state = json.loads(state_path.read_text(encoding="utf-8"))
+        self.assertEqual("OK", final_state["phases"]["protocols"]["status"])
+        self.assertEqual(
+            "À REJOUER", final_state["phases"]["report"]["status"]
+        )
+        self.assertEqual(
+            "À REJOUER", final_state["phases"]["validate"]["status"]
+        )
 
     def test_browser_launch_configuration_is_shared_and_redacted(self):
         config = {

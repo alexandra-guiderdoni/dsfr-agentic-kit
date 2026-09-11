@@ -9,7 +9,9 @@ en HTML et en Markdown. Les archives ne sont jamais modifiées.
 Flux : première exécution sans fiche de revue -> écriture de
 DSFR-COMPOSANTS-TRAVAIL/REVUE-A-QUALIFIER.md, exit 2. Le relecteur coche une
 case par groupe. Exécution suivante -> rendu. La fiche n'est jamais réécrite
-si elle existe ; la supprimer pour la régénérer.
+si elle existe ; la supprimer pour la régénérer. Une archive dont le catalogue
+est obsolète ou mélangé exige --allow-stale-catalog pour produire une synthèse
+explicitement marquée comme exception.
 """
 
 from __future__ import annotations
@@ -72,6 +74,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rules", type=Path, default=RULES)
     parser.add_argument("--delivery-date", default=date.today().isoformat())
     parser.add_argument("--allow-pending", action="store_true", help="rendre malgré des signaux non arbitrés (Non vérifié)")
+    parser.add_argument(
+        "--allow-stale-catalog",
+        action="store_true",
+        help="rendre malgré un catalogue DSFR obsolète ou mélangé, en marquant l’exception",
+    )
     parser.add_argument("--no-index", action="store_true", help="ne pas toucher à INDEX-LIVRABLES.html")
     return parser.parse_args()
 
@@ -196,9 +203,23 @@ def main() -> int:
             for group in pending:
                 print(f"  - {group.group_id} ({group.status})")
             return 2
+        catalog_status = collection.catalog_status
+        stale_catalog_statuses = {"CATALOGUE_OBSOLETE", "CATALOGUES_MULTIPLES"}
+        stale_catalog_allowed = (
+            catalog_status["status"] in stale_catalog_statuses
+            and args.allow_stale_catalog
+        )
+        if catalog_status["status"] in stale_catalog_statuses and not stale_catalog_allowed:
+            print(
+                f"[CATALOGUE] {catalog_status['message']} ; ajouter --allow-stale-catalog pour produire une synthèse d’archives explicitement marquée",
+                file=sys.stderr,
+            )
+            return 2
         kinds, details, diffs, index = compute_kinds(collection, args.cache_dir)
         verdicts = verdict.component_verdicts(collection, kinds)
         report = verdict.build_report(collection, verdicts, details, args.delivery_date, diffs, reference_available=index.available)
+        if stale_catalog_allowed:
+            report.catalog_status["stale_catalog_allowed"] = True
         written = publish.write_outputs(
             report, args.output, include_parent_index=not args.no_index
         )
@@ -218,6 +239,8 @@ def main() -> int:
             "verdicts": verdict.build_manifest(report)["verdict_counts"], "groups": len(collection.groups), "overrides": len(overrides),
             "pending": len(pending), "migration_reference_available": index.available, "index_card": index_state,
             "files": len(written), "checksums": checksums.name, "errors": errors,
+            "catalog_status": report.catalog_status,
+            "stale_catalog_allowed": stale_catalog_allowed,
         }
         (args.work_dir / "RECU-GENERATION.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps(receipt, ensure_ascii=False, indent=2))

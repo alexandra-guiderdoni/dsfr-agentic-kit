@@ -158,9 +158,14 @@ Les `[WARN]` et `[SKIP]` explicitent une preuve non exercée. Ils ne doivent pas
 - Python 3.10 minimum, 3.12 recommandé ;
 - PyYAML et `jsonschema`, ou `uv` capable de les fournir ;
 - Node 20 minimum, Node 22 recommandé, avec `npm` et `npx` ;
-- Playwright facultatif pour les contrôles navigateur ;
+- Playwright Python facultatif pour le kit seul, mais requis dans
+  l’interpréteur de la campagne lorsque `browser_checks`, `rgaa_checks` ou
+  `dsfr_checks` est actif ; Playwright Node reste séparé et optionnel ;
 - `rsync` requis pour la démo vitrine (`brew install rsync` ou
   `apt-get install rsync`).
+
+Pour imposer le même interpréteur Python à la sonde des prérequis et à la
+campagne, définir `DSFR_AUDIT_PYTHON` avant les contrôles.
 
 Le paquet officiel DSFR peut être placé dans
 `~/.cache/dsfr-official-cache`. En mode hors ligne, son absence produit un saut

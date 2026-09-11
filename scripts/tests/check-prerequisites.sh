@@ -71,6 +71,24 @@ else
   ko "Playwright Python/Node indépendants (exit $rc)"
 fi
 
+# 4. L'interpréteur explicitement sélectionné par la campagne est celui de la sonde.
+mkdir -p "$tmp/interpreter"
+printf '%s\n' \
+  '#!/bin/sh' \
+  'if [[ "${1:-}" == "-c" ]]; then printf "/selected/playwright/__init__.py\\n"; else exec "$python_reel" "$@"; fi' \
+  > "$tmp/interpreter/python"
+chmod +x "$tmp/interpreter/python"
+set +e
+sortie="$(DSFR_AUDIT_PYTHON="$tmp/interpreter/python" bash "$DIAG" 2>&1)"; rc=$?
+set -e
+if [[ "$rc" -eq 0 ]] \
+  && grep -Fq "[OPTIONNEL] Playwright Python présent avec $tmp/interpreter/python" <<<"$sortie"; then
+  ok "interpréteur Python sélectionné utilisé par la sonde"
+else
+  printf '%s\n' "$sortie" | grep -i playwright >&2 || true
+  ko "interpréteur Python sélectionné ignoré (exit $rc)"
+fi
+
 if (( echecs > 0 )); then
   printf '[FAIL] diagnostic des prérequis : %d échec(s)\n' "$echecs" >&2
   exit 1

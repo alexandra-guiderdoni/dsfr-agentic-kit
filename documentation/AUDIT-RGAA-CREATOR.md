@@ -88,6 +88,12 @@ campagne. L’absence de cet import est bloquante avant toute collecte. Le
 module Playwright Node, utilisé par certaines démonstrations, est contrôlé
 séparément et reste optionnel pour le runner.
 
+Le diagnostic autonome reprend le même choix d’interpréteur. Pour imposer un
+chemin précis dans les deux contrôles, définir `DSFR_AUDIT_PYTHON` ; à défaut,
+le chemin est déduit de `AY11_ROOT`, `AY11_BIN`, de la commande `ay11` ou de
+`python3`. La sonde vérifie `import playwright.async_api`, et non la seule
+présence du paquet Python.
+
 Les options de lancement sont gouvernées dans `campaign.yaml` par le bloc
 `browser.launch` :
 
@@ -112,7 +118,9 @@ contrôles `browser`, `rgaa` et `dsfr`. Les secrets ne doivent jamais être
 écrits dans la campagne : seuls les noms de variables d’environnement sont
 déclarés, puis leurs valeurs sont lues au lancement. La configuration effective
 est tracée sous forme expurgée dans les résumés de prévol, de phase et dans
-`.creator/browser-runtime.json`.
+`.creator/browser-runtime.json`. Le schéma de campagne est validé pendant le
+prévol, avant toute écriture du runtime ; les clés inconnues ne sont donc pas
+recopiées dans ce fichier.
 
 Les nouvelles campagnes activent `phases.rgaa_checks: true` et
 `phases.dsfr_checks: true`. Une ancienne campagne reste rétrocompatible :
@@ -155,7 +163,17 @@ L’état précédent est archivé ; les preuves sont conservées.
 Le rejeu d’une phase invalide automatiquement les phases qui en dépendent.
 Ainsi, un rejeu de `dsfr` marque le rapport et la validation comme `À REJOUER`
 et régénère le rapport avant la validation. Une phase explicitement demandée
-est toujours rejouée, même si son dernier statut était `OK`.
+est toujours rejouée, même si son dernier statut était `OK`. Avec
+`resume --only`, les phases aval sont invalidées mais ne sont pas exécutées :
+la commande retourne alors un statut partiel et indique de relancer `resume`
+sans `--only` pour produire une chaîne complète.
+
+Pour une synthèse d’archives dont le catalogue DSFR est obsolète ou mélangé,
+le générateur Virginie échoue par défaut. Le mode documentaire explicite
+`--allow-stale-catalog` permet de produire le livrable, avec
+`stale_catalog_allowed: true` dans le manifeste et le reçu, ainsi qu’une
+mention de l’exception dans le rapport. Une empreinte absente reste un
+avertissement distinct.
 
 ## Qualification
 

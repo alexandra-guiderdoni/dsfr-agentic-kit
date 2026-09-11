@@ -127,6 +127,14 @@ Une reprise ignore seulement les phases `OK`. Lorsqu’une phase est rejouée,
 les phases dérivées déjà marquées `OK` passent à `À REJOUER` puis sont
 régénérées si elles font partie de la sélection. Les captures AY11 utilisent
 un répertoire de tentative distinct afin de ne pas écraser les preuves brutes.
+Avec `resume --only`, les phases dérivées invalidées mais absentes de la
+sélection restent `À REJOUER` et la commande retourne un statut partiel ;
+relancer `resume` sans `--only` pour produire la chaîne complète.
+
+Lorsque `browser_checks`, `rgaa_checks` ou `dsfr_checks` est actif, le prévol
+valide la configuration avant toute écriture du runtime navigateur et vérifie
+`playwright.async_api` dans l’interpréteur choisi. `DSFR_AUDIT_PYTHON` permet
+d’imposer le même interpréteur au diagnostic autonome et à la campagne.
 
 Si `campaign.yaml` change après démarrage, la reprise est refusée :
 

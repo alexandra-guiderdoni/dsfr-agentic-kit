@@ -148,6 +148,23 @@ def read_yaml(path: Path) -> dict[str, Any]:
     return data
 
 
+def campaign_schema_errors(config: dict[str, Any]) -> list[str]:
+    """Retourne les erreurs de schéma avant toute exécution de phase."""
+    schema = json.loads(
+        (SKILL_ROOT / "schemas/campaign.schema.json").read_text(encoding="utf-8")
+    )
+    try:
+        import jsonschema
+    except ImportError:
+        messages = fallback_schema_errors(config, schema)
+    else:
+        messages = [
+            error.message
+            for error in jsonschema.Draft202012Validator(schema).iter_errors(config)
+        ]
+    return [f"Schéma campaign.yaml : {message}" for message in messages]
+
+
 def atomic_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
@@ -378,6 +395,14 @@ def find_ay11(root: Path | None) -> tuple[Path | None, list[str]]:
 
 
 def find_python_for_ay11(ay11: Path | None) -> Path:
+    configured = os.environ.get("DSFR_AUDIT_PYTHON", "").strip()
+    if configured:
+        candidate = Path(configured).expanduser()
+        if not candidate.is_absolute():
+            resolved = shutil.which(configured)
+            if resolved:
+                return Path(resolved)
+        return candidate
     if ay11 and ay11.parent.name == "bin":
         candidate = ay11.parent / "python"
         if candidate.is_file():
@@ -769,6 +794,18 @@ def preflight(
 ) -> bool:
     errors: list[str] = []
     warnings: list[str] = []
+    schema_errors = campaign_schema_errors(config)
+    if schema_errors:
+        record(
+            state,
+            "preflight",
+            "ECHEC",
+            errors=schema_errors,
+            warnings=[],
+            cause="CONFIGURATION_INVALIDE",
+        )
+        save_state(root, state)
+        return False
     try:
         validate_url(config.get("campaign", {}).get("target", ""))
     except ValueError as exc:
@@ -1023,6 +1060,20 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
     config = read_yaml(config_path)
     root = campaign_root(config_path)
     state = load_state(root)
+    schema_errors = campaign_schema_errors(config)
+    if schema_errors:
+        record(
+            state,
+            "preflight",
+            "ECHEC",
+            errors=schema_errors,
+            warnings=[],
+            cause="CONFIGURATION_INVALIDE",
+        )
+        save_state(root, state)
+        for error in schema_errors:
+            print(f"[FAIL] {error}", file=sys.stderr)
+        return 2
     digest = campaign_digest(config_path)
     if (
         state.get("campaign_digest")
@@ -1043,7 +1094,7 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
     # En mode resume, une phase explicitement sélectionnée par --only est une
     # demande de rejeu, même si son état précédent était OK. Ce rejeu doit
     # invalider les phases dérivées, notamment report et validate.
-    explicit_replay = bool(args.only)
+    explicit_replay = bool(args.resume and args.only)
 
     def skip(phase: str) -> bool:
         if phase not in selected:
@@ -1511,6 +1562,19 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 4
+    pending_phases = [
+        phase
+        for phase, data in state.get("phases", {}).items()
+        if data.get("status") == "À REJOUER"
+    ]
+    if resume and pending_phases:
+        print(
+            "[PARTIEL] Phases invalidées non rejouées : "
+            + ", ".join(pending_phases)
+            + ". Relancer `resume` sans `--only` pour régénérer la chaîne aval.",
+            file=sys.stderr,
+        )
+        return 3
     print(f"[OK] Campagne traitée : {root}")
     return 0
 

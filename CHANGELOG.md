@@ -38,14 +38,19 @@
 - invalidation explicite des phases de rapport dérivées lorsqu’une phase amont
   est rejouée, avec le statut `À REJOUER` et régénération automatique lorsque
   ces phases sont sélectionnées ;
+- `resume --only` signale désormais les phases aval invalidées qui n’ont pas été
+  rejouées et retourne un statut partiel ;
 - contrôle bloquant de Playwright Python dans l’interpréteur sélectionné par
   AY11 pour les phases navigateur, et contrôle distinct de Playwright Node
   utilisé par les démos JavaScript ;
+- validation du schéma de campagne dès le prévol, avant l’écriture du runtime
+  navigateur, et sonde `playwright.async_api` alignée sur l’interpréteur choisi ;
 - ajout du bloc `browser.launch` dans `campaign.yaml` pour gouverner le mode
   headless, le proxy, les arguments, le canal et l’exécutable, avec trace
   expurgée de la configuration effective ;
 - validation bloquante des pages DSFR dont l’empreinte de catalogue est
-  obsolète ou mélangée ;
+  obsolète ou mélangée, avec exception documentaire explicite
+  `--allow-stale-catalog` pour les synthèses d’archives ;
 - test des prérequis indépendant de l’emplacement système ou utilisateur de
   Playwright Python, import tardif du retest P06 et correction de son chemin de
   staging ;

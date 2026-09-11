@@ -8,12 +8,14 @@ dsfr-findings.json). Aucune lecture des archives réelles.
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+GENERATOR = ROOT / "scripts/generate-virginie-dsfr-composants.py"
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from virginie_dsfr import (
@@ -700,6 +702,74 @@ class PublishTests(unittest.TestCase):
             index.write_text("<main><p>sans section</p></main>", encoding="utf-8")
             self.assertEqual(
                 publish.insert_index_card(index, "<article>x</article>"), "no_anchor"
+            )
+
+
+class GeneratorTests(unittest.TestCase):
+    def test_stale_catalog_requires_explicit_exception_and_marks_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = root / "project"
+            archives = root / "archives"
+            project.mkdir()
+            archives.mkdir()
+            archive_paths = build_fixture(archives)
+            for archive in archive_paths:
+                page_path = next((archive / "dsfr/pages").glob("P*.json"))
+                page = json.loads(page_path.read_text(encoding="utf-8"))
+                page["rule_catalog"] = {"sha256": "0" * 64}
+                page_path.write_text(
+                    json.dumps(page, ensure_ascii=False), encoding="utf-8"
+                )
+            common = [
+                sys.executable,
+                str(GENERATOR),
+                "--project-root",
+                str(project),
+                "--archives",
+                str(archives),
+                "--pattern",
+                "audit-test-p{n:02d}-2026-09-02",
+                "--pages",
+                "1-2",
+                "--cache-dir",
+                str(root / "cache"),
+                "--allow-pending",
+            ]
+            initial = subprocess.run(
+                common,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(2, initial.returncode, initial.stderr)
+            rejected = subprocess.run(
+                common,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(2, rejected.returncode)
+            self.assertIn("--allow-stale-catalog", rejected.stderr)
+            self.assertFalse(
+                (project / "virginie-livrables/DSFR-COMPOSANTS").exists()
+            )
+
+            accepted = subprocess.run(
+                [*common, "--allow-stale-catalog"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(0, accepted.returncode, accepted.stderr)
+            manifest = json.loads(
+                (
+                    project
+                    / "virginie-livrables/DSFR-COMPOSANTS/MANIFESTE-DSFR-COMPOSANTS.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual("CATALOGUE_OBSOLETE", manifest["catalog_status"]["status"])
+            self.assertTrue(manifest["stale_catalog_allowed"])
+            self.assertTrue(manifest["catalog_status"]["stale_catalog_allowed"])
+            self.assertIn(
+                "rejeu frais reste non prouvé", manifest["claim"]
             )
 
 
