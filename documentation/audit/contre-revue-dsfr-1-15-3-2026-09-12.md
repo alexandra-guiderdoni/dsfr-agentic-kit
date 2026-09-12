@@ -1,6 +1,7 @@
 # Contre-revue indépendante DSFR 1.15.3
 
-**Date** : 2026-09-12  
+**Date** : 2026-09-12
+
 **Verdict** : clôturée pour le périmètre de cette contre-revue, après correction du journal de migration dans `dsfr-agentic-packs`. Cette conclusion ne vaut pas déclaration de conformité globale au DSFR.
 
 ## Constats vérifiés
