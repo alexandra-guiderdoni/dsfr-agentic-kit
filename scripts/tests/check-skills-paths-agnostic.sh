@@ -109,7 +109,19 @@ for file in "${portable_files[@]}"; do
   file_forbidden="$forbidden"
   case "$rel" in
     documentation/audit/contre-revue-dsfr-1-15-3-2026-09-12.md)
-      # Rapport historique propre à la cible, préservé par la recette d'export.
+      # Seul le contenu historique reçu est exempté, jamais un ajout ultérieur.
+      if ! python3 - "$file" <<'PY'
+import hashlib
+import sys
+from pathlib import Path
+
+expected = "715f48d62f215db94297cd3d0b4cff206185b7c874fdbacc334dfc136919bffe"
+raise SystemExit(0 if hashlib.sha256(Path(sys.argv[1]).read_bytes()).hexdigest() == expected else 1)
+PY
+      then
+        printf '[FAIL] rapport historique modifié : exemption refusée pour %s\n' "$rel" >&2
+        violations=$((violations + 1))
+      fi
       continue ;;
     design-systems/dsfr/evals/runtime-traces/*.events.json)
       # Une trace observée peut nommer le miroir sans en dépendre. Les autres

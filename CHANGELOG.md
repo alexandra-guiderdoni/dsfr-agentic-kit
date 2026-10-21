@@ -1,5 +1,16 @@
 # Journal des versions
 
+## Retours ShipGuard sur DSFR 1.15.4 — 21 octobre 2026
+
+Export depuis la source `9a1b96676275b37d723bc1a3eb854f52e3858e9e`.
+
+- exemption du rapport historique bornée à son empreinte reçue ; tout
+  ajout au même chemin est refusé, y compris un texte ordinaire ;
+- rapport, archives et autres zones propres préservés ; recette complète
+  du kit réussie avant la copie ;
+- exporteur source corrigé pour préserver aussi le fichier Git des
+  worktrees ; copie complète exercée, lien Git et HEAD conservés.
+
 ## Migration DSFR 1.15.4 — 21 octobre 2026
 
 Export direct depuis la source
