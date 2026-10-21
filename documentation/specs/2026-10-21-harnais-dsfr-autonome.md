@@ -28,11 +28,20 @@ identifié, sans perdre les qualifications humaines.
 - **Distribution** : le plugin est l’entrée utilisateur visée et doit donner
   accès à toute la chaîne. Une installation gérée peut fournir ses ressources
   d’exécution ; un second clone à entretenir manuellement ne vaut pas preuve
-  d’autonomie du plugin. Le mécanisme exact reste à éprouver.
+  d’autonomie du plugin. Comparer l’archive produite par `build-plugin.sh` et
+  l’installation marketplace, en consignant l’hôte et sa version pour chaque
+  essai. Un checkout géré par l’hôte ne se confond pas avec un clone manuel.
+  Chaque voie doit préserver l’arborescence attendue ou résoudre explicitement
+  les racines du produit ; les calculs positionnels comme `SCRIPT.parents[4]`
+  doivent être exercés dans leur disposition réelle.
 - **Profil léger** : préserver la possibilité d’exposer les outils utiles sans
   métacouche d’orchestration agentique avancée. Même source et même version que
   le profil complet ; aucune copie maintenue séparément. Le contenu des profils
   sera arrêté après inventaire, sans réduire silencieusement les usages actuels.
+  Hypothèse à vérifier : cette métacouche désigne l’orchestration avancée,
+  notamment `agentic-design-harness`, à distinguer des règles propres à l’hôte.
+  Les outils DSFR sélectionnés, leurs références métier, preuves et protections
+  restent utilisables sans cette orchestration.
 - **Frontière produit/projet** : campagnes, qualifications, captures et rapports
   vivent hors de l’installation. Aucun ticket, secret ou contenu privé d’un
   consommateur ne doit entrer dans la distribution publique.
@@ -56,18 +65,20 @@ centralisation, avec les réserves suivantes confirmées dans les sources :
 | La portabilité des audits natifs est démontrée | [Test standalone](../../scripts/tests/check-standalone-install.sh) | Partiel : copie conservant l’arborescence du clone | Exercer l’installation native |
 | Les campagnes tracent déjà tout l’outillage | [Campagne](../../.claude/skills/audit-rgaa-creator/scripts/audit_campaign.py) | Partiel : empreintes présentes, version exacte du harnais non établie | Conserver les preuves et établir la reprise |
 | La séparation produit/projets est terminée | [Manifeste](../../config/agentic-design-packages.yaml) et [spec précédente](2026-09-10-durcissement-harnais-dsfr.md) | Incomplète | Inventorier la propriété avant transfert ou retrait |
+| Toute écriture de campagne dans le kit est refusée | [Initialisation de campagne](../../.claude/skills/audit-rgaa-creator/scripts/audit_campaign.py) | Partiel : option masquée `--allow-inside-kit` | Identifier ses usages et proposer son retrait ou son confinement aux fixtures isolées |
 
 | Option | Intérêt | Limite | Décision |
 |---|---|---|---|
 | Produit canonique autonome, distribué par plugin | Une maintenance, usage indépendant et intégration facultative aux workflows | Packaging, chemins et reprise à prouver | Cible retenue |
-| Clone versionné avec entrée plugin | Réutilise la disposition actuelle et facilite l’identification Git | Installation supplémentaire à gérer ; autonomie du plugin non démontrée | Transition possible, sans remplacer la cible |
+| Clone manuel versionné avec entrée plugin | Réutilise la disposition actuelle et facilite l’identification Git | Installation supplémentaire à gérer ; autonomie du plugin non démontrée | Transition possible, sans remplacer la cible |
 
 Ce cadrage étend la spec de septembre et les issues [#2](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/2),
 [#6](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/6),
 [#7](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/7) et
 [#8](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/8).
 Réutiliser leurs protections et contrats ; ne pas dupliquer les moteurs.
-Le contrat de consommation versionnée doit rester compatible avec #6.
+Le contrat de consommation versionnée doit rester compatible avec #6 ; son
+mécanisme exécutable reste à définir et ne doit pas être présumé disponible.
 
 ## Critères de réussite et preuves avant bascule
 
@@ -75,15 +86,31 @@ Le contrat de consommation versionnée doit rester compatible avec #6.
 |---|---|---|
 | A1 | Installation indépendante | Environnement isolé, workflow source inaccessible, dépendances et téléchargements déclarés ; aucune résolution vers le poste personnel |
 | A2 | Chaîne complète accessible | Installation native puis génération, contrôles navigateur représentatifs, campagne et rapport ; tracer les commandes, chemins et versions réellement utilisés |
-| A3 | Installation intacte | Empreinte avant/après et tests de refus des sorties internes, y compris via lien symbolique ; toutes les données restent dans le projet consommateur |
-| A4 | Campagne versionnée | Campagne en A, mise à jour B puis reprise selon le contrat, avec A identifiable et disponible ; qualifications conservées et références inchangées sans migration explicite |
+| A3 | Installation intacte | Empreinte avant/après et refus des sorties internes, y compris via lien symbolique ; examiner aussi `--allow-inside-kit` et statuer sur son retrait ou son confinement aux tests, sans déroger à la frontière produit/projet |
+| A4 | Campagne versionnée | Campagne en A, mise à jour B puis reprise ; A et B identifiées par commit et empreinte, A disponible, qualifications conservées et références inchangées sans migration explicite |
 | A5 | Dépendances honnêtes | AY11 absent puis environnement Python différent ; phases disponibles, sauts et erreurs explicités, sans faux succès ni conformité automatique |
 | A6 | Source unique et profils cohérents | Inventaire de toutes les origines actives, parité des fonctions conservées et profils dérivés des mêmes sources ; après retrait autorisé, fonctionnement sans les anciennes copies |
 
 Une preuve sur un hôte ne valide que cet hôte. Les autres adaptateurs restent
-non vérifiés tant que leur parcours n’est pas exercé. Le scénario A4 réutilise
-les empreintes existantes ; il ne promet pas l’identité de résultats sur un
-site distant qui aurait changé.
+non vérifiés tant que leur parcours n’est pas exercé. Un échec de l’archive ne
+permet pas de conclure sur le marketplace, ni l’inverse. Le scénario A4 s’appuie
+sur les empreintes existantes et ajoute l’identification immuable du kit ;
+les qualifications et références à comparer sont fixées avant l’essai sur un
+site local stable. Il ne promet pas l’identité de résultats sur un site distant
+qui aurait changé.
+
+## Précisions issues de la relecture Fable
+
+Relecture du 21 octobre 2026 : aucun P1 bloquant pour l’exploration ; cinq P2
+intégrés ci-dessous, dont les preuves d’exécution restent à produire dans #9.
+
+| Retour | Précision intégrée |
+|---|---|
+| P2-1 — Racines positionnelles | Contrat de distribution et essais A1/A2 dans l’arborescence installée |
+| P2-2 — Deux voies plugin | Comparaison archive/marketplace ; hôte et version consignés |
+| P2-3 — Métacouche du profil léger | Hypothèse de découpage explicite, à vérifier par inventaire |
+| P2-4 — Identité de l’outillage | A4 complète les empreintes existantes par l’identité immuable du kit |
+| P2-5 — Écriture interne masquée | A3 examine `--allow-inside-kit` et son usage ; frontière produit/projet maintenue |
 
 ## Séquence de travail
 

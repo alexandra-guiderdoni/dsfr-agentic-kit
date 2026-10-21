@@ -9,6 +9,9 @@
   avant tout retrait des anciens circuits ; aucune migration exécutée.
 - [Issue #9](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/9)
   ouverte pour éprouver la chaîne complète avant le découpage de la migration.
+- cinq précisions de Fable intégrées au PRD et à l’exploration : racines
+  installées, archive/marketplace, profil léger, identité immuable du kit
+  et examen de `--allow-inside-kit` ; aucun comportement du produit modifié.
 
 ## Retours ShipGuard sur DSFR 1.15.4 — 21 octobre 2026
 
