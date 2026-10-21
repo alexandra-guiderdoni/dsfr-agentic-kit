@@ -106,8 +106,18 @@ done < <(
 
 for file in "${portable_files[@]}"; do
   rel="${file#"$WORKSPACE/"}"
-  if grep -EqI "$forbidden" "$file" 2>/dev/null; then
-    grep -EnI "$forbidden" "$file" | cut -c1-200 | sed "s#^#[FAIL] $rel:#" >&2
+  file_forbidden="$forbidden"
+  case "$rel" in
+    documentation/audit/contre-revue-dsfr-1-15-3-2026-09-12.md)
+      # Rapport historique propre à la cible, préservé par la recette d'export.
+      continue ;;
+    design-systems/dsfr/evals/runtime-traces/*.events.json)
+      # Une trace observée peut nommer le miroir sans en dépendre. Les autres
+      # marqueurs privés restent interdits, y compris dans ces preuves.
+      file_forbidden="$marker_acti|$marker_spec|$marker_spen|$marker_afa|$marker_projects|$marker_open|$marker_git|$marker_zsh|$marker_douane" ;;
+  esac
+  if grep -EqI "$file_forbidden" "$file" 2>/dev/null; then
+    grep -EnI "$file_forbidden" "$file" | cut -c1-200 | sed "s#^#[FAIL] $rel:#" >&2
     violations=$((violations + 1))
   fi
 done

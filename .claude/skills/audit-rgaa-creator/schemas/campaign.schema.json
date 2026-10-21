@@ -4,38 +4,91 @@
   "title": "Campagne Audit RGAA Creator",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "campaign", "tooling", "sample", "phases", "browser", "limits", "claims"],
+  "required": [
+    "schema_version",
+    "campaign",
+    "tooling",
+    "sample",
+    "phases",
+    "browser",
+    "limits",
+    "claims"
+  ],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {
+      "const": 1
+    },
     "campaign": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "name", "created_at", "target", "locale", "referential", "profile"],
+      "required": [
+        "id",
+        "name",
+        "created_at",
+        "target",
+        "locale",
+        "referential",
+        "profile"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "name": {"type": "string", "minLength": 1},
-        "created_at": {"type": "string", "minLength": 1},
-        "target": {"type": "string", "minLength": 8},
-        "locale": {"const": "fr-FR"},
-        "referential": {"const": "RGAA 4.1.2"},
-        "profile": {"const": "rgaa-106"}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 8
+        },
+        "locale": {
+          "const": "fr-FR"
+        },
+        "referential": {
+          "const": "RGAA 4.1.2"
+        },
+        "profile": {
+          "const": "rgaa-106"
+        }
       }
     },
     "tooling": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kit_root", "ay11_root", "skills_roots"],
+      "required": [
+        "kit_root",
+        "ay11_root",
+        "skills_roots"
+      ],
       "properties": {
-        "kit_root": {"type": "string"},
-        "ay11_root": {"type": "string"},
-        "skills_roots": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        "kit_root": {
+          "type": "string"
+        },
+        "ay11_root": {
+          "type": "string"
+        },
+        "skills_roots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
       }
     },
     "tooling_options": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "ay11_version": {"type": "string"}
+        "ay11_version": {
+          "type": "string"
+        }
       }
     },
     "sample": {
@@ -45,14 +98,35 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "name", "url", "type"],
+        "required": [
+          "id",
+          "name",
+          "url",
+          "type"
+        ],
         "properties": {
-          "id": {"type": "string", "pattern": "^P[0-9]{2,3}$"},
-          "name": {"type": "string", "minLength": 1},
-          "url": {"type": "string", "minLength": 8},
-          "type": {"type": "string", "minLength": 1},
-          "authenticated": {"type": "boolean"},
-          "notes": {"type": "string"}
+          "id": {
+            "type": "string",
+            "pattern": "^P[0-9]{2,3}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "minLength": 8
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authenticated": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string"
+          }
         }
       }
     },
@@ -61,57 +135,148 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "script"],
+        "required": [
+          "id",
+          "script"
+        ],
         "properties": {
-          "id": {"type": "string", "minLength": 1},
-          "script": {"type": "string", "minLength": 1},
-          "output": {"type": "string"},
-          "pages": {"type": "array", "items": {"type": "string", "pattern": "^P[0-9]{2,3}$"}, "uniqueItems": true}
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "script": {
+            "type": "string",
+            "minLength": 1
+          },
+          "output": {
+            "type": "string"
+          },
+          "pages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^P[0-9]{2,3}$"
+            },
+            "uniqueItems": true
+          }
         }
       }
     },
     "phases": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["ay11", "browser_checks", "reports", "tickets"],
+      "required": [
+        "ay11",
+        "browser_checks",
+        "reports",
+        "tickets"
+      ],
       "properties": {
-        "ay11": {"type": "boolean"},
-        "browser_checks": {"type": "boolean"},
-        "rgaa_checks": {"type": "boolean"},
-        "dsfr_checks": {"type": "boolean"},
-        "reports": {"type": "boolean"},
-        "report_capture": {"type": "boolean"},
-        "tickets": {"type": "boolean"}
+        "ay11": {
+          "type": "boolean"
+        },
+        "browser_checks": {
+          "type": "boolean"
+        },
+        "rgaa_checks": {
+          "type": "boolean"
+        },
+        "dsfr_checks": {
+          "type": "boolean"
+        },
+        "reports": {
+          "type": "boolean"
+        },
+        "report_capture": {
+          "type": "boolean"
+        },
+        "tickets": {
+          "type": "boolean"
+        },
+        "validator": {
+          "type": "boolean",
+          "description": "Exécuter le validateur HTML externe, seule source capable d'instruire le critère 8.2."
+        }
       }
     },
     "browser": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["wait_ms", "timeout_seconds", "tabs_per_page", "screenshots", "form_interactions", "axe"],
+      "required": [
+        "wait_ms",
+        "timeout_seconds",
+        "tabs_per_page",
+        "screenshots",
+        "form_interactions",
+        "axe"
+      ],
       "properties": {
-        "wait_ms": {"type": "integer", "minimum": 0},
-        "timeout_seconds": {"type": "integer", "minimum": 1},
-        "tabs_per_page": {"type": "integer", "minimum": 1, "maximum": 300},
-        "screenshots": {"type": "boolean"},
-        "form_interactions": {"type": "boolean"},
-        "axe": {"type": "boolean"},
+        "wait_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tabs_per_page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        },
+        "screenshots": {
+          "type": "boolean"
+        },
+        "form_interactions": {
+          "type": "boolean"
+        },
+        "axe": {
+          "type": "boolean"
+        },
         "launch": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "headless": {"type": "boolean"},
-            "args": {"type": "array", "items": {"type": "string"}, "maxItems": 64},
-            "channel": {"type": "string", "minLength": 1},
-            "executable_path": {"type": "string", "minLength": 1},
+            "headless": {
+              "type": "boolean"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 64
+            },
+            "channel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "executable_path": {
+              "type": "string",
+              "minLength": 1
+            },
             "proxy": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["server"],
+              "required": [
+                "server"
+              ],
               "properties": {
-                "server": {"type": "string", "minLength": 1},
-                "bypass": {"type": "string"},
-                "username_env": {"type": "string", "minLength": 1},
-                "password_env": {"type": "string", "minLength": 1}
+                "server": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "bypass": {
+                  "type": "string"
+                },
+                "username_env": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "password_env": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           }
@@ -121,21 +286,68 @@
     "limits": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["authenticated_scope", "real_screen_reader", "source_code_available"],
+      "required": [
+        "authenticated_scope",
+        "real_screen_reader",
+        "source_code_available"
+      ],
       "properties": {
-        "authenticated_scope": {"type": "boolean"},
-        "real_screen_reader": {"type": "boolean"},
-        "source_code_available": {"type": "boolean"},
-        "notes": {"type": "string"}
+        "authenticated_scope": {
+          "type": "boolean"
+        },
+        "real_screen_reader": {
+          "type": "boolean"
+        },
+        "source_code_available": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "claims": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["official_compliance_rate", "dsfr_claim"],
+      "required": [
+        "official_compliance_rate",
+        "dsfr_claim"
+      ],
       "properties": {
-        "official_compliance_rate": {"const": false},
-        "dsfr_claim": {"enum": ["aucune conformité DSFR globale revendiquée", "aligné DSFR avec limites"]}
+        "official_compliance_rate": {
+          "const": false
+        },
+        "dsfr_claim": {
+          "enum": [
+            "aucune conformité DSFR globale revendiquée",
+            "aligné DSFR avec limites"
+          ]
+        }
+      }
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Réglages du validateur HTML. Un point d'accès local vnu évite de solliciter le service public du W3C.",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "description": "Point d'accès du validateur, par défaut https://validator.w3.org/nu/"
+        },
+        "delay_seconds": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Pause entre deux pages, par courtoisie envers le service."
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Délai maximal par page."
+        },
+        "command": {
+          "type": "string",
+          "description": "Commande d'un validateur local, par exemple vnu. Préférée au service distant : pas de limite de débit, et elle valide le DOM rendu."
+        }
       }
     }
   }

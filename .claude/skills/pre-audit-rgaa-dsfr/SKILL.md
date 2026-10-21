@@ -49,10 +49,10 @@ Si un argument obligatoire manque, demander à l'utilisateur.
 
 | Scénario | Comportement |
 |----------|-------------|
-| URL inaccessible (403/timeout) | Fallback navigateur (chrome-devtools MCP ou `agent-browser open`). Si échec des deux : ERREUR, demander URL valide |
+| URL inaccessible (403/timeout) | Fallback navigateur (`agent-browser open`, puis chrome-devtools MCP). Si échec des deux : ERREUR, demander URL valide |
 | axe-core 0 violation | Continuer vers phase 2 (inspection DOM compense) |
 | Snapshot DOM vide ou incomplet (SPA) | Attendre chargement complet via `evaluate_script`. Si échec : NOTE-INTERNE |
-| Chrome DevTools MCP non disponible | Basculer sur `agent-browser`. Si les deux absents : marquer phase 2 comme PARTIELLE, lister les vérifications non faites |
+| `agent-browser` non disponible | Basculer sur chrome-devtools MCP. Si les deux absents : marquer phase 2 comme PARTIELLE, lister les vérifications non faites |
 | Mapping RGAA introuvable | Avertir, utiliser les critères WCAG en attendant confirmation |
 | Tickets existants dans un format inattendu | Ignorer les fichiers non parsables, avertir l'utilisateur |
 
@@ -117,25 +117,11 @@ navigation    → template/ejs/navigation.ejs
 
 ## Outils navigateur
 
-Deux options pour interagir avec la page. Choisir selon la disponibilité :
+Deux options pour interagir avec la page. Choisir selon la disponibilité, `agent-browser` en premier :
 
-### Option A : chrome-devtools MCP (prioritaire)
+### Option A : agent-browser (prioritaire)
 
-Outils MCP directs, plus rapides pour les opérations unitaires :
-
-| Action | Commande |
-|--------|----------|
-| Naviguer | `mcp__chrome-devtools__navigate_page` |
-| Snapshot DOM / arbre a11y | `mcp__chrome-devtools__take_snapshot` |
-| Screenshot | `mcp__chrome-devtools__take_screenshot` |
-| Cliquer (ouvrir modale, menu) | `mcp__chrome-devtools__click` |
-| Tabuler (test focus) | `mcp__chrome-devtools__press_key` |
-| Injecter axe-core CDN | `mcp__chrome-devtools__evaluate_script` |
-| Émuler mobile | `mcp__chrome-devtools__emulate` |
-
-### Option B : agent-browser (fallback ou complément)
-
-CLI Playwright via Bash. Utiliser si chrome-devtools MCP n'est pas disponible, ou en complément pour les interactions complexes (formulaires multi-étapes, navigation par refs, séquences clavier élaborées) :
+CLI Playwright via Bash, sans serveur MCP à garder connecté. Convient aux opérations unitaires comme aux interactions complexes (formulaires multi-étapes, navigation par refs, séquences clavier élaborées) :
 
 ```bash
 agent-browser open <url>                    # Naviguer
@@ -151,12 +137,27 @@ agent-browser is visible @e1                # Vérifier la visibilité
 agent-browser close                         # Fermer
 ```
 
+### Option B : chrome-devtools MCP (repli ou complément)
+
+Outils MCP directs. Le serveur se déconnecte si Chrome est tué et exige alors un redémarrage de session :
+
+| Action | Commande |
+|--------|----------|
+| Naviguer | `mcp__chrome-devtools__navigate_page` |
+| Snapshot DOM / arbre a11y | `mcp__chrome-devtools__take_snapshot` |
+| Screenshot | `mcp__chrome-devtools__take_screenshot` |
+| Cliquer (ouvrir modale, menu) | `mcp__chrome-devtools__click` |
+| Tabuler (test focus) | `mcp__chrome-devtools__press_key` |
+| Injecter axe-core CDN | `mcp__chrome-devtools__evaluate_script` |
+| Émuler mobile | `mcp__chrome-devtools__emulate` |
+
 ### Stratégie de choix
 
-1. **Essayer chrome-devtools MCP d'abord** (plus léger, intégré)
-2. Si MCP indisponible ou si l'interaction échoue → basculer sur `agent-browser`
-3. Pour les **screenshots d'états interactifs** (modale ouverte, focus visible) : `agent-browser` est souvent plus fiable car il gère les refs et les séquences click → wait → screenshot en une chaîne
-4. Pour l'**injection axe-core** : `evaluate_script` (MCP) ou `agent-browser eval`  -  même résultat
+1. **Essayer `agent-browser` d'abord** (CLI via Bash, indépendant d'un serveur MCP)
+2. Si `agent-browser` est indisponible ou si l'interaction échoue → basculer sur chrome-devtools MCP
+3. Si un WAF bloque la page (403 Cloudflare) : `agent-browser --headed` ou un vrai Chrome, jamais le mode headless (voir `a11y-shared-references/cloudflare-bypass.md`)
+4. Pour les **screenshots d'états interactifs** (modale ouverte, focus visible) : `agent-browser` gère les refs et les séquences click → wait → screenshot en une chaîne
+5. Pour l'**injection axe-core** : `agent-browser eval` ou `evaluate_script` (MCP)  -  même résultat
 
 ## Workflow
 
@@ -294,7 +295,7 @@ Si un retour d'auditeur RGAA enrichit les constats après la génération initia
 
 ## Checklist finale
 
-- [ ] Toutes les fiches écrites sur disque dans `tickets/{page}/md/`
+- [ ] Toutes les fiches écrites sur disque dans `tickets/{nom-page-kebab}/`
 - [ ] DOCX générés par l'outil du projet hôte si ce format est requis (optionnel)
 - [ ] Fiches NC conformes au format `/ticket-rgaa` (structure, tableau DSFR, références)
 - [ ] Sources DSFR citées (template EJS + doc accessibilité GitHub) pour chaque NC sur composant DSFR

@@ -1,5 +1,24 @@
 # Journal des versions
 
+## Migration DSFR 1.15.4 — 21 octobre 2026
+
+Export direct depuis la source
+`d4222680b32e346ec4cedb2a775e4baad5bcecf3`, avec l’overlay du kit.
+
+- cible active 1.15.4 pour les générateurs, ressources des nouvelles pages,
+  profil, inventaire, catalogue et nouveaux rapports ;
+- tags statiques groupés en `span`, tags isolés et liens/boutons conservés ;
+  audit acceptant les balises textuelles valides sans interdire les anciens `p` ;
+- couverture dimensionnelle reprenant les versions des résultats, bornes des
+  constats historiques préservées, pictogrammes revérifiés sans changer les SVG ;
+- découverte dynamique des sondes AY11 reçue avec `probe_matrix.py` et ses
+  tests ; décomptes courants issus des catalogues de campagne ;
+- contre-revue 1.15.3 préservée comme rapport historique propre au kit ;
+  contrôle de portabilité distinguant ce rapport et les traces observées des
+  dépendances actives, avec cas négatifs ;
+- archives, qualifications humaines, outillage, tickets et campagne Douane
+  figée en 1.15.2 conservés ; aucune publication ni conformité générale déclarée.
+
 ## Migration DSFR 1.15.3
 
 Premier export appliqué depuis la source par `export-dsfr-agentic-kit.sh` ;

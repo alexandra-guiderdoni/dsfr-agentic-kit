@@ -1,5 +1,5 @@
 {
-  "version": "1.15.3",
+  "version": "1.15.4",
   "generated": "2025-09-05T14:57:06.499727",
   "total_components": 48,
   "total_variants": 136,
@@ -495,7 +495,7 @@
         "dismissible": "<button type=\"button\" class=\"fr-tag fr-tag--dismiss\" aria-label=\"Retirer le tag\">\n    Tag supprimable\n</button>",
         "sm": "<p class=\"fr-tag fr-tag--sm\">Petit tag</p>",
         "icon": "<p class=\"fr-tag fr-tag--icon-left fr-icon-check-line\">\n    Tag avec icône\n</p>",
-        "group": "<ul class=\"fr-tags-group\">\n    <li>\n        <p class=\"fr-tag\">Tag 1</p>\n    </li>\n    <li>\n        <p class=\"fr-tag\">Tag 2</p>\n    </li>\n    <li>\n        <a class=\"fr-tag\" href=\"#\">Tag 3</a>\n    </li>\n</ul>"
+        "group": "<ul class=\"fr-tags-group\">\n    <li>\n        <span class=\"fr-tag\">Tag 1</span>\n    </li>\n    <li>\n        <span class=\"fr-tag\">Tag 2</span>\n    </li>\n    <li>\n        <a class=\"fr-tag\" href=\"#\">Tag 3</a>\n    </li>\n</ul>"
       }
     },
     "tile": {

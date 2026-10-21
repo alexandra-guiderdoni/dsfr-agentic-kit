@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Générateur de gabarits DSFR (DSFR 1.15.3).
+Générateur de gabarits DSFR (DSFR 1.15.4).
 
 Gabarits = agencements structurels composant atomes et composants :
 - skeleton  : charpente de page complète (head + assets DSFR + slots)
@@ -30,9 +30,9 @@ DSFR_VERSION_RE = re.compile(r"^\d+\.\d+\.\d+(?:[.-][0-9A-Za-z.]+)?$")
 
 
 def _dsfr_version() -> str:
-    raw = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.3"
+    raw = os.environ.get("DSFR_OFFICIAL_VERSION") or "1.15.4"
     if not DSFR_VERSION_RE.fullmatch(raw):
-        raise SystemExit(f"Erreur : DSFR_OFFICIAL_VERSION invalide ({raw[:40]!r}) : numéro de version attendu, par exemple 1.15.3")
+        raise SystemExit(f"Erreur : DSFR_OFFICIAL_VERSION invalide ({raw[:40]!r}) : numéro de version attendu, par exemple 1.15.4")
     return raw
 
 

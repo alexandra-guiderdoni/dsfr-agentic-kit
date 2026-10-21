@@ -1,4 +1,10 @@
-# Mesure d'audience DSFR 1.15.3 (analytics)
+# Mesure d'audience DSFR (analytics)
+
+Cible du builder : **1.15.4**. Les descriptions et l’introspection ci-dessous
+restent sourcées sur 1.15.3. Dans le code officiel 1.15.4, les sélecteurs sont
+résolus à la demande pour les imports partiels (PR 1535) ; `pagehide` est écouté
+sur `window`, `unload` et `beforeunload` disparaissent et `visibilitychange`
+reste écouté (PR 1551). Aucun correctif local du module n’est à recopier.
 
 Le module `analytics` du paquet `@gouvfr/dsfr@1.15.3` assure la mesure
 d'audience (compatible Eulerian, tarteaucitron, etc.). C'est un runtime JS :

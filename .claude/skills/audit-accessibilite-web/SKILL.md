@@ -41,7 +41,7 @@ Si la cible manque, afficher l'utilisation et arrêter.
 
 ## Procédure
 
-1. Lire `a11y-shared-references/axe-core-scan-patterns.md`.
+1. Lire `../a11y-shared-references/axe-core-scan-patterns.md`.
 2. Exécuter le scan automatisé disponible et conserver URL, sélecteur,
    impact, règle et preuve.
 3. Vérifier au clavier les landmarks, titres, focus, formulaires, widgets ARIA

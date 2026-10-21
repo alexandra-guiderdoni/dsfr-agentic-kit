@@ -1,5 +1,9 @@
 # Catalogue des pictos SVG
 
+Référence active vérifiée le 21 octobre 2026 : paquet DSFR **1.15.4**, 102 SVG
+identiques octet pour octet au corpus local. Les repères historiques ci-dessous
+restent valables ; voir `../pictos-svg/dsfr-officiels/SOURCE.md`.
+
 ## Sources DSFR
 
 Source officielle à privilégier quand une conformité DSFR est demandée : le dépôt `GouvernementFR/dsfr-artwork` ou une distribution locale vérifiée contenant les pictogrammes.

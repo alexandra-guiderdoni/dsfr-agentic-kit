@@ -1,6 +1,8 @@
 # Source des pictogrammes officiels DSFR
 
-Version de référence vérifiée : `@gouvfr/dsfr@1.15.3` (tag amont `v1.15.3`, SHA `bfd32c25d94e`, 9 septembre 2026 ; précédente `1.15.2`, `ae35a0c8cdc6`, 12 août 2026, vérifiée le 28 août 2026). Vérification 1.15.3 réalisée le 11 septembre 2026 avec le skill `dsfr-changelog`.
+Version de référence vérifiée : `@gouvfr/dsfr@1.15.4` (tag amont `v1.15.4`, SHA `f18688f7292dc3c45322a1e203923291b18b7022`, 12 octobre 2026). Vérification réalisée le 21 octobre 2026 : les 102 chemins et SHA256 du paquet publié correspondent exactement au manifeste et aux SVG locaux. Aucun SVG ni annotation humaine n’a été modifié.
+
+Référence précédente : `1.15.3`, SHA `bfd32c25d94e`, vérifiée le 11 septembre 2026 ; `1.15.2`, SHA `ae35a0c8cdc6`, vérifiée le 28 août 2026. Les SVG restent identiques sur ces versions.
 
 Lot initial récupéré le 13 juin 2026 depuis le paquet npm `@gouvfr/dsfr@1.14.4`, dossier `dist/artwork/pictograms`. Le lot n’a pas été modifié depuis : les 102 SVG de `1.14.4` et de `1.15.2` sont identiques octet pour octet.
 

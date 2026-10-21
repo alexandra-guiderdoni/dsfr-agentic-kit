@@ -587,7 +587,7 @@ def block_badges(s):
 def block_tags(s):
     items = s.get("items", [])
     lis = "".join(
-        f"\n                    <li>{gc.generate_tag(label=it.get('label', 'Tag'), href=it.get('href'), sm=it.get('sm', False))}</li>"
+        f"\n                    <li>{gc.generate_tag(label=it.get('label', 'Tag'), href=it.get('href'), sm=it.get('sm', False), markup='span')}</li>"
         for it in items
     )
     return f'<ul class="fr-tags-group">{lis}\n            </ul>'

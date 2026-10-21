@@ -1,4 +1,4 @@
-# Inventaire officiel DSFR 1.15.3
+# Inventaire officiel DSFR 1.15.4
 
 Inventaire généré depuis le paquet npm extrait localement. Il mesure la
 surface officielle disponible ; il ne prouve pas une conformité RGAA ni
@@ -6,13 +6,13 @@ un droit de publication.
 
 ## Source
 
-- Paquet : `@gouvfr/dsfr@1.15.3`
-- Chemin : `~/.cache/dsfr-official-cache/gouvfr-dsfr-1.15.3/package`
+- Paquet : `@gouvfr/dsfr@1.15.4`
+- Chemin : `~/.cache/dsfr-official-cache/gouvfr-dsfr-1.15.4/package`
 - Commande :
 
 ```bash
 SKILL_DIR=.claude/skills/dsfr-components  # adapter à l'emplacement d'installation
-python3 "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1.15.3 --output "$SKILL_DIR/evals/official-coverage-inventory.md"
+python3 "$SKILL_DIR/scripts/inventory_official_coverage.py" --official-version 1.15.4 --output "$SKILL_DIR/evals/official-coverage-inventory.md"
 ```
 
 ## Synthèse

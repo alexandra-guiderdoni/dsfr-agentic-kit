@@ -1,17 +1,18 @@
 {
   "case": "near-miss-service-public-no-dsfr",
-  "raw_sha256": "c6e232495d902392562099398030386963ca64c8f290ca28ac3782ae16e815ed",
+  "raw_sha256": "76e0c333b11514ca63eb6c5afab5902b0cde5c5d8cab8bc3d1073b4f21edb67f",
   "commands": [],
   "final_messages": [
-    "Skill utilisé : non.\n\nDécision : routage seulement, aucune écriture. La demande simulée ne déclenche pas explicitement `dsfr-components` ni une référence DSFR : “service public” est un indice métier, pas une consigne DSFR.\n\nQuestion éventuelle : si implémentation réelle, demander “Souhaites-tu une page conforme DSFR/RGAA ou une page HTML générique ?”\n\nSources lues : aucune lecture de fichier ni skill ; uniquement les consignes présentes dans ce tour.\n\nClaim autorisé : je peux dire que le routage DSFR n’est pas déclenché explicitement ici.\n\nLimites : je n’ai pas validé de `AGENTS.md` local, pas lu de skill, pas chargé de référence DSFR, pas produit de fichier."
+    "- **Skill utilisé :** aucun.\n- **Décision :** aucun chargement DSFR ; « service public » seul ne constitue pas une demande explicite de DSFR.\n- **Question éventuelle :** aucune nécessaire pour ce test.\n- **Sources lues :** consignes et catalogue déjà présents dans le contexte uniquement.\n- **Claim autorisé :** aucun déclencheur DSFR explicite identifié dans les règles visibles.\n- **Limites :** aucun skill ni référence DSFR ouvert, aucune écriture, aucune page produite ni conformité vérifiée."
   ],
   "runtime_errors": [
-    "Skill descriptions were shortened to fit the 2% skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+    "Under-development features enabled: default_mode_request_user_input. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in ~/.codex/config.toml."
   ],
   "usage": {
-    "input_tokens": 24915,
-    "cached_input_tokens": 24448,
-    "output_tokens": 684,
-    "reasoning_output_tokens": 516
+    "input_tokens": 39006,
+    "cached_input_tokens": 7168,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 855,
+    "reasoning_output_tokens": 734
   }
 }

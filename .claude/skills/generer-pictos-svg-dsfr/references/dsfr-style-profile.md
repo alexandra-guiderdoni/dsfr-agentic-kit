@@ -1,8 +1,8 @@
 # Profil de style des pictogrammes DSFR
 
 Corpus analysé : `pictos-svg/dsfr-officiels`.
-Source : `@gouvfr/dsfr@1.15.3`.
-Date d'analyse : 2026-09-11.
+Source : `@gouvfr/dsfr@1.15.4`.
+Date d'analyse : 2026-10-21.
 Nombre de pictogrammes officiels : 102.
 Nombre de SVG dans le corpus : 102.
 Empreinte du corpus (SHA256 des empreintes) : `7b410644fca7c5f3…`.

@@ -69,7 +69,8 @@ Les chemins sont relatifs au dossier du skill actif, donc valables côté
 
 Lire la référence de scan, puis utiliser la meilleure surface disponible :
 
-1. `mcp__accesslint__audit_url` si disponible et adapté au besoin.
+1. `mcp__accesslint__audit_live` si disponible et adapté au besoin (pour un
+   fichier local, passer son contenu à `mcp__accesslint__audit_html`).
 2. Chrome DevTools avec injection axe-core.
 3. Fallback CLI `npx @axe-core/cli` si CSP ou injection impossible.
 
@@ -123,8 +124,8 @@ Après chaque série de corrections :
 2. recharger la page ;
 3. refaire le scan avec la même stratégie ou une stratégie documentée ;
 4. comparer les paires `(id, sélecteur)`, pas seulement les IDs ;
-5. utiliser `mcp__accesslint__diff_html` si disponible pour détecter les
-   régressions structurelles.
+5. détecter les régressions structurelles en comparant les deux scans ; le
+   serveur MCP AccessLint n'expose pas d'outil de diff HTML.
 
 Arrêts obligatoires :
 

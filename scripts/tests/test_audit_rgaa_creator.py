@@ -19,6 +19,17 @@ ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / ".claude/skills/audit-rgaa-creator/scripts/audit_campaign.py"
 sys.path.insert(0, str(CLI.parent))
 from audit_campaign import preflight, probe_network_url  # noqa: E402
+from probe_matrix import (  # noqa: E402
+    COUVERTURE_ABSENTE,
+    COUVERTURE_CANDIDAT,
+    COUVERTURE_SANS_CANDIDAT,
+    build_probe_plan,
+    criterion_sources,
+    classify_payload,
+    criterion_sort_key,
+    discover_probes,
+    summarise,
+)
 from browser_launch import browser_launch_options, browser_launch_summary  # noqa: E402
 from navigation import goto_checked  # noqa: E402
 
@@ -70,6 +81,7 @@ class CreatorTests(unittest.TestCase):
             text=True,
             capture_output=True,
             env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+            check=False,
         )
         if ok and result.returncode != 0:
             self.fail(
@@ -121,6 +133,7 @@ class CreatorTests(unittest.TestCase):
             [sys.executable, str(helper), str(self.project), "--check"],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(
@@ -733,6 +746,7 @@ class CreatorTests(unittest.TestCase):
             ],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertNotEqual(0, result.returncode)
         self.assertIn("non portable", result.stderr)
@@ -772,6 +786,7 @@ class CreatorTests(unittest.TestCase):
             ],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertEqual(0, result.returncode)
         self.assertEqual(1, result.stdout.count('<hr class="audit-finding-separator"'))
@@ -802,6 +817,7 @@ class CreatorTests(unittest.TestCase):
             ],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertEqual(0, result.returncode)
         self.assertEqual(0, result.stdout.count('<hr class="audit-finding-separator"'))
@@ -834,6 +850,7 @@ class CreatorTests(unittest.TestCase):
             ],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertNotEqual(0, result.returncode)
         self.assertIn("claim d’audit interdit", result.stderr)
@@ -861,6 +878,7 @@ class CreatorTests(unittest.TestCase):
             ],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertNotEqual(0, result.returncode)
         self.assertIn("JSON invalide", result.stderr)
@@ -1637,6 +1655,7 @@ class CreatorTests(unittest.TestCase):
             [sys.executable, str(script), str(self.project), "P01"],
             text=True,
             capture_output=True,
+            check=False,
         )
         self.assertEqual(0, result.returncode, result.stderr)
         coverage = json.loads(
@@ -1646,6 +1665,19 @@ class CreatorTests(unittest.TestCase):
         )
         self.assertEqual(1, coverage["summary"]["detected_families"])
         self.assertGreaterEqual(coverage["summary"]["catalog_rules"], 46)
+        self.assertEqual("1.15.4", coverage["versions"]["target"])
+        self.assertEqual("inconnue", coverage["versions"]["observed"])
+        page["version"] = {"observed": ["1.13.2"], "target": "1.15.3"}
+        (page_dir / "P01.json").write_text(json.dumps(page), encoding="utf-8")
+        historical = subprocess.run(
+            [sys.executable, str(script), str(self.project), "P01"],
+            text=True, capture_output=True,
+            check=False,
+        )
+        self.assertEqual(0, historical.returncode, historical.stderr)
+        old_coverage = json.loads((self.project / "dsfr/P01-COUVERTURE-DIMENSIONNELLE.json").read_text())
+        self.assertEqual("1.15.3", old_coverage["versions"]["target"])
+        self.assertEqual("1.13.2", old_coverage["versions"]["observed"])
 
     def test_page_specific_coverage_paths_are_not_hardcoded_to_p01(self):
         engine = (
@@ -1663,6 +1695,244 @@ class CreatorTests(unittest.TestCase):
         self.assertNotIn('root / "dsfr/P01-COUVERTURE-DIMENSIONNELLE.json"', report)
         self.assertNotIn("p01_decisions_path", validator)
 
+
+
+FAKE_AY11 = """#!/usr/bin/env python3
+import sys
+
+PROBES = {
+    "promoted-static": ("html_path", "--criterion {1.5,1.7}", True),
+    "promoted-css-dynamic": ("html_path collection_path", "[--criterion {10.14}]", False),
+    "focus-visible": ("collection_path", "", False),
+    "candidate-static": ("html_path", "--criterion {}", True),
+}
+args = sys.argv[1:]
+if args[:1] != ["probes"]:
+    sys.exit(2)
+rest = [a for a in args[1:] if a != "--help"]
+if not rest:
+    print("usage: ay11 probes [-h] {%s} ..." % ",".join(PROBES))
+    sys.exit(0)
+name = rest[0]
+positional, criterion, _ = PROBES[name]
+print("usage: ay11 probes %s [-h] %s [--json] %s" % (name, criterion, positional))
+print("")
+print("positional arguments:")
+for item in positional.split():
+    print("  %s" % item)
+print("")
+print("options:")
+print("  -h, --help  show this help message and exit")
+"""
+
+
+class BuilderMigrationTests(unittest.TestCase):
+    def test_timestamp_keeps_python_3_10_datetime_api(self):
+        from datetime import datetime, timezone
+        from types import SimpleNamespace
+        from audit_campaign import now
+
+        legacy_datetime = SimpleNamespace(datetime=datetime, timezone=timezone)
+        with patch("audit_campaign.dt", legacy_datetime):
+            self.assertTrue(now().endswith("+00:00"))
+
+    def test_grouped_tags_and_negative_output_contract(self):
+        sys.path.insert(0, str(ROOT / ".claude/skills/dsfr-components/scripts"))
+        import check_generated_outputs as checks
+        import generate_assembled_page as assembly
+        import generate_component as gc
+
+        html = assembly.block_tags(
+            {"items": [{"label": "A < B"}, {"label": "Lien", "href": "/suite"}]}
+        )
+        self.assertIn('<span class="fr-tag">A &lt; B</span>', html)
+        self.assertIn('<a class="fr-tag" href="/suite">Lien</a>', html)
+        self.assertFalse(
+            checks.check_tag_contract("migration", checks.parse_markup(html))
+        )
+        mutated = html.replace("<span", "<p").replace("</span>", "</p>")
+        self.assertTrue(
+            checks.check_tag_contract("migration", checks.parse_markup(mutated))
+        )
+        self.assertTrue(checks.check_builder_contract("builder:migration", mutated))
+        self.assertEqual('<p class="fr-tag">Tag</p>', gc.generate_tag())
+        self.assertTrue(gc.generate_tag(href="/suite", markup="span").startswith("<a "))
+        self.assertTrue(
+            gc.generate_tag(dismissible=True, markup="span").startswith("<button ")
+        )
+        with self.assertRaises(ValueError):
+            gc.generate_tag(markup='span onclick="x"')
+
+    def test_toggle_demo_defaults_are_preserved(self):
+        sys.path.insert(0, str(ROOT / ".claude/skills/dsfr-components/scripts"))
+        import generate_component as gc
+
+        for items in [[], [{"label": "A"}, {"label": "B"}]]:
+            html = gc.generate_toggle(items=items)
+            self.assertEqual(2, html.count('type="checkbox"'))
+            ids = re.findall(r'<input[^>]+id="([^"]+)"', html)
+            self.assertEqual(2, len(set(ids)))
+            for element_id in ids:
+                self.assertIn(f'for="{element_id}"', html)
+class ProbeMatrixTests(unittest.TestCase):
+    """Découverte des sondes AY11 et construction du plan d'appels."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.ay11 = Path(self.tmp.name) / "ay11"
+        self.ay11.write_text(FAKE_AY11, encoding="utf-8")
+        self.ay11.chmod(0o755)
+        self.catalog = discover_probes(str(self.ay11))
+
+    def test_discovery_reads_input_kind_and_criteria(self):
+        probes = {item["probe"]: item for item in self.catalog["probes"]}
+        self.assertEqual(probes["promoted-static"]["input"], "html")
+        self.assertEqual(probes["promoted-static"]["criteria"], ["1.5", "1.7"])
+        self.assertTrue(probes["promoted-static"]["criterion_required"])
+        self.assertEqual(probes["focus-visible"]["input"], "collection")
+        self.assertEqual(probes["focus-visible"]["criteria"], [])
+        self.assertEqual(probes["promoted-css-dynamic"]["input"], "both")
+        self.assertFalse(probes["promoted-css-dynamic"]["criterion_required"])
+
+    def test_probe_without_usable_criterion_is_skipped_not_silently_run(self):
+        skipped = [item["probe"] for item in self.catalog["skipped"]]
+        self.assertIn("candidate-static", skipped)
+        self.assertNotIn(
+            "candidate-static", [item["probe"] for item in self.catalog["probes"]]
+        )
+
+    def test_plan_emits_one_call_per_criterion(self):
+        # Omettre --criterion ne collecte qu'un critère par défaut : chaque
+        # critère doit donc apparaître dans un appel distinct.
+        plan = build_probe_plan(self.catalog, Path("page.html"), Path("coll.json"))
+        static = [item for item in plan if item["probe"] == "promoted-static"]
+        self.assertEqual([item["criterion"] for item in static], ["1.5", "1.7"])
+        self.assertEqual({item["name"] for item in static}, {"promoted-static-1.5", "promoted-static-1.7"})
+
+    def test_plan_passes_the_inputs_each_probe_expects(self):
+        plan = {
+            item["probe"]: item["argv"]
+            for item in build_probe_plan(self.catalog, Path("page.html"), Path("coll.json"))
+        }
+        self.assertEqual(plan["focus-visible"], ["probes", "focus-visible", "coll.json", "--json"])
+        self.assertEqual(
+            plan["promoted-css-dynamic"][:4],
+            ["probes", "promoted-css-dynamic", "page.html", "coll.json"],
+        )
+
+    def test_missing_capture_is_not_an_absence_of_defect(self):
+        verdict = classify_payload(
+            {"collection_status": "not_collected", "additional_capture_count": 0, "criterion_id": "10.14"}
+        )
+        self.assertTrue(verdict["missing_capture"])
+        collected = classify_payload(
+            {"collection_status": "collected_no_candidate", "criterion_id": "4.1", "observed_evidence": []}
+        )
+        self.assertFalse(collected["missing_capture"])
+        self.assertEqual(collected["signal_count"], 0)
+
+    def test_only_adverse_entries_count_as_signals(self):
+        # Inspecter n'est pas trouver : 109 éléments contrôlés dont aucun
+        # défavorable ne font pas 109 signaux.
+        payload = {
+            "signals": [
+                {"status": "candidat_insuffisant"},
+                {"status": "candidat_suffisant"},
+                {"status": "candidat_focus_visible"},
+                {"status": "candidat_focus_non_visible"},
+                {"status": "indetermine"},
+                {"human_review_status": "jugement_humain_requis"},
+            ]
+        }
+        verdict = classify_payload(payload)
+        self.assertEqual(verdict["signal_count"], 2)
+        self.assertEqual(verdict["inspected_count"], 6)
+        self.assertEqual(verdict["undetermined_count"], 2)
+
+    def test_entry_without_status_is_undetermined_not_a_defect(self):
+        verdict = classify_payload({"candidates": [{"node": "a"}, {"node": "p"}]})
+        self.assertEqual(verdict["signal_count"], 0)
+        self.assertEqual(verdict["undetermined_count"], 2)
+
+    def test_criteria_are_ordered_numerically(self):
+        self.assertEqual(
+            sorted(["10.3", "1.8", "10.10", "2.2"], key=criterion_sort_key),
+            ["1.8", "2.2", "10.3", "10.10"],
+        )
+
+    def test_summary_separates_signal_from_missing_capture(self):
+        summary = summarise(
+            [
+                {"name": "a", "criterion": "1.8", "signal_count": 32, "missing_capture": False},
+                {"name": "b", "criterion": "10.14", "signal_count": 0, "missing_capture": True},
+                {"name": "c", "criterion": "4.1", "signal_count": 0, "missing_capture": False},
+            ]
+        )
+        self.assertEqual(summary["criteria_with_signal"], ["1.8"])
+        self.assertEqual(summary["criteria_missing_capture"], ["10.14"])
+        self.assertEqual(summary["call_count"], 3)
+        self.assertFalse(summary["produces_conformity"])
+
+    def test_couvert_sans_candidat_se_distingue_de_non_couvert(self):
+        # Le coeur du correctif : un collecteur qui tourne sans rien trouver
+        # appelle une revue humaine ; un critere sans collecteur, non.
+        agregat = {
+            "criteria": {},
+            "collect_html": {"9.1": {"candidates": ["suspicion_invalide"], "evidence_count": 12}},
+            "axe": {},
+            "validator": {},
+            "collect_html_catalog": {"capable": ["9.1", "12.4"], "capable_count": 2,
+                                     "covered_without_candidate": ["12.4"]},
+        }
+        self.assertEqual(
+            criterion_sources(agregat, "9.1")["collect_html_coverage"], COUVERTURE_CANDIDAT
+        )
+        self.assertEqual(
+            criterion_sources(agregat, "12.4")["collect_html_coverage"],
+            COUVERTURE_SANS_CANDIDAT,
+        )
+        self.assertEqual(
+            criterion_sources(agregat, "6.1")["collect_html_coverage"], COUVERTURE_ABSENTE
+        )
+
+    def test_un_critere_couvert_sans_candidat_reste_instrumente(self):
+        # Il ne doit pas disparaitre de la liste des sources : c'est ce qui a
+        # fait conclure a tort qu'aucun outil ne couvrait 6.1.
+        agregat = {
+            "criteria": {}, "collect_html": {}, "axe": {}, "validator": {},
+            "collect_html_catalog": {"capable": ["12.4"], "capable_count": 1,
+                                     "covered_without_candidate": ["12.4"]},
+        }
+        self.assertIn("collect-html", criterion_sources(agregat, "12.4")["sources"])
+        self.assertNotIn("collect-html", criterion_sources(agregat, "6.1")["sources"])
+        self.assertTrue(criterion_sources(agregat, "12.4")["collect_html_capable"])
+        self.assertFalse(criterion_sources(agregat, "6.1")["collect_html_capable"])
+
+    def test_une_fiche_ecrite_a_la_main_survit_a_la_regeneration(self):
+        # La phase de rapport supprimait tout .md du dossier tickets avant de
+        # regenerer : dix fiches redigees a la main ont ete perdues ainsi.
+        with tempfile.TemporaryDirectory() as tmp:
+            tickets = Path(tmp) / "tickets"
+            tickets.mkdir()
+            (tickets / "NC-P02-011-a-la-main.md").write_text("fiche humaine", encoding="utf-8")
+            (tickets / "NC-A-genere.md").write_text("fiche generee", encoding="utf-8")
+            (tickets / ".generes.json").write_text(
+                json.dumps({"fichiers": ["NC-A-genere.md"]}), encoding="utf-8"
+            )
+            connus = set(json.loads((tickets / ".generes.json").read_text())["fichiers"])
+            for ancien in tickets.glob("*.md"):
+                if ancien.name in connus:
+                    ancien.unlink()
+            restants = sorted(p.name for p in tickets.glob("*.md"))
+            self.assertEqual(restants, ["NC-P02-011-a-la-main.md"])
+
+    def test_le_manifeste_ne_liste_que_les_fiches_generees(self):
+        chemin = ROOT / ".claude/skills/audit-rgaa-creator/scripts/audit_campaign.py"
+        source = chemin.read_text(encoding="utf-8")
+        self.assertIn('manifeste = tickets / ".generes.json"', source)
+        self.assertIn("if ancien.name in connus:", source)
+        self.assertNotIn("for old in tickets.glob(\"*.md\"):", source)
 
 if __name__ == "__main__":
     unittest.main()

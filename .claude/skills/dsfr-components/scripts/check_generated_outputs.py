@@ -1084,6 +1084,21 @@ def check_badge_contract(scope: str, _variant: str, facts: MarkupFacts) -> list[
     return [Issue("structure_contract", scope, ", ".join(missing))] if missing else []
 
 
+def check_tag_contract(scope: str, facts: MarkupFacts) -> list[Issue]:
+    # Contrat des sorties du builder 1.15.4 ; ce n’est pas une interdiction
+    # générale d’audit des p groupés (le gabarit officiel garde ce défaut).
+    if any(
+        has_ancestor_class(facts, tag, "fr-tags-group")
+        for tag in find_elements(facts, tag="p", class_name="fr-tag")
+    ):
+        return [
+            Issue(
+                "structure_contract",
+                scope,
+                "span.fr-tag expected in generated .fr-tags-group",
+            )
+        ]
+    return []
 def check_component_root_contract(component: str, scope: str, facts: MarkupFacts) -> list[Issue]:
     expected = COMPONENT_ROOT_CLASS_CONTRACTS.get(component)
     if not expected:
@@ -1101,6 +1116,9 @@ def check_component_root_contract(component: str, scope: str, facts: MarkupFacts
 
 def check_component_structure(component: str, variant: str, scope: str, facts: MarkupFacts) -> list[Issue]:
     issues = check_component_root_contract(component, scope, facts)
+    if component == "tag":
+        issues.extend(check_tag_contract(scope, facts))
+        return issues
     if component == "header":
         issues.extend(check_header_contract(scope, variant, facts))
         return issues
@@ -1352,7 +1370,7 @@ LAYOUT_NEGATIVE_ARGS: list[tuple[str, list[str], str]] = [
 ]
 LAYOUT_EXPECTATIONS: list[tuple[str, list[str], dict[str, str], list[str], list[str]]] = [
     ("layout-expect:card-grid-string-items", ["card-grid", "--config", '{"cards":["Carte A","Carte B"]}'], {}, [">Carte A<"], []),
-    ("layout-expect:version-empty-fallback", ["skeleton", "--config", "{}"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.3/dist"], ["dsfr@/dist"]),
+    ("layout-expect:version-empty-fallback", ["skeleton", "--config", "{}"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.4/dist"], ["dsfr@/dist"]),
     ("layout-expect:tile-grid-content-container", ["tile-grid", "--config", '{"tiles":[{"title":"A","href":"/a"}]}'], {}, ['<div class="fr-tile__content">'], []),
 ]
 # Cas négatifs des pages : le préfixe --assets est interpolé dans des attributs
@@ -1381,7 +1399,7 @@ PAGE_EXPECTATIONS: list[tuple[str, list[str], dict[str, str], list[str], list[st
     ("page-expect:brand-neutral", ["--type", "standard", "--title", "T"], {}, [], ['class="fr-logo"']),
     ("page-expect:dark", ["--type", "standard", "--title", "T", "--dark"], {}, ['data-fr-scheme="dark"'], []),
     ("page-expect:sitemap-title", ["--type", "sitemap", "--title", "Mon plan"], {}, ["<h1>Mon plan</h1>"], ["<h1>Plan du site</h1>"]),
-    ("page-expect:version-empty-fallback", ["--type", "standard", "--title", "T"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.3/dist/"], ["dsfr@/dist"]),
+    ("page-expect:version-empty-fallback", ["--type", "standard", "--title", "T"], {"DSFR_OFFICIAL_VERSION": ""}, ["dsfr@1.15.4/dist/"], ["dsfr@/dist"]),
     ("page-expect:deferred-script-keeps-server-errors", ["--type", "form", "--title", "T"], {}, ["dropClientConstraints();"], []),
     ("page-expect:landing-tile-content", ["--type", "landing", "--title", "T"], {}, ['<div class="fr-tile__content">'], ['fr-tile--vertical"']),
     ("page-expect:content-code-preserved", ["--type", "standard", "--title", "T", "--content", '<p><code>href="#"</code></p>'], {}, ['<code>href="#"</code>'], []),
@@ -1823,6 +1841,7 @@ BUILDER_EXPECTATIONS: list[tuple[str, dict, list[str], list[str], dict[str, int]
     ("builder-expect:download-default-detail", {"title": "T", "sections": [_h1_section(), {"block": "download", "label": "Rapport", "href": "/r.pdf"}]}, [], ['<span class="fr-download__detail">\n                    \n'], {}),
     ("builder-expect:orphan-endtag-still-counts-h1", {"title": "T", "auto_h1": False, "sections": [{"block": "content", "title": "Brut", "allow_raw_html": True, "body": "<p>Texte</p></div></div></div>"}, _h1_section("Titre")]}, [], [], {}),
     ("builder-expect:input-name", {"title": "T", "sections": [_h1_section(), {"block": "form", "fields": [{"type": "input", "label": "Courriel", "name": "email"}]}]}, ['name="email"'], [], {}),
+    ("builder-expect:tags-group-span", {"title": "T", "sections": [_h1_section(), {"block": "tags", "items": [{"label": "Statique"}, {"label": "Lien", "href": "/suite"}]}]}, ['<li><span class="fr-tag">Statique</span></li>', '<a class="fr-tag" href="/suite">Lien</a>'], ['<p class="fr-tag'], {}),
     ("builder-expect:badges-group-span", {"title": "T", "sections": [_h1_section(), {"block": "badges", "items": [{"label": "Nouveau"}, {"label": "Urgent", "variant": "error"}]}]}, ['<li><span class="fr-badge">Nouveau</span></li>', '<span class="fr-badge fr-badge--error">Urgent</span>'], ['<p class="fr-badge'], {}),
     ("builder-expect:notice-id-with-container", {"title": "T", "sections": [_h1_section(), {"block": "notice", "id": "bandeau2", "container": True, "title": "Autre", "description": "Texte"}]}, ['id="bandeau2"'], [], {'id="bandeau2"': 1}),
     ("builder-expect:accordion-explicit-prefix-collision", {"title": "T", "sections": [_h1_section(), {"block": "accordion", "id_prefix": "accordion-2", "heading_level": 2, "items": [{"title": "A", "content": "a"}]},
@@ -2000,6 +2019,9 @@ def check_no_inline_event_handlers(scope: str, html: str) -> list[Issue]:
 
 def check_builder_contract(scope: str, html: str) -> list[Issue]:
     missing: list[str] = []
+    missing.extend(
+        issue.detail for issue in check_tag_contract(scope, parse_markup(html))
+    )
     if scope == "builder:smoke":
         if "<h1>Smoke builder</h1>" not in html:
             missing.append("content.heading_level=1 did not emit h1")
@@ -2248,25 +2270,83 @@ def check_tool_cases() -> list[Issue]:
                 issues.append(Issue("tool_negative_case_passed", scope, "expected refusal"))
             elif "Traceback" in output or expected not in output:
                 issues.append(Issue("tool_negative_case_wrong_error", scope, output.strip().replace("\n", " ")[-160:]))
-    official = DEFAULT_OFFICIAL_CACHE_DIR / "gouvfr-dsfr-1.15.3" / "package"
+    official = DEFAULT_OFFICIAL_CACHE_DIR / "gouvfr-dsfr-1.15.4" / "package"
     if official_package_complete(official):
         # Sortie JSON de l'inventaire pure (aucun message parasite sur stdout).
-        result = subprocess.run([sys.executable, str(INVENTORY_SCRIPT), "--official-package", str(official), "--format", "json"], cwd=WORKSPACE, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(INVENTORY_SCRIPT),
+                "--official-package",
+                str(official),
+                "--format",
+                "json",
+            ],
+            cwd=WORKSPACE,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
         try:
             json.loads(result.stdout)
         except json.JSONDecodeError:
-            issues.append(Issue("tool_expectation_missing", "inventory-expect:json-stdout-pure", result.stdout.strip().replace("\n", " ")[:120]))
+            issues.append(
+                Issue(
+                    "tool_expectation_missing",
+                    "inventory-expect:json-stdout-pure",
+                    result.stdout.strip().replace("\n", " ")[:120],
+                )
+            )
         # Tilde développé et version affichée = celle du paquet lu.
-        home_relative = "~/" + str(official.relative_to(Path.home())) if str(official).startswith(str(Path.home())) else str(official)
-        returncode, output = run_script_check(ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": home_relative})
+        home_relative = (
+            "~/" + str(official.relative_to(Path.home()))
+            if str(official).startswith(str(Path.home()))
+            else str(official)
+        )
+        returncode, output = run_script_check(
+            ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": home_relative}
+        )
         if returncode != 0:
-            issues.append(Issue("tool_expectation_failed", "icons-expect:tilde-package-dir", output.strip().replace("\n", " ")[-160:]))
-        historical_version = os.environ.get("DSFR_HISTORICAL_OFFICIAL_VERSION", "1.14.4")
-        older = DEFAULT_OFFICIAL_CACHE_DIR / f"gouvfr-dsfr-{historical_version}" / "package"
+            issues.append(
+                Issue(
+                    "tool_expectation_failed",
+                    "icons-expect:tilde-package-dir",
+                    output.strip().replace("\n", " ")[-160:],
+                )
+            )
+        historical_version = os.environ.get(
+            "DSFR_HISTORICAL_OFFICIAL_VERSION", "1.14.4"
+        )
+        older = (
+            DEFAULT_OFFICIAL_CACHE_DIR / f"gouvfr-dsfr-{historical_version}" / "package"
+        )
         if official_package_complete(older):
-            returncode, output = run_script_check(ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": str(older)})
-            if returncode != 0 or historical_version not in output or "1.15.3" in output:
-                issues.append(Issue("tool_expectation_missing", "icons-expect:version-of-package-read", output.strip().replace("\n", " ")[:160]))
+            returncode, output = run_script_check(
+                ICONS_SCRIPT, [], {"DSFR_OFFICIAL_PACKAGE_DIR": str(older)}
+            )
+            if (
+                returncode != 0
+                or historical_version not in output
+                or "1.15.4" in output
+            ):
+                issues.append(
+                    Issue(
+                        "tool_expectation_missing",
+                        "icons-expect:version-of-package-read",
+                        output.strip().replace("\n", " ")[:160],
+                    )
+                )
+        else:
+            print(
+                f"NON EXERCÉ icons-expect:version-of-package-read : cache {historical_version} absent",
+                file=sys.stderr,
+            )
+    else:
+        print(
+            "NON EXERCÉ inventory-expect:json-stdout-pure et icons-expect:tilde-package-dir : cache 1.15.4 absent",
+            file=sys.stderr,
+        )
     return issues
 
 
@@ -2827,7 +2907,7 @@ def check_reference_classes(package_path: Path, official: set[str] | None = None
     for md in sorted((SKILL_DIR / "references").rglob("*.md")):
         text = md.read_text(encoding="utf-8")
         unknown: set[str] = set()
-        for block in re.findall(r"```(?:html)?\n(.*?)```", text, flags=re.S):
+        for block in re.findall(r"```(?:html)?\n(.*?)```", text, flags=re.DOTALL):
             for attr in HTML_CLASS_ATTR_RE.findall(block):
                 for token in attr.split():
                     if REFERENCE_CLASS_RE.match(token) and token not in official:

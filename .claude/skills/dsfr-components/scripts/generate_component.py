@@ -535,16 +535,30 @@ TAG_COLORS = (
 )
 
 
-def generate_tag(label: str = "Tag", href: str | None = None, dismissible: bool = False,
-                 sm: bool = False, icon: str | None = None, icon_position: str = "left",
-                 color: str | None = None) -> str:
-    """Génère un tag DSFR (statique, lien ou bouton supprimable), coloré sur demande."""
+def generate_tag(
+    label: str = "Tag",
+    href: str | None = None,
+    dismissible: bool = False,
+    sm: bool = False,
+    icon: str | None = None,
+    icon_position: str = "left",
+    color: str | None = None,
+    markup: str = "p",
+) -> str:
+    """Tag DSFR : p isolé par défaut, span pour les groupes statiques du builder.
+
+    Les liens et boutons gardent leur balise, indépendamment du markup statique.
+    """
+    if markup not in ("p", "span"):
+        raise ValueError("markup : p ou span attendu")
     classes = ["fr-tag"]
     if sm:
         classes.append("fr-tag--sm")
     if color:
         if color not in TAG_COLORS:
-            raise ValueError(f"color '{color}' inconnue pour un tag ; couleurs attendues : {', '.join(TAG_COLORS)}")
+            raise ValueError(
+                f"color '{color}' inconnue pour un tag ; couleurs attendues : {', '.join(TAG_COLORS)}"
+            )
         classes.append(f"fr-tag--{color}")
     if icon:
         icon, icon_position = _safe_icon(icon, icon_position)
@@ -553,11 +567,13 @@ def generate_tag(label: str = "Tag", href: str | None = None, dismissible: bool 
     class_attr = " ".join(classes)
     safe_label = esc(label)
     if dismissible:
-        return (f'<button type="button" class="{class_attr} fr-tag--dismiss" '
-                f'aria-label="Retirer {safe_label}">{safe_label}</button>')
+        return (
+            f'<button type="button" class="{class_attr} fr-tag--dismiss" '
+            f'aria-label="Retirer {safe_label}">{safe_label}</button>'
+        )
     if href:
         return f'<a class="{class_attr}" href="{esc_href(href)}">{safe_label}</a>'
-    return f'<p class="{class_attr}">{safe_label}</p>'
+    return f'<{markup} class="{class_attr}">{safe_label}</{markup}>'
 
 
 def generate_callout(title: str = "", text: str = "", icon: str | None = None, color: str | None = None,
@@ -1713,9 +1729,9 @@ def generate_footer(brand_mode: str = "neutral", service_name: str = "Nom du ser
     if brand_mode == "neutral":
         brand = f'            <div class="fr-footer__brand">\n                <p>{esc(service_name)}</p>\n            </div>'
     else:
-        brand = (f'            <div class="fr-footer__brand fr-enlarge-link">\n'
-                 f'                <a href="/" title="Retour à l\'accueil">\n'
-                 f'                    <p class="fr-logo">République<br>Française</p>\n                </a>\n            </div>')
+        brand = ('            <div class="fr-footer__brand fr-enlarge-link">\n'
+            '                <a href="/" title="Retour à l\'accueil">\n'
+            '                    <p class="fr-logo">République<br>Française</p>\n                </a>\n            </div>')
 
     if content_links is None:
         content_links = [

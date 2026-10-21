@@ -1,7 +1,7 @@
 # Index d’analyse des pictogrammes officiels DSFR
 
 Source : `dsfr-artwork`.
-Paquet source : `@gouvfr/dsfr@1.15.2`, version vérifiée le 28 août 2026 ; lot initial `1.14.4`, identique octet pour octet (voir `SOURCE.md`).
+Paquet de référence : `@gouvfr/dsfr@1.15.4`, version vérifiée le 21 octobre 2026 ; lot initial `1.14.4`, identique octet pour octet (voir `SOURCE.md`).
 Racine source : `dist/artwork/pictograms`.
 Nombre de pictogrammes : 102.
 

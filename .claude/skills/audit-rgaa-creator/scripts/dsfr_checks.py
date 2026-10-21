@@ -337,7 +337,7 @@ async def inspect_page(
           return !root.textContent.trim()||!!root.id&&[...document.querySelectorAll(`[${c.name}]`)].some(node=>(node.getAttribute(c.name)||'').trim().split(/\s+/).includes(root.id));
         }
         if(c.type==='tag_semantics'){
-          if(root.tagName==='P')return !!root.textContent.trim();
+          if(root.tagName==='P'||root.tagName==='SPAN')return !!root.textContent.trim();
           if(root.tagName==='A')return !!(root.getAttribute('href')||'').trim();
           if(root.tagName==='BUTTON')return !!(root.getAttribute('type')||'').trim()&&(!root.classList.contains('fr-tag--dismiss')||(root.getAttribute('aria-label')||'').trim())&&(!root.closest('.fr-tags-group')||(root.hasAttribute('aria-pressed')||root.classList.contains('fr-tag--dismiss')));
           return false;
@@ -422,12 +422,12 @@ async def inspect_page(
     dsfr_resource_failures = [
         item
         for item in resource_failures
-        if re.search(r"dsfr|marianne|font|woff|\.css(?:[?#]|$)|\.js(?:[?#]|$)", item["url"], re.I)
+        if re.search(r"dsfr|marianne|font|woff|\.css(?:[?#]|$)|\.js(?:[?#]|$)", item["url"], re.IGNORECASE)
     ]
     dsfr_console_failure = [
         message
         for message in console_errors
-        if re.search(r"failed to load resource|net::err|dsfr|marianne|woff", message, re.I)
+        if re.search(r"failed to load resource|net::err|dsfr|marianne|woff", message, re.IGNORECASE)
     ]
     resource_failure = bool(dsfr_resource_failures or dsfr_console_failure)
     resource_failure_detail = json.dumps(
@@ -435,6 +435,7 @@ async def inspect_page(
         ensure_ascii=False,
     )
 
+    rule_by_id = {rule["rule_id"]: rule for rule in catalog["rules"]}
     differences: list[dict[str, Any]] = []
     state_component_rules: dict[str, set[str]] = {}
 
@@ -589,7 +590,10 @@ async def inspect_page(
             nature = (
                 "migration"
                 if requires_migration(
-                    {"version_scope": "TARGET_VERSION", "minimum_version": target_version},
+                    rule_by_id.get(
+                        "DSFR-INPUT-ERROR-STATE-002" if in_group else "DSFR-INPUT-ERROR-STATE-003",
+                        {"version_scope": "TARGET_VERSION", "minimum_version": "1.15.3"},
+                    ),
                     observed_versions,
                     target_version,
                 )
@@ -810,7 +814,7 @@ async def inspect_page(
             "DSFR-GRID-STRUCTURE-001",
             "migration"
             if requires_migration(
-                {"version_scope": "TARGET_VERSION", "minimum_version": target_version},
+                {"version_scope": "TARGET_VERSION", "minimum_version": "1.15.3"},
                 observed_versions,
                 target_version,
             )
@@ -892,7 +896,6 @@ async def inspect_page(
             failed_conditions=[f"Mentions absentes : {', '.join(missing_legal)}."],
         )
 
-    rule_by_id = {rule["rule_id"]: rule for rule in catalog["rules"]}
     for item in raw["ruleResults"]:
         if item["signal_status"] != "FAIL_CANDIDATE":
             continue
@@ -958,7 +961,7 @@ async def inspect_page(
     result = {
         "schema_version": 2,
         "page": page_info,
-        "audited_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        "audited_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),  # noqa: UP017 - Python 3.10
         "rule_catalog": catalog_metadata,
         "version": {
             "observed": observed_versions,

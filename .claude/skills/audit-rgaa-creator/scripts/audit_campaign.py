@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,6 +43,17 @@ from browser_launch import (
     check_playwright_python,
 )
 from engine_coverage import generate_engine_coverage
+from probe_matrix import (
+    VALIDATOR_CRITERION,
+    build_probe_plan,
+    discover_collect_html,
+    classify_payload,
+    criterion_sources,
+    criterion_state,
+    discover_probes,
+    load_campaign_summaries,
+    summarise,
+)
 
 
 class UniqueKeyLoader(yaml.SafeLoader):
@@ -80,6 +92,7 @@ PHASES = (
     "browser",
     "rgaa",
     "dsfr",
+    "validator",
     "protocols",
     "report",
     "report_capture",
@@ -131,7 +144,7 @@ CRITERION_IDS = embedded_criterion_ids()
 
 
 def now() -> str:
-    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")  # noqa: UP017 - Python 3.10
 
 
 def slugify(value: str) -> str:
@@ -352,6 +365,26 @@ def resolve_ay11_root(configured_root: str | None) -> Path | None:
     return root
 
 
+#: Validateurs HTML locaux reconnus, par ordre de préférence.
+VALIDATEURS_LOCAUX = ("vnu", "html-validator")
+
+
+def find_validator() -> str | None:
+    """Cherche un validateur HTML local dans le PATH.
+
+    Un validateur local est préférable au service public du W3C : il n'impose
+    aucune limite de débit, et il valide le DOM rendu sans le publier. Mesuré le
+    18 septembre 2026 : cinq appels consécutifs au service distant refusés en
+    HTTP 429 au cours d'une campagne d'une seule page.
+
+    Installation : ``brew install vnu`` sur macOS.
+    """
+    for nom in VALIDATEURS_LOCAUX:
+        if shutil.which(nom):
+            return nom
+    return None
+
+
 def find_ay11(root: Path | None) -> tuple[Path | None, list[str]]:
     candidates: list[Path] = []
     warnings: list[str] = []
@@ -548,6 +581,7 @@ def init_campaign(args: argparse.Namespace) -> int:
     if not pages:
         pages = [{"id": "P01", "name": "Accueil", "url": target, "type": "homepage"}]
     ay11_root = resolve_ay11_root(args.ay11_root)
+    validateur_local = find_validator()
     skills_roots = [
         str(Path(p).expanduser().resolve()) for p in (args.skills_root or [])
     ]
@@ -582,7 +616,9 @@ def init_campaign(args: argparse.Namespace) -> int:
             "reports": True,
             "report_capture": False,
             "tickets": True,
+            "validator": True,
         },
+        "validator": {"command": validateur_local} if validateur_local else {},
         "browser": {
             "wait_ms": 900,
             "timeout_seconds": 30,
@@ -810,6 +846,18 @@ def preflight(
         validate_url(config.get("campaign", {}).get("target", ""))
     except ValueError as exc:
         errors.append(str(exc))
+    if config.get("phases", {}).get("validator", True):
+        declare = (config.get("validator") or {}).get("command")
+        if not declare and not find_validator():
+            warnings.append(
+                "Aucun validateur HTML local : la phase validator passera par le "
+                "service public du W3C, qui limite le débit. Sur macOS, "
+                "`brew install vnu` ; `init` le déclare alors automatiquement."
+            )
+        elif declare and not shutil.which(declare.split()[0]):
+            errors.append(
+                f"Validateur local déclaré mais introuvable dans le PATH : {declare}"
+            )
     pages = config.get("sample") or []
     if not pages:
         errors.append("Échantillon vide")
@@ -1275,6 +1323,9 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
             record(state, "collect", "OK", dry_run=True)
         else:
             failures = []
+            limits = []
+            catalog = discover_probes(str(ay11))
+            write_json(root / "collectes-ay11/catalogue-sondes.json", catalog)
             for page in config["sample"]:
                 pid = page["id"]
                 page_state = state.setdefault("pages", {}).setdefault(pid, {})
@@ -1284,8 +1335,14 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 attempt = int(page_state.get("capture_attempt", 0))
                 destination = root / "collectes-ay11" / pid / f"attempt-{attempt:03d}"
                 destination.mkdir(parents=True, exist_ok=True)
-                html_files = sorted(capture_dir.glob("*-rendered.html"))
-                collections = sorted(capture_dir.glob("*-browser-collection.json"))
+                # `replan` efface l'état de page qui porte le chemin : chercher
+                # récursivement, et retomber sur le dossier de la page.
+                html_files = sorted(capture_dir.rglob("*-rendered.html"))
+                collections = sorted(capture_dir.rglob("*-browser-collection.json"))
+                if not html_files or not collections:
+                    repli = root / "captures-ay11" / pid
+                    html_files = html_files or sorted(repli.rglob("*-rendered.html"))
+                    collections = collections or sorted(repli.rglob("*-browser-collection.json"))
                 if not html_files or not collections:
                     failures.append(
                         {
@@ -1295,123 +1352,124 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                     )
                     continue
                 html_path, collection = html_files[0], collections[0]
-                commands = [
-                    (
-                        "rgaa-collected-plan",
-                        [
-                            str(ay11),
-                            "rgaa",
-                            "run-plan",
-                            "rgaa-106",
-                            "--execution-mode",
-                            "agents",
-                            "--json",
-                            "--collect-html",
-                            str(html_path),
-                            "--collect-accessible-name",
-                            str(html_path),
-                        ],
-                    ),
-                    (
-                        "accessible-name",
-                        [
-                            str(ay11),
-                            "probes",
-                            "accessible-name",
-                            str(html_path),
-                            "--json",
-                        ],
-                    ),
-                    (
-                        "focus-visible",
-                        [
-                            str(ay11),
-                            "probes",
-                            "focus-visible",
-                            str(collection),
-                            "--json",
-                        ],
-                    ),
-                    (
-                        "layout-10.3",
-                        [
-                            str(ay11),
-                            "probes",
-                            "layout",
-                            str(collection),
-                            "--criterion",
-                            "10.3",
-                            "--json",
-                        ],
-                    ),
-                    (
-                        "layout-10.4",
-                        [
-                            str(ay11),
-                            "probes",
-                            "layout",
-                            str(collection),
-                            "--criterion",
-                            "10.4",
-                            "--json",
-                        ],
-                    ),
-                    (
-                        "contrast-3.2",
-                        [
-                            str(ay11),
-                            "probes",
-                            "contrast",
-                            str(collection),
-                            "--criterion",
-                            "3.2",
-                            "--json",
-                        ],
-                    ),
-                    (
-                        "contrast-3.3",
-                        [
-                            str(ay11),
-                            "probes",
-                            "contrast",
-                            str(collection),
-                            "--criterion",
-                            "3.3",
-                            "--json",
-                        ],
-                    ),
-                    (
-                        "contrast-10.5",
-                        [
-                            str(ay11),
-                            "probes",
-                            "contrast",
-                            str(collection),
-                            "--criterion",
-                            "10.5",
-                            "--json",
-                        ],
-                    ),
-                ]
-                for name, argv in commands:
-                    code, out, err = run_command(
-                        argv, root / f"logs/collect-{pid}-{name}.json"
-                    )
-                    if code == 0:
-                        try:
-                            write_json(destination / f"{name}.json", json.loads(out))
-                        except json.JSONDecodeError:
-                            code = 1
-                            err += " Sortie JSON invalide"
-                    if code:
-                        failures.append(
-                            {"page": pid, "collector": name, "error": err[-500:]}
+                code, out, err = run_command(
+                    [
+                        str(ay11),
+                        "rgaa",
+                        "run-plan",
+                        "rgaa-106",
+                        "--execution-mode",
+                        "agents",
+                        "--json",
+                        "--collect-html",
+                        str(html_path),
+                        "--collect-accessible-name",
+                        str(html_path),
+                    ],
+                    root / f"logs/collect-{pid}-rgaa-collected-plan.json",
+                )
+                if code == 0:
+                    try:
+                        write_json(
+                            destination / "rgaa-collected-plan.json", json.loads(out)
                         )
+                    except json.JSONDecodeError:
+                        code = 1
+                        err += " Sortie JSON invalide"
+                if code:
+                    failures.append(
+                        {
+                            "page": pid,
+                            "collector": "rgaa-collected-plan",
+                            "error": err[-500:],
+                        }
+                    )
+                # Catalogue des collecteurs : sondé une fois par campagne, sur la
+                # première capture disponible. Sans lui, un critère couvert sans
+                # candidat serait indiscernable d'un critère non couvert.
+                chemin_catalogue = root / "collectes-ay11" / "catalogue-collecteurs.json"
+                if not chemin_catalogue.is_file():
+                    write_json(chemin_catalogue, discover_collect_html(str(ay11), html_path))
+                probe_dir = destination / "sondes"
+                probe_dir.mkdir(parents=True, exist_ok=True)
+                entries = []
+                for item in build_probe_plan(catalog, html_path, collection):
+                    # Les sondes sortent en code 0 même sans candidat : le journal
+                    # complet n'est écrit qu'en cas d'échec, sinon une cinquantaine
+                    # d'appels par page dupliqueraient chaque sortie dans logs/.
+                    proc = subprocess.run(
+                        [str(ay11), *item["argv"]],
+                        text=True,
+                        capture_output=True,
+                        check=False,
+                    )
+                    payload = None
+                    reason = ""
+                    if proc.returncode != 0:
+                        reason = (proc.stderr or "").strip()[-500:] or (
+                            f"code de retour {proc.returncode}"
+                        )
+                    else:
+                        try:
+                            payload = json.loads(proc.stdout)
+                        except json.JSONDecodeError:
+                            reason = "Sortie JSON invalide"
+                    if payload is None:
+                        write_json(
+                            root / f"logs/collect-{pid}-{item['name']}.json",
+                            {
+                                "command": [str(ay11), *item["argv"]],
+                                "exit_code": proc.returncode,
+                                "stdout": proc.stdout[-2000:],
+                                "stderr": proc.stderr[-2000:],
+                            },
+                        )
+                        failures.append(
+                            {"page": pid, "collector": item["name"], "error": reason}
+                        )
+                        continue
+                    write_json(probe_dir / f"{item['name']}.json", payload)
+                    entries.append(
+                        {
+                            "name": item["name"],
+                            "probe": item["probe"],
+                            "criterion": item["criterion"],
+                            **classify_payload(payload),
+                        }
+                    )
+                summary = summarise(entries)
+                write_json(destination / "sondes-resume.json", summary)
+                page_state["probes"] = {
+                    "appels": summary["call_count"],
+                    "criteres_avec_signal": len(summary["criteria_with_signal"]),
+                    "criteres_capture_manquante": len(
+                        summary["criteria_missing_capture"]
+                    ),
+                }
+                if summary["criteria_missing_capture"]:
+                    limits.append(
+                        {
+                            "page": pid,
+                            "criteria": summary["criteria_missing_capture"],
+                            "reason": "capture complémentaire absente, critère non instruit",
+                        }
+                    )
                 state.setdefault("pages", {}).setdefault(pid, {})["collect"] = (
                     "ECHEC" if any(f["page"] == pid for f in failures) else "OK"
                 )
                 save_state(root, state)
-            record(state, "collect", "PARTIEL" if failures else "OK", failures=failures)
+            record(
+                state,
+                "collect",
+                "PARTIEL" if failures else "OK",
+                failures=failures,
+                probe_catalog={
+                    "probes": catalog["probe_count"],
+                    "criteres": catalog["criteria_count"],
+                    "ignorees": catalog["skipped"],
+                },
+                captures_manquantes=limits,
+            )
         save_state(root, state)
 
     if not skip("browser"):
@@ -1495,6 +1553,107 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 "OK" if code == 0 else "ECHEC",
                 output=out[-1000:],
                 error=err[-1000:],
+            )
+        save_state(root, state)
+
+    if not skip("validator"):
+        if not config.get("phases", {}).get("validator", True):
+            record(state, "validator", "IGNORÉ", reason="Désactivé")
+        elif args.dry_run:
+            record(state, "validator", "OK", dry_run=True)
+        else:
+            # Seule source capable d'instruire le critère 8.2 : la collecte AY11
+            # rend external_validator_executed à false et ne pratique que des
+            # contrôles structurels bornés.
+            reglages = config.get("validator", {}) or {}
+            endpoint = reglages.get("endpoint", "https://validator.w3.org/nu/")
+            commande = reglages.get("command")
+            pause = float(reglages.get("delay_seconds", 2))
+            delai = int(reglages.get("timeout_seconds", 90))
+            destination = root / "validateur-w3c"
+            destination.mkdir(parents=True, exist_ok=True)
+            failures, totaux, sources = [], {}, {}
+            for index, page in enumerate(config["sample"]):
+                pid = page["id"]
+                # Sur une application rendue côté client, le HTML servi ne
+                # contient presque rien : les défauts naissent au rendu. Mesuré
+                # sur signal.conso.gouv.fr le 18 septembre 2026 — 2 erreurs sur
+                # le HTML servi, 9 sur le DOM rendu de la même page.
+                page_state = state.setdefault("pages", {}).setdefault(pid, {})
+                # `replan` efface l'état de page : retrouver la capture par le
+                # disque plutôt que par l'état, et descendre dans attempt-XXX.
+                capture_dir = root / (
+                    page_state.get("capture_dir") or f"captures-ay11/{pid}"
+                )
+                rendus = sorted(capture_dir.rglob("*-rendered.html"))
+                if not rendus:
+                    rendus = sorted((root / "captures-ay11" / pid).rglob("*-rendered.html"))
+                payload = None
+                if commande and rendus:
+                    sources[pid] = "dom_rendu_validateur_local"
+                    proc = subprocess.run(
+                        [*commande.split(), "--format", "json", "--exit-zero-always", str(rendus[0])],
+                        capture_output=True, text=True, check=False, timeout=delai,
+                    )
+                    sortie = (proc.stdout or "") + (proc.stderr or "")
+                    try:
+                        payload = json.loads(sortie)
+                    except json.JSONDecodeError:
+                        failures.append({"page": pid, "error": f"sortie du validateur illisible : {sortie[:200]}"})
+                        continue
+                else:
+                    if index:
+                        # Le service public du W3C demande un usage courtois.
+                        time.sleep(pause)
+                    if rendus:
+                        sources[pid] = "dom_rendu_service_distant"
+                        requete = urllib.request.Request(
+                            endpoint + "?" + urllib.parse.urlencode({"out": "json"}),
+                            data=rendus[0].read_bytes(),
+                            headers={
+                                "Content-Type": "text/html; charset=utf-8",
+                                "User-Agent": "audit-rgaa-creator (pré-audit RGAA local)",
+                            },
+                        )
+                    else:
+                        sources[pid] = "html_servi"
+                        requete = urllib.request.Request(
+                            endpoint + "?" + urllib.parse.urlencode({"doc": page["url"], "out": "json"}),
+                            headers={"User-Agent": "audit-rgaa-creator (pré-audit RGAA local)"},
+                        )
+                    try:
+                        with urllib.request.urlopen(requete, timeout=delai) as reponse:
+                            payload = json.loads(reponse.read().decode("utf-8"))
+                    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
+                        failures.append({"page": pid, "error": f"{type(exc).__name__}: {exc}"[:300]})
+                        continue
+                write_json(destination / f"{pid}.json", payload)
+                messages = payload.get("messages") or []
+                erreurs = sum(1 for m in messages if m.get("type") == "error")
+                avertissements = sum(1 for m in messages if m.get("subType") == "warning")
+                totaux[pid] = {"erreurs": erreurs, "avertissements": avertissements}
+                page_state["validator"] = {
+                    "criterion": VALIDATOR_CRITERION,
+                    "erreurs": erreurs,
+                    "avertissements": avertissements,
+                    "source": sources.get(pid),
+                }
+                save_state(root, state)
+            statut = "PARTIEL" if failures else ("OK" if totaux else "IGNORÉ")
+            record(
+                state,
+                "validator",
+                statut,
+                endpoint=endpoint,
+                failures=failures,
+                totaux=totaux,
+                sources=sources,
+                limite=(
+                    "Le validateur porte sur l'état capturé de la page. Un parcours "
+                    "à étapes révèle des erreurs absentes de l'état initial : mesuré "
+                    "sur signal.conso.gouv.fr, 2 erreurs sur le HTML servi, 9 sur le "
+                    "DOM rendu initial, 32 sur le DOM après trois choix."
+                ),
             )
         save_state(root, state)
 
@@ -1984,6 +2143,10 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
 
     plan = read_json(root / "plan-preuves-rgaa-106.json", {}) or {}
     tests = (plan.get("proof_contract") or {}).get("tests", [])
+    # Les sondes rendent un critère, jamais un test : l'agrégat reste au niveau
+    # du critère et le rendu le dit explicitement.
+    probe_aggregate = load_campaign_summaries(root)
+    write_json(rgaa_root / "INSTRUMENTATION-PAR-CRITERE.json", probe_aggregate)
     reviews = []
     signal_tests = Counter(item.get("test") for item in signals)
     pass_by_test: dict[str, Counter] = {}
@@ -2000,11 +2163,29 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
             {item["page"] for item in signals if item.get("test") == tid}
         )
         status = "DECISION_PARTIELLE" if qualification_tests[tid] else "A_REVOIR"
-        priority = (
-            "P0"
-            if signal_tests[tid]
-            else ("P1" if criterion.split(".")[0] in {"7", "10", "11", "12"} else "P2")
+        probe = criterion_state(probe_aggregate, criterion)
+        sources = criterion_sources(probe_aggregate, criterion)
+        # Une règle axe marquée « bonne pratique » n'est pas un échec WCAG :
+        # elle relève de l'arbitrage, pas de la non-conformité automatique.
+        axe_defaut = sources["axe_violations"] and not sources["axe_best_practice_only"]
+        moteurs = bool(
+            sources["collect_html_candidates"]
+            or axe_defaut
+            or sources["validator_errors"]
         )
+        moteurs_a_examiner = bool(sources["collect_html_to_examine"])
+        if signal_tests[tid] or probe["state"] == "signal" or moteurs:
+            priority = "P0"
+        elif (
+            probe["state"] in {"capture_manquante", "a_examiner"}
+            or moteurs_a_examiner
+            or sources["axe_violations"]
+        ):
+            priority = "P1"
+        else:
+            priority = (
+                "P1" if criterion.split(".")[0] in {"7", "10", "11", "12"} else "P2"
+            )
         reviews.append(
             {
                 "criterion": criterion,
@@ -2014,6 +2195,18 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
                 "pages": related_pages,
                 "automatic_signals": signal_tests[tid],
                 "automatic_coverage": dict(pass_by_test.get(tid, {})),
+                "probe_coverage": {
+                    "granularity": "critere",
+                    "state": probe["state"],
+                    "label": probe["label"],
+                    "signal_count": probe["signal_count"],
+                    "inspected_count": probe["inspected_count"],
+                    "undetermined_count": probe["undetermined_count"],
+                    "probes": probe["probes"],
+                    "pages": probe["pages"],
+                    "comment": probe["comment"],
+                },
+                "instrumentation": sources,
                 "target": contract.get("target", "À déterminer"),
                 "expected_evidence": contract.get(
                     "expected_evidence", "Preuve à définir"
@@ -2047,24 +2240,80 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
         f"- Décisions partielles : **{sum(x['status'] == 'DECISION_PARTIELLE' for x in reviews)}**",
         f"- Tests à revoir : **{sum(x['status'] == 'A_REVOIR' for x in reviews)}**",
         "",
-        "| Priorité | Critère | Test | Statut | Pages signalées | Signaux | Cible | Validation humaine | Preuve attendue |",
-        "|---|---|---|---|---|---:|---|---|---|",
+        "| Priorité | Critère | Test | Statut | Pages signalées | Signaux | Sondes (critère) | Cible | Validation humaine | Preuve attendue |",
+        "|---|---|---|---|---|---:|---|---|---|---|",
     ]
+    probe_states = Counter(
+        item["probe_coverage"]["state"] for item in reviews
+    )
     matrix_lines = [
         "# Matrice d’exécution des 258 tests RGAA",
         "",
         "> Couverture instrumentée et décisions humaines sont séparées.",
         "",
-        "| Critère | Test | Couverture automatique | Signaux | Qualification | Statut de revue | Source |",
-        "|---|---|---|---:|---|---|---|",
+        "> La colonne « Sondes » vaut pour le **critère entier**, pas pour le test seul :",
+        "> une sonde AY11 rend un critère. Un **candidat** est une entrée que la sonde",
+        "> juge défavorable ; le nombre d'éléments **inspectés** est donné à part, car",
+        "> inspecter n'est pas trouver. `à examiner` signale des éléments inspectés sans",
+        "> conclusion possible. `capture manquante` signale un critère **non instruit**",
+        "> faute de capture adaptée — ni conformité, ni non-conformité. `aucun candidat`",
+        "> ne vaut pas conformité non plus.",
+        "",
+        f"- Tests dont le critère porte un **candidat de défaut** : **{probe_states['signal']}**",
+        f"- Tests dont le critère est **à examiner** (inspecté sans conclusion) : **{probe_states['a_examiner']}**",
+        f"- Tests dont le critère est en **capture manquante** : **{probe_states['capture_manquante']}**",
+        f"- Tests dont le critère a été sondé **sans candidat** : **{probe_states['aucun_candidat']}**",
+        f"- Tests dont le critère n'est couvert par **aucune sonde** : **{probe_states['hors_sondes']}**",
+        "",
+        f"- Critères instrumentés, toutes sources confondues : **{probe_aggregate.get('instrumented_criteria_count', 0)}** sur 106",
+        f"- Critères que `collect-html` sait instruire : **{(probe_aggregate.get('collect_html_catalog') or {}).get('capable_count', 0)}**, dont **{len((probe_aggregate.get('collect_html_catalog') or {}).get('covered_without_candidate') or [])}** couverts **sans candidat** — à revoir humainement, et non conformes pour autant",
+        f"- Tests dont le critère porte un candidat **collect-html ou axe** : **{sum(1 for r in reviews if r['instrumentation']['collect_html_candidates'] or r['instrumentation']['axe_violations'])}**",
+        "",
+        "| Critère | Test | Couverture automatique | Signaux | Sondes (critère) | Moteurs (critère) | Qualification | Statut de revue | Source |",
+        "|---|---|---|---:|---|---|---|---|---|",
     ]
     for item in reviews:
         clean = lambda value: str(value).replace("|", "—").replace("\n", " ")
+        probe = item["probe_coverage"]
+        probe_cell = clean(probe["label"])
+        if probe["probes"]:
+            probe_cell += f" ({', '.join(probe['probes'][:3])}"
+            probe_cell += "…)" if len(probe["probes"]) > 3 else ")"
         review_lines.append(
-            f"| {item['priority']} | {item['criterion']} | {item['test']} | **{item['status']}** | {', '.join(item['pages']) or '—'} | {item['automatic_signals']} | {clean(item['target'])} | {clean(item['human_validation'])} | {clean(item['expected_evidence'])} |"
+            f"| {item['priority']} | {item['criterion']} | {item['test']} | **{item['status']}** | {', '.join(item['pages']) or '—'} | {item['automatic_signals']} | {probe_cell} | {clean(item['target'])} | {clean(item['human_validation'])} | {clean(item['expected_evidence'])} |"
         )
+        instr = item["instrumentation"]
+        moteurs_cell = []
+        if instr["collect_html_candidates"]:
+            moteurs_cell.append(
+                "collect-html défaut : "
+                + ", ".join(instr["collect_html_candidates"][:2])
+            )
+        elif instr["collect_html_to_examine"]:
+            moteurs_cell.append(
+                f"collect-html à examiner : {len(instr['collect_html_to_examine'])} code(s)"
+            )
+        elif instr["collect_html_coverage"] == "couvert_sans_candidat":
+            moteurs_cell.append(
+                "collect-html : couvert, aucun candidat"
+                + (f" ({instr['collect_html_evidence']} preuve(s))"
+                   if instr["collect_html_evidence"] else "")
+            )
+        if instr["axe_rules"]:
+            origine = (
+                " [table locale]"
+                if instr["axe_mapping_sources"] == ["table_locale"]
+                else ""
+            )
+            moteurs_cell.append("axe : " + ", ".join(instr["axe_rules"]) + origine)
+        if instr["validator_errors"]:
+            moteurs_cell.append(f"validateur : {instr['validator_errors']} erreur(s)")
+        elif instr["validator_warnings"]:
+            moteurs_cell.append(
+                f"validateur : 0 erreur, {instr['validator_warnings']} avertissement(s)"
+            )
         matrix_lines.append(
-            f"| {item['criterion']} | {item['test']} | `{json.dumps(item['automatic_coverage'], ensure_ascii=False)}` | {item['automatic_signals']} | {qualification_tests[item['test']]} décision(s) | **{item['status']}** | {item['source']} |"
+            f"| {item['criterion']} | {item['test']} | `{json.dumps(item['automatic_coverage'], ensure_ascii=False)}` | {item['automatic_signals']} | {probe_cell} | {clean(' · '.join(moteurs_cell)) or '—'} | {qualification_tests[item['test']]} décision(s) | **{item['status']}** | {item['source']} |"
         )
     atomic_text(rgaa_root / "REVUE-MANUELLE-258.md", "\n".join(review_lines) + "\n")
     atomic_text(rgaa_root / "MATRICE-TESTS-258.md", "\n".join(matrix_lines) + "\n")
@@ -2203,11 +2452,11 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
                 "page": page,
                 "version": {
                     "observed": [],
-                    "target": "1.15.3",
+                    "target": "1.15.4",
                     "comparison_mode": "REFERENCE_VERSION_INDISPONIBLE",
                     "exact_observed_reference_available": False,
                 },
-                "reference_version": "1.15.3",
+                "reference_version": "1.15.4",
                 "detected_versions": [],
                 "status": "REFERENCE_INDISPONIBLE",
                 "claim": "Aucune conformité DSFR globale n’est revendiquée.",
@@ -2295,7 +2544,7 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
             item.setdefault("assessed_against", "REFERENCE_VERSION_INDISPONIBLE")
             item.setdefault("observed_versions", data.get("detected_versions", []))
             item.setdefault(
-                "reference_target_version", data.get("reference_version", "1.15.3")
+                "reference_target_version", data.get("reference_version", "1.15.4")
             )
             for qualification in qualifications:
                 if page["id"] not in qualification.get(
@@ -2420,7 +2669,7 @@ def generate_dsfr_reports(config: dict[str, Any], root: Path) -> None:
         {
             str(
                 (data.get("version") or {}).get("target")
-                or data.get("reference_version", "1.15.3")
+                or data.get("reference_version", "1.15.4")
             )
             for data in pages_data
         }
@@ -2641,7 +2890,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
             data = {
                 "schema_version": 1,
                 "page": page,
-                "reference_version": "1.15.3",
+                "reference_version": "1.15.4",
                 "detected_versions": [],
                 "status": "RÉFÉRENCE NON VÉRIFIABLE",
                 "claim": "non vérifié",
@@ -2703,7 +2952,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
         dsfr_root / "INVENTAIRE-COMPOSANTS.json",
         {
             "schema_version": 1,
-            "reference_version": "1.15.3",
+            "reference_version": "1.15.4",
             "pages": len(config["sample"]),
             "components": inventory,
         },
@@ -2721,7 +2970,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
     matrix = [
         "# Matrice de respect DSFR",
         "",
-        "> Vérification bornée aux sources locales DSFR 1.15.3 lues. Aucun statut « conforme DSFR ».",
+        "> Vérification bornée aux sources locales DSFR 1.15.4 lues. Aucun statut « conforme DSFR ».",
         "",
         "| Page | Élément | Type | Statut | Sévérité | Constat | Source |",
         "|---|---|---|---|---|---|---|",
@@ -2820,7 +3069,7 @@ def _generate_dsfr_reports_legacy(config: dict[str, Any], root: Path) -> None:
     report = f"""# Rapport consolidé DSFR — {config["campaign"]["name"]}
 
 - **Échantillon :** {len(config["sample"])} page(s), identique à la campagne RGAA
-- **Référence locale :** DSFR 1.15.3
+- **Référence locale :** DSFR 1.15.4
 - **Statut borné :** {overall}
 - **Types de composants inventoriés :** {len(inventory)}
 - **Écarts observés :** {len(differences)}
@@ -2879,8 +3128,14 @@ def generate_reports(config_path: Path) -> None:
                 by_page[pid].append(finding)
     tickets = root / "tickets"
     tickets.mkdir(exist_ok=True)
-    for old in tickets.glob("*.md"):
-        old.unlink()
+    # Ne supprimer que ce que cette phase a écrit : le dossier accueille aussi
+    # des fiches rédigées à la main, qu'une régénération ne doit pas détruire.
+    manifeste = tickets / ".generes.json"
+    connus = set(read_json(manifeste, {}).get("fichiers") or [])
+    for ancien in tickets.glob("*.md"):
+        if ancien.name in connus:
+            ancien.unlink()
+    ecrits: list[str] = []
     for finding in findings:
         if finding.get("status") not in {"NC-A", "RECO"}:
             continue
@@ -2926,8 +3181,19 @@ def generate_reports(config_path: Path) -> None:
 
 {reference}
 """
-        atomic_text(tickets / f"{finding['status']}-{fid}.md", text)
+        nom = f"{finding['status']}-{fid}.md"
+        atomic_text(tickets / nom, text)
+        ecrits.append(nom)
 
+    write_json(
+        manifeste,
+        {
+            "schema_version": 1,
+            "kind": "audit_rgaa_creator_generated_tickets",
+            "note": "Fiches écrites par la phase de rapport. Les fiches absentes de cette liste sont rédigées à la main et ne sont jamais supprimées.",
+            "fichiers": sorted(ecrits),
+        },
+    )
     rows = []
     for cid in CRITERION_IDS:
         status = str(qualifications.get(cid, {}).get("status", "NT"))

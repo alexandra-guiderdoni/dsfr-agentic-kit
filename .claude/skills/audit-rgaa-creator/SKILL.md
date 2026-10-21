@@ -1,7 +1,7 @@
 ---
 name: audit-rgaa-creator
 description: "Créer, exécuter, reprendre et valider une campagne RGAA 4.1.2 multi-pages reproductible combinant AY11, Playwright et les skills d’audit du kit."
-argument-hint: "init|sample|run|resume|status|report|validate <url-ou-campaign.yaml>"
+argument-hint: "init|sample|run|`resume`|status|report|validate <url-ou-campaign.yaml>"
 allowed-tools: Read, Glob, Grep, Bash, Write, Edit
 context: conversation
 ---
@@ -120,7 +120,7 @@ par page sont tous produits via le bloc structuré `audit_report` de
 
 La phase `dsfr`, activée par `phases.dsfr_checks`, utilise exactement le même
 échantillon que le RGAA. Elle inventorie les composants, vérifie des invariants
-observables contre les références locales DSFR 1.15.3 et écrit ses résultats
+observables contre les références locales DSFR 1.15.4 et écrit ses résultats
 séparément dans `dsfr/`.
 
 Une reprise ignore seulement les phases `OK`. Lorsqu’une phase est rejouée,
@@ -169,15 +169,133 @@ ay11 rgaa list --kind criteria --format json
 ay11 rgaa run-plan rgaa-106 --include-proof-contract --execution-mode agents --json
 ay11 preaudit capture-browser URL --output-dir DIR --screenshot --form-interactions --axe --json
 ay11 rgaa run-plan rgaa-106 --collect-html PAGE --collect-accessible-name PAGE --json
-ay11 probes accessible-name PAGE --json
-ay11 probes contrast COLLECTION --criterion 3.2 --json
-ay11 probes focus-visible COLLECTION --json
-ay11 probes layout COLLECTION --criterion 10.3 --json
+ay11 probes --help
+ay11 probes SONDE --help
+ay11 probes SONDE ENTRÉE [--criterion CRITÈRE] --json
 ```
 
 AY11 produit des contrats et signaux candidats : jamais une décision RGAA.
 Une commande non disponible ou en échec devient `ECHEC`, `PARTIEL` ou `IGNORÉ`,
 pas un succès implicite.
+
+### Découverte des sondes
+
+La phase `collect` découvre les sondes dynamiquement : `probe_matrix.py` les lit
+dans l'aide d'AY11, avec leur entrée attendue (HTML rendu, collection navigateur
+ou les deux) et les critères que chacune propose. Une sonde ou un critère ajouté
+en amont est collecté sans modifier le creator. Le
+catalogue observé est écrit dans `collectes-ay11/catalogue-sondes.json`, et
+une sonde écartée y est nommée avec son motif.
+
+Trois propriétés d'AY11 gouvernent cette phase :
+
+- **omettre `--criterion` ne collecte qu'un seul critère**, jamais tous ceux que
+  la sonde couvre : chaque critère donne lieu à un appel distinct ;
+- **une sonde sort en code 0 même sans candidat** : l'état utile est
+  `collection_status`, et un code de retour nul ne vaut pas collecte réussie ;
+- **`not_collected` sans capture complémentaire n'est pas un échec** : la sonde
+  réclame une capture que la capture de base ne produit pas (reflow,
+  orientation, états `:hover` et `:focus`). Ces critères sont listés en
+  `captures_manquantes` dans l'état, et restent **non instruits** — ni conformes,
+  ni non conformes.
+
+Chaque page reçoit `collectes-ay11/<page>/attempt-XXX/sondes/<sonde>-<critère>.json`
+et un `sondes-resume.json` qui sépare critères avec signal, critères sans
+candidat et critères en capture manquante. L'absence de signal ne vaut jamais
+conformité : elle borne ce que la sonde a pu observer.
+
+### Trois états de couverture, jamais deux
+
+`collect-html` ne remonte un critère que s'il a trouvé quelque chose : un critère
+**couvert mais muet** est absent de sa sortie, exactement comme un critère
+**non couvert**, alors que le premier appelle une revue humaine ciblée et le
+second non.
+
+AY11 ne déclare pas quels critères il sait instruire, mais il le dit à l'appel :
+`rgaa collect-html --criterion X` sort en code 0 quand un collecteur existe, et en
+code 1 avec « Collecteur HTML local non disponible » sinon. La phase `collect`
+sonde donc les 106 critères une fois par campagne — environ 15 secondes — et écrit
+`collectes-ay11/catalogue-collecteurs.json`.
+
+| État | Sens | Suite |
+|---|---|---|
+| `candidat` | le collecteur signale un candidat de défaut | qualifier |
+| `couvert_sans_candidat` | il a tourné sans rien trouver | **revoir humainement** |
+| `non_couvert` | aucun collecteur pour ce critère | jugement humain seul |
+
+Les preuves de 6.1, 6.2, 7.1, 11.5, 11.6, 11.9 et 12.8 ne viennent pas d'un
+collecteur `collect-html` (il n'en existe pas pour ces critères) mais de
+`--collect-accessible-name`, que `run-plan` fusionne dans la même sortie. Le
+nombre de collecteurs disponibles et de critères instrumentés se lit dans
+`collectes-ay11/catalogue-collecteurs.json`, pas dans ce fichier.
+
+### Remontée dans la grille des 258 tests
+
+`rgaa/SONDES-PAR-CRITERE.json` agrège la campagne, et la colonne « Sondes »
+apparaît dans `MATRICE-TESTS-258.md` et `REVUE-MANUELLE-258.md`.
+
+**Une sonde rend un critère, jamais un test.** La colonne est donc affichée sur
+chaque ligne de test du critère, avec la mention explicite qu'elle vaut pour le
+critère entier — elle ne doit pas se lire comme un verdict de test. Le champ
+`probe_coverage.granularity` du JSON porte la même réserve.
+
+Quatre états, volontairement distincts :
+
+| État | Sens |
+|---|---|
+| `signal` | candidats à qualifier, avec le compte et les sondes concernées |
+| `capture_manquante` | critère **non instruit** : ni conforme, ni non conforme |
+| `aucun_candidat` | sonde exécutée sans trouver ; **ne vaut pas conformité** |
+| `hors_sondes` | aucune sonde ne couvre ce critère, jugement humain seul |
+
+La priorité de revue suit : `P0` si un signal existe, `P1` si le critère est en
+capture manquante. La colonne « Qualification » reste vide — elle n'appartient
+qu'à l'humain.
+
+### Prérequis du poste de travail
+
+| Outil | Rôle | Sans lui |
+|---|---|---|
+| AY11 | référentiel et sondes | phases `catalog`, `plan`, `capture`, `collect` en `IGNORÉ` |
+| Chromium via Playwright | capture du DOM rendu | aucune capture |
+| **`vnu`** | validateur HTML local | la phase `validator` passe par le service public du W3C, **qui limite le débit** |
+
+Sur macOS : `brew install vnu`. `init` le détecte dans le `PATH` et écrit
+`validator.command` dans `campaign.yaml` sans intervention. Le pré-vol avertit
+quand aucun validateur local n'est disponible, et échoue si un validateur
+déclaré est introuvable.
+
+### Validateur HTML — la seule source du critère 8.2
+
+La collecte AY11 rend `external_validator_executed: false` : elle ne pratique
+que des contrôles structurels bornés (`complete_html_conformance: false`).
+Sans phase dédiée, le critère 8.2 reste hors de portée du harnais.
+
+La phase `validator` appelle le validateur HTML sur l'URL de chaque page, écrit
+`validateur-w3c/<page>.json`, et rattache erreurs et avertissements au critère
+8.2 dans la grille.
+
+```yaml
+phases:
+  validator: true
+validator:
+  endpoint: https://validator.w3.org/nu/   # ou un vnu local
+  delay_seconds: 2                          # courtoisie envers le service public
+  timeout_seconds: 90
+```
+
+Elle est placée **après** `dsfr` et non avant `browser` : ses preuves ne servent
+qu'au rapport, elle n'est donc dépendance amont d'aucune phase de collecte.
+
+Trois réserves à ne pas perdre de vue :
+
+- **le validateur porte sur le HTML servi**, pas sur le DOM rendu après
+  exécution du JavaScript. Sur une application React, une partie du code audité
+  par un lecteur d'écran échappe donc à ce contrôle ;
+- une panne réseau ou un délai dépassé rend la phase `PARTIEL`, jamais `OK` :
+  l'absence de rapport n'est pas une absence d'erreur ;
+- `endpoint` accepte un `vnu` local, à préférer pour une campagne de plusieurs
+  pages plutôt que de solliciter le service public du W3C.
 
 ## Qualification humaine
 

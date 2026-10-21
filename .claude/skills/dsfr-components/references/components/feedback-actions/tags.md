@@ -51,10 +51,20 @@ suppression hors HTML statique.
 ## Groupe de tags
 ```html
 <ul class="fr-tags-group">
-    <li><p class="fr-tag">Tag 1</p></li>
-    <li><p class="fr-tag">Tag 2</p></li>
-    <li><p class="fr-tag">Tag 3</p></li>
+    <li><span class="fr-tag">Tag 1</span></li>
+    <li><span class="fr-tag">Tag 2</span></li>
+    <li><span class="fr-tag">Tag 3</span></li>
 </ul>
 ```
+
+Le builder reprend les groupes statiques en `span` des exemples DSFR 1.15.4
+(PR 1539). Un tag statique isolé garde `p` ; les liens et boutons gardent leur
+comportement. `generate_tag(..., markup="span")` permet ce contexte sans
+changer le format `page.json`.
+
+Limite de la référence officielle : `tags-group.ejs` ne force pas la balise
+et `tag.ejs` conserve le défaut `p`. Le contrôle des sorties du builder exige
+donc `span` dans ses groupes, tandis que l’audit général accepte les textes
+valides en `p` ou `span` sans interdire tous les groupes en `p`.
 
 ---

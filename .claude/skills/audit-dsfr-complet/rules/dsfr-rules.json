@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "catalog": "DSFR component instance rules",
-  "target_version": "1.15.3",
+  "target_version": "1.15.4",
   "status_policy": {
     "detected_not_audited": "DETECTE_NON_AUDITE",
     "pass": "AUCUN_ECART_REGLES_EXECUTEES",
@@ -776,7 +776,7 @@
       "severity": "Majeur",
       "title": "Tag DSFR sans sémantique exploitable",
       "expected": "Un tag est un texte, un lien avec destination ou un bouton typé dont l’état est exposé lorsque nécessaire.",
-      "expected_html": "<p class=\"fr-tag\">Libellé</p> ou <a class=\"fr-tag\" href=\"/destination\">Libellé</a>",
+      "expected_html": "<p class=\"fr-tag\">Libellé</p> ou <span class=\"fr-tag\">Libellé</span> ou <a class=\"fr-tag\" href=\"/destination\">Libellé</a>",
       "source": "dsfr-components/references/components/feedback-actions/tags.md",
       "recommendation": "Choisir l’élément adapté au comportement du tag et exposer son état sélectionné ou supprimable.",
       "verification": "Inspecter puis activer chaque tag interactif au clavier.",

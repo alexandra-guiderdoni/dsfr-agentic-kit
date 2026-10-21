@@ -6,8 +6,8 @@ allowed-tools: Read, Glob, Grep, Bash, Write, Edit
 
 # Rapports d’audit construits avec le builder DSFR
 
-Ce skill rend les résultats ; il ne collecte pas les preuves et ne modifie pas
-les qualifications. `audit-rgaa-complet` et `audit-dsfr-complet` restent les
+Ce skill assure le rendu des résultats, sans collecte de preuves ni changement
+des qualifications. `audit-rgaa-complet` et `audit-dsfr-complet` restent les
 sources sémantiques. `audit-rgaa-creator` orchestre la génération.
 
 ## Contrat
@@ -54,8 +54,10 @@ DSFR arbitraire.
 - sans JavaScript, tous les constats restent consultables ; les filtres sont une
   amélioration progressive ;
 - les liens de preuve sont relatifs et portables dans l’archive ;
-- le thème DSFR 1.15.2 est chargé depuis le CDN par défaut ; sans réseau, le
-  contenu sémantique reste lisible mais la présentation DSFR n’est pas garantie.
+- le thème DSFR est chargé depuis le CDN à la version cible du builder
+  (`DSFR_VERSION` dans `dsfr-components/scripts/generate_page.py`, 1.15.4 par
+  défaut, surchargeable par `DSFR_OFFICIAL_VERSION`) ; sans réseau, le contenu
+  sémantique reste lisible mais la présentation DSFR n’est pas garantie.
 
 ## Pipeline
 
