@@ -1,5 +1,15 @@
 # Journal des versions
 
+## Cadrage du harnais DSFR autonome — 21 octobre 2026
+
+- [PRD de migration](documentation/specs/2026-10-21-harnais-dsfr-autonome.md) :
+  kit cible canonique et autonome, workflow personnel consommateur facultatif,
+  profil léger issu des mêmes sources et AY11 maintenu externe ;
+- critères d’installation isolée, de reprise versionnée et de parité définis
+  avant tout retrait des anciens circuits ; aucune migration exécutée.
+- [Issue #9](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/9)
+  ouverte pour éprouver la chaîne complète avant le découpage de la migration.
+
 ## Retours ShipGuard sur DSFR 1.15.4 — 21 octobre 2026
 
 Export depuis la source `9a1b96676275b37d723bc1a3eb854f52e3858e9e`.
