@@ -80,6 +80,12 @@ Le contrôle inspecte l’inventaire, les chemins, les règles de génération e
 les régressions produit. Il lance également une génération dans un dossier
 temporaire.
 
+Les nouvelles traces de routage Codex se rangent explicitement hors du kit :
+`python3 design-systems/scripts/check-dsfr-runtime-trace.py run --output-dir /chemin/projet/traces`.
+Le mode `normalize` refuse également une destination interne, y compris
+redirigée par lien symbolique. Le contrôle `check` peut lire les traces
+historiques livrées sans les modifier.
+
 Lorsque le paquet officiel DSFR n’est pas disponible dans le cache local, le
 contrôle de fidélité officiel peut être marqué `[SKIP]`. Ce saut ne vaut pas
 preuve de fidélité.

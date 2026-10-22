@@ -867,15 +867,17 @@ def preflight(
         errors.append(str(exc))
     optional_network_services = []
     if config.get("phases", {}).get("validator", True):
+        # Même un validateur local déclaré retombe sur le service distant
+        # lorsqu'aucun DOM rendu n'est disponible pour une page.
+        optional_network_services.append(
+            {
+                "role": "validateur_html_distant",
+                "required": False,
+                "status": "NON_EXERCE_AU_PREVOL",
+            }
+        )
         declare = (config.get("validator") or {}).get("command")
         if not declare and not find_validator():
-            optional_network_services.append(
-                {
-                    "role": "validateur_html_distant",
-                    "required": False,
-                    "status": "NON_EXERCE_AU_PREVOL",
-                }
-            )
             warnings.append(
                 "Aucun validateur HTML local : la phase validator passera par le "
                 "service public du W3C, qui limite le débit. Sur macOS, "
@@ -1898,6 +1900,7 @@ def probe_network_url(url: str) -> dict[str, Any]:
             }
     except urllib.error.HTTPError as exc:
         headers = {str(k).lower(): str(v) for k, v in exc.headers.items()}
+        exc.close()
         deny_reason = headers.get("x-deny-reason", "").strip()
         if deny_reason:
             return {

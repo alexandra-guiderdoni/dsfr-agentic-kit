@@ -2,6 +2,7 @@
 import asyncio
 import hashlib
 import http.server
+import io
 import json
 import os
 import re
@@ -1341,6 +1342,40 @@ class CreatorTests(unittest.TestCase):
         self.assertFalse(result)
         self.assertEqual("BLOQUE_INFRA", state["phases"]["preflight"]["status"])
         self.assertEqual("BLOQUÉ-INFRA", state["phases"]["preflight"]["cause"])
+
+    def test_optional_remote_validator_is_declared_even_with_local_binary(self):
+        config = {
+            "campaign": {"target": "https://example.test/"},
+            "sample": [{"id": "P01", "url": "https://example.test/"}],
+            "phases": {"ay11": False, "validator": True},
+            "tooling": {"skills_roots": []},
+        }
+        for command in (None, "vnu"):
+            config["validator"] = {"command": command}
+            state = {"phases": {}, "pages": {}}
+            with (
+                patch("audit_campaign.campaign_schema_errors", return_value=[]),
+                patch("audit_campaign.find_validator", return_value="vnu"),
+                patch("audit_campaign.shutil.which", return_value="/fixture/vnu"),
+                patch(
+                    "audit_campaign.probe_network_url", return_value={"kind": "SITE"}
+                ),
+            ):
+                preflight(config, self.project, state, dry_run=False)
+            services = state["phases"]["preflight"]["optional_network_services"]
+            self.assertEqual(len(services), 1)
+            self.assertFalse(services[0]["required"])
+            self.assertEqual(services[0]["status"], "NON_EXERCE_AU_PREVOL")
+
+    def test_http_error_probe_closes_response(self):
+        for headers in ({}, {"x-deny-reason": "fixture"}):
+            body = io.BytesIO(b"fixture")
+            error = urllib.error.HTTPError(
+                "https://example.test", 403, "fixture", headers, body
+            )
+            with patch("audit_campaign.urllib.request.urlopen", side_effect=error):
+                probe_network_url("https://example.test")
+            self.assertTrue(body.closed)
 
     def test_network_probe_distinguishes_proxy_and_site_errors(self):
         server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _HeadHandler)

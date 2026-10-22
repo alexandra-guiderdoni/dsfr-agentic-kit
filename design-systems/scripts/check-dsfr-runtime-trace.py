@@ -9,11 +9,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[2]
 TRACE_DIR = ROOT / "design-systems" / "dsfr" / "evals" / "runtime-traces"
 POSITIVE_OUT = TRACE_DIR / "pos-page-form-codex-exec-runtime.events.json"
-NEAR_MISS_OUT = TRACE_DIR / "near-miss-service-public-no-dsfr-codex-exec-runtime.events.json"
+NEAR_MISS_OUT = (
+    TRACE_DIR / "near-miss-service-public-no-dsfr-codex-exec-runtime.events.json"
+)
 
 POSITIVE_COMMAND_NEEDLES = [
     "dsfr-components/SKILL.md",
@@ -112,20 +113,46 @@ def parse_jsonl(raw: bytes, case: str) -> dict[str, Any]:
     }
 
 
+def external_output(path: Path) -> Path:
+    output = path.expanduser().resolve()
+    if output == ROOT or output.is_relative_to(ROOT):
+        raise ValueError("les traces doivent rester hors de l'installation du kit")
+    return output
+
+
 def normalize(args: argparse.Namespace) -> int:
+    output = external_output(args.output)
     trace = parse_jsonl(args.jsonl.read_bytes(), args.case)
-    args.output.write_text(json.dumps(trace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {args.output}")
+    output.write_text(
+        json.dumps(trace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    print(f"Wrote {output}")
     return 0
 
 
 def run_codex(prompt: str, case: str, output: Path, timeout: int) -> None:
-    cmd = ["codex", "-a", "never", "-s", "read-only", "exec", "--json", "--ephemeral", "-C", str(ROOT), "-"]
-    run = subprocess.run(cmd, input=prompt, text=True, capture_output=True, timeout=timeout)
+    cmd = [
+        "codex",
+        "-a",
+        "never",
+        "-s",
+        "read-only",
+        "exec",
+        "--json",
+        "--ephemeral",
+        "-C",
+        str(ROOT),
+        "-",
+    ]
+    run = subprocess.run(
+        cmd, input=prompt, text=True, capture_output=True, timeout=timeout
+    )
     if run.returncode:
         raise RuntimeError(run.stderr.strip() or f"codex exec failed for {case}")
     trace = parse_jsonl(run.stdout.encode("utf-8"), case)
-    output.write_text(json.dumps(trace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output.write_text(
+        json.dumps(trace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     print(f"Wrote {output}")
 
 
@@ -146,22 +173,35 @@ def check_positive(c: Check, trace: dict[str, Any]) -> None:
     text = final_text(trace)
     c.expect(trace.get("case") == "pos-page-form", "cas positif identifié")
     c.expect("dsfr-components" in text, "verdict positif mentionne dsfr-components")
-    c.expect("page complète" in text and "form" in text, "verdict positif branche page complète form")
+    c.expect(
+        "page complète" in text and "form" in text,
+        "verdict positif branche page complète form",
+    )
     for needle in POSITIVE_COMMAND_NEEDLES:
         c.expect(any(needle in item for item in cmd), f"lecture observée: {needle}")
-    generated = any("generate_page.py --type" in item or "scripts/generate_page.py --type" in item for item in cmd)
+    generated = any(
+        "generate_page.py --type" in item or "scripts/generate_page.py --type" in item
+        for item in cmd
+    )
     c.expect(not generated, "aucune génération HTML exécutée pendant le test")
 
 
 def check_near_miss(c: Check, trace: dict[str, Any]) -> None:
     cmd = commands(trace)
     text = final_text(trace).lower()
-    c.expect(trace.get("case") == "near-miss-service-public-no-dsfr", "cas near-miss identifié")
+    c.expect(
+        trace.get("case") == "near-miss-service-public-no-dsfr",
+        "cas near-miss identifié",
+    )
     c.expect("aucun" in text and "skill" in text, "verdict near-miss sans skill")
     c.expect(not cmd, "near-miss sans commande outil")
-    c.expect("dsfr" in text and "référence" in text, "raison near-miss sans référence DSFR")
+    c.expect(
+        "dsfr" in text and "référence" in text, "raison near-miss sans référence DSFR"
+    )
     for needle in NEAR_MISS_FORBIDDEN_COMMAND_NEEDLES:
-        c.expect(not any(needle in item for item in cmd), f"near-miss sans lecture: {needle}")
+        c.expect(
+            not any(needle in item for item in cmd), f"near-miss sans lecture: {needle}"
+        )
 
 
 def check(args: argparse.Namespace) -> int:
@@ -179,9 +219,14 @@ def check(args: argparse.Namespace) -> int:
 
 
 def run(args: argparse.Namespace) -> int:
-    run_codex(POSITIVE_PROMPT, "pos-page-form", POSITIVE_OUT, args.timeout)
-    run_codex(NEAR_MISS_PROMPT, "near-miss-service-public-no-dsfr", NEAR_MISS_OUT, args.timeout)
-    return check(argparse.Namespace(traces=[POSITIVE_OUT, NEAR_MISS_OUT]))
+    output = external_output(args.output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    positive, near_miss = output / POSITIVE_OUT.name, output / NEAR_MISS_OUT.name
+    run_codex(POSITIVE_PROMPT, "pos-page-form", positive, args.timeout)
+    run_codex(
+        NEAR_MISS_PROMPT, "near-miss-service-public-no-dsfr", near_miss, args.timeout
+    )
+    return check(argparse.Namespace(traces=[positive, near_miss]))
 
 
 def main() -> int:
@@ -196,10 +241,14 @@ def main() -> int:
     p_check.add_argument("traces", type=Path, nargs="+")
     p_check.set_defaults(func=check)
     p_run = sub.add_parser("run")
+    p_run.add_argument("--output-dir", type=Path, required=True)
     p_run.add_argument("--timeout", type=int, default=240)
     p_run.set_defaults(func=run)
     args = parser.parse_args()
-    return args.func(args)
+    try:
+        return args.func(args)
+    except ValueError as error:
+        parser.error(str(error))
 
 
 if __name__ == "__main__":
