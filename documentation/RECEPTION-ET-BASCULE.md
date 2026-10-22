@@ -121,14 +121,58 @@ Le dépôt n’atteste pas de CI distante ; les commandes locales constituent le
 preuves décrites ici. Les données réelles et les preuves privées restent hors
 du dépôt public.
 
-Le test natif de routage Codex 0.163.0 a réellement été tenté après bascule :
-l’hôte refuse le cache comme répertoire de confiance, en code 1, avant
-toute trace. Aucune sélection autonome de compétence ni identité de modèle
-n’est mesurée par cet essai ; aucun réglage de confiance n’a été modifié.
-Le contrôle global du harnais retourne 0 mais signale une URL de push
-ShipGuard non neutralisée dans un clone de plugin extérieur au delta DSFR.
-Ce contrôle n’est donc pas entièrement vert ; cette configuration est laissée
-inchangée. Ces limites ne sont pas remplacées par les succès CLI ou simulés.
+Lors de la première réception, Codex 0.163.0 refusait le cache comme
+répertoire de confiance, en code 1 avant toute trace. Le contrôle global
+retournait 0 malgré une URL de push ShipGuard non neutralisée. Ces deux
+écarts historiques ont été traités dans le complément ci-dessous.
+
+## Complément reçu : routage Codex et diagnostic ShipGuard
+
+Le kit `3628c241123c65429104eed8c9b66b10a45e8991` a été publié avant
+le verrou consommateur du workflow `cfd35aeb40625583c43436728ab5745bc35e34d8`.
+La préparation réelle a récupéré cette version depuis GitHub en SSH. Les
+68 liens actifs résolvent son cache vérifié de 384 fichiers ; le cache
+historique `007208fb` de 383 fichiers et les campagnes restent conservés.
+
+Deux nouveaux essais CLI Codex 0.163.0 ont été exécutés depuis le workflow,
+avec le script réellement installé et des sorties externes au kit :
+
+- demande DSFR : 12 commandes réussies, dont les lectures du skill,
+  du profil et des références de formulaire ; branche page complète `form` ;
+- demande proche sans DSFR : aucune commande outil ni lecture DSFR ;
+- vérification des deux traces et du profil : codes 0, sans erreur runtime ;
+- contexte dans le cache ou redirigé, sortie interne, répertoire de sortie
+  redirigé et fichier de trace symbolique : cinq refus en code 2 avant appel ;
+- empreintes et permissions des fichiers et répertoires du cache inchangées,
+  configuration Codex inchangée, aucune génération HTML par ces scénarios.
+
+La racine produit reste immuable ; seul le contexte transmis à Codex devient
+celui du consommateur. Aucun réglage de confiance ni dépôt Git dans le cache
+n’a été ajouté. Le vérificateur du profil utilise les formulations réellement
+déclarées par les références ; le profil lui-même n’est pas assoupli.
+La recette complète du kit termine en code 0 avec 135 tests Python, les
+contrôles CSS officiels et les sorties générées. Le hook CSS non stylé
+`fr-display` reste exclu, et le lint externe facultatif n’a pas été lancé.
+
+La maintenance canonique du workflow réapplique le seul `origin.pushurl`
+ShipGuard autorisé. Deux réapplications réelles conservent les mêmes octets
+de configuration Git, l’URL de récupération, les autres remotes et le code
+tiers. Le diagnostic direct et le diagnostic global terminent en code 0,
+sans `FAIL`. Les échecs requis sont désormais propagés ; l’absence facultative
+reste acceptée. Les suites du workflow comptent 42 tests et 13 scénarios verts.
+
+La contre-revue ShipGuard des candidats `614c4d17` et `18100aad` a relevé
+trois défauts moyens : génération en échec masquée, métadonnées Git partagées
+et destinations effectives de push mal vérifiées. Les corrections `3628c241`
+et `739177f3` ont chacune leur régression et une vérification indépendante
+ciblée réussie. Les rapports initiaux restent intacts, avec reçus de correction
+séparés ; aucun nouvel audit intégral ni aval Claude n’est revendiqué.
+
+Cette réception prouve le routage CLI dans le contexte personnel. Elle ne
+prouve ni une installation autonome du plugin Codex, ni la conformité HTML,
+ni les autres hôtes. Les cinq issues Astra des recettes, AY11 et Studio sont
+hors de ce complément. Le dossier privé `dsfr-reception-native-preuves-20261022`
+contient les traces fraîches, les échecs avant correction et les rapports.
 
 ## Ordre de réception et retour arrière
 
