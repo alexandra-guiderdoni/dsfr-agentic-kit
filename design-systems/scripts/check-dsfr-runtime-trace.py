@@ -221,7 +221,8 @@ def check(args: argparse.Namespace) -> int:
 def run(args: argparse.Namespace) -> int:
     output = external_output(args.output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    positive, near_miss = output / POSITIVE_OUT.name, output / NEAR_MISS_OUT.name
+    positive = external_output(output / POSITIVE_OUT.name)
+    near_miss = external_output(output / NEAR_MISS_OUT.name)
     run_codex(POSITIVE_PROMPT, "pos-page-form", positive, args.timeout)
     run_codex(
         NEAR_MISS_PROMPT, "near-miss-service-public-no-dsfr", near_miss, args.timeout

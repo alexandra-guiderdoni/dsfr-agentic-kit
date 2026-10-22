@@ -31,7 +31,7 @@ Trace renforcée : conserver une trace événementielle normalisée issue de
 traces en une commande :
 
 ```bash
-python3 design-systems/scripts/check-dsfr-runtime-trace.py run
+python3 design-systems/scripts/check-dsfr-runtime-trace.py run --output-dir /chemin/projet/traces
 ```
 
 Pour vérifier des traces existantes :

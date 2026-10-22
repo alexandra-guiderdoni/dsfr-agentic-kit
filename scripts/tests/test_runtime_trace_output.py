@@ -60,6 +60,16 @@ class RuntimeTraceOutputTests(unittest.TestCase):
             self.module.normalize(args)
         self.assertFalse(args.output.exists())
 
+    def test_run_refuses_file_symlinks_before_any_codex_call(self):
+        out = self.base / "project"
+        out.mkdir()
+        for name in ("positive.json", "near-miss.json"):
+            (out / name).symlink_to(self.kit / name)
+        with patch.object(self.module, "run_codex") as run:
+            with self.assertRaises(ValueError):
+                self.module.run(argparse.Namespace(output_dir=out, timeout=1))
+            run.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
