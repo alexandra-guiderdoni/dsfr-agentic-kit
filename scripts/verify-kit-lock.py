@@ -15,6 +15,8 @@ from pathlib import Path, PurePosixPath
 
 ALGORITHM = "sha256-files-v1"
 HOST_METADATA = {".git", ".in_use", ".orphaned_at"}
+CODEX_MANIFEST = ".codex-plugin/plugin.json"
+CODEX_CATALOG = ".agents/plugins/marketplace.json"
 
 
 def git(root: Path, *args: str) -> bytes:
@@ -113,6 +115,40 @@ def create(root: Path, commit: str, repository: str, tag: str | None) -> dict:
     return lock
 
 
+def codex_host_manifest(lock: dict, root: Path) -> set[str]:
+    """Reconnaître seulement le manifeste natif dérivé du catalogue verrouillé."""
+    manifest = root / CODEX_MANIFEST
+    if CODEX_MANIFEST in lock["files"] or not manifest.exists():
+        return set()
+    catalog = root / CODEX_CATALOG
+    expected = lock["files"].get(CODEX_CATALOG)
+    if (
+        manifest.is_symlink()
+        or not manifest.is_file()
+        or manifest.stat().st_mode & 0o111
+        or catalog.is_symlink()
+        or not catalog.is_file()
+        or expected is None
+        or digest(catalog.read_bytes()) != expected["sha256"]
+    ):
+        raise ValueError("métadonnées Codex non vérifiées")
+    candidates = []
+    for plugin in json.loads(catalog.read_text())["plugins"]:
+        candidates.append(
+            {
+                key: plugin[key]
+                for key in ("description", "strict", "skills", "name", "category")
+            }
+            | {"interface": {"category": plugin["category"]}}
+        )
+    actual = json.dumps(json.loads(manifest.read_text()), sort_keys=True)
+    if actual not in {
+        json.dumps(candidate, sort_keys=True) for candidate in candidates
+    }:
+        raise ValueError("métadonnées Codex divergentes")
+    return {CODEX_MANIFEST}
+
+
 def verify(
     lock: dict, root: Path, project: Path, *, allow_git_ignored: bool = False
 ) -> None:
@@ -144,6 +180,7 @@ def verify(
                 ).split(b"\0")
                 if name
             } - set(lock["files"])
+    host_files = codex_host_manifest(lock, root)
     actual = set()
     for directory, dirs, names in os.walk(root, followlinks=False):
         base = Path(directory)
@@ -161,6 +198,8 @@ def verify(
                 continue
             if entry.is_symlink() or not entry.is_file():
                 raise ValueError("fichier produit non régulier")
+            if rel in host_files:
+                continue
             actual.add(rel)
             expected = lock["files"].get(rel)
             if expected is None or expected != {

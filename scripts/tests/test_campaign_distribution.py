@@ -396,6 +396,25 @@ assert code == 0, err
         self.assertNotIn("./.claude/skills/agentic-design-harness", light["skills"])
         self.assertEqual(full["skills"], ["./.claude/skills"])
         self.assertEqual(len(list((ROOT / ".claude/skills").glob("*/SKILL.md"))), 18)
+        native = json.loads((ROOT / ".agents/plugins/marketplace.json").read_text())
+        for old, plugin in zip(catalog["plugins"], native["plugins"], strict=True):
+            self.assertEqual(plugin["skills"], old["skills"])
+            self.assertEqual(plugin["source"]["source"], "url")
+            self.assertTrue(plugin["source"]["url"].startswith("git@github.com:"))
+            self.assertEqual(plugin["policy"]["installation"], "AVAILABLE")
+
+    def test_standalone_codex_catalog_symlink_refused_without_git(self):
+        script = self.cache / "scripts/tests/check-standalone-boundary.sh"
+        result = command("bash", script, self.cache)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        catalog = self.cache / ".agents/plugins/marketplace.json"
+        catalog.unlink()
+        catalog.symlink_to(self.source / ".agents/plugins/marketplace.json")
+        result = command("bash", script, self.cache)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(
+            "lien symbolique dans le catalogue Codex", result.stdout + result.stderr
+        )
 
     def test_pack_check_uses_target_profiles_when_caller_diverges(self):
         caller, target = self.base / "caller", self.base / "target"
@@ -407,6 +426,7 @@ assert code == 0, err
                 "config/agentic-design-packages.yaml",
                 "config/distribution-profiles.json",
                 ".claude-plugin/marketplace.json",
+                ".agents/plugins/marketplace.json",
             ):
                 dest = checkout / relative
                 dest.parent.mkdir(parents=True, exist_ok=True)

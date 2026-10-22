@@ -65,6 +65,8 @@ catalogue `.claude-plugin/marketplace.json` :
 ```
 
 Le checkout complet est installé par la voie Git : skills, scripts et profil DSFR.
+Codex CLI dispose du même produit via son catalogue natif dérivé :
+voir les commandes dans [les profils et l’installation](documentation/DISTRIBUTION-ET-PROFILS.md).
 Le profil complet expose 18 skills ; le léger en expose 17, sans orchestration
 avancée. Ils partagent les mêmes sources. Suivre [les profils et le verrou de
 campagne](documentation/DISTRIBUTION-ET-PROFILS.md) ; le cache officiel DSFR et

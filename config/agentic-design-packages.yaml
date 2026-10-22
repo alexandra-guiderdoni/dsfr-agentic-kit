@@ -39,6 +39,7 @@ product:
   required_paths:
     - README.md
     - .claude-plugin/marketplace.json
+    - .agents/plugins/marketplace.json
     - DEMARRAGE-AGENT.md
     - LICENSE
     - CHANGELOG.md

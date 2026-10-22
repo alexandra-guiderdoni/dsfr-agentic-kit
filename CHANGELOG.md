@@ -1,5 +1,14 @@
 # Journal des versions
 
+## Installation native Codex — 22 octobre 2026
+
+- catalogue Codex dérivé des mêmes profils complet et léger, avec transport
+  Git SSH reconnu par l’hôte et politiques d’installation explicites ;
+- manifeste généré par Codex comparé exactement au catalogue verrouillé,
+  sans tolérer d’autres fichiers, des clés ajoutées ou un exécutable ;
+- catalogue Claude, sources des compétences et verrous des consommateurs
+  existants conservés.
+
 ## Réception et clôture du harnais autonome — 22 octobre 2026
 
 - fraîcheur calculée avec le catalogue effectivement sélectionné par `--rules`,

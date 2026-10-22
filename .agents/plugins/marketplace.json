@@ -1,0 +1,60 @@
+{
+  "name": "dsfr-agentic",
+  "owner": {
+    "name": "Équipe DSFR Agentic"
+  },
+  "plugins": [
+    {
+      "name": "dsfr-agentic-kit",
+      "description": "Skills DSFR et RGAA/WCAG pour générer, auditer et corriger des interfaces publiques, avec des preuves bornées.",
+      "source": {
+        "source": "url",
+        "url": "git@github.com:alexandra-guiderdoni/dsfr-agentic-kit.git",
+        "ref": "main"
+      },
+      "strict": false,
+      "skills": [
+        "./.claude/skills"
+      ],
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "dsfr-agentic-kit-light",
+      "description": "Outils DSFR et RGAA/WCAG sans orchestration avancée, issus des mêmes sources que le profil complet.",
+      "source": {
+        "source": "url",
+        "url": "git@github.com:alexandra-guiderdoni/dsfr-agentic-kit.git",
+        "ref": "main"
+      },
+      "strict": false,
+      "skills": [
+        "./.claude/skills/a11y-loop",
+        "./.claude/skills/a11y-shared-references",
+        "./.claude/skills/audit-a11y-complet",
+        "./.claude/skills/audit-accessibilite-web",
+        "./.claude/skills/audit-dsfr-complet",
+        "./.claude/skills/audit-report-dsfr",
+        "./.claude/skills/audit-rgaa-complet",
+        "./.claude/skills/audit-rgaa-dsfr",
+        "./.claude/skills/audit-rgaa-creator",
+        "./.claude/skills/dsfr-changelog",
+        "./.claude/skills/dsfr-components",
+        "./.claude/skills/fix-accessibilite",
+        "./.claude/skills/generer-pictos-svg-dsfr",
+        "./.claude/skills/pre-audit-rgaa-dsfr",
+        "./.claude/skills/screen-reader-testing",
+        "./.claude/skills/tests-conformite-wcag",
+        "./.claude/skills/ticket-rgaa"
+      ],
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

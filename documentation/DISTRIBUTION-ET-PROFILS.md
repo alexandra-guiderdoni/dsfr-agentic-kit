@@ -34,6 +34,23 @@ Dans Claude Code :
 /plugin install dsfr-agentic-kit-light@dsfr-agentic
 ```
 
+Dans Codex CLI, le catalogue `.agents/plugins/marketplace.json` adapte le
+transport Git et les politiques d’installation depuis les mêmes profils :
+
+```bash
+codex plugin marketplace add git@github.com:alexandra-guiderdoni/dsfr-agentic-kit.git
+codex plugin add dsfr-agentic-kit-light@dsfr-agentic
+codex plugin list --json
+```
+
+Remplacer l’identifiant léger par `dsfr-agentic-kit` pour le profil complet.
+Le format suit la [documentation officielle des plugins Codex](https://developers.openai.com/plugins/build/plugins).
+Le manifeste `.codex-plugin/plugin.json` créé par l’hôte est accepté uniquement
+si son contenu correspond exactement à un profil du catalogue verrouillé,
+sans clé supplémentaire ni permission d’exécution. Le catalogue est vérifié
+par son empreinte avant de servir à cette comparaison. Tout autre ajout reste
+refusé ; aucune exclusion globale de `.codex-plugin` n’est introduite.
+
 L’identité d’une campagne vient de son verrou, jamais du seul nom du cache ou
 d’une branche `main`. Choisir un commit complet publié et préparer le projet.
 `KIT_ROOT` désigne le cache natif réellement exécuté, trouvé dans les détails

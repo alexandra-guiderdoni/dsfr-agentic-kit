@@ -143,6 +143,71 @@ class LockTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "liens"):
             kit_lock.create(self.source, commit, "fixture-local", None)
 
+    def native_codex(self, light=False):
+        catalog = self.source / ".agents/plugins/marketplace.json"
+        catalog.parent.mkdir(parents=True)
+        plugin = {
+            "name": "dsfr-agentic-kit-light" if light else "dsfr-agentic-kit",
+            "description": "Compétences du produit",
+            "strict": False,
+            "skills": ["./.claude/skills/dsfr-components"]
+            if light
+            else ["./.claude/skills"],
+            "category": "Productivity",
+        }
+        catalog.write_text(json.dumps({"plugins": [plugin]}))
+        commit = self.commit("catalogue Codex")
+        self.lock = kit_lock.create(self.source, commit, "fixture-local", None)
+        shutil.copytree(self.source / ".agents", self.cache / ".agents")
+        path = self.cache / ".codex-plugin/plugin.json"
+        path.parent.mkdir()
+        path.write_text(
+            json.dumps({**plugin, "interface": {"category": "Productivity"}})
+        )
+        return path
+
+    def test_codex_native_full_and_light_metadata(self):
+        self.native_codex(light=True)
+        self.verify()
+
+    def test_codex_unknown_fields_and_extra_files_refused(self):
+        path = self.native_codex()
+        self.verify()
+        original = path.read_text()
+        data = json.loads(original)
+        data["strict"] = 0
+        path.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, "Codex divergentes"):
+            self.verify()
+        data = json.loads(original)
+        data["mcpServers"] = {"unexpected": {"command": "evil"}}
+        path.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, "Codex divergentes"):
+            self.verify()
+        path.write_text(original)
+        (path.parent / "unexpected.py").write_text("print('extra')")
+        with self.assertRaisesRegex(ValueError, "divergente"):
+            self.verify()
+
+    def test_codex_catalog_tampering_and_executable_metadata_refused(self):
+        path = self.native_codex()
+        path.chmod(0o755)
+        with self.assertRaisesRegex(ValueError, "Codex non vérifiées"):
+            self.verify()
+        path.chmod(0o644)
+        catalog = self.cache / ".agents/plugins/marketplace.json"
+        catalog.write_text(catalog.read_text() + " ")
+        with self.assertRaisesRegex(ValueError, "Codex non vérifiées"):
+            self.verify()
+
+    def test_codex_symlink_metadata_refused(self):
+        path = self.native_codex()
+        outside = self.project / "manifest.json"
+        path.rename(outside)
+        path.symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "Codex non vérifiées"):
+            self.verify()
+
 
 if __name__ == "__main__":
     unittest.main()

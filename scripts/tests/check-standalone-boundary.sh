@@ -24,7 +24,6 @@ fi
 
 for rel in \
   ".lor""iq" \
-  ".agents" \
   ".verdent" \
   ".codegraph" \
   "AGENTS.md" \
@@ -36,6 +35,21 @@ for rel in \
     fail "surface interne livrée : $rel"
   fi
 done
+
+# Le seul adaptateur natif livré ici est le catalogue Codex dérivé.
+if [[ -e "$WORKSPACE/.agents" ]]; then
+  for rel in .agents .agents/plugins .agents/plugins/marketplace.json; do
+    if [[ -L "$WORKSPACE/$rel" ]]; then
+      fail "lien symbolique dans le catalogue Codex : $rel"
+    fi
+  done
+  while IFS= read -r path; do
+    case "${path#"$WORKSPACE/"}" in
+      .agents/plugins|.agents/plugins/marketplace.json) ;;
+      *) fail "surface interne livrée : ${path#"$WORKSPACE/"}" ;;
+    esac
+  done < <(find "$WORKSPACE/.agents" -mindepth 1 -print)
+fi
 
 for prefix in "syn""c-" "pack""age-" "check-mirror-" "codex-harness-"; do
   while IFS= read -r path; do
