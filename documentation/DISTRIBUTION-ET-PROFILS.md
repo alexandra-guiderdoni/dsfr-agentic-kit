@@ -159,6 +159,10 @@ Le parcours de réception CLI utilise donc un seul confinement macOS externe,
 fourni par `templates/codex-macos-isolation.sb`. Il laisse fonctionner les
 services système du navigateur et impose les restrictions de fichiers aux
 processus CLI et à leurs descendants.
+Le dossier `.codex/plugins` du HOME isolé reste entièrement en lecture seule,
+y compris ses répertoires parents de cache, pour empêcher leur déplacement.
+Le déplacement de `.codex` lui-même est également interdit ; l’hôte peut
+toujours écrire ses fichiers enfants hors du dossier des plugins.
 
 Préparer un HOME isolé authentifié, un projet Git neuf, un kit installé vérifié
 par son verrou et des dépendances extérieures. Utiliser des chemins absolus

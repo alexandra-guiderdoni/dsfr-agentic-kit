@@ -164,6 +164,9 @@ class InstalledCampaignTests(unittest.TestCase):
         (self.project / "kit-alias").symlink_to(self.cache, target_is_directory=True)
         isolated = self.base / "isolated"
         isolated.mkdir()
+        native_cache = isolated / ".codex/plugins/cache/market/plugin/local"
+        native_cache.mkdir(parents=True)
+        (native_cache / "sentinel").write_text("protected")
         params = {
             "WORKFLOW_ROOT": workflow,
             "PERSONAL_HOME": personal,
@@ -183,7 +186,7 @@ class InstalledCampaignTests(unittest.TestCase):
         probe = """
 import sys
 from pathlib import Path
-base, project, cache, workflow, personal = map(Path, sys.argv[1:])
+base, project, cache, workflow, personal, isolated = map(Path, sys.argv[1:])
 for path, write in [
     (workflow / 'private.txt', False),
     (project / 'workflow-alias/private.txt', False),
@@ -200,9 +203,25 @@ for path, write in [
     raise AssertionError(str(path))
 (project / 'allowed.txt').write_text('OK')
 assert (personal / '.codex/runtime/readable').read_text() == 'runtime'
+(isolated / '.codex/host-state').write_text('allowed')
+for relative in ('.codex/plugins/cache/market/plugin', '.codex/plugins/cache/market',
+                 '.codex/plugins/cache', '.codex/plugins', '.codex'):
+    ancestor = isolated / relative
+    try:
+        ancestor.rename(project / (ancestor.name + '-moved'))
+    except PermissionError:
+        continue
+    raise AssertionError('Cache ancestor could be moved: ' + relative)
 """
         result = command(
-            *argv, probe, self.base, self.project, self.cache, workflow, personal
+            *argv,
+            probe,
+            self.base,
+            self.project,
+            self.cache,
+            workflow,
+            personal,
+            isolated,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         result = command("/usr/bin/sandbox-exec", "-f", policy, "/usr/bin/true")

@@ -19,6 +19,8 @@
     (require-not (subpath (param "RECEIPTS_ROOT")))
     (require-not (literal "/dev/null"))))
 (deny file-write*
+  (literal (string-append (param "ISOLATED_HOME") "/.codex"))
+  (subpath (string-append (param "ISOLATED_HOME") "/.codex/plugins"))
   (subpath (param "KIT_ROOT"))
   (subpath (string-append (param "PROJECT_ROOT") "/.git"))
   (subpath (string-append (param "PROJECT_ROOT") "/.agents"))
