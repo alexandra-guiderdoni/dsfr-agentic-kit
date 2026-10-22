@@ -7,6 +7,10 @@
 - préparation explicite du verrou d’un cache natif, sans clone permanent ;
 - vérification automatique avant les écritures de campagne, refus d’une
   divergence et de l’adoption silencieuse d’une campagne historique ;
+- protection du cache contre le bytecode des processus enfants en appel Python
+  direct ; contrôle des profils dans le checkout explicitement ciblé ;
+- clones Git compatibles avec leurs fichiers ignorés, tout en contrôlant les
+  fichiers versionnés ; caches natifs maintenus stricts ;
 - retrait du contournement masqué `--allow-inside-kit` ; alias et consommateurs
   actifs préservés, réception et bascule distinctes de cette livraison.
 

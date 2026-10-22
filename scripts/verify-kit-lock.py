@@ -113,13 +113,16 @@ def create(root: Path, commit: str, repository: str, tag: str | None) -> dict:
     return lock
 
 
-def verify(lock: dict, root: Path, project: Path) -> None:
+def verify(
+    lock: dict, root: Path, project: Path, *, allow_git_ignored: bool = False
+) -> None:
     validate(lock)
     root, project = root.resolve(), project.resolve()
     if root == project or root in project.parents or project in root.parents:
         raise ValueError("cache du kit et projet doivent être disjoints")
     if not root.is_dir() or not project.is_dir():
         raise ValueError("kit et projet existants obligatoires")
+    ignored = set()
     if (root / ".git").exists():
         if (
             Path(git(root, "rev-parse", "--show-toplevel").decode().strip()).resolve()
@@ -128,6 +131,19 @@ def verify(lock: dict, root: Path, project: Path) -> None:
             raise ValueError("racine Git incorrecte")
         if git(root, "rev-parse", "HEAD").decode().strip() != lock["commit"]:
             raise ValueError("commit du cache divergent")
+        if allow_git_ignored:
+            ignored = {
+                name.decode()
+                for name in git(
+                    root,
+                    "ls-files",
+                    "--others",
+                    "--ignored",
+                    "--exclude-standard",
+                    "-z",
+                ).split(b"\0")
+                if name
+            } - set(lock["files"])
     actual = set()
     for directory, dirs, names in os.walk(root, followlinks=False):
         base = Path(directory)
@@ -135,11 +151,14 @@ def verify(lock: dict, root: Path, project: Path) -> None:
             dirs[:] = [name for name in dirs if name not in HOST_METADATA]
             names = [name for name in names if name not in HOST_METADATA]
         for name in dirs:
-            if (base / name).is_symlink():
+            entry = base / name
+            if entry.is_symlink() and entry.relative_to(root).as_posix() not in ignored:
                 raise ValueError("lien symbolique interdit dans le produit")
         for name in names:
             entry = base / name
             rel = entry.relative_to(root).as_posix()
+            if rel in ignored:
+                continue
             if entry.is_symlink() or not entry.is_file():
                 raise ValueError("fichier produit non régulier")
             actual.add(rel)

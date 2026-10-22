@@ -55,9 +55,11 @@ export AY11_ROOT="<workspace>/ay11-pre-audit"
 export AY11_EXPECTED_VERSION="1.3.0"
 ```
 
-Le wrapper conserve la lecture historique d’un `.env.local` dans un clone,
-mais un cache versionné refuse ce fichier supplémentaire. Préférer les
-variables du projet, à l’extérieur de l’installation.
+Le wrapper conserve la lecture historique d’un `.env.local` ignoré par Git
+dans un clone. Le runner vérifie les fichiers versionnés et refuse les ajouts
+non ignorés ; les livrables ignorés sont préservés. Un cache natif sans Git
+refuse tout fichier supplémentaire, dont `.env.local`. Préférer les variables
+du projet, à l’extérieur de l’installation.
 
 Le `sample` est une proposition heuristique. Il faut conserver les gabarits et
 fonctionnalités représentatifs : accueil, plan, déclaration, contenus, tableau,

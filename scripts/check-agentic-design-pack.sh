@@ -154,7 +154,7 @@ assert light.get("name") == "dsfr-agentic-kit-light"
 assert light.get("source") == source
 assert light.get("strict") is False
 PY
-  run_check "profils de distribution" python_with_pyyaml "$SCRIPT_DIR/build-marketplace.py" --check
+  run_check "profils de distribution" python_with_pyyaml "$WORKSPACE/scripts/build-marketplace.py" --check
 fi
 
 tests=()

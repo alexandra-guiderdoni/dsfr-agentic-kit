@@ -12,6 +12,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[2]
 CAMPAIGN = ".claude/skills/audit-rgaa-creator/scripts/audit_campaign.py"
 
@@ -118,12 +120,88 @@ class InstalledCampaignTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.project / "PORTAIL-AUDITS.html").is_file())
 
+    def test_direct_python_protects_child_imports_and_campaign_reuse(self):
+        config = self.init()
+        before = {p.relative_to(self.cache) for p in self.cache.rglob("*")}
+        scripts = (self.cache / CAMPAIGN).parent
+        probe = """
+import runpy, sys
+from pathlib import Path
+scripts, log = sys.argv[1:]
+sys.path.insert(0, scripts)
+runner = runpy.run_path(str(Path(scripts) / 'audit_campaign.py'))
+code, out, err = runner['run_command'](
+    [sys.executable, '-c', 'import sys; sys.path.insert(0, sys.argv[1]); import navigation, browser_launch', scripts],
+    Path(log),
+)
+assert code == 0, err
+"""
+        env = dict(os.environ)
+        env.pop("PYTHONDONTWRITEBYTECODE", None)
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                probe,
+                str(scripts),
+                str(self.project / "logs/child.json"),
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            {p.relative_to(self.cache) for p in self.cache.rglob("*")}, before
+        )
+        result = self.cli("status", config)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_git_clone_preserves_ignored_data_but_checks_product(self):
+        clone = self.base / "clone"
+        shutil.copytree(self.source, clone)
+        local = clone / ".env.local"
+        local.write_text("DSFR_PROJECT_TEST=1\n")
+        (clone / "archives").mkdir()
+        (clone / "archives/local.txt").write_text("Livrable à préserver.\n")
+        result = self.cli(
+            "init",
+            "https://example.test/",
+            "--output",
+            self.project,
+            cache=clone,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        config = self.project / "campaign.yaml"
+        self.assertEqual(self.cli("report", config, cache=clone).returncode, 0)
+        self.assertEqual(local.read_text(), "DSFR_PROJECT_TEST=1\n")
+        (clone / "README.md").write_text("Produit altéré\n")
+        result = self.cli("report", config, cache=clone)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("README.md", result.stderr)
+
+    def test_installed_cache_rejects_git_ignored_extras(self):
+        config = self.init()
+        (self.cache / ".env.local").write_text("DSFR_PROJECT_TEST=1\n")
+        result = self.cli("report", config)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(".env.local", result.stderr)
+
     def test_divergence_blocks_every_campaign_command_before_writes(self):
         config = self.init()
         before = self.snapshot()
         with (self.cache / "README.md").open("a") as stream:
             stream.write("\naltération\n")
-        for action in ["run", "resume", "report", "validate", "replan", "sample"]:
+        for action in [
+            "run",
+            "resume",
+            "report",
+            "validate",
+            "replan",
+            "sample",
+            "status",
+        ]:
             with self.subTest(action=action):
                 result = self.cli(action, config)
                 self.assertNotEqual(result.returncode, 0)
@@ -268,6 +346,61 @@ class InstalledCampaignTests(unittest.TestCase):
         self.assertNotIn("./.claude/skills/agentic-design-harness", light["skills"])
         self.assertEqual(full["skills"], ["./.claude/skills"])
         self.assertEqual(len(list((ROOT / ".claude/skills").glob("*/SKILL.md"))), 18)
+
+    def test_pack_check_uses_target_profiles_when_caller_diverges(self):
+        caller, target = self.base / "caller", self.base / "target"
+        for checkout in (caller, target):
+            for relative in (
+                "scripts/check-agentic-design-pack.sh",
+                "scripts/build-marketplace.py",
+                "scripts/lib/python-with-pyyaml.sh",
+                "config/agentic-design-packages.yaml",
+                "config/distribution-profiles.json",
+                ".claude-plugin/marketplace.json",
+            ):
+                dest = checkout / relative
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(ROOT / relative, dest)
+        # Seuls les contrôles annexes sont remplacés ; le contrôle des profils
+        # et le catalogue utilisent les vrais scripts et des checkouts distincts.
+        for relative in (
+            "scripts/tests/check-standalone-boundary.sh",
+            "scripts/check-prerequisites.sh",
+            "scripts/check-accents.sh",
+            "scripts/check-dsfr-design-system.sh",
+            "scripts/tests/fixture.sh",
+        ):
+            dest = caller / relative
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text("#!/bin/bash\nexit 0\n")
+        (target / "scripts/tests").mkdir()
+        shutil.copy2(
+            caller / "scripts/tests/fixture.sh", target / "scripts/tests/fixture.sh"
+        )
+        (target / "README.md").write_text("# Cible de vérification\n")
+        path = target / "config/agentic-design-packages.yaml"
+        manifest = yaml.safe_load(path.read_text())
+        manifest["product"]["required_paths"] = ["README.md"]
+        manifest["validation"] = {
+            "product_tests": ["scripts/tests/fixture.sh"],
+            "markdown": ["README.md"],
+        }
+        path.write_text(yaml.safe_dump(manifest, allow_unicode=True))
+        path = caller / ".claude-plugin/marketplace.json"
+        catalog = json.loads(path.read_text())
+        catalog["plugins"][1]["skills"] = []
+        path.write_text(json.dumps(catalog))
+        result = command(
+            sys.executable, caller / "scripts/build-marketplace.py", "--check"
+        )
+        self.assertNotEqual(result.returncode, 0)
+        result = command(
+            "bash",
+            caller / "scripts/check-agentic-design-pack.sh",
+            target,
+            "--stop-after-product-tests",
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

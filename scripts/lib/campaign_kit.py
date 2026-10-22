@@ -40,7 +40,9 @@ def initial_lock(root: Path, project: Path, seed: str | None) -> dict:
     # Le dossier de campagne n’existe pas encore. Vérifier les octets sans
     # y créer une sortie, puis écrire son verrou seulement après ce contrôle.
     with tempfile.TemporaryDirectory(prefix="dsfr-identity-") as temporary:
-        check.verify(lock, root, Path(temporary))
+        check.verify(
+            lock, root, Path(temporary), allow_git_ignored=(root / ".git").exists()
+        )
     return lock
 
 
@@ -67,7 +69,9 @@ def verify_campaign(root: Path, project: Path, *, required: bool = True) -> None
             "identifier et vérifier son kit d’origine avant toute reprise"
         )
     lock = json.loads(lock_path.read_text(encoding="utf-8"))
-    verifier(root).verify(lock, root, project)
+    verifier(root).verify(
+        lock, root, project, allow_git_ignored=(root / ".git").exists()
+    )
 
 
 IDENTITY_ERRORS = (ValueError, OSError, subprocess.CalledProcessError)

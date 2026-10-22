@@ -30,6 +30,13 @@ Seules les métadonnées racines `.git`, `.in_use` et `.orphaned_at`, appartenan
 à l’hôte, sont exclues. Aucun fichier produit ne peut porter ces noms à la
 racine. Les caches Python, dépendances, réglages et sorties restent ailleurs.
 
+La CLI du vérificateur reste stricte, y compris sur un clone. Le runner de
+campagne possède une tolérance réservée aux clones Git locaux : les fichiers
+non versionnés et ignorés par Git sont exclus, mais chaque fichier du verrou
+et `HEAD` restent contrôlés. Cela préserve `.env.local` et les livrables du
+clone. Cette tolérance ne s’applique jamais à un cache sans Git ; elle ne
+constitue pas une garantie sur l’environnement local du développeur.
+
 ## Préparer et vérifier
 
 `SOURCE_GIT` désigne un checkout de confiance utilisé pour établir le verrou.
@@ -50,9 +57,15 @@ python3 "$SOURCE_GIT/scripts/verify-kit-lock.py" verify \
 
 Le vérificateur est lancé depuis une version de confiance, avant tout code
 du cache à contrôler. Il ne télécharge rien, ne répare rien et ne réécrit pas
-le verrou. Un refus interdit le lancement de la campagne. Pour la voie Git
-native éprouvée dans #9, la source marketplace utilise `ref: main` avec un
-champ `sha` contenant le commit complet ; une branche seule n’est pas un pin.
+le verrou. Un refus interdit le lancement de la campagne. La garde interne
+chargée ensuite par le runner sert à détecter les divergences ; elle ne peut
+pas authentifier son propre code contre une altération hostile.
+
+La recette isolée de #9 utilisait `ref: main` avec un champ `sha` contenant le
+commit complet. Le catalogue publié suit actuellement `main` sans `sha` :
+une mise à jour native peut recevoir un autre commit. Une branche seule
+n’est pas un pin ; vérifier les octets réellement installés et conserver A
+avant cette mise à jour reste nécessaire.
 
 ## Mise à jour et reprise
 
