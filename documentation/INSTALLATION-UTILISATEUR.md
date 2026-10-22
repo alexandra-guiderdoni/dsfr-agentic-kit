@@ -40,6 +40,13 @@ Une nouvelle session de l’agent peut être nécessaire pour redécouvrir les
 compétences ; un inventaire de liens ne prouve pas cette découverte.
 Les dépendances Python, Playwright et DSFR officiel restent externes.
 
+Lors du remplacement d’un plugin existant, inspecter `claude plugin list --json`.
+Une source locale et une source `@synced` peuvent exposer séparément le même
+produit. Désactiver les sélecteurs DSFR concernés avec la commande native
+`claude plugin disable <sélecteur> --scope user`, puis ouvrir une session neuve.
+Ne pas purger leurs caches ni modifier les autres plugins. L’installateur ne
+change pas lui-même ces réglages ; conserver leur état pour le retour arrière.
+
 Pour mettre à jour, relancer la même installation avec le nouveau commit.
 Les anciennes révisions et caches ne sont pas purgés. Ne jamais substituer
 le verrou courant au verrou d’une ancienne campagne : son outillage A reste
@@ -77,3 +84,5 @@ la résistance à une coupure du processus n’est pas garantie par les tests lo
 Les essais `test_user_installation.py` couvrent les conflits, le retour réel,
 les profils, la conservation de A et le refus d’un cache altéré. Ils emploient
 un dépôt Git synthétique : la réception des agents et du navigateur reste distincte.
+Le [reçu de l’installation utilisateur](RECEPTION-INSTALLATION-UTILISATEUR.md)
+distingue ces tests, les sessions natives et leurs limites.

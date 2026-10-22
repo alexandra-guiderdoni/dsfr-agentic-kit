@@ -7,6 +7,8 @@
 - installation commune aux agents, adoption avec sauvegardes, liens de
   compatibilité facultatifs et retour arrière refusant les modifications tierces ;
 - anciennes versions et qualifications conservées, sans plugin obligatoire.
+- réception indépendante Codex, parcours personnel Claude et retour arrière réel
+  documentés ; anciennes sélections de plugins distinguées des liens utilisateur.
 
 ## Parcours CLI Codex confiné — 22 octobre 2026
 

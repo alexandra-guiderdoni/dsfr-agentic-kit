@@ -3,6 +3,10 @@
 État au 22 octobre 2026. Ce reçu relie les critères aux sources exécutables ;
 il ne remplace ni les qualifications humaines ni les preuves brutes des projets.
 
+La bascule ultérieure vers l’installation utilisateur, sans plugin obligatoire,
+est décrite dans le [reçu du branchement utilisateur](RECEPTION-INSTALLATION-UTILISATEUR.md).
+Les sections ci-dessous conservent leurs versions et leurs observations historiques.
+
 ## Livraisons et critères
 
 | Ticket | Source et preuve | État |
