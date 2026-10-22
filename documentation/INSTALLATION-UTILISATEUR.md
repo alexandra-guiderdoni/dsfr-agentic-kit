@@ -54,6 +54,9 @@ vers l’installation utilisateur. Les liens relatifs existants peuvent ainsi
 conserver leurs noms, leurs imports partagés et leur profil sans dupliquer les
 moteurs. Les mises à jour conservent automatiquement ce branchement géré.
 La propriété de ces liens est inscrite dans le reçu de transaction.
+Le profil `light` filtre les compétences utilisateur : il ne transforme pas
+les liens locaux d’un workflow complet existant. Ce workflow conserve ses
+18 entrées et doit rester consommateur du profil `complete`.
 
 `--home`, `--prefix` et `--cache-root` permettent une réception isolée. La
 configuration et le cache sont disjoints ; aucun réglage des agents n’est écrit.
