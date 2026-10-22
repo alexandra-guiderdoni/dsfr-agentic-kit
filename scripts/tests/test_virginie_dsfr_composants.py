@@ -7,6 +7,7 @@ dsfr-findings.json). Aucune lecture des archives réelles.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -706,6 +707,120 @@ class PublishTests(unittest.TestCase):
 
 
 class GeneratorTests(unittest.TestCase):
+    def test_first_pass_without_pending_groups_still_requires_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = root / "project"
+            project.mkdir()
+            archive = make_archive(root, "P01", "Fixture", "content", [], [])
+            argv = [
+                sys.executable,
+                "-B",
+                str(GENERATOR),
+                "--project-root",
+                str(project),
+                "--archives",
+                str(root),
+                "--pattern",
+                archive.name,
+                "--pages",
+                "1",
+                "--cache-dir",
+                str(root / "cache"),
+                "--no-index",
+            ]
+            first = subprocess.run(argv, capture_output=True, text=True, check=False)
+            self.assertEqual(first.returncode, 2, first.stderr)
+            sheet = (
+                project
+                / "virginie-livrables/DSFR-COMPOSANTS-TRAVAIL/REVUE-A-QUALIFIER.md"
+            )
+            self.assertTrue(sheet.is_file())
+            self.assertFalse((project / "virginie-livrables/DSFR-COMPOSANTS").exists())
+
+    def test_selected_catalog_matches_its_archive_fingerprint(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pages = [collect.load_page(p) for p in build_fixture(root)]
+            catalog = root / "selected.json"
+            catalog.write_text('{"rules": [], "fixture": true}')
+            digest = hashlib.sha256(catalog.read_bytes()).hexdigest()
+            for page in pages:
+                page.rule_catalog = {"sha256": digest}
+            collection = collect.collect(pages, rules_path=catalog)
+            self.assertEqual(collection.catalog_status["status"], "A_JOUR")
+            self.assertEqual(collection.catalog_status["current"]["sha256"], digest)
+
+    def test_custom_catalog_and_two_pass_receipts_preserve_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project, archives = root / "project", root / "archives"
+            project.mkdir()
+            archives.mkdir()
+            archive_paths = build_fixture(archives)
+            rules = json.loads(collect.RULE_CATALOG_PATH.read_text())
+            rules["fixture_non_canonical"] = True
+            custom = root / "custom-rules.json"
+            custom.write_text(json.dumps(rules))
+            digest = hashlib.sha256(custom.read_bytes()).hexdigest()
+            for archive in archive_paths:
+                path = next((archive / "dsfr/pages").glob("P*.json"))
+                data = json.loads(path.read_text())
+                data["rule_catalog"] = {"sha256": digest}
+                path.write_text(json.dumps(data))
+            argv = [
+                sys.executable,
+                "-B",
+                str(GENERATOR),
+                "--project-root",
+                str(project),
+                "--archives",
+                str(archives),
+                "--pattern",
+                "audit-test-p{n:02d}-2026-09-02",
+                "--pages",
+                "1-2",
+                "--cache-dir",
+                str(root / "cache"),
+                "--rules",
+                str(custom),
+                "--allow-pending",
+                "--no-index",
+            ]
+            first = subprocess.run(argv, capture_output=True, text=True, check=False)
+            self.assertEqual(first.returncode, 2, first.stderr)
+            work = project / "virginie-livrables/DSFR-COMPOSANTS-TRAVAIL"
+            receipt = json.loads((work / "RECU-GENERATION.json").read_text())
+            self.assertEqual(receipt["phase"], "REVUE_CREEE")
+            self.assertFalse(receipt["rendered"])
+            self.assertFalse((project / "virginie-livrables/DSFR-COMPOSANTS").exists())
+            sheet = work / "REVUE-A-QUALIFIER.md"
+            original = sheet.read_bytes()
+            self.assertEqual(
+                receipt["source_sheet_sha256"], hashlib.sha256(original).hexdigest()
+            )
+            second = subprocess.run(argv, capture_output=True, text=True, check=False)
+            self.assertEqual(second.returncode, 0, second.stderr)
+            self.assertEqual(sheet.read_bytes(), original)
+            receipt = json.loads((work / "RECU-GENERATION.json").read_text())
+            self.assertEqual(receipt["phase"], "RENDU")
+            self.assertTrue(receipt["rendered"])
+            self.assertEqual(
+                receipt["source_sheet_sha256"], hashlib.sha256(original).hexdigest()
+            )
+            manifest = json.loads(
+                (
+                    project
+                    / "virginie-livrables/DSFR-COMPOSANTS/MANIFESTE-DSFR-COMPOSANTS.json"
+                ).read_text()
+            )
+            current = manifest["catalog_status"]["current"]
+            self.assertEqual(manifest["catalog_status"]["status"], "A_JOUR")
+            self.assertEqual(current["sha256"], digest)
+            self.assertEqual(current["rules_count"], len(rules["rules"]))
+            self.assertFalse(current["canonical"])
+            self.assertIn("non canonique", second.stderr)
+
     def test_stale_catalog_requires_explicit_exception_and_marks_output(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -749,9 +864,7 @@ class GeneratorTests(unittest.TestCase):
             )
             self.assertEqual(2, rejected.returncode)
             self.assertIn("--allow-stale-catalog", rejected.stderr)
-            self.assertFalse(
-                (project / "virginie-livrables/DSFR-COMPOSANTS").exists()
-            )
+            self.assertFalse((project / "virginie-livrables/DSFR-COMPOSANTS").exists())
 
             accepted = subprocess.run(
                 [*common, "--allow-stale-catalog"],
@@ -768,9 +881,7 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual("CATALOGUE_OBSOLETE", manifest["catalog_status"]["status"])
             self.assertTrue(manifest["stale_catalog_allowed"])
             self.assertTrue(manifest["catalog_status"]["stale_catalog_allowed"])
-            self.assertIn(
-                "rejeu frais reste non prouvé", manifest["claim"]
-            )
+            self.assertIn("rejeu frais reste non prouvé", manifest["claim"])
 
 
 if __name__ == "__main__":

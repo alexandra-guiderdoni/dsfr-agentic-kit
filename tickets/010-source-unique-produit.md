@@ -21,4 +21,4 @@ consignés dans le reçu de chantier.
 
 La publication coordonnée livre les gardes, le kit puis le verrou des recettes.
 La bascule des alias et le retrait des anciennes copies restent à effectuer.
-#8 recevra le produit ; #11 livrera les profils ; #12 portera la bascule.
+#11 a livré les profils ; #8 reçoit le produit ; #12 porte la bascule.

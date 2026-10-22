@@ -865,9 +865,17 @@ def preflight(
         validate_url(config.get("campaign", {}).get("target", ""))
     except ValueError as exc:
         errors.append(str(exc))
+    optional_network_services = []
     if config.get("phases", {}).get("validator", True):
         declare = (config.get("validator") or {}).get("command")
         if not declare and not find_validator():
+            optional_network_services.append(
+                {
+                    "role": "validateur_html_distant",
+                    "required": False,
+                    "status": "NON_EXERCE_AU_PREVOL",
+                }
+            )
             warnings.append(
                 "Aucun validateur HTML local : la phase validator passera par le "
                 "service public du W3C, qui limite le débit. Sur macOS, "
@@ -969,7 +977,7 @@ def preflight(
             probe_urls.setdefault(origin, candidate)
         for origin, candidate in probe_urls.items():
             result = probe_network_url(candidate)
-            network_checks.append({"origin": origin, **result})
+            network_checks.append({"origin": origin, "required": True, **result})
             if result["kind"] == "BLOQUÉ-INFRA":
                 blocked_infra.append({"origin": origin, "cause": result["cause"]})
             elif result["kind"] == "INJOIGNABLE":
@@ -1013,6 +1021,7 @@ def preflight(
         if unreachable
         else None,
         network_checks=network_checks,
+        optional_network_services=optional_network_services,
         blocked_infra=blocked_infra,
         unreachable=unreachable,
         browser_python=browser_python,

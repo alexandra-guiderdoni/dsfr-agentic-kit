@@ -57,16 +57,19 @@ Le script rend la session reconstructible : il ne rend pas le conteneur
 permanent.
 
 Pour une découverte native des skills dans Claude/Cowork, le kit fournit le
-catalogue `.claude-plugin/marketplace.json`. Après publication du dépôt :
+catalogue `.claude-plugin/marketplace.json` :
 
 ```text
 /plugin marketplace add alexandra-guiderdoni/dsfr-agentic-kit
 /plugin install dsfr-agentic-kit@dsfr-agentic
 ```
 
-Le marketplace expose les skills du kit, pas les scripts de contrôle, le
-profil DSFR ni le cache officiel. Conserver le clone pour les vérifications
-complètes. Pour produire une archive plugin locale rattachée à un commit :
+Le checkout complet est installé par la voie Git : skills, scripts et profil DSFR.
+Le profil complet expose 18 skills ; le léger en expose 17, sans orchestration
+avancée. Ils partagent les mêmes sources. Suivre [les profils et le verrou de
+campagne](documentation/DISTRIBUTION-ET-PROFILS.md) ; le cache officiel DSFR et
+les dépendances restent extérieurs. L’archive historique ci-dessous contient
+seulement les skills et reste une voie partielle :
 
 ```bash
 bash scripts/build-plugin.sh --version 0.1.0
@@ -180,4 +183,6 @@ Le kit est placé sous Licence Ouverte 2.0 / Open Licence 2.0 (Etalab), voir
 `LICENSE`. Les conditions officielles du DSFR continuent de s’appliquer au
 paquet `@gouvfr/dsfr` utilisé à l’exécution.
 
-État : prototype standalone local, non publié.
+État : prototype publié sur `main`, source canonique du produit. Les parcours
+natifs exercés et les limites de réception sont consignés dans
+[le suivi de réception et de bascule](documentation/RECEPTION-ET-BASCULE.md).

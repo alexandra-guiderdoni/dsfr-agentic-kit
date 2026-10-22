@@ -3,12 +3,14 @@
 # PDG-LARGE-FILE-JUSTIFICATION: une fixture Git partagée exerce le cycle installé par les CLI publiques.
 
 import hashlib
+import http.server
 import json
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 
@@ -119,6 +121,54 @@ class InstalledCampaignTests(unittest.TestCase):
         result = self.cli("report", config)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.project / "PORTAIL-AUDITS.html").is_file())
+
+    def test_proxy_block_probes_origin_once_and_stops_before_audit(self):
+        calls = []
+
+        class Proxy(http.server.BaseHTTPRequestHandler):
+            def do_HEAD(self):
+                calls.append(self.path)
+                self.send_response(403)
+                self.send_header("x-deny-reason", "host_not_allowed")
+                self.end_headers()
+
+            def log_message(self, *_args):
+                pass
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Proxy)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            config = self.init()
+            data = yaml.safe_load(config.read_text())
+            origin = f"http://127.0.0.1:{server.server_port}"
+            data["campaign"]["target"] = origin + "/target"
+            data["sample"] = [
+                {**data["sample"][0], "id": f"P{i:02d}", "url": origin + f"/page-{i}"}
+                for i in range(1, 4)
+            ]
+            data["phases"]["ay11"] = False
+            config.write_text(yaml.safe_dump(data, allow_unicode=True))
+            self.assertEqual(self.cli("replan", config).returncode, 0)
+            qualification = (self.project / "qualification.json").read_bytes()
+            result = self.cli("run", config)
+            self.assertEqual(result.returncode, 5, result.stderr)
+            self.assertEqual(calls, ["/target"])
+            state = json.loads((self.project / ".creator/state.json").read_text())
+            self.assertEqual(state["phases"]["preflight"]["status"], "BLOQUE_INFRA")
+            self.assertTrue(
+                state["phases"]["preflight"]["network_checks"][0]["required"]
+            )
+            self.assertNotIn("browser", state["phases"])
+            self.assertNotIn("report", state["phases"])
+            self.assertFalse((self.project / "logs/browser-checks.json").exists())
+            self.assertEqual(
+                (self.project / "qualification.json").read_bytes(), qualification
+            )
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
 
     def test_direct_python_protects_child_imports_and_campaign_reuse(self):
         config = self.init()

@@ -34,6 +34,20 @@ Les destinations explicites sont contrôlées après résolution des liens
 symboliques. Une destination qui se trouve dans le kit, ou hors du projet de
 travail, est refusée avant toute écriture.
 
+La synthèse suit deux passages, même lorsqu’aucun groupe n’exige d’arbitrage.
+Sans fiche, elle crée `REVUE-A-QUALIFIER.md`, écrit un reçu de phase
+`REVUE_CREEE` et retourne 2 sans rendre de rapport. Après lecture de la fiche,
+le second passage rend les groupes autorisés ; `--allow-pending` permet alors
+de garder les groupes non arbitrés en « Non vérifié ». Cette option ne saute
+jamais la création initiale. La fiche existante reste identique.
+`RECU-GENERATION.json` trace la phase, le code de sortie et le SHA-256 de la
+fiche ; `RENDU` décrit le passage de génération, pas un verdict de conformité.
+
+`--rules` sélectionne aussi le catalogue servant au calcul de fraîcheur.
+Le manifeste trace son empreinte, son nombre de règles et son caractère
+canonique ou non. Un catalogue explicitement fourni est signalé ; une archive
+obsolète exige toujours l’exception documentée `--allow-stale-catalog`.
+
 ## 1. Écrire un mini-brief
 
 Un brief utile tient en quelques réponses :

@@ -206,6 +206,7 @@ class Collection:
     pages: list[PageData]
     components: dict[str, ComponentSummary]
     groups: dict[str, Group]
+    rules_path: Path = RULE_CATALOG_PATH
 
     @property
     def observed_versions(self) -> list[str]:
@@ -220,10 +221,15 @@ class Collection:
 
     @property
     def catalog_status(self) -> dict:
-        raw = RULE_CATALOG_PATH.read_bytes()
+        raw = self.rules_path.read_bytes()
+        canonical = self.rules_path.resolve() == RULE_CATALOG_PATH.resolve()
         current = {
-            "path": "audit-dsfr-complet/rules/dsfr-rules.json",
+            "path": "audit-dsfr-complet/rules/dsfr-rules.json"
+            if canonical
+            else self.rules_path.name,
             "sha256": hashlib.sha256(raw).hexdigest(),
+            "rules_count": len(json.loads(raw).get("rules", [])),
+            "canonical": canonical,
         }
         observed = [
             p.rule_catalog.get("sha256")
@@ -266,7 +272,7 @@ class Collection:
         }
 
 
-def collect(pages: list[PageData]) -> Collection:
+def collect(pages: list[PageData], rules_path: Path | None = None) -> Collection:
     components: dict[str, ComponentSummary] = {}
     groups: dict[str, Group] = {}
     for page in sorted(pages, key=lambda p: p.id):
@@ -285,7 +291,7 @@ def collect(pages: list[PageData]) -> Collection:
             summary.statuses[page.id] = item.get("status", "")
         for diff in page.differences:
             _merge_difference(groups, components, page, diff)
-    return Collection(pages, components, groups)
+    return Collection(pages, components, groups, rules_path or RULE_CATALOG_PATH)
 
 
 def _merge_difference(

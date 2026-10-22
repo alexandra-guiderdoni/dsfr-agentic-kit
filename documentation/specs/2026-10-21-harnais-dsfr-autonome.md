@@ -1,8 +1,10 @@
 # PRD — Un harnais DSFR autonome, consommable par les workflows
 
-**Date** : 21 octobre 2026. **Statut** : cible confirmée ; exploration technique à lancer.
+**Date** : 21 octobre 2026. **Actualisation** : 22 octobre 2026.
+**Statut** : exploration réalisée ; source canonique et profils livrés ;
+réception #8 et bascule #12 suivies dans [le reçu de migration](../RECEPTION-ET-BASCULE.md).
 
-**Première étape** : [exploration d’autonomie — issue #9](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/9).
+**Exploration de référence** : [issue #9](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/9).
 
 ## But et parcours attendu
 
@@ -11,7 +13,7 @@ audits, références, preuves, rapports et tests. Une personne doit pouvoir
 l’installer et l’utiliser sans le workflow personnel qui le produit aujourd’hui.
 Ce workflow deviendra un consommateur facultatif, au même titre qu’un autre hôte.
 
-Parcours cible, non encore démontré : installer une version du produit,
+Parcours cible, exercé dans les limites du reçu : installer une version du produit,
 préparer ses dépendances déclarées, générer une page depuis un brief, exécuter
 une campagne représentative et produire son rapport dans un projet distinct.
 Une mise à jour doit permettre de reprendre une campagne avec son outillage
@@ -54,7 +56,10 @@ L’autonomie ne signifie pas embarquer Python, Node ou un navigateur dans une
 archive. Elle exige une installation reproductible, des dépendances explicites
 et des erreurs ou états partiels observables lorsqu’une capacité manque.
 
-## État observé et choix
+## État initial observé et choix
+
+Le tableau suivant conserve le diagnostic du 21 octobre avant implémentation.
+Les preuves et décisions postérieures sont dans [le suivi de réception](../RECEPTION-ET-BASCULE.md).
 
 Les revues Fable 5.1 et « connus inconnus » du 21 octobre soutiennent la
 centralisation, avec les réserves suivantes confirmées dans les sources :
@@ -77,8 +82,9 @@ Ce cadrage étend la spec de septembre et les issues [#2](https://github.com/ale
 [#7](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/7) et
 [#8](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/8).
 Réutiliser leurs protections et contrats ; ne pas dupliquer les moteurs.
-Le contrat de consommation versionnée doit rester compatible avec #6 ; son
-mécanisme exécutable reste à définir et ne doit pas être présumé disponible.
+Le contrat de consommation versionnée et son vérificateur ont été livrés dans
+#6 ; #11 ajoute la vérification automatique avant les écritures de campagne.
+Voir [le contrat effectivement livré](../CONSOMMATION-VERSIONNEE.md).
 
 ## Critères de réussite et preuves avant bascule
 
@@ -102,7 +108,8 @@ qui aurait changé.
 ## Précisions issues de la relecture Fable
 
 Relecture du 21 octobre 2026 : aucun P1 bloquant pour l’exploration ; cinq P2
-intégrés ci-dessous, dont les preuves d’exécution restent à produire dans #9.
+intégrés ci-dessous. Leur exécution et leurs limites sont désormais consignées
+dans le suivi de réception ; ce tableau conserve les exigences initiales.
 
 | Retour | Précision intégrée |
 |---|---|
@@ -132,8 +139,9 @@ intégrés ci-dessous, dont les preuves d’exécution restent à produire dans 
 
 ## Limites de ce cadrage
 
-Aucune migration, suppression, installation de plugin ou refonte AY11 n’est
-réalisée ici. Les campagnes réelles et données privées ne sont pas des fixtures.
+Ce PRD définit la cible ; les livraisons sont retracées séparément dans le reçu.
+Aucune refonte AY11 n’est incluse. Les campagnes réelles et données privées ne sont pas des fixtures.
 Les audits conservent leurs limites de couverture et la qualification humaine ;
 aucun résultat automatique ne devient une conformité DSFR ou RGAA générale.
-Les exigences ci-dessus sont des critères futurs, pas des tests déjà réussis.
+Chaque exigence garde le verdict et la portée des preuves effectivement obtenues ;
+les exigences non exercées ne sont pas présentées comme réussies.

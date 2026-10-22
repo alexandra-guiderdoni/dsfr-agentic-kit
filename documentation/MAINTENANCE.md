@@ -42,8 +42,11 @@ sur le kit canonique.
    puis exercer le parcours installé touché par la modification. Un check vert
    n’atteste pas les états, variables CSS ou sorties qu’il n’exerce pas.
 4. Livrer une version immuable selon [le contrat de consommation](CONSOMMATION-VERSIONNEE.md).
-   Les profils partagent les sources ; leurs adaptateurs restent à livrer dans #11.
+   Les profils complet et léger livrés dans #11 partagent les mêmes sources ;
+   conserver le commit éprouvé et les limites de chaque hôte.
 5. Faire recevoir les consommateurs (#8) avant la bascule et le retrait (#12).
 
 AY11 reste externe et facultatif. Le kit conserve son connecteur existant ;
 aucun nouveau branchement n’est requis pour maintenir le produit.
+
+État de réception et de transition : [suivi et preuves](RECEPTION-ET-BASCULE.md).

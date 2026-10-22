@@ -72,6 +72,9 @@ preflight → catalog → plan → capture → collect → browser → rgaa → 
 ```
 
 - `preflight` vérifie URLs, AY11 et skills ;
+- ses origines de campagne et d’échantillon sont requises et dédupliquées ;
+  les services facultatifs non sondés, comme le validateur HTML distant,
+  portent un état explicite `NON_EXERCE_AU_PREVOL` ;
 - si le proxy refuse un hôte ou si la cible est injoignable, `preflight` produit
   le statut machine `BLOQUE_INFRA`, le libellé humain `BLOQUÉ-INFRA` et le code
   de sortie 5 ; aucune phase d’audit ne démarre ;

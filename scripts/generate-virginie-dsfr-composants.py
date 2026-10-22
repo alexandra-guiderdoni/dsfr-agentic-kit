@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import sys
@@ -27,8 +28,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from virginie_dsfr import collect, gaps, migration, publish, qualify, render_html, render_markdown, verdict  # noqa: E402
-from virginie_dsfr.project_paths import (  # noqa: E402
+from virginie_dsfr import (
+    collect,
+    gaps,
+    migration,
+    publish,
+    qualify,
+    render_html,
+    render_markdown,
+    verdict,
+)
+from virginie_dsfr.project_paths import (
     KIT_ROOT,
     require_project_root,
     safe_pipeline_lock,
@@ -57,7 +67,9 @@ def parse_pages(spec: str) -> list[int]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
         "--project-root",
         type=Path,
@@ -65,21 +77,44 @@ def parse_args() -> argparse.Namespace:
         help="projet de travail existant ; défaut : DSFR_PROJECT_ROOT",
     )
     parser.add_argument("--archives", type=Path, default=None)
-    parser.add_argument("--pattern", default=DEFAULT_PATTERN, help="motif de dossier d'archive, avec {n:02d}")
-    parser.add_argument("--pages", default="1-9", help="numéros de pages, ex. 1-9 ou 1,2,6")
+    parser.add_argument(
+        "--pattern",
+        default=DEFAULT_PATTERN,
+        help="motif de dossier d'archive, avec {n:02d}",
+    )
+    parser.add_argument(
+        "--pages", default="1-9", help="numéros de pages, ex. 1-9 ou 1,2,6"
+    )
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--work-dir", type=Path, default=None)
-    parser.add_argument("--review-sheet", type=Path, default=None, help="défaut : <work-dir>/REVUE-A-QUALIFIER.md")
-    parser.add_argument("--cache-dir", type=Path, default=Path(os.environ.get("DSFR_OFFICIAL_CACHE_DIR") or "~/.cache/dsfr-official-cache").expanduser())
+    parser.add_argument(
+        "--review-sheet",
+        type=Path,
+        default=None,
+        help="défaut : <work-dir>/REVUE-A-QUALIFIER.md",
+    )
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        default=Path(
+            os.environ.get("DSFR_OFFICIAL_CACHE_DIR") or "~/.cache/dsfr-official-cache"
+        ).expanduser(),
+    )
     parser.add_argument("--rules", type=Path, default=RULES)
     parser.add_argument("--delivery-date", default=date.today().isoformat())
-    parser.add_argument("--allow-pending", action="store_true", help="rendre malgré des signaux non arbitrés (Non vérifié)")
+    parser.add_argument(
+        "--allow-pending",
+        action="store_true",
+        help="rendre malgré des signaux non arbitrés (Non vérifié)",
+    )
     parser.add_argument(
         "--allow-stale-catalog",
         action="store_true",
         help="rendre malgré un catalogue DSFR obsolète ou mélangé, en marquant l’exception",
     )
-    parser.add_argument("--no-index", action="store_true", help="ne pas toucher à INDEX-LIVRABLES.html")
+    parser.add_argument(
+        "--no-index", action="store_true", help="ne pas toucher à INDEX-LIVRABLES.html"
+    )
     return parser.parse_args()
 
 
@@ -137,26 +172,41 @@ def load_collection(args: argparse.Namespace) -> collect.Collection:
         if not archive.is_dir():
             raise SystemExit(f"Archive absente : {archive}")
         pages.append(collect.load_page(archive))
-    return collect.collect(pages)
+    return collect.collect(pages, rules_path=args.rules)
 
 
-def resolve_review(args: argparse.Namespace, collection: collect.Collection) -> tuple[Path, dict[str, str]]:
+def resolve_review(
+    args: argparse.Namespace, collection: collect.Collection
+) -> tuple[Path, dict[str, str]]:
     sheet = args.review_sheet or (args.work_dir / "REVUE-A-QUALIFIER.md")
     overrides: dict[str, str] = {}
     if sheet.is_file():
         text = sheet.read_text(encoding="utf-8")
         overrides = qualify.parse_review_sheet(text)
-        qualify.apply_overrides(collection, overrides, qualify.parse_review_comments(text))
+        qualify.apply_overrides(
+            collection, overrides, qualify.parse_review_comments(text)
+        )
     return sheet, overrides
 
 
-def compute_kinds(collection: collect.Collection, cache_dir: Path) -> tuple[dict, dict, dict, migration.CssIndex]:
-    observed = collection.observed_versions[0] if collection.observed_versions else collection.target_version
+def compute_kinds(
+    collection: collect.Collection, cache_dir: Path
+) -> tuple[dict, dict, dict, migration.CssIndex]:
+    observed = (
+        collection.observed_versions[0]
+        if collection.observed_versions
+        else collection.target_version
+    )
     index = migration.CssIndex(cache_dir, observed, collection.target_version)
     kinds, details, diffs = {}, {}, {}
     for group in collection.groups.values():
-        if group.status == "ECART_CONFIRME" and group.component != collect.VERSION_COMPONENT:
-            kinds[group.group_id], missing = index.classify(group.expected_html, group.failed_conditions)
+        if (
+            group.status == "ECART_CONFIRME"
+            and group.component != collect.VERSION_COMPONENT
+        ):
+            kinds[group.group_id], missing = index.classify(
+                group.expected_html, group.failed_conditions
+            )
             if missing:
                 details[group.group_id] = missing
     for name in collection.components:
@@ -166,42 +216,108 @@ def compute_kinds(collection: collect.Collection, cache_dir: Path) -> tuple[dict
     return kinds, details, diffs, index
 
 
-def review_hints(collection: collect.Collection, groups: list, cache_dir: Path) -> dict[str, list[str]]:
+def review_hints(
+    collection: collect.Collection, groups: list, cache_dir: Path
+) -> dict[str, list[str]]:
     """Faits vérifiables pour la décision : classes attendues présentes ou non dans la version observée."""
-    observed = collection.observed_versions[0] if collection.observed_versions else collection.target_version
+    observed = (
+        collection.observed_versions[0]
+        if collection.observed_versions
+        else collection.target_version
+    )
     index = migration.CssIndex(cache_dir, observed, collection.target_version)
     hints: dict[str, list[str]] = {}
     for group in groups:
         if not index.available:
-            hints[group.group_id] = [f"paquet officiel {observed} ou {collection.target_version} absent du cache : comparaison impossible"]
+            hints[group.group_id] = [
+                f"paquet officiel {observed} ou {collection.target_version} absent du cache : comparaison impossible"
+            ]
             continue
         kind, missing = index.classify(group.expected_html, group.failed_conditions)
         if missing:
-            hints[group.group_id] = [f"classes attendues absentes de DSFR {observed} : {', '.join(missing)} ; l'écart relève de la {kind}"]
+            hints[group.group_id] = [
+                f"classes attendues absentes de DSFR {observed} : {', '.join(missing)} ; l'écart relève de la {kind}"
+            ]
         else:
-            hints[group.group_id] = [f"toutes les classes attendues existent en DSFR {observed} : si l'écart est réel, il relève de l'intégration, pas de la migration"]
+            hints[group.group_id] = [
+                f"toutes les classes attendues existent en DSFR {observed} : si l'écart est réel, il relève de l'intégration, pas de la migration"
+            ]
         diff = index.example_diff(group.component)
         if diff and (diff["added"] or diff["removed"]):
-            hints[group.group_id].append(f"exemple officiel {observed} -> {collection.target_version} : ajoutées {', '.join(diff['added']) or 'aucune'} ; retirées {', '.join(diff['removed']) or 'aucune'}")
-        hints[group.group_id].append(f"exemple officiel à relire : package/example/component/{migration.EXAMPLE_FOLDERS.get(group.component, group.component)}/index.html des deux paquets")
+            hints[group.group_id].append(
+                f"exemple officiel {observed} -> {collection.target_version} : ajoutées {', '.join(diff['added']) or 'aucune'} ; retirées {', '.join(diff['removed']) or 'aucune'}"
+            )
+        hints[group.group_id].append(
+            f"exemple officiel à relire : package/example/component/{migration.EXAMPLE_FOLDERS.get(group.component, group.component)}/index.html des deux paquets"
+        )
     return hints
+
+
+def write_generation_receipt(
+    args, sheet: Path, phase: str, code: int, **details
+) -> dict:
+    receipt = {
+        "delivery_date": args.delivery_date,
+        "phase": phase,
+        "exit_code": code,
+        "rendered": phase == "RENDU",
+        "source_sheet": sheet.name,
+        "source_sheet_sha256": hashlib.sha256(sheet.read_bytes()).hexdigest()
+        if sheet.is_file()
+        else None,
+        **details,
+    }
+    (args.work_dir / "RECU-GENERATION.json").write_text(
+        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    return receipt
 
 
 def main() -> int:
     args = configure_paths(parse_args())
     with pipeline_lock():
         collection = load_collection(args)
+        if not collection.catalog_status["current"]["canonical"]:
+            print(
+                f"[CATALOGUE] catalogue non canonique explicitement fourni : {args.rules.name}",
+                file=sys.stderr,
+            )
         sheet, overrides = resolve_review(args, collection)
         pending = qualify.pending_groups(collection)
         args.work_dir.mkdir(parents=True, exist_ok=True)
-        if pending and not sheet.is_file():
-            sheet.write_text(qualify.render_review_sheet(collection, pending, review_hints(collection, pending, args.cache_dir)), encoding="utf-8")
+        if not sheet.is_file():
+            sheet.write_text(
+                qualify.render_review_sheet(
+                    collection,
+                    pending,
+                    review_hints(collection, pending, args.cache_dir),
+                ),
+                encoding="utf-8",
+            )
             print(f"[REVUE] {len(pending)} groupe(s) à qualifier -> {sheet}")
+            write_generation_receipt(
+                args,
+                sheet,
+                "REVUE_CREEE",
+                2,
+                pending=len(pending),
+                catalog_status=collection.catalog_status,
+            )
             return 2
         if pending and not args.allow_pending:
-            print(f"[REVUE] {len(pending)} groupe(s) encore sans décision dans {sheet} ; ajouter --allow-pending pour rendre en Non vérifié")
+            print(
+                f"[REVUE] {len(pending)} groupe(s) encore sans décision dans {sheet} ; ajouter --allow-pending pour rendre en Non vérifié"
+            )
             for group in pending:
                 print(f"  - {group.group_id} ({group.status})")
+            write_generation_receipt(
+                args,
+                sheet,
+                "REVUE_EN_ATTENTE",
+                2,
+                pending=len(pending),
+                catalog_status=collection.catalog_status,
+            )
             return 2
         catalog_status = collection.catalog_status
         stale_catalog_statuses = {"CATALOGUE_OBSOLETE", "CATALOGUES_MULTIPLES"}
@@ -209,40 +325,94 @@ def main() -> int:
             catalog_status["status"] in stale_catalog_statuses
             and args.allow_stale_catalog
         )
-        if catalog_status["status"] in stale_catalog_statuses and not stale_catalog_allowed:
+        if (
+            catalog_status["status"] in stale_catalog_statuses
+            and not stale_catalog_allowed
+        ):
             print(
                 f"[CATALOGUE] {catalog_status['message']} ; ajouter --allow-stale-catalog pour produire une synthèse d’archives explicitement marquée",
                 file=sys.stderr,
             )
+            write_generation_receipt(
+                args,
+                sheet,
+                "CATALOGUE_BLOQUE",
+                2,
+                pending=len(pending),
+                catalog_status=catalog_status,
+            )
             return 2
         kinds, details, diffs, index = compute_kinds(collection, args.cache_dir)
         verdicts = verdict.component_verdicts(collection, kinds)
-        report = verdict.build_report(collection, verdicts, details, args.delivery_date, diffs, reference_available=index.available)
+        report = verdict.build_report(
+            collection,
+            verdicts,
+            details,
+            args.delivery_date,
+            diffs,
+            reference_available=index.available,
+        )
         if stale_catalog_allowed:
             report.catalog_status["stale_catalog_allowed"] = True
         written = publish.write_outputs(
             report, args.output, include_parent_index=not args.no_index
         )
-        (args.work_dir / "qualification-virginie-dsfr.json").write_text(json.dumps({
-            "schema_version": 1, "reviewed_at": args.delivery_date, "source_sheet": sheet.name,
-            "decisions": [{"group_id": gid, "qualification_status": status, "rule_id": collection.groups[gid].rule_id,
-                           "pages": collection.groups[gid].pages, "selector": collection.groups[gid].selector} for gid, status in overrides.items()],
-        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (args.work_dir / "qualification-virginie-dsfr.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "reviewed_at": args.delivery_date,
+                    "source_sheet": sheet.name,
+                    "decisions": [
+                        {
+                            "group_id": gid,
+                            "qualification_status": status,
+                            "rule_id": collection.groups[gid].rule_id,
+                            "pages": collection.groups[gid].pages,
+                            "selector": collection.groups[gid].selector,
+                        }
+                        for gid, status in overrides.items()
+                    ],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         coverage = gaps.harness_coverage(collection, args.rules)
-        (args.work_dir / "COUVERTURE-HARNAIS.md").write_text(render_markdown.render_couverture(report, coverage), encoding="utf-8")
-        index_state = "skipped" if args.no_index else publish.insert_index_card(DELIVERY / "INDEX-LIVRABLES.html", render_html.render_index_card(report))
+        (args.work_dir / "COUVERTURE-HARNAIS.md").write_text(
+            render_markdown.render_couverture(report, coverage), encoding="utf-8"
+        )
+        index_state = (
+            "skipped"
+            if args.no_index
+            else publish.insert_index_card(
+                DELIVERY / "INDEX-LIVRABLES.html", render_html.render_index_card(report)
+            )
+        )
         errors = publish.verify_outputs(written, index.target_classes)
         publish.update_manifest(args.output, report, errors)
         checksums = publish.write_checksums(args.output, written)
         receipt = {
-            "delivery_date": args.delivery_date, "pages": [p.id for p in collection.pages], "components": len(report.components),
-            "verdicts": verdict.build_manifest(report)["verdict_counts"], "groups": len(collection.groups), "overrides": len(overrides),
-            "pending": len(pending), "migration_reference_available": index.available, "index_card": index_state,
-            "files": len(written), "checksums": checksums.name, "errors": errors,
+            "delivery_date": args.delivery_date,
+            "pages": [p.id for p in collection.pages],
+            "components": len(report.components),
+            "verdicts": verdict.build_manifest(report)["verdict_counts"],
+            "groups": len(collection.groups),
+            "overrides": len(overrides),
+            "pending": len(pending),
+            "migration_reference_available": index.available,
+            "index_card": index_state,
+            "files": len(written),
+            "checksums": checksums.name,
+            "errors": errors,
             "catalog_status": report.catalog_status,
             "stale_catalog_allowed": stale_catalog_allowed,
         }
-        (args.work_dir / "RECU-GENERATION.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        receipt = write_generation_receipt(
+            args, sheet, "RENDU", 1 if errors else 0, **receipt
+        )
         print(json.dumps(receipt, ensure_ascii=False, indent=2))
         return 1 if errors else 0
 

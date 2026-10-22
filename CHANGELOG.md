@@ -1,5 +1,14 @@
 # Journal des versions
 
+## Réception et clôture du harnais autonome — 22 octobre 2026
+
+- fraîcheur calculée avec le catalogue effectivement sélectionné par `--rules`,
+  empreinte et nombre de règles tracés, catalogue non canonique signalé ;
+- qualification en deux passages, y compris sans groupe à arbitrer ; reçu
+  de phase et empreinte de la fiche humaine conservée ;
+- documentation structurante alignée sur les profils livrés et leur portée ;
+  réception et bascule des consommateurs tracées séparément.
+
 ## Profils et campagnes versionnées — 22 octobre 2026
 
 - profils marketplace complet et léger issus des mêmes sources : 18 et

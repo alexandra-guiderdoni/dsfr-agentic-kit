@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-import hashlib
 import asyncio
+import hashlib
 import http.server
 import json
 import os
 import re
-import threading
+import socket
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
+import urllib.error
 from pathlib import Path
 from unittest.mock import patch
 
@@ -18,20 +20,20 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / ".claude/skills/audit-rgaa-creator/scripts/audit_campaign.py"
 sys.path.insert(0, str(CLI.parent))
-from audit_campaign import preflight, probe_network_url  # noqa: E402
-from probe_matrix import (  # noqa: E402
+from audit_campaign import preflight, probe_network_url
+from browser_launch import browser_launch_options, browser_launch_summary
+from navigation import goto_checked
+from probe_matrix import (
     COUVERTURE_ABSENTE,
     COUVERTURE_CANDIDAT,
     COUVERTURE_SANS_CANDIDAT,
     build_probe_plan,
-    criterion_sources,
     classify_payload,
     criterion_sort_key,
+    criterion_sources,
     discover_probes,
     summarise,
 )
-from browser_launch import browser_launch_options, browser_launch_summary  # noqa: E402
-from navigation import goto_checked  # noqa: E402
 
 
 class _FakeResponse:
@@ -52,7 +54,7 @@ class _FakePage:
 
 
 class _HeadHandler(http.server.BaseHTTPRequestHandler):
-    def do_HEAD(self):  # noqa: N802
+    def do_HEAD(self):
         if self.path == "/proxy":
             self.send_response(403)
             self.send_header("x-deny-reason", "host_not_allowed")
@@ -1277,7 +1279,9 @@ class CreatorTests(unittest.TestCase):
         )
         self.run_cli("report", campaign)
         self.run_cli("validate", campaign)
-        document = (self.project / "rgaa/AUDIT-PAR-PAGE.html").read_text(encoding="utf-8")
+        document = (self.project / "rgaa/AUDIT-PAR-PAGE.html").read_text(
+            encoding="utf-8"
+        )
         self.assertNotIn("<img src=x", document)
         self.assertIn("&lt;img", document)
         self.assertEqual(1, len(list((self.project / "tickets").glob("NC-A-*.md"))))
@@ -1292,9 +1296,7 @@ class CreatorTests(unittest.TestCase):
             asyncio.run(
                 goto_checked(
                     _FakePage(
-                        _FakeResponse(
-                            403, {"X-Deny-Reason": "host_not_allowed"}
-                        )
+                        _FakeResponse(403, {"X-Deny-Reason": "host_not_allowed"})
                     ),
                     "https://example.test/",
                     1000,
@@ -1337,12 +1339,8 @@ class CreatorTests(unittest.TestCase):
         ):
             result = preflight(config, self.project, state, dry_run=False)
         self.assertFalse(result)
-        self.assertEqual(
-            "BLOQUE_INFRA", state["phases"]["preflight"]["status"]
-        )
-        self.assertEqual(
-            "BLOQUÉ-INFRA", state["phases"]["preflight"]["cause"]
-        )
+        self.assertEqual("BLOQUE_INFRA", state["phases"]["preflight"]["status"])
+        self.assertEqual("BLOQUÉ-INFRA", state["phases"]["preflight"]["cause"])
 
     def test_network_probe_distinguishes_proxy_and_site_errors(self):
         server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _HeadHandler)
@@ -1351,9 +1349,7 @@ class CreatorTests(unittest.TestCase):
         try:
             base = f"http://127.0.0.1:{server.server_port}"
             self.assertEqual("SITE", probe_network_url(f"{base}/ok")["kind"])
-            self.assertEqual(
-                "BLOQUÉ-INFRA", probe_network_url(f"{base}/proxy")["kind"]
-            )
+            self.assertEqual("BLOQUÉ-INFRA", probe_network_url(f"{base}/proxy")["kind"])
             site_error = probe_network_url(f"{base}/site")
             self.assertEqual("SITE", site_error["kind"])
             self.assertEqual(403, site_error["http_status"])
@@ -1361,6 +1357,22 @@ class CreatorTests(unittest.TestCase):
             server.shutdown()
             server.server_close()
             thread.join(timeout=2)
+
+    def test_network_probe_reports_dns_and_connection_failures(self):
+        for cause in ("Name or service not known", "Connection refused"):
+            with (
+                self.subTest(cause=cause),
+                patch(
+                    "urllib.request.urlopen", side_effect=urllib.error.URLError(cause)
+                ),
+            ):
+                result = probe_network_url("https://example.test/")
+                self.assertEqual(result["kind"], "INJOIGNABLE")
+                self.assertIn(cause, result["cause"])
+        with socket.socket() as reserved:
+            reserved.bind(("127.0.0.1", 0))
+            result = probe_network_url(f"http://127.0.0.1:{reserved.getsockname()[1]}/")
+            self.assertEqual(result["kind"], "INJOIGNABLE")
 
     def test_unknown_configuration_field_is_rejected(self):
         campaign = self.init()
@@ -1409,8 +1421,13 @@ class CreatorTests(unittest.TestCase):
         ):
             self.assertFalse(preflight(config, self.project, state, dry_run=True))
         self.assertEqual("ECHEC", state["phases"]["preflight"]["status"])
-        self.assertIn("interpréteur sélectionné", state["phases"]["preflight"]["errors"][0])
-        self.assertEqual(["browser", "rgaa", "dsfr"], state["phases"]["preflight"]["browser_python"]["phases"])
+        self.assertIn(
+            "interpréteur sélectionné", state["phases"]["preflight"]["errors"][0]
+        )
+        self.assertEqual(
+            ["browser", "rgaa", "dsfr"],
+            state["phases"]["preflight"]["browser_python"]["phases"],
+        )
 
     def test_resume_only_reports_unreplayed_downstream_phases(self):
         campaign = self.init()
@@ -1435,20 +1452,14 @@ class CreatorTests(unittest.TestCase):
         }
         state_path.write_text(json.dumps(state), encoding="utf-8")
 
-        result = self.run_cli(
-            "resume", campaign, "--only", "protocols", ok=False
-        )
+        result = self.run_cli("resume", campaign, "--only", "protocols", ok=False)
 
         self.assertEqual(3, result.returncode)
         self.assertIn("Phases invalidées non rejouées", result.stderr)
         final_state = json.loads(state_path.read_text(encoding="utf-8"))
         self.assertEqual("OK", final_state["phases"]["protocols"]["status"])
-        self.assertEqual(
-            "À REJOUER", final_state["phases"]["report"]["status"]
-        )
-        self.assertEqual(
-            "À REJOUER", final_state["phases"]["validate"]["status"]
-        )
+        self.assertEqual("À REJOUER", final_state["phases"]["report"]["status"])
+        self.assertEqual("À REJOUER", final_state["phases"]["validate"]["status"])
 
     def test_browser_launch_configuration_is_shared_and_redacted(self):
         config = {
@@ -1537,7 +1548,9 @@ class CreatorTests(unittest.TestCase):
         initial_validate_status = state["phases"]["validate"]["status"]
         self.assertIn(initial_validate_status, {"OK", "PARTIEL"})
         protocol.write_text(
-            protocol.read_text(encoding="utf-8").replace("revision': 1", "revision': 2"),
+            protocol.read_text(encoding="utf-8").replace(
+                "revision': 1", "revision': 2"
+            ),
             encoding="utf-8",
         )
         for phase in (
@@ -1671,11 +1684,14 @@ class CreatorTests(unittest.TestCase):
         (page_dir / "P01.json").write_text(json.dumps(page), encoding="utf-8")
         historical = subprocess.run(
             [sys.executable, str(script), str(self.project), "P01"],
-            text=True, capture_output=True,
+            text=True,
+            capture_output=True,
             check=False,
         )
         self.assertEqual(0, historical.returncode, historical.stderr)
-        old_coverage = json.loads((self.project / "dsfr/P01-COUVERTURE-DIMENSIONNELLE.json").read_text())
+        old_coverage = json.loads(
+            (self.project / "dsfr/P01-COUVERTURE-DIMENSIONNELLE.json").read_text()
+        )
         self.assertEqual("1.15.3", old_coverage["versions"]["target"])
         self.assertEqual("1.13.2", old_coverage["versions"]["observed"])
 
@@ -1694,7 +1710,6 @@ class CreatorTests(unittest.TestCase):
         self.assertNotIn('root / "rgaa/P01-DECISIONS-258.json"', report)
         self.assertNotIn('root / "dsfr/P01-COUVERTURE-DIMENSIONNELLE.json"', report)
         self.assertNotIn("p01_decisions_path", validator)
-
 
 
 FAKE_AY11 = """#!/usr/bin/env python3
@@ -1730,6 +1745,7 @@ class BuilderMigrationTests(unittest.TestCase):
     def test_timestamp_keeps_python_3_10_datetime_api(self):
         from datetime import datetime, timezone
         from types import SimpleNamespace
+
         from audit_campaign import now
 
         legacy_datetime = SimpleNamespace(datetime=datetime, timezone=timezone)
@@ -1774,6 +1790,8 @@ class BuilderMigrationTests(unittest.TestCase):
             self.assertEqual(2, len(set(ids)))
             for element_id in ids:
                 self.assertIn(f'for="{element_id}"', html)
+
+
 class ProbeMatrixTests(unittest.TestCase):
     """Découverte des sondes AY11 et construction du plan d'appels."""
 
@@ -1808,14 +1826,21 @@ class ProbeMatrixTests(unittest.TestCase):
         plan = build_probe_plan(self.catalog, Path("page.html"), Path("coll.json"))
         static = [item for item in plan if item["probe"] == "promoted-static"]
         self.assertEqual([item["criterion"] for item in static], ["1.5", "1.7"])
-        self.assertEqual({item["name"] for item in static}, {"promoted-static-1.5", "promoted-static-1.7"})
+        self.assertEqual(
+            {item["name"] for item in static},
+            {"promoted-static-1.5", "promoted-static-1.7"},
+        )
 
     def test_plan_passes_the_inputs_each_probe_expects(self):
         plan = {
             item["probe"]: item["argv"]
-            for item in build_probe_plan(self.catalog, Path("page.html"), Path("coll.json"))
+            for item in build_probe_plan(
+                self.catalog, Path("page.html"), Path("coll.json")
+            )
         }
-        self.assertEqual(plan["focus-visible"], ["probes", "focus-visible", "coll.json", "--json"])
+        self.assertEqual(
+            plan["focus-visible"], ["probes", "focus-visible", "coll.json", "--json"]
+        )
         self.assertEqual(
             plan["promoted-css-dynamic"][:4],
             ["probes", "promoted-css-dynamic", "page.html", "coll.json"],
@@ -1823,11 +1848,19 @@ class ProbeMatrixTests(unittest.TestCase):
 
     def test_missing_capture_is_not_an_absence_of_defect(self):
         verdict = classify_payload(
-            {"collection_status": "not_collected", "additional_capture_count": 0, "criterion_id": "10.14"}
+            {
+                "collection_status": "not_collected",
+                "additional_capture_count": 0,
+                "criterion_id": "10.14",
+            }
         )
         self.assertTrue(verdict["missing_capture"])
         collected = classify_payload(
-            {"collection_status": "collected_no_candidate", "criterion_id": "4.1", "observed_evidence": []}
+            {
+                "collection_status": "collected_no_candidate",
+                "criterion_id": "4.1",
+                "observed_evidence": [],
+            }
         )
         self.assertFalse(collected["missing_capture"])
         self.assertEqual(collected["signal_count"], 0)
@@ -1864,9 +1897,24 @@ class ProbeMatrixTests(unittest.TestCase):
     def test_summary_separates_signal_from_missing_capture(self):
         summary = summarise(
             [
-                {"name": "a", "criterion": "1.8", "signal_count": 32, "missing_capture": False},
-                {"name": "b", "criterion": "10.14", "signal_count": 0, "missing_capture": True},
-                {"name": "c", "criterion": "4.1", "signal_count": 0, "missing_capture": False},
+                {
+                    "name": "a",
+                    "criterion": "1.8",
+                    "signal_count": 32,
+                    "missing_capture": False,
+                },
+                {
+                    "name": "b",
+                    "criterion": "10.14",
+                    "signal_count": 0,
+                    "missing_capture": True,
+                },
+                {
+                    "name": "c",
+                    "criterion": "4.1",
+                    "signal_count": 0,
+                    "missing_capture": False,
+                },
             ]
         )
         self.assertEqual(summary["criteria_with_signal"], ["1.8"])
@@ -1879,30 +1927,43 @@ class ProbeMatrixTests(unittest.TestCase):
         # appelle une revue humaine ; un critere sans collecteur, non.
         agregat = {
             "criteria": {},
-            "collect_html": {"9.1": {"candidates": ["suspicion_invalide"], "evidence_count": 12}},
+            "collect_html": {
+                "9.1": {"candidates": ["suspicion_invalide"], "evidence_count": 12}
+            },
             "axe": {},
             "validator": {},
-            "collect_html_catalog": {"capable": ["9.1", "12.4"], "capable_count": 2,
-                                     "covered_without_candidate": ["12.4"]},
+            "collect_html_catalog": {
+                "capable": ["9.1", "12.4"],
+                "capable_count": 2,
+                "covered_without_candidate": ["12.4"],
+            },
         }
         self.assertEqual(
-            criterion_sources(agregat, "9.1")["collect_html_coverage"], COUVERTURE_CANDIDAT
+            criterion_sources(agregat, "9.1")["collect_html_coverage"],
+            COUVERTURE_CANDIDAT,
         )
         self.assertEqual(
             criterion_sources(agregat, "12.4")["collect_html_coverage"],
             COUVERTURE_SANS_CANDIDAT,
         )
         self.assertEqual(
-            criterion_sources(agregat, "6.1")["collect_html_coverage"], COUVERTURE_ABSENTE
+            criterion_sources(agregat, "6.1")["collect_html_coverage"],
+            COUVERTURE_ABSENTE,
         )
 
     def test_un_critere_couvert_sans_candidat_reste_instrumente(self):
         # Il ne doit pas disparaitre de la liste des sources : c'est ce qui a
         # fait conclure a tort qu'aucun outil ne couvrait 6.1.
         agregat = {
-            "criteria": {}, "collect_html": {}, "axe": {}, "validator": {},
-            "collect_html_catalog": {"capable": ["12.4"], "capable_count": 1,
-                                     "covered_without_candidate": ["12.4"]},
+            "criteria": {},
+            "collect_html": {},
+            "axe": {},
+            "validator": {},
+            "collect_html_catalog": {
+                "capable": ["12.4"],
+                "capable_count": 1,
+                "covered_without_candidate": ["12.4"],
+            },
         }
         self.assertIn("collect-html", criterion_sources(agregat, "12.4")["sources"])
         self.assertNotIn("collect-html", criterion_sources(agregat, "6.1")["sources"])
@@ -1915,12 +1976,16 @@ class ProbeMatrixTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             tickets = Path(tmp) / "tickets"
             tickets.mkdir()
-            (tickets / "NC-P02-011-a-la-main.md").write_text("fiche humaine", encoding="utf-8")
+            (tickets / "NC-P02-011-a-la-main.md").write_text(
+                "fiche humaine", encoding="utf-8"
+            )
             (tickets / "NC-A-genere.md").write_text("fiche generee", encoding="utf-8")
             (tickets / ".generes.json").write_text(
                 json.dumps({"fichiers": ["NC-A-genere.md"]}), encoding="utf-8"
             )
-            connus = set(json.loads((tickets / ".generes.json").read_text())["fichiers"])
+            connus = set(
+                json.loads((tickets / ".generes.json").read_text())["fichiers"]
+            )
             for ancien in tickets.glob("*.md"):
                 if ancien.name in connus:
                     ancien.unlink()
@@ -1932,7 +1997,8 @@ class ProbeMatrixTests(unittest.TestCase):
         source = chemin.read_text(encoding="utf-8")
         self.assertIn('manifeste = tickets / ".generes.json"', source)
         self.assertIn("if ancien.name in connus:", source)
-        self.assertNotIn("for old in tickets.glob(\"*.md\"):", source)
+        self.assertNotIn('for old in tickets.glob("*.md"):', source)
+
 
 if __name__ == "__main__":
     unittest.main()

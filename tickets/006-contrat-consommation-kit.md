@@ -7,7 +7,7 @@ sous-module.
 
 **Bloqué par :** Aucun — peut commencer immédiatement.
 
-**Statut :** implémenté, relu et vérifié ; intégration automatique dans #11.
+**Statut :** implémenté, relu et vérifié ; intégration automatique livrée dans #11.
 
 - [x] Le contrat décrit un commit obligatoire et un tag facultatif.
 - [x] Le contrat définit les informations minimales de `kit.lock`.
@@ -22,4 +22,4 @@ avec échec explicite en cas d’empreinte divergente.
 
 Livraison : [contrat](../documentation/CONSOMMATION-VERSIONNEE.md),
 `scripts/verify-kit-lock.py` et `bash scripts/tests/check-kit-lock.sh`.
-L’intégration automatique à chaque campagne reste dans #11.
+L’intégration automatique avant les écritures de campagne est livrée dans #11.
