@@ -28,6 +28,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
+sys.dont_write_bytecode = True
+
 try:
     import yaml
 except ImportError as exc:  # pragma: no cover - traité par le wrapper du kit
@@ -46,10 +48,10 @@ from engine_coverage import generate_engine_coverage
 from probe_matrix import (
     VALIDATOR_CRITERION,
     build_probe_plan,
-    discover_collect_html,
     classify_payload,
     criterion_sources,
     criterion_state,
+    discover_collect_html,
     discover_probes,
     load_campaign_summaries,
     summarise,
@@ -79,6 +81,9 @@ UniqueKeyLoader.add_constructor(
 SCRIPT = Path(__file__).resolve()
 SKILL_ROOT = SCRIPT.parents[1]
 KIT_ROOT = SCRIPT.parents[4]
+sys.path.insert(0, str(KIT_ROOT / "scripts/lib"))
+from campaign_kit import IDENTITY_ERRORS, initial_lock, verify_campaign
+
 # Statuts historiques conservés uniquement pour les sorties dérivées
 # `findings.json` et `qualification.json`. Les saisies humaines canoniques
 # vivent dans `rgaa-findings.json` et `dsfr-findings.json`.
@@ -129,15 +134,24 @@ def load_embedded_rgaa_referential() -> dict[str, Any]:
     try:
         data = json.loads(RGAA_REFERENTIAL.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"Référentiel RGAA embarqué illisible : {RGAA_REFERENTIAL}: {exc}") from exc
+        raise ValueError(
+            f"Référentiel RGAA embarqué illisible : {RGAA_REFERENTIAL}: {exc}"
+        ) from exc
     counts = data.get("counts", {})
-    if data.get("referential_id") != "rgaa-4.1.2" or counts.get("criteria") != 106 or counts.get("tests") != 258:
+    if (
+        data.get("referential_id") != "rgaa-4.1.2"
+        or counts.get("criteria") != 106
+        or counts.get("tests") != 258
+    ):
         raise ValueError(f"Référentiel RGAA embarqué invalide : {RGAA_REFERENTIAL}")
     return data
 
 
 def embedded_criterion_ids() -> list[str]:
-    return [str(item["criterion_id"]) for item in load_embedded_rgaa_referential()["criteria"]]
+    return [
+        str(item["criterion_id"])
+        for item in load_embedded_rgaa_referential()["criteria"]
+    ]
 
 
 CRITERION_IDS = embedded_criterion_ids()
@@ -493,9 +507,7 @@ def record(state: dict[str, Any], phase: str, status: str, **details: Any) -> No
     }
 
 
-def invalidate_downstream_phases(
-    state: dict[str, Any], phase: str
-) -> list[str]:
+def invalidate_downstream_phases(state: dict[str, Any], phase: str) -> list[str]:
     """Marque les phases dérivées d’une phase rejouée comme à régénérer."""
     try:
         first_downstream = PHASES.index(phase) + 1
@@ -552,7 +564,7 @@ def init_campaign(args: argparse.Namespace) -> int:
             Path.cwd() / f"audit-{slugify(target)}-{dt.date.today().isoformat()}"
         ).resolve()
     )
-    if is_inside(output, KIT_ROOT) and not args.allow_inside_kit:
+    if is_inside(output, KIT_ROOT):
         raise SystemExit(
             f"Refus d’écrire les livrables dans le kit : {output}\nChoisir --output hors du kit."
         )
@@ -560,7 +572,13 @@ def init_campaign(args: argparse.Namespace) -> int:
         raise SystemExit(
             f"Le dossier existe et n’est pas vide : {output}. Choisir un nouveau dossier de campagne."
         )
+    try:
+        kit_lock = initial_lock(KIT_ROOT, output, args.kit_lock)
+    except IDENTITY_ERRORS as error:
+        print(f"[FAIL] kit.lock : {error}", file=sys.stderr)
+        return 1
     output.mkdir(parents=True, exist_ok=True)
+    write_json(output / "kit.lock", kit_lock)
     for rel in (
         "pages",
         "tickets",
@@ -952,14 +970,15 @@ def preflight(
             result = probe_network_url(candidate)
             network_checks.append({"origin": origin, **result})
             if result["kind"] == "BLOQUÉ-INFRA":
-                blocked_infra.append(
-                    {"origin": origin, "cause": result["cause"]}
-                )
+                blocked_infra.append({"origin": origin, "cause": result["cause"]})
             elif result["kind"] == "INJOIGNABLE":
                 unreachable.append({"origin": origin, "cause": result["cause"]})
             else:
                 for page in pages:
-                    if urllib.parse.urlparse(page["url"]).netloc == urllib.parse.urlparse(candidate).netloc:
+                    if (
+                        urllib.parse.urlparse(page["url"]).netloc
+                        == urllib.parse.urlparse(candidate).netloc
+                    ):
                         state.setdefault("pages", {}).setdefault(page["id"], {})[
                             "http_status"
                         ] = result.get("http_status")
@@ -973,8 +992,10 @@ def preflight(
                 "Cible réseau injoignable : "
                 + ", ".join(item["origin"] for item in unreachable)
             )
-    status = "BLOQUE_INFRA" if blocked_infra or unreachable else (
-        "ECHEC" if errors else ("PARTIEL" if warnings else "OK")
+    status = (
+        "BLOQUE_INFRA"
+        if blocked_infra or unreachable
+        else ("ECHEC" if errors else ("PARTIEL" if warnings else "OK"))
     )
     record(
         state,
@@ -985,7 +1006,11 @@ def preflight(
         ay11=str(ay11) if ay11 else None,
         ay11_version=ay11_version or None,
         ay11_expected_version=expected_version or None,
-        cause="BLOQUÉ-INFRA" if blocked_infra else "INJOIGNABLE" if unreachable else None,
+        cause="BLOQUÉ-INFRA"
+        if blocked_infra
+        else "INJOIGNABLE"
+        if unreachable
+        else None,
         network_checks=network_checks,
         blocked_infra=blocked_infra,
         unreachable=unreachable,
@@ -1185,7 +1210,9 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
     if not skip("catalog"):
         if not ay11:
             if not args.dry_run:
-                write_json(root / "collectes-ay11/rgaa-criteria.json", embedded_rgaa_catalog())
+                write_json(
+                    root / "collectes-ay11/rgaa-criteria.json", embedded_rgaa_catalog()
+                )
             record(
                 state,
                 "catalog",
@@ -1342,7 +1369,9 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 if not html_files or not collections:
                     repli = root / "captures-ay11" / pid
                     html_files = html_files or sorted(repli.rglob("*-rendered.html"))
-                    collections = collections or sorted(repli.rglob("*-browser-collection.json"))
+                    collections = collections or sorted(
+                        repli.rglob("*-browser-collection.json")
+                    )
                 if not html_files or not collections:
                     failures.append(
                         {
@@ -1387,9 +1416,13 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 # Catalogue des collecteurs : sondé une fois par campagne, sur la
                 # première capture disponible. Sans lui, un critère couvert sans
                 # candidat serait indiscernable d'un critère non couvert.
-                chemin_catalogue = root / "collectes-ay11" / "catalogue-collecteurs.json"
+                chemin_catalogue = (
+                    root / "collectes-ay11" / "catalogue-collecteurs.json"
+                )
                 if not chemin_catalogue.is_file():
-                    write_json(chemin_catalogue, discover_collect_html(str(ay11), html_path))
+                    write_json(
+                        chemin_catalogue, discover_collect_html(str(ay11), html_path)
+                    )
                 probe_dir = destination / "sondes"
                 probe_dir.mkdir(parents=True, exist_ok=True)
                 entries = []
@@ -1587,19 +1620,35 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 )
                 rendus = sorted(capture_dir.rglob("*-rendered.html"))
                 if not rendus:
-                    rendus = sorted((root / "captures-ay11" / pid).rglob("*-rendered.html"))
+                    rendus = sorted(
+                        (root / "captures-ay11" / pid).rglob("*-rendered.html")
+                    )
                 payload = None
                 if commande and rendus:
                     sources[pid] = "dom_rendu_validateur_local"
                     proc = subprocess.run(
-                        [*commande.split(), "--format", "json", "--exit-zero-always", str(rendus[0])],
-                        capture_output=True, text=True, check=False, timeout=delai,
+                        [
+                            *commande.split(),
+                            "--format",
+                            "json",
+                            "--exit-zero-always",
+                            str(rendus[0]),
+                        ],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                        timeout=delai,
                     )
                     sortie = (proc.stdout or "") + (proc.stderr or "")
                     try:
                         payload = json.loads(sortie)
                     except json.JSONDecodeError:
-                        failures.append({"page": pid, "error": f"sortie du validateur illisible : {sortie[:200]}"})
+                        failures.append(
+                            {
+                                "page": pid,
+                                "error": f"sortie du validateur illisible : {sortie[:200]}",
+                            }
+                        )
                         continue
                 else:
                     if index:
@@ -1618,19 +1667,34 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                     else:
                         sources[pid] = "html_servi"
                         requete = urllib.request.Request(
-                            endpoint + "?" + urllib.parse.urlencode({"doc": page["url"], "out": "json"}),
-                            headers={"User-Agent": "audit-rgaa-creator (pré-audit RGAA local)"},
+                            endpoint
+                            + "?"
+                            + urllib.parse.urlencode(
+                                {"doc": page["url"], "out": "json"}
+                            ),
+                            headers={
+                                "User-Agent": "audit-rgaa-creator (pré-audit RGAA local)"
+                            },
                         )
                     try:
                         with urllib.request.urlopen(requete, timeout=delai) as reponse:
                             payload = json.loads(reponse.read().decode("utf-8"))
-                    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
-                        failures.append({"page": pid, "error": f"{type(exc).__name__}: {exc}"[:300]})
+                    except (
+                        urllib.error.URLError,
+                        TimeoutError,
+                        json.JSONDecodeError,
+                        OSError,
+                    ) as exc:
+                        failures.append(
+                            {"page": pid, "error": f"{type(exc).__name__}: {exc}"[:300]}
+                        )
                         continue
                 write_json(destination / f"{pid}.json", payload)
                 messages = payload.get("messages") or []
                 erreurs = sum(1 for m in messages if m.get("type") == "error")
-                avertissements = sum(1 for m in messages if m.get("subType") == "warning")
+                avertissements = sum(
+                    1 for m in messages if m.get("subType") == "warning"
+                )
                 totaux[pid] = {"erreurs": erreurs, "avertissements": avertissements}
                 page_state["validator"] = {
                     "criterion": VALIDATOR_CRITERION,
@@ -1790,11 +1854,15 @@ def embedded_rgaa_plan() -> dict[str, Any]:
                     "source_rgaa": {"url": item["source_url"], "title": item["title"]},
                     "reference_contract": {
                         "target": "Éléments concernés par le test dans le DOM rendu",
-                        "expected_evidence": item.get("methodology", "Méthodologie officielle RGAA"),
+                        "expected_evidence": item.get(
+                            "methodology", "Méthodologie officielle RGAA"
+                        ),
                         "human_validation": "Validation humaine requise avant toute décision",
                         "limit": "La collecte automatique ne couvre pas toute la méthodologie du test",
                     },
-                    "human_review_points": ["Applicabilité et cas particuliers à confirmer"],
+                    "human_review_points": [
+                        "Applicabilité et cas particuliers à confirmer"
+                    ],
                     "collection_status": "not_collected",
                 }
                 for item in referential["tests"]
@@ -1842,7 +1910,11 @@ def probe_network_url(url: str) -> dict[str, Any]:
             "tunnel connection failed",
             "connection reset",
         )
-        kind = "BLOQUÉ-INFRA" if any(marker in lowered for marker in proxy_markers) else "INJOIGNABLE"
+        kind = (
+            "BLOQUÉ-INFRA"
+            if any(marker in lowered for marker in proxy_markers)
+            else "INJOIGNABLE"
+        )
         return {"kind": kind, "cause": cause or exc.__class__.__name__}
 
 
@@ -2243,9 +2315,7 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
         "| Priorité | Critère | Test | Statut | Pages signalées | Signaux | Sondes (critère) | Cible | Validation humaine | Preuve attendue |",
         "|---|---|---|---|---|---:|---|---|---|---|",
     ]
-    probe_states = Counter(
-        item["probe_coverage"]["state"] for item in reviews
-    )
+    probe_states = Counter(item["probe_coverage"]["state"] for item in reviews)
     matrix_lines = [
         "# Matrice d’exécution des 258 tests RGAA",
         "",
@@ -2296,8 +2366,11 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
         elif instr["collect_html_coverage"] == "couvert_sans_candidat":
             moteurs_cell.append(
                 "collect-html : couvert, aucun candidat"
-                + (f" ({instr['collect_html_evidence']} preuve(s))"
-                   if instr["collect_html_evidence"] else "")
+                + (
+                    f" ({instr['collect_html_evidence']} preuve(s))"
+                    if instr["collect_html_evidence"]
+                    else ""
+                )
             )
         if instr["axe_rules"]:
             origine = (
@@ -4160,7 +4233,11 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("--page", action="append", help="URL::Nom::type")
     init.add_argument("--ay11-root")
     init.add_argument("--skills-root", action="append")
-    init.add_argument("--allow-inside-kit", action="store_true", help=argparse.SUPPRESS)
+    init.add_argument(
+        "--kit-lock",
+        default=os.environ.get("DSFR_KIT_LOCK"),
+        help="Verrou de confiance du cache installé",
+    )
     init.set_defaults(func=init_campaign)
     sample = sub.add_parser(
         "sample", help="Proposer un échantillon depuis les liens de la cible"
@@ -4206,6 +4283,16 @@ def main() -> int:
         args.resume = False
     if not hasattr(args, "strict_ay11"):
         args.strict_ay11 = False
+    if args.command != "init":
+        try:
+            verify_campaign(
+                KIT_ROOT,
+                Path(args.campaign).resolve().parent,
+                required=args.command != "status",
+            )
+        except IDENTITY_ERRORS as error:
+            print(f"[FAIL] kit.lock : {error}", file=sys.stderr)
+            return 1
     return int(args.func(args))
 
 

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "complete": {
+      "plugin": "dsfr-agentic-kit",
+      "excluded_skills": []
+    },
+    "light": {
+      "plugin": "dsfr-agentic-kit-light",
+      "excluded_skills": ["agentic-design-harness"]
+    }
+  }
+}

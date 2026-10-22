@@ -74,11 +74,13 @@ effectivement modifiés. Le rejeu ciblé de `report` recalcule le rapport.
 
 ## Portée livrée
 
-`scripts/verify-kit-lock.py` et son test sont un outil explicite du contrat #6.
-La campagne ne le lance pas encore automatiquement ; ce branchement et les
-adaptateurs de distribution relèvent de #11. L’archive de skills seule n’est
-pas le checkout complet couvert par ce verrou. Les profils complet et léger
-doivent partager l’identité des mêmes sources ; leur sélection reste à livrer.
+`scripts/verify-kit-lock.py` et son test sont l’outil du contrat #6. Les nouvelles
+campagnes conservent leur verrou et le vérifient avant leurs écritures. La
+préparation d’un cache sans Git exige un commit explicite et une source de
+confiance ; [le parcours de distribution](DISTRIBUTION-ET-PROFILS.md) décrit
+les commandes et les profils complet et léger. Une campagne historique sans
+verrou refuse toute adoption silencieuse. L’archive de skills seule n’est pas
+le checkout complet couvert par ce verrou.
 
 Vérification reproductible : `bash scripts/tests/check-kit-lock.sh`. Elle
 exerce création, cache sans Git, altération, mauvais commit, liens, fichiers

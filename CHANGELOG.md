@@ -1,5 +1,15 @@
 # Journal des versions
 
+## Profils et campagnes versionnées — 22 octobre 2026
+
+- profils marketplace complet et léger issus des mêmes sources : 18 et
+  17 skills exposés, sans fork des moteurs ni ressources ;
+- préparation explicite du verrou d’un cache natif, sans clone permanent ;
+- vérification automatique avant les écritures de campagne, refus d’une
+  divergence et de l’adoption silencieuse d’une campagne historique ;
+- retrait du contournement masqué `--allow-inside-kit` ; alias et consommateurs
+  actifs préservés, réception et bascule distinctes de cette livraison.
+
 ## Source unique et consommation versionnée — 22 octobre 2026
 
 - #6 : contrat `kit.lock`, vérificateur explicite et refus des divergences ;

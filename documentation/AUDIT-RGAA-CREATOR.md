@@ -16,6 +16,12 @@ conformité DSFR globale.
 
 ## Démarrage
 
+Dans un cache natif sans Git, préparer d’abord un verrou de confiance selon
+[le parcours de distribution](DISTRIBUTION-ET-PROFILS.md), puis définir
+`DSFR_KIT_LOCK`. `init` enregistre le verrou dans la campagne ; les commandes
+suivantes vérifient automatiquement le kit avant toute écriture. Une campagne
+historique sans verrou exige l’identification de son outillage d’origine.
+
 ```bash
 KIT=/chemin/dsfr-agentic-kit
 AY11=/chemin/ay11-pre-audit
@@ -40,16 +46,18 @@ Organisation de travail claire avec `ay11-pre-audit` en source externe :
 └── audit-example/
 ```
 
-Dans `dsfr-agentic-kit`, crée (ou adapte) `.env.local` :
+Dans le shell du projet, définir les variables nécessaires sans écrire dans
+le cache du kit :
 
 ```bash
-cd <workspace>/dsfr-agentic-kit
 export AY11_ROOT="<workspace>/ay11-pre-audit"
 # Optionnel :
 export AY11_EXPECTED_VERSION="1.3.0"
 ```
 
-Le runner charge automatiquement ce fichier au lancement (non versionné).
+Le wrapper conserve la lecture historique d’un `.env.local` dans un clone,
+mais un cache versionné refuse ce fichier supplémentaire. Préférer les
+variables du projet, à l’extérieur de l’installation.
 
 Le `sample` est une proposition heuristique. Il faut conserver les gabarits et
 fonctionnalités représentatifs : accueil, plan, déclaration, contenus, tableau,

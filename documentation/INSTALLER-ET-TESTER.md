@@ -3,6 +3,9 @@
 Ce guide place le kit à côté du projet qui recevra les livrables. Le kit reste
 remplaçable et en lecture seule pendant son utilisation.
 
+Pour le profil complet ou léger et le verrou automatique des campagnes,
+suivre [le parcours de distribution](DISTRIBUTION-ET-PROFILS.md).
+
 ## 1. Vérifier les prérequis
 
 Depuis la racine du kit :

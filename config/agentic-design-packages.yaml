@@ -86,6 +86,11 @@ product:
     - scripts/amorcage-session-cloud.sh
     - scripts/build-plugin.sh
     - scripts/verify-kit-lock.py
+    - scripts/prepare-kit-lock.py
+    - scripts/lib/campaign_kit.py
+    - scripts/build-marketplace.py
+    - config/distribution-profiles.json
+    - documentation/DISTRIBUTION-ET-PROFILS.md
     - config/product-authority.json
     - documentation/CONSOMMATION-VERSIONNEE.md
     - documentation/MAINTENANCE.md
@@ -102,6 +107,7 @@ product:
 
 validation:
   product_tests:
+    - scripts/tests/check-campaign-distribution.sh
     - scripts/tests/check-kit-lock.sh
     - scripts/tests/check-product-ownership.sh
     - scripts/tests/check-prerequisites.sh
@@ -122,6 +128,7 @@ validation:
     - scripts/tests/check-virginie-project-boundary.sh
     - scripts/tests/check-harness-conventions.sh
   markdown:
+    - documentation/DISTRIBUTION-ET-PROFILS.md
     - documentation/CONSOMMATION-VERSIONNEE.md
     - documentation/MAINTENANCE.md
     - documentation/SEPARATION-RECETTES.md

@@ -17,6 +17,35 @@
       "skills": [
         "./.claude/skills"
       ]
+    },
+    {
+      "name": "dsfr-agentic-kit-light",
+      "description": "Outils DSFR et RGAA/WCAG sans orchestration avancée, issus des mêmes sources que le profil complet.",
+      "source": {
+        "source": "github",
+        "repo": "alexandra-guiderdoni/dsfr-agentic-kit",
+        "ref": "main"
+      },
+      "strict": false,
+      "skills": [
+        "./.claude/skills/a11y-loop",
+        "./.claude/skills/a11y-shared-references",
+        "./.claude/skills/audit-a11y-complet",
+        "./.claude/skills/audit-accessibilite-web",
+        "./.claude/skills/audit-dsfr-complet",
+        "./.claude/skills/audit-report-dsfr",
+        "./.claude/skills/audit-rgaa-complet",
+        "./.claude/skills/audit-rgaa-dsfr",
+        "./.claude/skills/audit-rgaa-creator",
+        "./.claude/skills/dsfr-changelog",
+        "./.claude/skills/dsfr-components",
+        "./.claude/skills/fix-accessibilite",
+        "./.claude/skills/generer-pictos-svg-dsfr",
+        "./.claude/skills/pre-audit-rgaa-dsfr",
+        "./.claude/skills/screen-reader-testing",
+        "./.claude/skills/tests-conformite-wcag",
+        "./.claude/skills/ticket-rgaa"
+      ]
     }
   ]
 }

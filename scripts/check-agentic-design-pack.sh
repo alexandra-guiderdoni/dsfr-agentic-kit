@@ -140,7 +140,7 @@ data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 assert data.get("name") == "dsfr-agentic"
 assert isinstance(data.get("owner", {}).get("name"), str)
 plugins = data.get("plugins")
-assert isinstance(plugins, list) and len(plugins) == 1
+assert isinstance(plugins, list) and len(plugins) == 2
 plugin = plugins[0]
 assert plugin.get("name") == "dsfr-agentic-kit"
 source = plugin.get("source", {})
@@ -149,7 +149,12 @@ assert source.get("repo") == "alexandra-guiderdoni/dsfr-agentic-kit"
 assert source.get("ref") == "main"
 assert plugin.get("strict") is False
 assert plugin.get("skills") == ["./.claude/skills"]
+light = plugins[1]
+assert light.get("name") == "dsfr-agentic-kit-light"
+assert light.get("source") == source
+assert light.get("strict") is False
 PY
+  run_check "profils de distribution" python_with_pyyaml "$SCRIPT_DIR/build-marketplace.py" --check
 fi
 
 tests=()
