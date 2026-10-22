@@ -6,6 +6,9 @@ remplaçable et en lecture seule pendant son utilisation.
 Pour le profil complet ou léger et le verrou automatique des campagnes,
 suivre [le parcours de distribution](DISTRIBUTION-ET-PROFILS.md).
 
+Pour installer une seule version utilisateur hors de tout workflow, sans plugin,
+suivre [l’installation utilisateur](INSTALLATION-UTILISATEUR.md).
+
 ## 1. Vérifier les prérequis
 
 Depuis la racine du kit :

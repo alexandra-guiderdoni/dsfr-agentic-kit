@@ -12,6 +12,7 @@ En quatre verbes : **router, contraindre, générer, vérifier**.
 
 Maintenance : [source du produit](documentation/MAINTENANCE.md).
 Consommation : [version immuable et `kit.lock`](documentation/CONSOMMATION-VERSIONNEE.md).
+Installation commune aux agents : [installation utilisateur et retour arrière](documentation/INSTALLATION-UTILISATEUR.md).
 
 - L’agent est **routé** : `design-systems/dsfr/DESIGN.md` lui indique les
   sources à charger et les revendications permises.

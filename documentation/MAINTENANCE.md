@@ -50,3 +50,13 @@ AY11 reste externe et facultatif. Le kit conserve son connecteur existant ;
 aucun nouveau branchement n’est requis pour maintenir le produit.
 
 État de réception et de transition : [suivi et preuves](RECEPTION-ET-BASCULE.md).
+
+## Installation utilisateur indépendante
+
+Le kit maintient aussi `scripts/use-dsfr-kit.py` et `scripts/install-user.py`.
+Le premier reprend le chargeur de confiance du consommateur historique ; le
+second prépare une version vérifiée hors du workflow et gère ses liens,
+sauvegardes et retour arrière. Les copies de bootstrap d’une révision installée
+sont générées depuis ce commit, jamais modifiées comme sources locales.
+Les compétences globales et les éventuels chemins de compatibilité suivent
+la même installation. Procédure : [installation utilisateur](INSTALLATION-UTILISATEUR.md).

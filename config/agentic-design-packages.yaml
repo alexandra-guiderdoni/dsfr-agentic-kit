@@ -89,6 +89,9 @@ product:
     - scripts/build-plugin.sh
     - scripts/verify-kit-lock.py
     - scripts/prepare-kit-lock.py
+    - scripts/use-dsfr-kit.py
+    - scripts/install-user.py
+    - documentation/INSTALLATION-UTILISATEUR.md
     - scripts/lib/campaign_kit.py
     - scripts/build-marketplace.py
     - config/distribution-profiles.json

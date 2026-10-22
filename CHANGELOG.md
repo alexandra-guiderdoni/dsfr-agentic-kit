@@ -1,5 +1,13 @@
 # Journal des versions
 
+## Installation utilisateur autonome — 22 octobre 2026
+
+- chargeur de confiance maintenu dans le kit, avec cache vérifié en lecture
+  seule et sélection explicite de la version ;
+- installation commune aux agents, adoption avec sauvegardes, liens de
+  compatibilité facultatifs et retour arrière refusant les modifications tierces ;
+- anciennes versions et qualifications conservées, sans plugin obligatoire.
+
 ## Parcours CLI Codex confiné — 22 octobre 2026
 
 - politique macOS de confinement externe pour `codex exec` et Chromium,
