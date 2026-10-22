@@ -2,7 +2,8 @@
 
 **Date** : 21 octobre 2026. **Actualisation** : 22 octobre 2026.
 **Statut** : exploration réalisée ; source canonique et profils reçus depuis
-GitHub ; #8 reçu, bascule #12 préparée dans [le reçu de migration](../RECEPTION-ET-BASCULE.md).
+GitHub ; #8 reçu puis bascule réversible #12 publiée, dans les limites du
+[reçu de migration](../RECEPTION-ET-BASCULE.md).
 
 **Exploration de référence** : [issue #9](https://github.com/alexandra-guiderdoni/dsfr-agentic-kit/issues/9).
 
