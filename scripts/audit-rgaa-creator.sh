@@ -10,4 +10,8 @@ if [ -f "$SCRIPT_DIR/../.env.local" ]; then
 fi
 # shellcheck source=lib/python-with-pyyaml.sh
 . "$SCRIPT_DIR/lib/python-with-pyyaml.sh"
-python_with_pyyaml "$SCRIPT_DIR/../.claude/skills/audit-rgaa-creator/scripts/audit_campaign.py" "$@"
+if [[ -n "${DSFR_AUDIT_PYTHON:-}" ]]; then
+  "$DSFR_AUDIT_PYTHON" "$SCRIPT_DIR/../.claude/skills/audit-rgaa-creator/scripts/audit_campaign.py" "$@"
+else
+  python_with_pyyaml "$SCRIPT_DIR/../.claude/skills/audit-rgaa-creator/scripts/audit_campaign.py" "$@"
+fi

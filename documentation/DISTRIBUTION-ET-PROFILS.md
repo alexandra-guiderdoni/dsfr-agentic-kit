@@ -58,6 +58,9 @@ de l’installation. Il doit être disjoint du projet.
 
 ## Vérifier le routage Codex depuis un consommateur
 
+Pour la génération et l’audit navigateur par `codex exec` sur macOS, voir
+[le confinement CLI autonome](#codex-exec-et-navigateur-sur-macos).
+
 La racine du produit reste celle du script installé. Le contexte de Codex est
 le répertoire courant du consommateur, ou le chemin explicite `--cwd`. Ce
 répertoire doit exister hors du kit et satisfaire les contrôles natifs de
@@ -147,3 +150,56 @@ et les phases effectivement exécutées doivent accompagner les preuves.
 La réception des usages et des autres hôtes relève de #8. La bascule des
 consommateurs et le retrait des anciennes copies relèvent de #12. Aucune
 installation globale, nouvelle intégration AY11 ou action Studio n’est requise.
+
+## Codex exec et navigateur sur macOS
+
+Les sandboxes macOS ne s’imbriquent pas dans la réception exercée. De plus,
+le sandbox natif de Codex refuse l’enregistrement du service Mach de Chromium.
+Le parcours de réception CLI utilise donc un seul confinement macOS externe,
+fourni par `templates/codex-macos-isolation.sb`. Il laisse fonctionner les
+services système du navigateur et impose les restrictions de fichiers aux
+processus CLI et à leurs descendants.
+
+Préparer un HOME isolé authentifié, un projet Git neuf, un kit installé vérifié
+par son verrou et des dépendances extérieures. Utiliser des chemins absolus
+résolus, des racines disjointes et un dossier temporaire dédié. Le projet,
+le HOME isolé et les reçus restent hors du kit et du workflow interdit.
+`PERSONAL_HOME` désigne le HOME réel avant le lancement isolé ;
+`CODEX_RUNTIME_ROOT` désigne le dossier du binaire réel de Codex et de ses
+ressources, sans inclure sa configuration personnelle. `OTHER_PROFILE_ROOT`
+désigne l’installation voisine à rendre inaccessible, ou un chemin inexistant.
+
+```bash
+env HOME="$ISOLATED_HOME" CODEX_HOME="$ISOLATED_HOME/.codex" TMPDIR="$TMP_ROOT" \
+  /usr/bin/sandbox-exec \
+  -D "WORKFLOW_ROOT=$WORKFLOW_ROOT" -D "PERSONAL_HOME=$PERSONAL_HOME" \
+  -D "CODEX_RUNTIME_ROOT=$CODEX_RUNTIME_ROOT" -D "PROJECT_ROOT=$PROJECT_ROOT" \
+  -D "TMP_ROOT=$TMP_ROOT" -D "ISOLATED_HOME=$ISOLATED_HOME" \
+  -D "RECEIPTS_ROOT=$RECEIPTS_ROOT" -D "KIT_ROOT=$KIT_ROOT" \
+  -D "OTHER_PROFILE_ROOT=$OTHER_PROFILE_ROOT" \
+  -f "$KIT_ROOT/templates/codex-macos-isolation.sb" \
+  "$CODEX_BINARY" --no-daemon exec --sandbox danger-full-access \
+  --ephemeral --json -C "$PROJECT_ROOT" -
+```
+
+L’option `danger-full-access` désactive ici seulement la seconde couche
+interne : elle doit rester dans cette commande sous `sandbox-exec`, avec la
+politique complète. L’exécuter seule supprimerait le confinement attendu.
+La politique d’approbation native reste distincte ; aucun réglage global ni
+option `--dangerously-bypass-*` n’est nécessaire. Des paramètres manquants
+font échouer la compilation de la politique avant le lancement.
+
+Avant une génération, éprouver dans ce même lancement le refus de lecture du
+workflow et de son alias, des écritures dans le kit et son alias, dans `.git`
+et hors des dossiers autorisés, ainsi qu’une écriture réussie dans le projet.
+Un code CLI 0 sans fichiers produits ni phases navigateur réussies ne suffit pas.
+Le rapport conserve les limites des capacités absentes et des contrôles désactivés.
+
+Choisir l’interpréteur Python via `DSFR_AUDIT_PYTHON` : le wrapper de campagne
+l’utilise dès son premier import, puis la campagne le réutilise pour ses enfants.
+Une valeur explicite invalide échoue sans repli silencieux vers un autre Python.
+Le choix automatique antérieur reste disponible lorsque la variable est absente.
+Ce parcours est spécifique à macOS et à la CLI reçue ; les autres plateformes
+ne sont pas couvertes par cette preuve. Sources :
+[permissions Codex](https://learn.chatgpt.com/docs/permissions) et
+[CLI non interactive](https://learn.chatgpt.com/docs/non-interactive-mode).

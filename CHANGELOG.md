@@ -1,5 +1,12 @@
 # Journal des versions
 
+## Parcours CLI Codex confiné — 22 octobre 2026
+
+- politique macOS de confinement externe pour `codex exec` et Chromium,
+  avec kit immuable, workflow interdit et écritures bornées ;
+- interpréteur `DSFR_AUDIT_PYTHON` respecté dès l’entrée du wrapper de
+  campagne ; valeur invalide refusée sans repli, sélection automatique préservée.
+
 ## Installation native Codex — 22 octobre 2026
 
 - catalogue Codex dérivé des mêmes profils complet et léger, avec transport

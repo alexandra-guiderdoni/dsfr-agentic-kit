@@ -1,0 +1,27 @@
+(version 1)
+(allow default)
+
+; Confinement externe obligatoire pour le lancement CLI documenté.
+(deny file-read* file-write*
+  (subpath (param "WORKFLOW_ROOT"))
+  (subpath (string-append (param "PERSONAL_HOME") "/.claude"))
+  (subpath (string-append (param "PERSONAL_HOME") "/.codex"))
+  (subpath (string-append (param "PERSONAL_HOME") "/.agents"))
+  (subpath (string-append (param "PERSONAL_HOME") "/.cache")))
+(allow file-read* (subpath (param "CODEX_RUNTIME_ROOT")))
+
+(deny file-write*
+  (require-all
+    (require-not (subpath (param "PROJECT_ROOT")))
+    (require-not (subpath (param "TMP_ROOT")))
+    (require-not (subpath (string-append (param "ISOLATED_HOME") "/.codex")))
+    (require-not (subpath (string-append (param "ISOLATED_HOME") "/Library/Caches")))
+    (require-not (subpath (param "RECEIPTS_ROOT")))
+    (require-not (literal "/dev/null"))))
+(deny file-write*
+  (subpath (param "KIT_ROOT"))
+  (subpath (string-append (param "PROJECT_ROOT") "/.git"))
+  (subpath (string-append (param "PROJECT_ROOT") "/.agents"))
+  (subpath (string-append (param "PROJECT_ROOT") "/.codex"))
+  (subpath (string-append (param "PROJECT_ROOT") "/.aws")))
+(deny file-read* (subpath (param "OTHER_PROFILE_ROOT")))

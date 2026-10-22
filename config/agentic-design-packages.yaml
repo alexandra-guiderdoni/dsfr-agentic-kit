@@ -44,6 +44,7 @@ product:
     - LICENSE
     - CHANGELOG.md
     - templates/AGENTS.md.exemple
+    - templates/codex-macos-isolation.sb
     - templates/CLAUDE.md.exemple
     - documentation/INSTALLER-ET-TESTER.md
     - documentation/MODE-OPERATOIRE.md

@@ -6,6 +6,7 @@ import hashlib
 import http.server
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -103,6 +104,109 @@ class InstalledCampaignTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         return self.project / "campaign.yaml"
+
+    def wrapper_with_python(self, selected):
+        binary = self.base / "bin"
+        binary.mkdir()
+        marker = self.base / "unexpected-python"
+        fake = binary / "python3"
+        fake.write_text(
+            "#!/bin/sh\nprintf called > " + shlex.quote(str(marker)) + "\nexit 42\n"
+        )
+        fake.chmod(0o755)
+        result = subprocess.run(
+            [
+                "/bin/bash",
+                str(self.cache / "scripts/audit-rgaa-creator.sh"),
+                "init",
+                "https://example.test/",
+                "--output",
+                str(self.project),
+                "--kit-lock",
+                str(self.seed),
+            ],
+            env={
+                **os.environ,
+                "PATH": str(binary) + ":/usr/bin:/bin",
+                "DSFR_AUDIT_PYTHON": str(selected),
+                "PYTHONDONTWRITEBYTECODE": "1",
+            },
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return result, marker
+
+    def test_wrapper_honors_selected_python_before_imports(self):
+        result, marker = self.wrapper_with_python(sys.executable)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertFalse(marker.exists())
+        self.assertTrue((self.project / "kit.lock").is_file())
+
+    def test_wrapper_invalid_selected_python_never_falls_back(self):
+        result, marker = self.wrapper_with_python(self.base / "missing-python")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(marker.exists())
+        self.assertFalse(self.project.exists())
+
+    @unittest.skipUnless(sys.platform == "darwin", "politique macOS uniquement")
+    def test_macos_template_enforces_file_boundaries(self):
+        self.project.mkdir()
+        (self.project / ".git").mkdir()
+        personal = self.base / "personal"
+        (personal / ".codex/runtime").mkdir(parents=True)
+        (personal / ".codex/config.toml").write_text("protected")
+        (personal / ".codex/runtime/readable").write_text("runtime")
+        workflow = self.base / "workflow"
+        workflow.mkdir()
+        (workflow / "private.txt").write_text("protected")
+        (self.project / "workflow-alias").symlink_to(workflow, target_is_directory=True)
+        (self.project / "kit-alias").symlink_to(self.cache, target_is_directory=True)
+        isolated = self.base / "isolated"
+        isolated.mkdir()
+        params = {
+            "WORKFLOW_ROOT": workflow,
+            "PERSONAL_HOME": personal,
+            "CODEX_RUNTIME_ROOT": personal / ".codex/runtime",
+            "PROJECT_ROOT": self.project,
+            "TMP_ROOT": self.base / "tmp",
+            "ISOLATED_HOME": isolated,
+            "RECEIPTS_ROOT": self.project / "proofs",
+            "KIT_ROOT": self.cache,
+            "OTHER_PROFILE_ROOT": self.base / "other",
+        }
+        argv = ["/usr/bin/sandbox-exec"]
+        for key, value in params.items():
+            argv += ["-D", key + "=" + str(value.resolve())]
+        policy = ROOT / "templates/codex-macos-isolation.sb"
+        argv += ["-f", str(policy), sys.executable, "-B", "-c"]
+        probe = """
+import sys
+from pathlib import Path
+base, project, cache, workflow, personal = map(Path, sys.argv[1:])
+for path, write in [
+    (workflow / 'private.txt', False),
+    (project / 'workflow-alias/private.txt', False),
+    (personal / '.codex/config.toml', False),
+    (cache / 'forbidden.txt', True),
+    (project / 'kit-alias/forbidden.txt', True),
+    (project / '.git/forbidden.txt', True),
+    (base / 'forbidden.txt', True),
+]:
+    try:
+        path.write_text('probe') if write else path.read_bytes()
+    except PermissionError:
+        continue
+    raise AssertionError(str(path))
+(project / 'allowed.txt').write_text('OK')
+assert (personal / '.codex/runtime/readable').read_text() == 'runtime'
+"""
+        result = command(
+            *argv, probe, self.base, self.project, self.cache, workflow, personal
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        result = command("/usr/bin/sandbox-exec", "-f", policy, "/usr/bin/true")
+        self.assertNotEqual(result.returncode, 0)
 
     def snapshot(self):
         return {
