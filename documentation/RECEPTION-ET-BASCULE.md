@@ -7,30 +7,34 @@ il ne remplace ni les qualifications humaines ni les preuves brutes des projets.
 
 | Ticket | Source et preuve | État |
 | --- | --- | --- |
-| #3 — Catalogue sélectionné | `generate-virginie-dsfr-composants.py`, `virginie_dsfr/collect.py`, tests de synthèse | Correctif ciblé vérifié ; recette complète à consigner |
+| #3 — Catalogue sélectionné | `generate-virginie-dsfr-composants.py`, `virginie_dsfr/collect.py`, 28 tests de synthèse | Reçu sur le commit publié ci-dessous |
 | #4 — Blocage d’infrastructure | `audit_campaign.py`, `navigation.py`, tests de pré-vol et navigation | Refus proxy en code 5, origine sondée une fois, qualification préservée ; DNS injecté et port local sans écoute |
-| #5 — Qualification en deux passages | Générateur de synthèse, reçu et tests du premier passage | Correctif ciblé vérifié ; recette complète à consigner |
+| #5 — Qualification en deux passages | Générateur, reçus et deux consommateurs séparés | Codes 2 puis 0, sept pages HTML, fiche inchangée |
 | #6 — Version immuable | `verify-kit-lock.py`, `CONSOMMATION-VERSIONNEE.md`, sept tests du verrou | Livré et vérifié |
-| #7 — Recettes séparées | `SEPARATION-RECETTES.md`, consommateur privé avec `kit.lock` | Extrait et publié ; réception du consommateur en cours |
+| #7 — Recettes séparées | `SEPARATION-RECETTES.md`, consommateur privé avec `kit.lock` | Publié et reçu sur des archives synthétiques |
 | #9 — Exploration | Essais isolés et critères A1 à A5 ; archive et marketplace distingués | Exploration réalisée ; limites ci-dessous |
 | #10 — Source canonique | `product-authority.json`, `MAINTENANCE.md`, gardes des exports | Kit canonique ; anciens circuits refusés avant écriture |
 | #11 — Profils et campagnes | `DISTRIBUTION-ET-PROFILS.md`, tests de distribution, installations natives | Livré sur `main` ; profils 18/17 issus des mêmes sources |
-| #8 — Réception | Parcours installé et consommateur séparé après corrections | En cours |
-| #12 — Bascule | Inventaire des consommateurs, branchements et retour arrière | Après réception ; aucun retrait irréversible exécuté |
+| #8 — Réception | Marketplace GitHub, deux profils et deux consommateurs séparés | Reçu le 22 octobre 2026 avec limites explicites |
+| #12 — Bascule | Inventaire des consommateurs, branchements et retour arrière | Préparée après réception ; activation encore distincte |
 
 Les états GitHub doivent être rapprochés de ces preuves avant clôture. Un ticket
 ne devient pas terminé parce que sa dépendance a été livrée.
 
 ## Preuves de la livraison des profils
 
-Le commit `c179315535b51e4cd47a234fea5f7766c2065c27` a été exercé dans deux
-installations natives Claude Code 2.1.306 isolées du workflow personnel.
-Les deux caches contiennent les mêmes 381 fichiers produit, préservés après
+Le commit publié `007208fb5ed5aba6d309831f98faacf3c55fec02` a été installé
+depuis la marketplace GitHub par Claude Code 2.1.306, dans un HOME isolé.
+Le workflow personnel, ses caches et le voisin complet du profil léger sont
+inaccessibles pendant les essais. Un vérificateur extérieur compare les
+installations aux objets Git de ce commit avant leur exécution.
+Les deux caches contiennent les mêmes 383 fichiers produit, préservés après
 génération, navigateur, vérifications RGAA/DSFR et rapport. Le profil léger
 expose 17 skills ; le complet 18. Les verrous des campagnes portent ce commit.
 
-La recette canonique de cette livraison a terminé en code 0 : 12 tests de
-distribution, 7 du verrou, 13 du registre, 60 d’audit et 25 de synthèse ;
+La recette canonique de cette livraison a terminé en code 0 : 13 tests de
+distribution, 4 de sorties des traces, 7 du verrou, 13 du registre,
+63 d’audit et 28 de synthèse ;
 12 pages et 137 variantes générées ; 27 tokens et 155 classes retrouvés dans
 le CSS officiel DSFR 1.15.4. Le hook `fr-display` non stylé n’est pas exercé
 par ce contrôle CSS ; celui-ci ne prouve pas toutes les variantes possibles.
@@ -40,19 +44,48 @@ symbolique d’une campagne vers le kit, reprise A par B, absence de verrou et
 ancien contournement `--allow-inside-kit`. A conservé peut régénérer son
 rapport en préservant le verrou et la qualification de la campagne A.
 
+La livraison antérieure `c179315` et les essais de prototype restent des
+preuves historiques distinctes ; leur réussite n’est pas déduite du correctif.
+
+## Réception des consommateurs et de la revue
+
+Les recettes publiées au commit `d7fe7982d55362be554794c441dad16d4d5d7bf4`
+et le workflow préparé au commit `fffbe26b5ddc0bad0b2dd3e3aae16b28ff21b1b7`
+verrouillent tous deux le kit `007208fb`. La préparation du cache consommateur
+a récupéré ce commit depuis GitHub sans redirection vers une fixture Git locale.
+Les deux entrées réelles ont produit `REVUE_CREEE` en code 2, sans rapport,
+puis `RENDU` en code 0 : sept pages HTML et SHA-256 de la fiche inchangé.
+Les trois tests de racines des recettes passent également.
+
+La contre-revue ShipGuard du kit et des consommateurs ne relève plus de
+défaut sur les constats connus et le delta corrigé. La revue initiale reste
+réutilisée pour les parties inchangées ; ce n’est pas un nouvel audit intégral.
+Les corrections couvrent notamment la concurrence du cache, les droits des
+dossiers externes, les neuf références partagées des alias et les fichiers
+de trace symboliques. Sept tests consommateur, onze tests d’alias et quatre
+tests de sorties passent. Les rapports de logique ne confirment ni violation
+ni risque sur les obligations examinées ; les rapports de comportement
+distinguent raisonnement, mesures et nouveaux refus préventifs attendus.
+Claude n’a pas fourni d’aval final après correction.
+
+Les journaux et rapports, y compris les échecs intermédiaires, sont regroupés
+dans le dossier local de livraison `dsfr-migration-rapports-20261022`, avec
+index, empreintes et tableaux de revue. Aucune preuve brute de projet réel
+n’est ajoutée au dépôt public.
+
 ## Portée de l’exploration et limites
 
 | Critère | Observation | Portée |
 | --- | --- | --- |
-| A1/A2 | Installation Git native puis chaîne génération/audits/rapport | CLI Claude Code ; workflow personnel inaccessible |
+| A1/A2 | Installation native depuis GitHub puis génération/audits/rapport | CLI Claude Code 2.1.306 ; workflow personnel inaccessible |
 | A3 | Empreinte préservée et refus des chemins internes ou redirigés | Cas négatifs de distribution exécutés |
 | A4 | Versions A/B identifiées ; refus de B, rejeu de rapport avec A | Compatibilité interversions non promise |
-| A5 | AY11 absent explicite ; pré-vol Python 3.12 réussi ; Python sans Playwright refusé | Aucun nouvel AY11 intégré |
+| A5 | AY11 absent explicite ; pré-vol Python 3.12.14 réussi ; Python 3.14.7 sans Playwright refusé en code 2 | Campagnes natives en Python 3.14.7 ; aucun nouvel AY11 intégré |
 | A6 | Kit canonique et profils communs ; consommateurs inventoriés avant bascule | Retrait des anciennes copies encore distinct |
 
 L’archive `build-plugin.sh` contient seulement les skills : elle reste partielle.
-La marketplace Git est la voie autonome retenue ; la recette locale épinglée
-ne prouve pas l’installation depuis GitHub après publication. Le catalogue
+La marketplace Git est la voie autonome retenue et exercée depuis GitHub.
+L’ancien essai de marketplace locale reste identifié comme fixture. Le catalogue
 publié suit `main`, sans pin implicite. Une campagne garde son commit et son
 cache A ; les autres hôtes restent non vérifiés tant que leur entrée réelle
 n’est pas exercée. Les essais CLI ne prouvent pas le choix autonome d’un LLM.
@@ -60,6 +93,7 @@ n’est pas exercée. Les essais CLI ne prouvent pas le choix autonome d’un LL
 Les phases AY11 absentes sont ignorées, la qualification finale peut rester
 partielle, et aucun taux de conformité n’est déduit d’un code 0. Le validateur
 distant et la capture des rapports étaient désactivés dans la fixture native.
+Python 3.10 et 3.11 ne sont pas exercés dans cette réception datée.
 Le dépôt n’atteste pas de CI distante ; les commandes locales constituent les
 preuves décrites ici. Les données réelles et les preuves privées restent hors
 du dépôt public.

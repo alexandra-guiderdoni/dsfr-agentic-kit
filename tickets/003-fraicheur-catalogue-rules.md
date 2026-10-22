@@ -5,7 +5,7 @@ calcule la fraîcheur avec ce fichier et inscrit son empreinte dans le manifeste
 
 **Bloqué par :** Aucun — peut commencer immédiatement.
 
-**Statut :** implémenté ; tests ciblés réussis, réception complète suivie dans #8.
+**Statut :** livré, reçu et vérifié ; preuves dans le reçu de #8.
 
 - [x] `--rules` est transmis à toutes les étapes de collecte concernées.
 - [x] L’empreinte et le nombre de règles utilisés sont inscrits dans le

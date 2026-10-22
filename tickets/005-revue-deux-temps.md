@@ -5,7 +5,7 @@ la revue à qualifier et le rendu effectué après validation de cette revue.
 
 **Bloqué par :** Aucun — peut commencer immédiatement.
 
-**Statut :** implémenté ; tests ciblés réussis, réception complète suivie dans #8.
+**Statut :** livré, reçu et vérifié ; preuves dans le reçu de #8.
 
 - [x] Le premier passage sans fiche crée la fiche et ne rend aucun livrable.
 - [x] `--allow-pending` ne contourne pas la création initiale de la fiche.

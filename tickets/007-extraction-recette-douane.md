@@ -8,8 +8,8 @@ retirés du kit générique et publiés dans le dépôt privé
 a été créé par l’utilisateur, publié et reçu. Les archives et preuves brutes
 restent dans leur stockage actuel.
 
-**Statut :** séparation implémentée et vérifiée ; publication coordonnée du
-kit puis du verrou des recettes. Réception fonctionnelle dans #8.
+**Statut :** séparation publiée et reçue ; verrou des recettes publié après le
+kit. Réception synthétique dans #8 et le reçu de migration.
 
 - [x] La liste des artefacts Douane à déplacer est établie.
 - [x] Les recettes migrées consomment le kit par `kit.lock`.

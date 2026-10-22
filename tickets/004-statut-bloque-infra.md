@@ -6,7 +6,7 @@ ou DSFR.
 
 **Bloqué par :** Aucun — peut commencer immédiatement.
 
-**Statut :** implémenté ; cas ciblés vérifiés, réception complète suivie dans #8.
+**Statut :** livré, reçu et vérifié ; preuves dans le reçu de #8.
 
 - [x] Le prévol contrôle chaque origine requise une seule fois.
 - [x] Une preuve proxy explicite produit `BLOQUE_INFRA`.
