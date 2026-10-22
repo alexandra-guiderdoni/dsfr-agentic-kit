@@ -20,5 +20,8 @@ de modification des consommateurs actifs. Les sauts et limites doivent être
 consignés dans le reçu de chantier.
 
 La publication coordonnée livre les gardes, le kit puis le verrou des recettes.
-La bascule des alias et le retrait des anciennes copies restent à effectuer.
-#11 a livré les profils ; #8 reçoit le produit ; #12 porte la bascule.
+La bascule des alias et le retrait des anciens circuits ont été publiés dans
+#12, après la réception du produit dans #8. Les anciennes copies sont archivées
+et les branchements actifs consomment le kit versionné. #11 a livré les profils.
+Les preuves et limites figurent dans le
+[reçu de réception et de bascule](../documentation/RECEPTION-ET-BASCULE.md).
