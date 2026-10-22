@@ -35,53 +35,19 @@ assert_rejected() {
 
 assert_rejected "racine absente — générateur DSFR" \
   python3 "$WORKSPACE/scripts/generate-virginie-dsfr-composants.py"
-assert_rejected "racine absente — tickets RGAA" \
-  python3 "$WORKSPACE/scripts/generate-virginie-rgaa-tickets.py"
-assert_rejected "racine absente — annexe P06" \
-  python3 "$WORKSPACE/scripts/generate-p06-form-annex.py"
-assert_rejected "racine absente — retest P06" \
-  python3 "$WORKSPACE/scripts/retest-p06-form-safe.py"
-# Le contrôle de frontière doit précéder l’import Playwright : ce cas reste
-# testable dans un environnement Python minimal sans dépendance navigateur.
-assert_rejected "racine absente — retest P06 sans Playwright" \
-  python3 -S "$WORKSPACE/scripts/retest-p06-form-safe.py"
 
 assert_rejected "racine égale au kit — générateur DSFR" \
   python3 "$WORKSPACE/scripts/generate-virginie-dsfr-composants.py" \
   --project-root "$WORKSPACE"
-assert_rejected "racine égale au kit — tickets RGAA" \
-  python3 "$WORKSPACE/scripts/generate-virginie-rgaa-tickets.py" \
-  --project-root "$WORKSPACE"
-assert_rejected "racine égale au kit — annexe P06" \
-  python3 "$WORKSPACE/scripts/generate-p06-form-annex.py" \
-  --project-root "$WORKSPACE"
-assert_rejected "racine égale au kit — retest P06" \
-  python3 "$WORKSPACE/scripts/retest-p06-form-safe.py" \
-  --project-root "$WORKSPACE"
 
 assert_rejected "sortie explicite dans le kit — générateur DSFR" \
   python3 "$WORKSPACE/scripts/generate-virginie-dsfr-composants.py" \
-  --project-root "$PROJECT" --output "$WORKSPACE/virginie-livrables/test-output"
-assert_rejected "sortie explicite dans le kit — annexe P06" \
-  python3 "$WORKSPACE/scripts/generate-p06-form-annex.py" \
-  --project-root "$PROJECT" --output "$WORKSPACE/virginie-livrables/test-output"
-assert_rejected "sortie explicite dans le kit — retest P06" \
-  python3 "$WORKSPACE/scripts/retest-p06-form-safe.py" \
   --project-root "$PROJECT" --output "$WORKSPACE/virginie-livrables/test-output"
 
 ln -s "$WORKSPACE/virginie-livrables" "$PROJECT/lien-vers-kit"
 assert_rejected "lien symbolique — générateur DSFR" \
   python3 "$WORKSPACE/scripts/generate-virginie-dsfr-composants.py" \
   --project-root "$PROJECT" --output "$PROJECT/lien-vers-kit"
-assert_rejected "lien symbolique — annexe P06" \
-  python3 "$WORKSPACE/scripts/generate-p06-form-annex.py" \
-  --project-root "$PROJECT" --output "$PROJECT/lien-vers-kit"
-assert_rejected "lien symbolique — retest P06" \
-  python3 "$WORKSPACE/scripts/retest-p06-form-safe.py" \
-  --project-root "$PROJECT" --output "$PROJECT/lien-vers-kit"
-assert_rejected "lien symbolique — tickets RGAA" \
-  python3 "$WORKSPACE/scripts/generate-virginie-rgaa-tickets.py" \
-  --project-root "$PROJECT/lien-vers-kit"
 
 # Le chemin nominal doit créer le verrou et les premières sorties sous le
 # projet. La fixture reprend le format couvert par les tests du générateur ;
@@ -129,4 +95,4 @@ status_after="$(git -C "$WORKSPACE" status --porcelain --ignored)"
 [[ "$status_before" == "$status_after" ]] \
   || fail "le contrôle de frontière a modifié l’état du kit"
 
-printf '[OK] frontière projet/kit vérifiée sur les quatre pipelines\n'
+printf '[OK] frontière projet/kit du générateur générique ; recettes métier externes\n'

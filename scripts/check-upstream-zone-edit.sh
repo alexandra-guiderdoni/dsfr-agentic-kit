@@ -17,6 +17,20 @@ MODE="${UPSTREAM_ZONE_GUARD:-warn}"
 
 [[ "$MODE" == "off" ]] && exit 0
 
+# Le produit canonique ne reçoit plus de zones d’un workspace amont.
+if [[ -f "$WORKSPACE/config/product-authority.json" ]]; then
+  python3 - "$WORKSPACE/config/product-authority.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+authority = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+assert authority["product"] == "dsfr-agentic-kit"
+assert authority["accept_workspace_export"] is False
+PY
+  exit 0
+fi
+
 # Le workspace source n-est pas un miroir : il n-a rien en amont.
 # Source et miroir portent le meme manifeste, le contenu ne les distingue donc
 # pas. Ce qui les separe est la cible de synchronisation : elle existe comme

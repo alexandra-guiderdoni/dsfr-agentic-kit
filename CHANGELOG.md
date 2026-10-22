@@ -1,5 +1,17 @@
 # Journal des versions
 
+## Source unique et consommation versionnée — 22 octobre 2026
+
+- #6 : contrat `kit.lock`, vérificateur explicite et refus des divergences ;
+- #7 : trois scripts de recette et leur retour d’expérience publiés dans le
+  dépôt privé de recettes, synthèse et protection des chemins génériques
+  maintenues dans le kit ;
+- #10 : autorité du kit et maintenance directe documentées, garde historique
+  adapté ; refus des exports activé et publié dans le workflow avant le kit ;
+- publication coordonnée des gardes, du kit puis du verrou des recettes ;
+  bascule des consommateurs et migration de preuves brutes hors de ce lot.
+
+
 ## Cadrage du harnais DSFR autonome — 21 octobre 2026
 
 - [PRD de migration](documentation/specs/2026-10-21-harnais-dsfr-autonome.md) :

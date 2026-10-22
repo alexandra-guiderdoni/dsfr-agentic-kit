@@ -43,9 +43,11 @@ installer le plugin :
 /plugin install dsfr-agentic-kit@dsfr-agentic
 ```
 
-Cette voie expose nativement les skills, mais pas les scripts de contrôle, le
-profil DSFR ni le cache officiel. Garder le clone pour l’installation
-complète. Une archive plugin locale peut être reconstruite depuis le clone :
+Cette voie Git fournit le checkout complet dans le cache natif : skills,
+scripts et profil DSFR y sont accessibles. Les dépendances et le paquet
+officiel restent à préparer séparément. La version consommée doit être
+[verrouillée et vérifiée](CONSOMMATION-VERSIONNEE.md). Une archive de skills
+locale, de périmètre plus restreint, peut être reconstruite depuis le clone :
 
 ```bash
 bash scripts/build-plugin.sh --version 0.1.0
@@ -99,22 +101,12 @@ skills correspond au manifeste. Son périmètre est le contenu versionné : un
 fichier ignoré par Git n’est jamais publié et ne le fait donc pas échouer.
 Hors dépôt Git, il inspecte l’arbre complet.
 
-## 2 bis. Installer le garde de zone synchronisée
+## 2 bis. Contribuer au produit canonique
 
-Plusieurs zones de ce kit sont recopiées depuis un workspace source à chaque
-publication. Une correction faite ici y survit jusqu’à la recopie suivante,
-puis disparaît ou doit être reportée à la main.
-
-```bash
-bash scripts/install-upstream-guard.sh
-```
-
-Le garde s’exécute alors avant chaque commit et nomme les fichiers concernés.
-Il avertit sans bloquer. `UPSTREAM_ZONE_GUARD=block` refuse le commit,
-`UPSTREAM_ZONE_GUARD=off` le désactive le temps d’une commande.
-
-Cette étape est utile à qui contribue au kit. Elle est inutile à qui l’utilise
-comme boîte à outils en lecture seule.
+Les sources se maintiennent dans ce dépôt, selon [le guide de maintenance](MAINTENANCE.md).
+Le garde historique de zone synchronisée reconnaît l’autorité du kit et ne
+demande plus de reporter ses corrections dans un workflow personnel. Aucun
+hook global ni réglage utilisateur n’est nécessaire.
 
 ## 3. Exécuter les démonstrations
 

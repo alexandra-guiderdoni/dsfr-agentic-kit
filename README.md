@@ -10,6 +10,9 @@ interfaces publiques françaises fondées sur le Système de Design de l’État
 
 En quatre verbes : **router, contraindre, générer, vérifier**.
 
+Maintenance : [source du produit](documentation/MAINTENANCE.md).
+Consommation : [version immuable et `kit.lock`](documentation/CONSOMMATION-VERSIONNEE.md).
+
 - L’agent est **routé** : `design-systems/dsfr/DESIGN.md` lui indique les
   sources à charger et les revendications permises.
 - Il est **contraint** : `tokens.yaml` encadre couleurs, typographie, grille et

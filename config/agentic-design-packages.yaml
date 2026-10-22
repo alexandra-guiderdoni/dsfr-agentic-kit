@@ -85,6 +85,11 @@ product:
     - scripts/check-prerequisites.sh
     - scripts/amorcage-session-cloud.sh
     - scripts/build-plugin.sh
+    - scripts/verify-kit-lock.py
+    - config/product-authority.json
+    - documentation/CONSOMMATION-VERSIONNEE.md
+    - documentation/MAINTENANCE.md
+    - documentation/SEPARATION-RECETTES.md
     - scripts/check-dsfr-design-system.sh
     - scripts/demo-dsfr-assembled-page.sh
     - scripts/demo-dsfr-vitrine.sh
@@ -97,6 +102,8 @@ product:
 
 validation:
   product_tests:
+    - scripts/tests/check-kit-lock.sh
+    - scripts/tests/check-product-ownership.sh
     - scripts/tests/check-prerequisites.sh
     - scripts/tests/check-dsfr-design-router-load-when-needed.sh
     - scripts/tests/check-dsfr-changelog-skill.sh
@@ -115,6 +122,9 @@ validation:
     - scripts/tests/check-virginie-project-boundary.sh
     - scripts/tests/check-harness-conventions.sh
   markdown:
+    - documentation/CONSOMMATION-VERSIONNEE.md
+    - documentation/MAINTENANCE.md
+    - documentation/SEPARATION-RECETTES.md
     - README.md
     - DEMARRAGE-AGENT.md
     - CHANGELOG.md

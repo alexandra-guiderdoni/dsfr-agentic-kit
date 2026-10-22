@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "product": "dsfr-agentic-kit",
+  "canonical_repository": "alexandra-guiderdoni/dsfr-agentic-kit",
+  "accept_workspace_export": false,
+  "runtime_skills_manifest": "config/agentic-design-packages.yaml",
+  "product_roots": [".claude/skills", "design-systems", "scripts", "config", "templates", "documentation"],
+  "recipe_paths_pending_extraction": [],
+  "external_project_paths": ["archives", "virginie-livrables", "visual-tests"],
+  "historical_documents": ["documentation/audit/contre-revue-dsfr-1-15-3-2026-09-12.md"],
+  "outside_product": ["composition-dsfr-pptx", "loic-pds-dsfr-slides", "rgaa-13-11", "accessible-pptx"]
+}

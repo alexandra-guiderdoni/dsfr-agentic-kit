@@ -405,7 +405,7 @@ def render_index(report: Report, include_parent_index: bool = True) -> str:
         "</div></div>",
     ]
     return shell(
-        "Synthèse DSFR par composant - portail Douane",
+        "Synthèse DSFR par composant",
         f"Verdict par composant DSFR sur {len(report.pages)} pages de préproduction.",
         "\n".join(body),
         "../INDEX-LIVRABLES.html" if include_parent_index else None,

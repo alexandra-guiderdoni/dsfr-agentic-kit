@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .collect import Collection, PageData, TRANSVERSE, VERSION_COMPONENT
+from .collect import TRANSVERSE, VERSION_COMPONENT, Collection, PageData
 
 BASELINE_ALL = ("skiplink", "header", "footer", "consent")
 BASELINE_NON_HOME = ("breadcrumb",)
@@ -27,26 +27,48 @@ STATES_NOTE = (
 )
 GENERIC_STATES = ["survol", "focus visible", "vue mobile", "thème sombre"]
 STATES = {
-    "navigation": ["menu ouvert et refermé au clavier", "sous-menus déroulés", "vue mobile, menu dans la modale"],
+    "navigation": [
+        "menu ouvert et refermé au clavier",
+        "sous-menus déroulés",
+        "vue mobile, menu dans la modale",
+    ],
     "mega_menu": ["méga-menu ouvert et refermé au clavier", "vue mobile"],
     "header": ["menu mobile ouvert", "outils repliés en vue mobile"],
     "translate": ["sélecteur de langue ouvert", "changement de langue"],
-    "modal": ["ouverture et fermeture", "retour du focus sur le déclencheur", "piège de focus", "fermeture par Échap"],
-    "display": ["modale des paramètres ouverte", "thème sombre appliqué", "préférence système"],
+    "modal": [
+        "ouverture et fermeture",
+        "retour du focus sur le déclencheur",
+        "piège de focus",
+        "fermeture par Échap",
+    ],
+    "display": [
+        "modale des paramètres ouverte",
+        "thème sombre appliqué",
+        "préférence système",
+    ],
     "accordion": ["panneau ouvert", "ouverture et fermeture au clavier"],
     "tabs": ["onglet actif", "navigation par flèches"],
     "search": ["soumission d'une recherche", "champ vide", "vue mobile, barre repliée"],
-    "input": ["état d'erreur après validation (exercé sur P06 seulement)", "état de succès", "état désactivé"],
+    "input": ["état d'erreur après validation", "état de succès", "état désactivé"],
     "select": ["état d'erreur", "état désactivé"],
     "checkbox": ["état d'erreur", "état désactivé", "coché"],
     "radio": ["état d'erreur", "état désactivé", "sélectionné"],
     "upload": ["fichier sélectionné", "état d'erreur"],
     "fieldset": ["état d'erreur du groupe", "légende avec aide"],
-    "message_group": ["messages d'erreur affichés après validation", "message de succès"],
+    "message_group": [
+        "messages d'erreur affichés après validation",
+        "message de succès",
+    ],
     "consent": ["gestionnaire ouvert", "refus global", "retour après enregistrement"],
-    "consent_manager": ["finalités acceptées ou refusées une à une", "enregistrement des choix"],
+    "consent_manager": [
+        "finalités acceptées ou refusées une à une",
+        "enregistrement des choix",
+    ],
     "consent_service": ["service requis désactivé", "service optionnel basculé"],
-    "skiplink": ["apparition au focus", "activation et déplacement du focus vers la cible"],
+    "skiplink": [
+        "apparition au focus",
+        "activation et déplacement du focus vers la cible",
+    ],
     "breadcrumb": ["fil déplié sur mobile", "page courante"],
     "button": ["état désactivé", "focus visible", "variantes icône"],
     "button_group": ["empilement en vue mobile"],
@@ -75,13 +97,20 @@ def expected_absent(collection: Collection) -> dict[str, list[str]]:
     absent: dict[str, list[str]] = {}
     for page in collection.pages:
         present = {item["name"] for item in page.inventory}
-        absent[page.id] = sorted(name for name in expected_for(page) if name not in present)
+        absent[page.id] = sorted(
+            name for name in expected_for(page) if name not in present
+        )
     return absent
 
 
 def uncovered_components(collection: Collection) -> list[str]:
-    return sorted(name for name, summary in collection.components.items()
-                  if name not in PSEUDO_COMPONENTS and not summary.rules_executed and not collection.groups_for(name))
+    return sorted(
+        name
+        for name, summary in collection.components.items()
+        if name not in PSEUDO_COMPONENTS
+        and not summary.rules_executed
+        and not collection.groups_for(name)
+    )
 
 
 def unexercised_states(component: str) -> list[str]:
@@ -92,7 +121,9 @@ def not_verified_union(collection: Collection) -> list[str]:
     return sorted({item for page in collection.pages for item in page.not_verified})
 
 
-def harness_coverage(collection: Collection, rules_path: Path | None) -> dict[str, list[str]]:
+def harness_coverage(
+    collection: Collection, rules_path: Path | None
+) -> dict[str, list[str]]:
     """Pour le backlog du kit : composants détectés sans règle, règles sans composant détecté."""
     detected = {name for name in collection.components if name not in PSEUDO_COMPONENTS}
     rule_components: set[str] = set()
@@ -101,5 +132,7 @@ def harness_coverage(collection: Collection, rules_path: Path | None) -> dict[st
         rule_components = {rule["component"] for rule in catalog.get("rules", [])}
     return {
         "detected_without_rule": uncovered_components(collection),
-        "rules_without_detection": sorted(rule_components - detected - {"html", "idref", "state", "skiplinks"}),
+        "rules_without_detection": sorted(
+            rule_components - detected - {"html", "idref", "state", "skiplinks"}
+        ),
     }

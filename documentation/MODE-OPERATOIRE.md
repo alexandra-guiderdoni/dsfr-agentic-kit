@@ -19,9 +19,10 @@ sortie attendue et le niveau de vérification demandé.
 Les générateurs `generate-virginie-*` exigent un projet de travail existant,
 fourni par `--project-root` ou `DSFR_PROJECT_ROOT`. Le clone du kit reste
 réservé au code et aux références ; les archives, livrables, captures, fiches
-de revue et verrous sont écrits dans le projet. Les recettes de formulaire
-historiques demandent en plus `DSFR_AUDIT_SITE_BASE_URL`, fourni par le projet
-consommateur ; aucun hôte métier n'est codé dans le kit.
+de revue et verrous sont écrits dans le projet. La synthèse par composant
+reste générique malgré son nom historique. Les recettes métier de tickets
+et de formulaire sont publiées séparément dans #7 ; elles ne font plus
+partie du produit. Voir [la séparation des recettes](SEPARATION-RECETTES.md).
 
 ```bash
 export DSFR_PROJECT_ROOT="/chemin/vers/mon-projet"

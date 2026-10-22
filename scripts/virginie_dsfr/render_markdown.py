@@ -178,7 +178,7 @@ def render_fiche(report: Report, name: str) -> str:
 def render_synthese(report: Report) -> str:
     coll = report.collection
     lines = [
-        "# Synthèse DSFR par composant - portail Douane",
+        "# Synthèse DSFR par composant",
         "",
         f"Synthèse du {report.delivery_date}, établie à partir de l'audit du {report.audit_date} sur {len(report.pages)} pages de préproduction.",
         "",
