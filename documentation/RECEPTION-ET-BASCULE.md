@@ -174,6 +174,55 @@ ni les autres hôtes. Les cinq issues Astra des recettes, AY11 et Studio sont
 hors de ce complément. Le dossier privé `dsfr-reception-native-preuves-20261022`
 contient les traces fraîches, les échecs avant correction et les rapports.
 
+## Complément reçu : installation indépendante Codex
+
+Le commit publié `d23d77dfc4fb1ce3375cc87a542942f3f054adee` a été installé
+depuis GitHub par Codex 0.163.0 dans deux HOME neufs, un par profil.
+Le workflow personnel est inaccessible ; le voisin complet est également
+inaccessible au léger. L’entrée native `skills/list` expose respectivement
+18 et 17 compétences activées, sans ajout de racine de compétences.
+
+L’essai a révélé puis corrigé deux incompatibilités : le transport Git du
+catalogue Claude était ignoré par Codex, et le manifeste généré par l’hôte
+était refusé comme fichier supplémentaire. Le catalogue Codex est maintenant
+dérivé des mêmes profils. Le manifeste de l’hôte doit correspondre exactement
+au catalogue verrouillé, types JSON compris ; aucun autre ajout n’est accepté.
+Le catalogue Claude et les compétences existantes sont inchangés.
+
+Les deux installations ont généré une page, exécuté le navigateur, les
+contrôles RGAA et DSFR, puis produit leur portail de rapports. Ces quatre
+phases sont `OK`. Les 385 fichiers produit, leurs modes exécutables et le
+manifeste de l’hôte sont préservés ; les verrous portent le commit publié.
+Les accès au workflow, au voisin complet et en écriture dans le cache ont
+également leurs tests de refus explicites.
+
+Une session fraîche du modèle `gpt-6.1-sol`, via le serveur natif Codex,
+a ensuite chargé le skill installé et appelé son générateur dans un troisième
+projet vide. La page ainsi produite a été auditée jusqu’au rapport, avec les
+mêmes quatre phases `OK` et une nouvelle vérification du verrou après exécution.
+La configuration et l’authentification personnelles gardent leurs empreintes.
+
+Le contrôle complet du kit termine en code 0 : 140 tests Python, contrôles
+produit, générations et fidélité CSS officielle, dont 27 tokens et 155 classes.
+Le hook non stylé `fr-display` et le lint externe facultatif restent exclus.
+La contre-revue indépendante a relevé deux P2 : lien symbolique du catalogue
+dans un export sans Git et confusion entre `false` et `0` dans le manifeste.
+Les deux corrections disposent de tests de régression réussis.
+
+Cette réception utilise le mode officiel `externalSandbox` du serveur Codex
+sous une politique macOS effective. Le premier essai `codex exec` en sandbox
+imbriquée a échoué avec `sandbox_apply: Operation not permitted` ; il ne
+constitue pas une réussite CLI. Les dépendances Python, Playwright et le paquet
+officiel DSFR sont réutilisés depuis un dossier externe déclaré, sans nouvelle
+installation. AY11 est absent, le validateur distant et la capture des rapports
+sont désactivés : prévol et validation restent `PARTIEL`. Aucune conformité
+globale ni installation de l’application graphique n’est revendiquée.
+
+Les traces, échecs intermédiaires, inventaires et rapports restent dans le
+dossier privé de réception `dsfr-codex-autonome-20261022`. Les essais sur
+catalogue local sont distingués des réinstallations GitHub réussies.
+Les consommateurs existants et leurs campagnes ne sont pas migrés par cet essai.
+
 ## Ordre de réception et retour arrière
 
 Recevoir le produit et les recettes (#8) avant de modifier les branchements
