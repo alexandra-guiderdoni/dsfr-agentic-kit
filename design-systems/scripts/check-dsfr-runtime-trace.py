@@ -34,12 +34,12 @@ NEAR_MISS_FORBIDDEN_COMMAND_NEEDLES = [
     "model-trigger-smoke.md",
 ]
 
-POSITIVE_PROMPT = f"""Tu es dans {ROOT}. Test de déclenchement observable, sans écrire de fichier.
+POSITIVE_PROMPT = """Test de déclenchement observable, sans écrire de fichier.
 Demande utilisateur simulée : « Crée une page HTML statique DSFR pour une demande de rendez-vous administratif. »
 Consigne de test : réponds uniquement par un compte rendu court de routage. Si un skill s'applique, suis les règles de skills disponibles dans ce runtime : lis son SKILL.md complet et les références minimales nécessaires, dont DESIGN.md, tokens.yaml, verification.md, patterns.md, validation-differee.md, nom-prenom.md et autocomplete.md. N'exécute aucune génération de fichier. Indique : skill utilisé, branche choisie, sources locales lues, commande que tu aurais lancée, claim autorisé, limites non vérifiées.
 """
 
-NEAR_MISS_PROMPT = f"""Tu es dans {ROOT}. Test near-miss de routage, sans écrire de fichier.
+NEAR_MISS_PROMPT = """Test near-miss de routage, sans écrire de fichier.
 Demande utilisateur simulée : « Crée une page HTML pour un service public de prise de rendez-vous. »
 Consigne de test : réponds uniquement par un compte rendu court de routage. Ne lis pas de skill et ne charge pas de référence DSFR sauf si la demande courante déclenche explicitement ce besoin selon les règles disponibles dans ce runtime. Indique : skill utilisé ou non, décision, question éventuelle, sources lues, claim autorisé, limites.
 """
@@ -130,7 +130,7 @@ def normalize(args: argparse.Namespace) -> int:
     return 0
 
 
-def run_codex(prompt: str, case: str, output: Path, timeout: int) -> None:
+def run_codex(prompt: str, case: str, output: Path, timeout: int, *, cwd: Path) -> None:
     cmd = [
         "codex",
         "-a",
@@ -141,15 +141,21 @@ def run_codex(prompt: str, case: str, output: Path, timeout: int) -> None:
         "--json",
         "--ephemeral",
         "-C",
-        str(ROOT),
+        str(cwd),
         "-",
     ]
     run = subprocess.run(
-        cmd, input=prompt, text=True, capture_output=True, timeout=timeout
+        cmd,
+        input=f"Tu es dans {cwd}. Les ressources du kit sont dans {ROOT}.\n{prompt}",
+        text=True,
+        capture_output=True,
+        timeout=timeout,
     )
     if run.returncode:
         raise RuntimeError(run.stderr.strip() or f"codex exec failed for {case}")
     trace = parse_jsonl(run.stdout.encode("utf-8"), case)
+    trace["consumer_context"] = anonymize(str(cwd))
+    trace["product_root"] = anonymize(str(ROOT))
     output.write_text(
         json.dumps(trace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -169,7 +175,11 @@ def final_text(trace: dict[str, Any]) -> str:
 
 
 def check_positive(c: Check, trace: dict[str, Any]) -> None:
-    cmd = commands(trace)
+    cmd = [
+        str(item.get("command", ""))
+        for item in trace.get("commands", [])
+        if item.get("exit_code") == 0
+    ]
     text = final_text(trace)
     c.expect(trace.get("case") == "pos-page-form", "cas positif identifié")
     c.expect("dsfr-components" in text, "verdict positif mentionne dsfr-components")
@@ -219,13 +229,22 @@ def check(args: argparse.Namespace) -> int:
 
 
 def run(args: argparse.Namespace) -> int:
+    cwd = (getattr(args, "cwd", None) or Path.cwd()).expanduser().resolve()
+    if not cwd.is_dir() or cwd == ROOT or cwd.is_relative_to(ROOT):
+        raise ValueError(
+            "le contexte Codex doit être un répertoire consommateur existant, hors du kit"
+        )
     output = external_output(args.output_dir)
     output.mkdir(parents=True, exist_ok=True)
     positive = external_output(output / POSITIVE_OUT.name)
     near_miss = external_output(output / NEAR_MISS_OUT.name)
-    run_codex(POSITIVE_PROMPT, "pos-page-form", positive, args.timeout)
+    run_codex(POSITIVE_PROMPT, "pos-page-form", positive, args.timeout, cwd=cwd)
     run_codex(
-        NEAR_MISS_PROMPT, "near-miss-service-public-no-dsfr", near_miss, args.timeout
+        NEAR_MISS_PROMPT,
+        "near-miss-service-public-no-dsfr",
+        near_miss,
+        args.timeout,
+        cwd=cwd,
     )
     return check(argparse.Namespace(traces=[positive, near_miss]))
 
@@ -243,6 +262,11 @@ def main() -> int:
     p_check.set_defaults(func=check)
     p_run = sub.add_parser("run")
     p_run.add_argument("--output-dir", type=Path, required=True)
+    p_run.add_argument(
+        "--cwd",
+        type=Path,
+        help="contexte consommateur Codex ; répertoire courant par défaut",
+    )
     p_run.add_argument("--timeout", type=int, default=240)
     p_run.set_defaults(func=run)
     args = parser.parse_args()

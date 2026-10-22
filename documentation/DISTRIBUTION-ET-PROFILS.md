@@ -39,6 +39,28 @@ d’une branche `main`. Choisir un commit complet publié et préparer le projet
 `KIT_ROOT` désigne le cache natif réellement exécuté, trouvé dans les détails
 de l’installation. Il doit être disjoint du projet.
 
+## Vérifier le routage Codex depuis un consommateur
+
+La racine du produit reste celle du script installé. Le contexte de Codex est
+le répertoire courant du consommateur, ou le chemin explicite `--cwd`. Ce
+répertoire doit exister hors du kit et satisfaire les contrôles natifs de
+Codex, notamment le contrôle Git. La confiance reste inchangée et aucun dépôt
+Git n’est créé dans le cache.
+
+```bash
+python3 -B "$KIT_ROOT/design-systems/scripts/check-dsfr-runtime-trace.py" run \
+  --cwd "$PROJECT_ROOT" --output-dir "$PROJECT_ROOT/preuves/routage"
+python3 -B "$KIT_ROOT/design-systems/scripts/check-dsfr-profile.py" \
+  --runtime-trace "$PROJECT_ROOT/preuves/routage/pos-page-form-codex-exec-runtime.events.json"
+```
+
+Les deux sessions CLI sont fraîches, éphémères et en lecture seule : demande
+DSFR explicite, puis demande proche sans DSFR. Elles ne génèrent aucun HTML.
+Une lecture de référence en échec ne prouve pas son chargement. Les traces
+nomment séparément le contexte consommateur et la racine produit ; leurs
+sorties, y compris les fichiers redirigés par lien symbolique, restent hors
+du kit. Les scénarios de test synthétiques ne remplacent pas ces sessions.
+
 ## Préparer le verrou puis initialiser
 
 Git, Python 3.10+ et l’accès au dépôt de confiance sont nécessaires à la

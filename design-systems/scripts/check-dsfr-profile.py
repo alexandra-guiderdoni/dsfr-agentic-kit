@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # PDG-LARGE-FILE-JUSTIFICATION: validateur contractuel autonome gardé dans un seul exécutable ; plafond local strict à 220 lignes.
+# fmt: off
 from __future__ import annotations
+
 import argparse
 import json
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
 ROOT = Path(__file__).resolve().parents[2]
 DSFR = ROOT / "design-systems" / "dsfr"
 DESIGN = DSFR / "DESIGN.md"
@@ -20,7 +23,7 @@ LABELS = {"officiel_lu", "local_lu", "inféré", "à_vérifier", "hors_périmèt
 GROUPS = {"colors", "typography", "spacing", "rounded", "components"}
 BRANCHES = {"page complète", "composant isolé", "routage audit DSFR ponctuel"}
 EVIDENCE_FAMILIES = {"colors", "typography", "spacing", "layout", "components", "claims"}
-CLAIMS = {"aligné DSFR avec limites", "prototype DSFR à vérifier avant publication", "structure inspirée des fondamentaux DSFR", "composants DSFR utilisés selon les sources lues"}
+CLAIMS = {"aucun écart observé sur les règles DSFR exécutées", "écarts DSFR observés à qualifier", "prototype DSFR à vérifier avant publication", "structure inspirée des fondamentaux DSFR", "composants DSFR utilisés selon les sources lues"}
 FORBIDDEN = {"conforme DSFR", "conforme RGAA", "prêt pour publication", "usage autorisé de la marque de l'État"}
 REQ_REFS = {"references/index.md", "references/agent-recipes.md", "references/foundations.md", "references/page-shell.md", "references/components-routing.md", "references/forms-models.md", "references/figma-handoff.md", "references/verification.md", "references/sources.md"}
 SMOKE_IDS = {"pos-profile-page", "pos-page-form", "pos-rdv-page", "pos-component-accordion", "pos-form-field", "pos-publication-guard", "pos-version-migration", "near-miss-service-public-no-dsfr", "near-miss-rgaa-complete", "near-miss-google-strict", "near-miss-token-catalog", "near-miss-dsfr-like-landing"}
