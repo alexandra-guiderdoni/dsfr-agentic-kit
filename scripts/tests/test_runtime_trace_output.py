@@ -130,6 +130,28 @@ class RuntimeTraceOutputTests(unittest.TestCase):
         self.module.check_positive(check, trace)
         self.assertTrue(check.bad)
 
+    def test_generation_attempt_is_rejected_regardless_of_exit_code(self):
+        for code in (0, 1):
+            with self.subTest(exit_code=code):
+                trace = {
+                    "case": "pos-page-form",
+                    "commands": [
+                        {
+                            "command": "cat "
+                            + " ".join(self.module.POSITIVE_COMMAND_NEEDLES),
+                            "exit_code": 0,
+                        },
+                        {
+                            "command": "python3 scripts/generate_page.py --type form",
+                            "exit_code": code,
+                        },
+                    ],
+                    "final_messages": ["dsfr-components : page complète form"],
+                }
+                check = self.module.Check()
+                self.module.check_positive(check, trace)
+                self.assertTrue(check.bad)
+
 
 if __name__ == "__main__":
     unittest.main()

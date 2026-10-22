@@ -175,7 +175,8 @@ def final_text(trace: dict[str, Any]) -> str:
 
 
 def check_positive(c: Check, trace: dict[str, Any]) -> None:
-    cmd = [
+    cmd = commands(trace)
+    successful_reads = [
         str(item.get("command", ""))
         for item in trace.get("commands", [])
         if item.get("exit_code") == 0
@@ -188,7 +189,10 @@ def check_positive(c: Check, trace: dict[str, Any]) -> None:
         "verdict positif branche page complète form",
     )
     for needle in POSITIVE_COMMAND_NEEDLES:
-        c.expect(any(needle in item for item in cmd), f"lecture observée: {needle}")
+        c.expect(
+            any(needle in item for item in successful_reads),
+            f"lecture observée: {needle}",
+        )
     generated = any(
         "generate_page.py --type" in item or "scripts/generate_page.py --type" in item
         for item in cmd
