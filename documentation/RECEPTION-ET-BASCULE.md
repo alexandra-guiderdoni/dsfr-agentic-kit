@@ -223,6 +223,42 @@ dossier privé de réception `dsfr-codex-autonome-20261022`. Les essais sur
 catalogue local sont distingués des réinstallations GitHub réussies.
 Les consommateurs existants et leurs campagnes ne sont pas migrés par cet essai.
 
+## Complément reçu : parcours CLI Codex
+
+Le commit publié `1360b15c964fe1b0180dfcc66fc60153a7496627` a été installé
+depuis GitHub dans deux nouveaux HOME, un par profil. Deux véritables sessions
+`codex exec` ont généré une page, exécuté Chromium et les contrôles RGAA/DSFR,
+puis produit leur portail : quatre phases `OK`, codes CLI 0, respectivement
+11 et 14 commandes. Une recherche d’inventaire du léger retourne 1 avant
+la lecture correcte des ressources ; aucune phase requise n’échoue.
+
+Ces sessions utilisent un confinement macOS externe unique, fourni par la
+politique installée `templates/codex-macos-isolation.sb`. La seconde couche
+interne est désactivée uniquement sous cette politique ; l’incompatibilité
+de l’imbrication n’est pas présentée comme corrigée dans Codex ou macOS.
+Le [lancement documenté](DISTRIBUTION-ET-PROFILS.md#codex-exec-et-navigateur-sur-macos)
+conserve le workflow inaccessible et les écritures bornées.
+
+Le wrapper respecte maintenant `DSFR_AUDIT_PYTHON` dès son premier import,
+sans adaptation de `PATH` dans les essais finaux. Les tests refusent aussi
+un interpréteur invalide sans repli et les déplacements des cinq parents du
+cache, y compris `.codex`, vers le projet. La contre-revue a reproduit puis
+confirmé la correction de ce dernier défaut sur des fixtures indépendantes.
+
+Les 386 fichiers produit et le manifeste de chaque cache gardent leurs
+empreintes et modes ; les verrous externes sont revérifiés après exécution.
+La lecture du profil voisin est refusée dans les deux sens. Configuration et
+authentification personnelles restent identiques ; leurs copies temporaires
+sont retirées. Le contrôle global sur ce commit termine en code 0 avec
+143 tests Python, 12 pages, 137 variantes, 27 tokens et 155 classes CSS.
+`fr-display` et le lint externe facultatif restent hors de cette vérification.
+
+Les preuves et échecs intermédiaires sont conservés dans le dossier privé
+`dsfr-codex-exec-20261022`. Dépendances extérieures réutilisées, données
+synthétiques, AY11 absent, validateur distant et capture des rapports désactivés :
+prévol et validation restent `PARTIEL`. Cette réception concerne macOS et
+Codex 0.163.0 ; elle ne migre pas les consommateurs existants.
+
 ## Ordre de réception et retour arrière
 
 Recevoir le produit et les recettes (#8) avant de modifier les branchements
