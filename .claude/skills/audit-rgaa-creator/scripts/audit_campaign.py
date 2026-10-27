@@ -57,6 +57,7 @@ from probe_matrix import (
     load_campaign_summaries,
     summarise,
 )
+from validator_results import validator_result
 
 
 class UniqueKeyLoader(yaml.SafeLoader):
@@ -219,6 +220,22 @@ def read_json(path: Path, default: Any = None) -> Any:
     if not path.is_file():
         return default
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_validator_receipt(destination: Path, page_id: str, payload: Any) -> Path:
+    """Conserver chaque tentative et maintenir la vue courante consommée par les rapports."""
+    current = destination / f"{page_id}.json"
+    archive = destination / page_id
+    archive.mkdir(parents=True, exist_ok=True)
+    attempts = sorted(archive.glob("attempt-*.json"))
+    if current.is_file() and not attempts:
+        shutil.copyfile(current, archive / "attempt-001.json")
+        attempts = sorted(archive.glob("attempt-*.json"))
+    number = max((int(path.stem.split("-")[-1]) for path in attempts), default=0) + 1
+    receipt = archive / f"attempt-{number:03d}.json"
+    write_json(receipt, payload)
+    write_json(current, payload)
+    return receipt
 
 
 DSFR_RULE_CATALOG = SKILL_ROOT.parent / "audit-dsfr-complet/rules/dsfr-rules.json"
@@ -1655,13 +1672,7 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                     try:
                         payload = json.loads(sortie)
                     except json.JSONDecodeError:
-                        failures.append(
-                            {
-                                "page": pid,
-                                "error": f"sortie du validateur illisible : {sortie[:200]}",
-                            }
-                        )
-                        continue
+                        payload = {"execution_failure": "invalid_json"}
                 else:
                     if index:
                         # Le service public du W3C demande un usage courtois.
@@ -1697,23 +1708,30 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                         json.JSONDecodeError,
                         OSError,
                     ) as exc:
-                        failures.append(
-                            {"page": pid, "error": f"{type(exc).__name__}: {exc}"[:300]}
-                        )
-                        continue
-                write_json(destination / f"{pid}.json", payload)
-                messages = payload.get("messages") or []
-                erreurs = sum(1 for m in messages if m.get("type") == "error")
-                avertissements = sum(
-                    1 for m in messages if m.get("subType") == "warning"
-                )
-                totaux[pid] = {"erreurs": erreurs, "avertissements": avertissements}
+                        payload = {"execution_failure": type(exc).__name__}
+                receipt = write_validator_receipt(destination, pid, payload)
+                result = validator_result(payload)
                 page_state["validator"] = {
                     "criterion": VALIDATOR_CRITERION,
-                    "erreurs": erreurs,
-                    "avertissements": avertissements,
+                    **result,
+                    "erreurs": result["errors"],
+                    "avertissements": result["warnings"],
                     "source": sources.get(pid),
+                    "receipt": str(receipt.relative_to(root)),
                 }
+                if result["executed"]:
+                    totaux[pid] = {
+                        "erreurs": result["errors"],
+                        "avertissements": result["warnings"],
+                    }
+                else:
+                    failures.append(
+                        {
+                            "page": pid,
+                            "error": result["reason"],
+                            "receipt": str(receipt.relative_to(root)),
+                        }
+                    )
                 save_state(root, state)
             statut = "PARTIEL" if failures else ("OK" if totaux else "IGNORÉ")
             record(
@@ -1790,6 +1808,7 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
         phase
         for phase, data in state.get("phases", {}).items()
         if data.get("status") == "ECHEC"
+        or (phase == "validator" and data.get("status") == "PARTIEL")
     ]
     if failed:
         print(
@@ -2258,7 +2277,9 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
             or axe_defaut
             or sources["validator_errors"]
         )
-        moteurs_a_examiner = bool(sources["collect_html_to_examine"])
+        moteurs_a_examiner = bool(
+            sources["collect_html_to_examine"] or sources["validator_unexecuted_pages"]
+        )
         if signal_tests[tid] or probe["state"] == "signal" or moteurs:
             priority = "P0"
         elif (
@@ -2397,6 +2418,11 @@ def generate_rgaa_v2_reports(config: dict[str, Any], root: Path) -> None:
         elif instr["validator_warnings"]:
             moteurs_cell.append(
                 f"validateur : 0 erreur, {instr['validator_warnings']} avertissement(s)"
+            )
+        if instr["validator_unexecuted_pages"]:
+            moteurs_cell.append(
+                "validateur non exécuté : "
+                + ", ".join(instr["validator_unexecuted_pages"])
             )
         matrix_lines.append(
             f"| {item['criterion']} | {item['test']} | `{json.dumps(item['automatic_coverage'], ensure_ascii=False)}` | {item['automatic_signals']} | {probe_cell} | {clean(' · '.join(moteurs_cell)) or '—'} | {qualification_tests[item['test']]} décision(s) | **{item['status']}** | {item['source']} |"

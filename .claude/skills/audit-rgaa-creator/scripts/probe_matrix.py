@@ -25,13 +25,21 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from validator_results import validator_result
+
 INPUT_HTML = "html"
 INPUT_COLLECTION = "collection"
 INPUT_BOTH = "both"
 
 #: Statuts de collecte qui ne constituent pas un échec d'exécution.
 NON_FAILING_STATUSES = frozenset(
-    {"collected", "collected_no_candidate", "partially_collected", "not_collected", "ok"}
+    {
+        "collected",
+        "collected_no_candidate",
+        "partially_collected",
+        "not_collected",
+        "ok",
+    }
 )
 #: Statuts signalant une preuve absente faute de capture adaptée.
 MISSING_CAPTURE_STATUSES = frozenset({"not_collected", "not_collected_static_html"})
@@ -68,9 +76,7 @@ def _usage_line(help_text: str) -> str:
     """Réduit le bloc ``usage:`` à une ligne, l'aide argparse étant repliée."""
     lines: list[str] = []
     for line in help_text.splitlines():
-        if line.startswith("usage:"):
-            lines.append(line)
-        elif lines and line.startswith(" "):
+        if line.startswith("usage:") or lines and line.startswith(" "):
             lines.append(line)
         elif lines:
             break
@@ -190,7 +196,12 @@ def build_probe_plan(
 #: Marqueurs de statut indiquant un candidat de défaut. Testés avant les
 #: marqueurs favorables, car « candidat_focus_non_visible » contient « visible ».
 ADVERSE_MARKERS = (
-    "insuffisant", "non_visible", "non_conforme", "absent", "manquant", "echec",
+    "insuffisant",
+    "non_visible",
+    "non_conforme",
+    "absent",
+    "manquant",
+    "echec",
 )
 #: Marqueurs indiquant que la sonde n'a pas trouvé de candidat sur cet élément.
 CLEAR_MARKERS = ("suffisant", "visible", "conforme", "present")
@@ -227,8 +238,12 @@ def classify_payload(payload: Any) -> dict[str, Any]:
     """
     if not isinstance(payload, dict):
         return {
-            "status": "sortie_inattendue", "signal_count": 0, "inspected_count": 0,
-            "undetermined_count": 0, "missing_capture": False, "criterion_id": None,
+            "status": "sortie_inattendue",
+            "signal_count": 0,
+            "inspected_count": 0,
+            "undetermined_count": 0,
+            "missing_capture": False,
+            "criterion_id": None,
         }
     status = (
         payload.get("collection_status") or payload.get("human_review_status") or "ok"
@@ -265,8 +280,11 @@ def summarise(entries: list[dict[str, Any]]) -> dict[str, Any]:
         slot = by_criterion.setdefault(
             criterion,
             {
-                "probes": [], "signal_count": 0, "inspected_count": 0,
-                "undetermined_count": 0, "missing_capture": False,
+                "probes": [],
+                "signal_count": 0,
+                "inspected_count": 0,
+                "undetermined_count": 0,
+                "missing_capture": False,
             },
         )
         slot["probes"].append(entry["name"])
@@ -293,7 +311,8 @@ def summarise(entries: list[dict[str, Any]]) -> dict[str, Any]:
         ),
         "criteria_to_examine": sorted(
             (
-                c for c, v in by_criterion.items()
+                c
+                for c, v in by_criterion.items()
                 if not v["signal_count"] and v["undetermined_count"]
             ),
             key=criterion_sort_key,
@@ -342,8 +361,12 @@ def load_campaign_summaries(campaign_root: Path) -> dict[str, Any]:
             slot = by_criterion.setdefault(
                 criterion,
                 {
-                    "pages": [], "signal_count": 0, "inspected_count": 0,
-                    "undetermined_count": 0, "missing_capture": False, "probes": [],
+                    "pages": [],
+                    "signal_count": 0,
+                    "inspected_count": 0,
+                    "undetermined_count": 0,
+                    "missing_capture": False,
+                    "probes": [],
                 },
             )
             slot["pages"].append(page_id)
@@ -413,8 +436,8 @@ def load_campaign_summaries(campaign_root: Path) -> dict[str, Any]:
 #: Piège connu : ``region`` relève de 9.2 et non de 12.6 — axe le confirme par
 #: son étiquette ``RGAA-9.2.1``.
 AXE_VERS_RGAA = {
-    "empty-heading": ["9.1"],     # axe ne rattache pas : titre sans contenu textuel
-    "heading-order": ["9.1"],     # axe ne rattache pas : hiérarchie des titres
+    "empty-heading": ["9.1"],  # axe ne rattache pas : titre sans contenu textuel
+    "heading-order": ["9.1"],  # axe ne rattache pas : hiérarchie des titres
 }
 
 #: Étiquette axe marquant une bonne pratique, et non un échec WCAG.
@@ -429,7 +452,11 @@ def _criteres_axe(regle: dict[str, Any]) -> tuple[list[str], str]:
     """
     tags = regle.get("tags") or []
     natifs = sorted(
-        {t.split("-", 1)[1].rsplit(".", 1)[0] for t in tags if str(t).startswith("RGAA-")},
+        {
+            t.split("-", 1)[1].rsplit(".", 1)[0]
+            for t in tags
+            if str(t).startswith("RGAA-")
+        },
         key=criterion_sort_key,
     )
     if natifs:
@@ -444,11 +471,21 @@ COLLECT_SUSPICION = "suspicion_invalide"
 #: Suffixe des codes de preuve qui portent un candidat.
 COLLECT_CANDIDATE_SUFFIX = "_candidate"
 #: Codes descriptifs, à ne jamais compter.
-COLLECT_IGNORED = frozenset({
-    "test_id", "source_rgaa_locale", "target_count", "target_nodes", "scope",
-    "inspectability", "inspection_limits", "human_review_question",
-    "human_validation_result", "rendered_text_sample", "source_text_sample",
-})
+COLLECT_IGNORED = frozenset(
+    {
+        "test_id",
+        "source_rgaa_locale",
+        "target_count",
+        "target_nodes",
+        "scope",
+        "inspectability",
+        "inspection_limits",
+        "human_review_question",
+        "human_validation_result",
+        "rendered_text_sample",
+        "source_text_sample",
+    }
+)
 
 
 def _severites(value: Any) -> set[str]:
@@ -509,7 +546,9 @@ COUVERTURE_ABSENTE = "non_couvert"
 MARQUEUR_SANS_COLLECTEUR = "Collecteur HTML local non disponible"
 
 
-def discover_collect_html(ay11: str, html_path: Path, profil: str = "rgaa-106") -> dict[str, Any]:
+def discover_collect_html(
+    ay11: str, html_path: Path, profil: str = "rgaa-106"
+) -> dict[str, Any]:
     """Relève les critères pour lesquels AY11 expose un collecteur HTML.
 
     AY11 ne déclare pas cette capacité : il faut la sonder. Un appel par critère
@@ -524,9 +563,20 @@ def discover_collect_html(ay11: str, html_path: Path, profil: str = "rgaa-106") 
     absents: list[str] = []
     for criterion in sorted(criteres_du_referentiel(ay11), key=criterion_sort_key):
         proc = subprocess.run(
-            [ay11, "rgaa", "collect-html", "--profile", profil,
-             "--criterion", criterion, "--json", str(html_path)],
-            capture_output=True, text=True, check=False,
+            [
+                ay11,
+                "rgaa",
+                "collect-html",
+                "--profile",
+                profil,
+                "--criterion",
+                criterion,
+                "--json",
+                str(html_path),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if proc.returncode == 0:
             capables.append(criterion)
@@ -552,14 +602,17 @@ def criteres_du_referentiel(ay11: str) -> list[str]:
     # c'est `rgaa list --kind criteria` qui les porte, sous la clé `items`.
     proc = subprocess.run(
         [ay11, "rgaa", "list", "--kind", "criteria", "--format", "json"],
-        capture_output=True, text=True, check=False,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     try:
         donnees = json.loads(proc.stdout or "{}")
     except json.JSONDecodeError:
         return []
     entrees = (
-        donnees if isinstance(donnees, list)
+        donnees
+        if isinstance(donnees, list)
         else donnees.get("items") or donnees.get("criteria") or []
     )
     return [str(e.get("criterion_id")) for e in entrees if e.get("criterion_id")]
@@ -586,8 +639,11 @@ def load_collect_html(campaign_root: Path) -> dict[str, dict[str, Any]]:
             slot = par_critere.setdefault(
                 criterion,
                 {
-                    "pages": [], "evidence_count": 0, "candidates": [],
-                    "to_examine": [], "tests": [],
+                    "pages": [],
+                    "evidence_count": 0,
+                    "candidates": [],
+                    "to_examine": [],
+                    "tests": [],
                 },
             )
             if page_dir.name not in slot["pages"]:
@@ -621,7 +677,9 @@ def load_axe(campaign_root: Path) -> dict[str, dict[str, Any]]:
             brut = json.loads(bruts[-1].read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
-        resultats = brut.get("results") if isinstance(brut.get("results"), dict) else brut
+        resultats = (
+            brut.get("results") if isinstance(brut.get("results"), dict) else brut
+        )
         for genre in ("violations", "incomplete"):
             for regle in resultats.get(genre) or []:
                 rid = str(regle.get("id"))
@@ -631,8 +689,11 @@ def load_axe(campaign_root: Path) -> dict[str, dict[str, Any]]:
                     slot = par_critere.setdefault(
                         criterion,
                         {
-                            "pages": [], "violations": 0, "incomplete": 0,
-                            "rules": [], "best_practice_only": True,
+                            "pages": [],
+                            "violations": 0,
+                            "incomplete": 0,
+                            "rules": [],
+                            "best_practice_only": True,
                             "mapping_sources": [],
                         },
                     )
@@ -672,15 +733,19 @@ def load_validator(campaign_root: Path) -> dict[str, dict[str, Any]]:
     erreurs = 0
     avertissements = 0
     echantillons: list[str] = []
+    unexecuted_pages: list[str] = []
     dossier = campaign_root / "validateur-w3c"
     for rapport in sorted(dossier.glob("*.json")):
         try:
             payload = json.loads(rapport.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
+            unexecuted_pages.append(rapport.stem)
             continue
-        messages = payload.get("messages") or []
-        if not isinstance(messages, list):
+        result = validator_result(payload)
+        if not result["executed"]:
+            unexecuted_pages.append(rapport.stem)
             continue
+        messages = payload["messages"]
         pages.append(rapport.stem)
         for message in messages:
             if message.get("type") == "error":
@@ -690,7 +755,7 @@ def load_validator(campaign_root: Path) -> dict[str, dict[str, Any]]:
                     echantillons.append(texte)
             elif message.get("subType") == "warning":
                 avertissements += 1
-    if not pages:
+    if not pages and not unexecuted_pages:
         return {}
     return {
         VALIDATOR_CRITERION: {
@@ -698,6 +763,7 @@ def load_validator(campaign_root: Path) -> dict[str, dict[str, Any]]:
             "errors": erreurs,
             "warnings": avertissements,
             "samples": echantillons,
+            "unexecuted_pages": sorted(set(unexecuted_pages)),
         }
     }
 
@@ -715,7 +781,7 @@ def criterion_sources(aggregate: dict[str, Any], criterion: str) -> dict[str, An
         sources.append("collect-html")
     if ax:
         sources.append("axe")
-    if va:
+    if va.get("pages"):
         sources.append("validateur")
     catalogue = aggregate.get("collect_html_catalog") or {}
     capable = criterion in set(catalogue.get("capable") or [])
@@ -734,6 +800,7 @@ def criterion_sources(aggregate: dict[str, Any], criterion: str) -> dict[str, An
         "validator_errors": int(va.get("errors") or 0),
         "validator_warnings": int(va.get("warnings") or 0),
         "validator_samples": va.get("samples") or [],
+        "validator_unexecuted_pages": va.get("unexecuted_pages") or [],
         "instrumente": bool(sources),
         "collect_html_candidates": ch.get("candidates") or [],
         "collect_html_to_examine": ch.get("to_examine") or [],
@@ -760,7 +827,8 @@ def criterion_state(aggregate: dict[str, Any], criterion: str) -> dict[str, Any]
             "label": "—",
             "comment": (
                 "Aucune sonde ne couvre ce critère ; il est instrumenté par "
-                + " et ".join(autres["sources"]) + "."
+                + " et ".join(autres["sources"])
+                + "."
                 if autres["instrumente"]
                 else "Aucune sonde ne couvre ce critère."
             ),
@@ -772,7 +840,10 @@ def criterion_state(aggregate: dict[str, Any], criterion: str) -> dict[str, Any]
         label, state = "capture manquante", STATE_MISSING_CAPTURE
         comment = "Capture complémentaire absente : critère non instruit."
     elif adverse:
-        label, state = f"{adverse} candidat(s) sur {inspected} inspecté(s)", STATE_SIGNAL
+        label, state = (
+            f"{adverse} candidat(s) sur {inspected} inspecté(s)",
+            STATE_SIGNAL,
+        )
         comment = "Candidats de défaut à qualifier."
     elif undetermined:
         label = f"{undetermined} à examiner sur {inspected} inspecté(s)"
