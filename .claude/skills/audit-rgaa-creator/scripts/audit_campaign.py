@@ -360,14 +360,37 @@ def version_tuple(value: str) -> tuple[int, ...]:
 def version_gte(actual: str, expected: str) -> bool:
     if not expected:
         return True
+    pattern = r"v?\d+(?:\.\d+){0,3}(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+    if any(
+        re.fullmatch(pattern, value, re.IGNORECASE) is None
+        for value in (actual, expected)
+    ):
+        return False
     actual_tuple = version_tuple(actual)
     expected_tuple = version_tuple(expected)
-    if not actual_tuple:
+    if not actual_tuple or not expected_tuple:
         return False
     size = max(len(actual_tuple), len(expected_tuple))
     actual_tuple += (0,) * (size - len(actual_tuple))
     expected_tuple += (0,) * (size - len(expected_tuple))
-    return actual_tuple >= expected_tuple
+    if actual_tuple != expected_tuple:
+        return actual_tuple > expected_tuple
+    actual_pre = actual.split("+", 1)[0].partition("-")[2]
+    expected_pre = expected.split("+", 1)[0].partition("-")[2]
+    if not actual_pre or not expected_pre:
+        return not actual_pre
+    actual_parts, expected_parts = actual_pre.split("."), expected_pre.split(".")
+    if any(not part for part in [*actual_parts, *expected_parts]):
+        return False
+    for left, right in zip(actual_parts, expected_parts):
+        if left == right:
+            continue
+        if left.isdigit() and right.isdigit():
+            return int(left) > int(right)
+        if left.isdigit() != right.isdigit():
+            return not left.isdigit()
+        return left > right
+    return len(actual_parts) >= len(expected_parts)
 
 
 def detect_ay11_version(ay11: Path) -> str:

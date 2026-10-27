@@ -5,6 +5,7 @@ import json
 import sys
 import tempfile
 import unittest
+from itertools import pairwise
 from pathlib import Path
 from unittest.mock import patch
 
@@ -13,7 +14,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / ".claude/skills/audit-rgaa-creator/scripts"
 sys.path.insert(0, str(SCRIPTS))
-from audit_campaign import detect_ay11_version, preflight
+from audit_campaign import detect_ay11_version, preflight, version_gte
 
 spec = importlib.util.spec_from_file_location(
     "report_capture",
@@ -81,7 +82,7 @@ class VersionTests(unittest.TestCase):
         return result, state["phases"]["preflight"]
 
     def test_required_minimum_refuses_unknown_or_insufficient_version(self):
-        for text, code in (("usage: ay11", 2), ("0.1.0", 0)):
+        for text, code in (("usage: ay11", 2), ("0.1.0", 0), ("0.2.0-rc.1", 0)):
             self.fake_cli(text, code)
             valid, state = self.check_preflight("0.2.0")
             self.assertFalse(valid)
@@ -98,6 +99,27 @@ class VersionTests(unittest.TestCase):
     def test_missing_executable_is_fatal_only_when_required(self):
         self.assertFalse(self.check_preflight("0.2.0", absent=True)[0])
         self.assertTrue(self.check_preflight("", absent=True)[0])
+
+    def test_prerelease_precedence_and_build_metadata(self):
+        order = [
+            "1.0.0-alpha",
+            "1.0.0-alpha.1",
+            "1.0.0-alpha.beta",
+            "1.0.0-beta",
+            "1.0.0-beta.2",
+            "1.0.0-beta.11",
+            "1.0.0-rc.1",
+            "1.0.0",
+        ]
+        for left, right in pairwise(order):
+            self.assertFalse(version_gte(left, right), (left, right))
+            self.assertTrue(version_gte(right, left), (right, left))
+        self.assertTrue(version_gte("1.0.0+build.1", "1.0.0+build.2"))
+        self.assertTrue(version_gte("1.1.0-alpha", "1.0.0"))
+        self.assertTrue(version_gte("0.2", "0.2.0"))
+        self.assertFalse(version_gte("0.2.0", "invalid"))
+        self.assertFalse(version_gte("0.2.0", "usage: ay11 0.1.0"))
+        self.assertFalse(version_gte("0.2.0-rc..1", "0.2.0-rc.1"))
 
 
 class ReportDiscoveryTests(unittest.TestCase):
