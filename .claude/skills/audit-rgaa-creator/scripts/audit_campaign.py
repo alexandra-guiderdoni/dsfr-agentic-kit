@@ -45,6 +45,7 @@ from browser_launch import (
     browser_launch_summary,
     check_playwright_python,
 )
+from collection_identity import write_binding
 from engine_coverage import generate_engine_coverage
 from probe_matrix import (
     VALIDATOR_CRITERION,
@@ -1390,6 +1391,13 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 )
                 attempt = int(page_state.get("capture_attempt", 0))
                 destination = root / "collectes-ay11" / pid / f"attempt-{attempt:03d}"
+                # Une reprise conserve les anciennes sorties et ne les réattribue
+                # jamais à une nouvelle exécution partiellement échouée.
+                while destination.exists():
+                    attempt += 1
+                    destination = (
+                        root / "collectes-ay11" / pid / f"attempt-{attempt:03d}"
+                    )
                 destination.mkdir(parents=True, exist_ok=True)
                 # `replan` efface l'état de page qui porte le chemin : chercher
                 # récursivement, et retomber sur le dossier de la page.
@@ -1501,6 +1509,17 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                     )
                 summary = summarise(entries)
                 write_json(destination / "sondes-resume.json", summary)
+                page_state["collect_dir"] = str(destination.relative_to(root))
+                write_binding(
+                    root,
+                    destination,
+                    pid,
+                    [
+                        html_path,
+                        collection,
+                        *html_path.parent.glob("*axe-core-collection.json"),
+                    ],
+                )
                 page_state["probes"] = {
                     "appels": summary["call_count"],
                     "criteres_avec_signal": len(summary["criteria_with_signal"]),
@@ -1655,24 +1674,27 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                 payload = None
                 if commande and rendus:
                     sources[pid] = "dom_rendu_validateur_local"
-                    proc = subprocess.run(
-                        [
-                            *commande.split(),
-                            "--format",
-                            "json",
-                            "--exit-zero-always",
-                            str(rendus[0]),
-                        ],
-                        capture_output=True,
-                        text=True,
-                        check=False,
-                        timeout=delai,
-                    )
-                    sortie = (proc.stdout or "") + (proc.stderr or "")
                     try:
-                        payload = json.loads(sortie)
-                    except json.JSONDecodeError:
-                        payload = {"execution_failure": "invalid_json"}
+                        proc = subprocess.run(
+                            [
+                                *commande.split(),
+                                "--format",
+                                "json",
+                                "--exit-zero-always",
+                                str(rendus[0]),
+                            ],
+                            capture_output=True,
+                            text=True,
+                            check=False,
+                            timeout=delai,
+                        )
+                        payload = json.loads((proc.stdout or "") + (proc.stderr or ""))
+                    except (
+                        json.JSONDecodeError,
+                        OSError,
+                        subprocess.TimeoutExpired,
+                    ) as exc:
+                        payload = {"execution_failure": type(exc).__name__}
                 else:
                     if index:
                         # Le service public du W3C demande un usage courtois.

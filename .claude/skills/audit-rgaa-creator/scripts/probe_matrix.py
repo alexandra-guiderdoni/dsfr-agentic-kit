@@ -221,6 +221,8 @@ def classify_entry(entry: Any) -> str:
         return "indetermine"
     status = str(entry.get("status") or "").lower()
     if not status:
+        if entry.get("severity") == "fail":
+            return "defavorable"
         return "indetermine"
     if status in ADVERSE_EXACT or any(m in status for m in ADVERSE_MARKERS):
         return "defavorable"

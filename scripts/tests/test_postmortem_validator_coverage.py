@@ -14,7 +14,9 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / ".claude/skills/audit-rgaa-creator/scripts"
 sys.path.insert(0, str(SCRIPTS))
 from audit_campaign import write_validator_receipt
-from probe_matrix import criterion_sources, load_validator
+from collection_identity import write_binding
+from engine_coverage import generate_engine_coverage
+from probe_matrix import classify_payload, criterion_sources, load_validator
 from validator_results import validator_result
 
 
@@ -148,6 +150,15 @@ class ValidatorCampaignTests(unittest.TestCase):
         self.assertEqual(1, state["pages"]["P01"]["validator"]["erreurs"])
         self.assertTrue(state["pages"]["P01"]["validator"]["executed"])
 
+    def test_missing_local_binary_is_receipted_as_partial(self):
+        config = yaml.safe_load(self.config.read_text())
+        config["validator"]["command"] = "/nonexistent/kit-test-validator"
+        self.config.write_text(yaml.safe_dump(config, allow_unicode=True))
+        self.assertEqual(0, self.cli("replan", self.config).returncode)
+        result, state = self.run_validator({"messages": []})
+        self.assertEqual(4, result.returncode, result.stderr)
+        self.assertFalse(state["pages"]["P01"]["validator"]["executed"])
+
     def test_successful_retry_preserves_the_initial_failure(self):
         result, first = self.run_validator(
             {"messages": [{"type": "non-document-error"}]}
@@ -163,6 +174,118 @@ class ValidatorCampaignTests(unittest.TestCase):
             str(archived.relative_to(self.root)),
             second["pages"]["P01"]["validator"]["receipt"],
         )
+
+
+class EngineCoverageTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(prefix="kit-coverage-")
+        self.root = Path(self.tmp.name)
+        self.capture = self.root / "captures-ay11/P01/attempt-001"
+        self.attempt = self.root / "collectes-ay11/P01/attempt-001"
+        self.capture.mkdir(parents=True)
+        (self.attempt / "sondes").mkdir(parents=True)
+        self.html = self.capture / "fixture-rendered.html"
+        self.html.write_text("<button disabled>Action</button>")
+        self.browser = self.capture / "fixture-browser-collection.json"
+        self.browser.write_text("{}")
+        self.axe = self.capture / "fixture-axe-core-collection.json"
+        self.axe.write_text(
+            json.dumps(
+                {
+                    "kind": "ay11_tool_evidence_collection",
+                    "tool_name": "axe-core",
+                    "rules": [{"outcome": "violations", "rgaa_mappings": ["11.1.1"]}],
+                }
+            )
+        )
+        self.probe = self.attempt / "sondes/accessible-name-11.1.json"
+        self.probe.write_text(
+            json.dumps(
+                {
+                    "criterion_id": "11.1",
+                    "collection_status": "partially_collected",
+                    "results": [
+                        {"severity": "fail", "is_disabled": True, "selector": "button"}
+                    ],
+                    "test_collection": {"11.1.1": "not_collected"},
+                }
+            )
+        )
+        (self.attempt / "rgaa-collected-plan.json").write_text(
+            json.dumps(
+                {
+                    "proof_contract": {
+                        "tests": [
+                            {"test_id": "11.1.1", "collection_status": "not_collected"}
+                        ]
+                    },
+                }
+            )
+        )
+        self.state = {
+            "pages": {
+                "P01": {
+                    "capture_dir": str(self.capture.relative_to(self.root)),
+                    "collect_dir": str(self.attempt.relative_to(self.root)),
+                }
+            }
+        }
+        (self.root / ".creator").mkdir()
+        self.save_state()
+        write_binding(
+            self.root, self.attempt, "P01", [self.html, self.browser, self.axe]
+        )
+
+    def save_state(self):
+        (self.root / ".creator/state.json").write_text(json.dumps(self.state))
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_native_subdirectory_and_axe_count_provenance_only(self):
+        result = generate_engine_coverage(self.root)
+        self.assertEqual(1, result["summary"]["rgaa_pages_with_axe_core"])
+        self.assertEqual(1, result["summary"]["rgaa_tests_with_ay11_probe"])
+        self.assertEqual(0, result["summary"]["rgaa_tests_collected_by_ay11"])
+        candidate = result["ay11_review_candidates"][0]
+        self.assertTrue(candidate["is_disabled"])
+        self.assertEqual("A_REVOIR", candidate["decision_status"])
+        self.assertEqual(
+            1, classify_payload(json.loads(self.probe.read_text()))["signal_count"]
+        )
+
+    def test_capture_change_does_not_consume_previous_evidence(self):
+        self.state["pages"]["P01"]["capture_dir"] = "captures-ay11/P01/attempt-002"
+        self.save_state()
+        result = generate_engine_coverage(self.root)
+        self.assertEqual(
+            "capture_mismatch", result["ay11_collection_provenance"][0]["status"]
+        )
+        self.assertEqual(0, result["summary"]["rgaa_pages_with_axe_core"])
+        self.assertEqual(0, result["summary"]["rgaa_tests_with_ay11_probe"])
+
+    def test_changed_input_or_unselected_collection_is_explicit(self):
+        self.html.write_text("changed")
+        result = generate_engine_coverage(self.root)
+        self.assertEqual(
+            "artifact_mismatch", result["ay11_collection_provenance"][0]["status"]
+        )
+        self.state["pages"]["P01"]["collect_dir"] = "collectes-ay11/P01/attempt-002"
+        self.save_state()
+        result = generate_engine_coverage(self.root)
+        self.assertEqual(
+            "collection_not_selected", result["ay11_collection_provenance"][0]["status"]
+        )
+
+    def test_legacy_artifacts_remain_visible_without_current_state_credit(self):
+        (self.attempt / "source-identity.json").unlink()
+        result = generate_engine_coverage(self.root)
+        self.assertEqual(
+            "identity_unknown", result["ay11_collection_provenance"][0]["status"]
+        )
+        self.assertEqual(1, len(result["ay11_discovered_probes"]))
+        self.assertEqual(1, len(result["ay11_discovered_axe"]))
+        self.assertEqual(0, result["summary"]["rgaa_tests_with_ay11_probe"])
 
 
 if __name__ == "__main__":
