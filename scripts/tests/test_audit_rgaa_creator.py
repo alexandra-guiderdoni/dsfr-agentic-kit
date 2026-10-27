@@ -1597,6 +1597,7 @@ class CreatorTests(unittest.TestCase):
             "browser",
             "rgaa",
             "dsfr",
+            "validator",
             "report_capture",
         ):
             state["phases"][phase] = {"status": "OK"}
