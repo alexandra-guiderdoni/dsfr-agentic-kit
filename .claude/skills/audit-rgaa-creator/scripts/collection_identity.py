@@ -57,3 +57,18 @@ def binding_status(root: Path, destination: Path, page: str, state: dict) -> str
     except (OSError, ValueError, TypeError, KeyError):
         return "invalid_identity"
     return "consumed"
+
+
+def consumed_paths(root: Path) -> set[str]:
+    """Les lecteurs du rapport partagent la même frontière que les compteurs."""
+    state_path = root / ".creator/state.json"
+    if not state_path.is_file():
+        return set()
+    state = json.loads(state_path.read_text()).get("pages", {})
+    paths = set()
+    for destination in (root / "collectes-ay11").glob("P*/attempt-*"):
+        page = destination.parent.name
+        if binding_status(root, destination, page, state.get(page, {})) == "consumed":
+            payload = json.loads((destination / "source-identity.json").read_text())
+            paths.update(payload["files"])
+    return paths

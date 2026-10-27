@@ -25,6 +25,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from collection_identity import consumed_paths
 from validator_results import validator_result
 
 INPUT_HTML = "html"
@@ -347,9 +348,15 @@ def load_campaign_summaries(campaign_root: Path) -> dict[str, Any]:
     by_criterion: dict[str, dict[str, Any]] = {}
     pages: list[str] = []
     call_count = 0
+    consumed = consumed_paths(campaign_root)
     collectes = campaign_root / "collectes-ay11"
     for page_dir in sorted(p for p in collectes.glob("*") if p.is_dir()):
         attempts = sorted(page_dir.glob("attempt-*/sondes-resume.json"))
+        attempts = [
+            path
+            for path in attempts
+            if str(path.relative_to(campaign_root)) in consumed
+        ]
         if not attempts:
             continue
         try:
@@ -623,10 +630,14 @@ def criteres_du_referentiel(ay11: str) -> list[str]:
 def load_collect_html(campaign_root: Path) -> dict[str, dict[str, Any]]:
     """Agrège les preuves `collect-html` par critère, sur la dernière tentative."""
     par_critere: dict[str, dict[str, Any]] = {}
+    consumed = consumed_paths(campaign_root)
     for page_dir in sorted(
         d for d in (campaign_root / "collectes-ay11").glob("*") if d.is_dir()
     ):
         plans = sorted(page_dir.glob("attempt-*/rgaa-collected-plan.json"))
+        plans = [
+            path for path in plans if str(path.relative_to(campaign_root)) in consumed
+        ]
         if not plans:
             continue
         try:
@@ -669,10 +680,14 @@ def load_collect_html(campaign_root: Path) -> dict[str, dict[str, Any]]:
 def load_axe(campaign_root: Path) -> dict[str, dict[str, Any]]:
     """Agrège les règles axe-core déclenchées, rattachées au RGAA par AXE_VERS_RGAA."""
     par_critere: dict[str, dict[str, Any]] = {}
+    consumed = consumed_paths(campaign_root)
     for page_dir in sorted(
         d for d in (campaign_root / "captures-ay11").glob("*") if d.is_dir()
     ):
         bruts = sorted(page_dir.glob("attempt-*/*axe-core-raw.json"))
+        bruts = [
+            path for path in bruts if str(path.relative_to(campaign_root)) in consumed
+        ]
         if not bruts:
             continue
         try:

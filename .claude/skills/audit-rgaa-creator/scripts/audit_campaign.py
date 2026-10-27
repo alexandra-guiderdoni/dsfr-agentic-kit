@@ -1518,6 +1518,7 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                         html_path,
                         collection,
                         *html_path.parent.glob("*axe-core-collection.json"),
+                        *html_path.parent.glob("*axe-core-raw.json"),
                     ],
                 )
                 page_state["probes"] = {

@@ -16,7 +16,12 @@ sys.path.insert(0, str(SCRIPTS))
 from audit_campaign import write_validator_receipt
 from collection_identity import write_binding
 from engine_coverage import generate_engine_coverage
-from probe_matrix import classify_payload, criterion_sources, load_validator
+from probe_matrix import (
+    classify_payload,
+    criterion_sources,
+    load_campaign_summaries,
+    load_validator,
+)
 from validator_results import validator_result
 
 
@@ -196,6 +201,16 @@ class EngineCoverageTests(unittest.TestCase):
         self.html.write_text("<button disabled>Action</button>")
         self.browser = self.capture / "fixture-browser-collection.json"
         self.browser.write_text("{}")
+        self.raw = self.capture / "fixture-axe-core-raw.json"
+        self.raw.write_text(
+            json.dumps(
+                {
+                    "violations": [
+                        {"id": "label", "tags": ["RGAA-11.1.1"], "nodes": [{}]}
+                    ]
+                }
+            )
+        )
         self.axe = self.capture / "fixture-axe-core-collection.json"
         self.axe.write_text(
             json.dumps(
@@ -243,9 +258,26 @@ class EngineCoverageTests(unittest.TestCase):
             }
         }
         (self.root / ".creator").mkdir()
+        (self.attempt / "sondes-resume.json").write_text(
+            json.dumps(
+                {
+                    "call_count": 1,
+                    "criteria": {
+                        "11.1": {
+                            "signal_count": 1,
+                            "inspected_count": 1,
+                            "probes": ["accessible-name"],
+                        }
+                    },
+                }
+            )
+        )
         self.save_state()
         write_binding(
-            self.root, self.attempt, "P01", [self.html, self.browser, self.axe]
+            self.root,
+            self.attempt,
+            "P01",
+            [self.html, self.browser, self.axe, self.raw],
         )
 
     def save_state(self):
@@ -258,6 +290,9 @@ class EngineCoverageTests(unittest.TestCase):
         result = generate_engine_coverage(self.root)
         self.assertEqual(1, result["summary"]["rgaa_pages_with_axe_core"])
         self.assertEqual(1, result["summary"]["rgaa_tests_with_ay11_probe"])
+        aggregate = load_campaign_summaries(self.root)
+        self.assertEqual(1, aggregate["call_count"])
+        self.assertIn("11.1", aggregate["axe"])
         self.assertEqual(0, result["summary"]["rgaa_tests_collected_by_ay11"])
         candidate = result["ay11_review_candidates"][0]
         self.assertTrue(candidate["is_disabled"])
@@ -275,6 +310,10 @@ class EngineCoverageTests(unittest.TestCase):
         )
         self.assertEqual(0, result["summary"]["rgaa_pages_with_axe_core"])
         self.assertEqual(0, result["summary"]["rgaa_tests_with_ay11_probe"])
+        aggregate = load_campaign_summaries(self.root)
+        self.assertEqual(0, aggregate["call_count"])
+        self.assertEqual({}, aggregate["collect_html"])
+        self.assertEqual({}, aggregate["axe"])
 
     def test_changed_input_or_unselected_collection_is_explicit(self):
         self.html.write_text("changed")
@@ -298,6 +337,20 @@ class EngineCoverageTests(unittest.TestCase):
         self.assertEqual(1, len(result["ay11_discovered_probes"]))
         self.assertEqual(1, len(result["ay11_discovered_axe"]))
         self.assertEqual(0, result["summary"]["rgaa_tests_with_ay11_probe"])
+
+    def test_duplicate_candidates_keep_both_sources_and_a_shared_key(self):
+        duplicate = self.probe.with_name("duplicate.json")
+        duplicate.write_bytes(self.probe.read_bytes())
+        write_binding(
+            self.root,
+            self.attempt,
+            "P01",
+            [self.html, self.browser, self.axe, self.raw],
+        )
+        candidates = generate_engine_coverage(self.root)["ay11_review_candidates"]
+        self.assertEqual(2, len(candidates))
+        self.assertEqual(candidates[0]["candidate_key"], candidates[1]["candidate_key"])
+        self.assertNotEqual(candidates[0]["source"], candidates[1]["source"])
 
 
 if __name__ == "__main__":
