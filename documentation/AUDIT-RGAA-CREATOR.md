@@ -107,6 +107,20 @@ le chemin est déduit de `AY11_ROOT`, `AY11_BIN`, de la commande `ay11` ou de
 `python3`. La sonde vérifie `import playwright.async_api`, et non la seule
 présence du paquet Python.
 
+Le profil `campaign.profile` est transmis à la capture native AY11. Le temporel
+reste désactivé sauf `browser.temporal_probes: true` : session distincte,
+environ dix secondes supplémentaires et gardes métier natives conservées.
+
+Une page peut déclarer `state: {id: confirmation, journey: parcours.json,
+expect: Confirmation, expect_selector: "#confirmation"}`. Le fichier de parcours
+doit appartenir à la campagne ; AY11 reçoit le parcours et l'invariant ciblé.
+Une réussite CLI sans trace native de cible unique et visible ne valide pas
+l'état. Les moteurs secondaires `browser`, `rgaa` et `dsfr` ne savent pas rejouer
+ce parcours natif : ils conservent leur propre reçu sous `observations/`,
+annoncent `unsupported_preparation` et refusent de mesurer cet état. Les rapports
+comparatifs sont alors refusés ; aucune observation de l'accueil n'est créditée
+comme preuve d'une modale. Aucun stockage applicatif n'est modifié par ce raccordement.
+
 Les options de lancement sont gouvernées dans `campaign.yaml` par le bloc
 `browser.launch` :
 

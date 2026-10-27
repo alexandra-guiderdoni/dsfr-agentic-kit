@@ -124,6 +124,17 @@
           "authenticated": {
             "type": "boolean"
           },
+          "state": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "journey", "expect", "expect_selector"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "journey": {"type": "string", "minLength": 1},
+              "expect": {"type": "string", "minLength": 1},
+              "expect_selector": {"type": "string", "minLength": 1}
+            }
+          },
           "notes": {
             "type": "string"
           }
@@ -232,6 +243,11 @@
         },
         "axe": {
           "type": "boolean"
+        },
+        "temporal_probes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Opt-in explicite pour une session temporelle distincte AY11, environ dix secondes supplémentaires ; les gardes métier natives restent applicables."
         },
         "launch": {
           "type": "object",
