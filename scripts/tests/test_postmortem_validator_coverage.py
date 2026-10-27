@@ -28,6 +28,9 @@ class ValidatorResultTests(unittest.TestCase):
             {},
             {"messages": None},
             {"messages": ["invalid"]},
+            {"messages": [{}]},
+            {"messages": [{"type": "garbage"}]},
+            {"messages": [{"type": "error"}]},
             {
                 "messages": [
                     {"type": "non-document-error", "message": "Forbidden host."}
@@ -136,7 +139,12 @@ class ValidatorCampaignTests(unittest.TestCase):
         self.assertIsNone(state["pages"]["P01"]["validator"]["erreurs"])
 
     def test_malformed_or_missing_document_is_partial(self):
-        for payload in ("not JSON", {}):
+        for payload in (
+            "not JSON",
+            {},
+            {"messages": [{}]},
+            {"messages": [{"type": "garbage"}]},
+        ):
             with self.subTest(payload=payload):
                 result, state = self.run_validator(payload)
                 self.assertEqual(4, result.returncode, result.stderr)
@@ -202,10 +210,14 @@ class EngineCoverageTests(unittest.TestCase):
         self.probe.write_text(
             json.dumps(
                 {
-                    "criterion_id": "11.1",
                     "collection_status": "partially_collected",
                     "results": [
-                        {"severity": "fail", "is_disabled": True, "selector": "button"}
+                        {
+                            "severity": "fail",
+                            "is_disabled": True,
+                            "selector": "button",
+                            "rgaa_candidates": ["11.1"],
+                        }
                     ],
                     "test_collection": {"11.1.1": "not_collected"},
                 }

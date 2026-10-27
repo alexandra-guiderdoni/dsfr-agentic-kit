@@ -92,6 +92,8 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
     collected_test_ids = set()
     for plan_path in plans:
         plan = _read(plan_path, {})
+        if str(plan_path.relative_to(root)) not in consumed_files:
+            continue
         for test in plan.get("proof_contract", {}).get("tests", []):
             ay11_tests[str(test.get("test_id"))] = test
             if (
@@ -116,15 +118,26 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
         }:
             continue
         probe = _read(probe_path, {})
-        criterion_id = str(probe.get("criterion_id", ""))
-        if criterion_id:
+        criteria = {str(probe["criterion_id"])} if probe.get("criterion_id") else set()
+        entries = next(
+            (probe[key] for key in SIGNAL_KEYS if isinstance(probe.get(key), list)), []
+        )
+        for entry in entries:
+            if isinstance(entry, dict):
+                criteria.update(
+                    ".".join(str(value).split(".")[:2])
+                    for value in entry.get("rgaa_candidates", [])
+                    if re.fullmatch(r"\d+\.\d+(?:\.\d+)?", str(value))
+                )
+        if criteria or probe_path.parent.name == "sondes":
             source = str(probe_path.relative_to(root))
             consumed = source in consumed_files
             discovered_probes.append(
-                {"path": source, "criterion": criterion_id, "consumed": consumed}
+                {"path": source, "criteria": sorted(criteria), "consumed": consumed}
             )
             if consumed:
-                probe_criteria[criterion_id].append(source)
+                for criterion_id in criteria:
+                    probe_criteria[criterion_id].append(source)
             for key in SIGNAL_KEYS:
                 entries = probe.get(key)
                 if isinstance(entries, list):
@@ -134,7 +147,7 @@ def generate_engine_coverage(root: Path) -> dict[str, Any]:
                                 {
                                     "candidate_key": hashlib.sha256(
                                         json.dumps(
-                                            [criterion_id, entry], sort_keys=True
+                                            [sorted(criteria), entry], sort_keys=True
                                         ).encode()
                                     ).hexdigest(),
                                     "source": source,

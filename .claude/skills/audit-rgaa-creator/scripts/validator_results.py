@@ -6,7 +6,14 @@ from typing import Any
 def validator_result(payload: Any) -> dict[str, Any]:
     messages = payload.get("messages") if isinstance(payload, dict) else None
     valid_messages = isinstance(messages, list) and all(
-        isinstance(item, dict) for item in messages
+        isinstance(item, dict)
+        and item.get("type") in {"error", "info", "non-document-error"}
+        and (
+            item.get("type") == "non-document-error"
+            or isinstance(item.get("message"), str)
+            and bool(item["message"].strip())
+        )
+        for item in messages
     )
     non_document_errors = (
         sum(item.get("type") == "non-document-error" for item in messages)
