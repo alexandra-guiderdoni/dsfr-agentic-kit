@@ -17,9 +17,9 @@ except ImportError as exc:
         "Playwright est absent de l’environnement Python sélectionné"
     ) from exc
 
-from navigation import goto_checked
 from browser_launch import browser_launch_options, browser_launch_summary
-
+from navigation import goto_checked
+from observation_state import require_page_state
 
 SOURCE = "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/"
 CATALOG_PATH = (
@@ -140,6 +140,7 @@ async def inspect_page(
     page = await context.new_page()
     await goto_checked(page, url, timeout)
     await page.wait_for_timeout(wait)
+    await require_page_state(page, page_info, root, "rgaa", "desktop")
     raw = await page.evaluate(r"""() => {
       const clip=(v,n=3500)=>String(v||'').slice(0,n);const visible=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0};
       const cssPath=e=>{if(!e||!e.tagName)return'';if(e.id&&document.querySelectorAll(`#${CSS.escape(e.id)}`).length===1)return`#${CSS.escape(e.id)}`;const p=[];let n=e;while(n&&n.nodeType===1&&p.length<6){let x=n.tagName.toLowerCase()+[...n.classList].slice(0,2).map(c=>`.${CSS.escape(c)}`).join('');const s=n.parentElement?[...n.parentElement.children].filter(y=>y.tagName===n.tagName):[];if(s.length>1)x+=`:nth-of-type(${s.indexOf(n)+1})`;p.unshift(x);n=n.parentElement;}return p.join(' > ')};
@@ -531,9 +532,10 @@ async def inspect_page(
                     continue
                 for instance, node in enumerate(violation.get("nodes", []), 1):
                     targets_for_node = node.get("target", [])
-                    selector = " ".join(
-                        str(target) for target in targets_for_node
-                    ) or "document"
+                    selector = (
+                        " ".join(str(target) for target in targets_for_node)
+                        or "document"
+                    )
                     key = (rule_id, selector)
                     axe_candidates.append(
                         {
@@ -547,9 +549,7 @@ async def inspect_page(
                     if key in existing_signal_keys:
                         continue
                     observed = str(
-                        violation.get(
-                            "help", violation.get("description", axe_id)
-                        )
+                        violation.get("help", violation.get("description", axe_id))
                     )
                     observed_code = str(
                         node.get("html", "<!-- cible axe-core non fournie -->")
@@ -623,7 +623,7 @@ async def inspect_page(
     result = {
         "schema_version": 1,
         "page": page_info,
-        "audited_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+        "audited_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
         "rules_executed": sorted(RULES),
         "signals": signals,
         "passes": passes,
@@ -634,9 +634,9 @@ async def inspect_page(
             "unmapped_violations": [
                 str(item.get("id", ""))
                 for item in axe_result.get("violations", [])
-                if not (
-                    axe_mapping.get(str(item.get("id", "")), {}) or {}
-                ).get("rule_ids")
+                if not (axe_mapping.get(str(item.get("id", "")), {}) or {}).get(
+                    "rule_ids"
+                )
             ],
         },
         "evidence": {

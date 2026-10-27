@@ -24,9 +24,9 @@ except ImportError as exc:
         "Playwright est absent de l’environnement Python sélectionné"
     ) from exc
 
-from navigation import goto_checked
 from browser_launch import browser_launch_options, browser_launch_summary
-
+from navigation import goto_checked
+from observation_state import require_page_state
 
 COMPONENTS: dict[str, tuple[str, str]] = {
     "header": (".fr-header", "components/structure/header.md"),
@@ -261,14 +261,17 @@ async def inspect_page(
     )
     page.on(
         "response",
-        lambda response: resource_failures.append(
-            {"url": response.url, "error": f"HTTP {response.status}"}
-        )
-        if response.status >= 400
-        else None,
+        lambda response: (
+            resource_failures.append(
+                {"url": response.url, "error": f"HTTP {response.status}"}
+            )
+            if response.status >= 400
+            else None
+        ),
     )
     await goto_checked(page, url, timeout)
     await page.wait_for_timeout(wait)
+    await require_page_state(page, page_info, root, "dsfr", "desktop")
 
     selectors = {name: selector for name, (selector, _source) in COMPONENTS.items()}
     raw = await page.evaluate(
@@ -395,6 +398,7 @@ async def inspect_page(
     mobile_page = await mobile.new_page()
     await goto_checked(mobile_page, url, timeout)
     await mobile_page.wait_for_timeout(wait)
+    await require_page_state(mobile_page, page_info, root, "dsfr", "mobile")
     await mobile_page.screenshot(path=str(attempt_root / "mobile.png"), full_page=False)
     mobile_metrics = await mobile_page.evaluate(
         "() => ({viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth})"
@@ -422,12 +426,20 @@ async def inspect_page(
     dsfr_resource_failures = [
         item
         for item in resource_failures
-        if re.search(r"dsfr|marianne|font|woff|\.css(?:[?#]|$)|\.js(?:[?#]|$)", item["url"], re.IGNORECASE)
+        if re.search(
+            r"dsfr|marianne|font|woff|\.css(?:[?#]|$)|\.js(?:[?#]|$)",
+            item["url"],
+            re.IGNORECASE,
+        )
     ]
     dsfr_console_failure = [
         message
         for message in console_errors
-        if re.search(r"failed to load resource|net::err|dsfr|marianne|woff", message, re.IGNORECASE)
+        if re.search(
+            r"failed to load resource|net::err|dsfr|marianne|woff",
+            message,
+            re.IGNORECASE,
+        )
     ]
     resource_failure = bool(dsfr_resource_failures or dsfr_console_failure)
     resource_failure_detail = json.dumps(
@@ -574,9 +586,13 @@ async def inspect_page(
             parent_html = str(field.get("parentHtml") or "")
             parent_open = re.match(r"\s*<[a-zA-Z0-9]+[^>]*>", parent_html)
             parent_class_attr = (
-                re.search(r'class="([^"]*)"', parent_open.group(0)) if parent_open else None
+                re.search(r'class="([^"]*)"', parent_open.group(0))
+                if parent_open
+                else None
             )
-            parent_classes = parent_class_attr.group(1).split() if parent_class_attr else []
+            parent_classes = (
+                parent_class_attr.group(1).split() if parent_class_attr else []
+            )
             in_group = "fr-input-group" in parent_classes
             if in_group and "fr-input-group--error" in parent_classes:
                 continue
@@ -591,8 +607,13 @@ async def inspect_page(
                 "migration"
                 if requires_migration(
                     rule_by_id.get(
-                        "DSFR-INPUT-ERROR-STATE-002" if in_group else "DSFR-INPUT-ERROR-STATE-003",
-                        {"version_scope": "TARGET_VERSION", "minimum_version": "1.15.3"},
+                        "DSFR-INPUT-ERROR-STATE-002"
+                        if in_group
+                        else "DSFR-INPUT-ERROR-STATE-003",
+                        {
+                            "version_scope": "TARGET_VERSION",
+                            "minimum_version": "1.15.3",
+                        },
                     ),
                     observed_versions,
                     target_version,
@@ -615,7 +636,9 @@ async def inspect_page(
                     expected_html='<div class="fr-input-group fr-input-group--error"><input class="fr-input" aria-invalid="true" aria-describedby="champ-messages"><div class="fr-messages-group" id="champ-messages" aria-live="polite"><p class="fr-message fr-message--error">Erreur</p></div></div>',
                     recommendation="Poser fr-input-group--error sur le groupe et relier le champ à son message par aria-describedby ; ne pas ajouter fr-input--error au champ en groupe.",
                     verification="Déclencher la validation serveur puis inspecter le groupe de chaque champ en erreur.",
-                    failed_conditions=["Le groupe du champ en erreur ne porte pas fr-input-group--error."],
+                    failed_conditions=[
+                        "Le groupe du champ en erreur ne porte pas fr-input-group--error."
+                    ],
                     instance=instance,
                     observed_html_origin="RENDERED_DOM",
                 )
@@ -635,7 +658,9 @@ async def inspect_page(
                     expected_html='<input class="fr-input fr-input--error" aria-invalid="true" aria-describedby="champ-messages">',
                     recommendation="Ajouter fr-input--error au champ hors groupe et relier le message par aria-describedby, ou placer le champ dans un fr-input-group portant l’état.",
                     verification="Déclencher la validation serveur puis inspecter chaque champ en erreur hors groupe.",
-                    failed_conditions=["Le champ en erreur hors groupe ne porte pas fr-input--error."],
+                    failed_conditions=[
+                        "Le champ en erreur hors groupe ne porte pas fr-input--error."
+                    ],
                     instance=instance,
                     observed_html_origin="RENDERED_DOM",
                 )
@@ -730,7 +755,8 @@ async def inspect_page(
             failed_conditions=["width=device-width est absent."],
         )
     if any(
-        version_tuple(version) and version_tuple(version) < version_tuple(target_version)
+        version_tuple(version)
+        and version_tuple(version) < version_tuple(target_version)
         for version in observed_versions
     ):
         add(
@@ -834,10 +860,13 @@ async def inspect_page(
     if "Marianne" not in raw["fontFamily"]:
         add(
             "DSFR-TYPOGRAPHY-MARIANNE-001",
-            "control_failure" if resource_failure else (
+            "control_failure"
+            if resource_failure
+            else (
                 "migration"
                 if any(
-                    version_tuple(version) and version_tuple(version) < version_tuple(target_version)
+                    version_tuple(version)
+                    and version_tuple(version) < version_tuple(target_version)
                     for version in observed_versions
                 )
                 else "integration"
@@ -900,7 +929,11 @@ async def inspect_page(
         if item["signal_status"] != "FAIL_CANDIDATE":
             continue
         rule = rule_by_id[item["rule_id"]]
-        kind = "migration" if requires_migration(rule, observed_versions, target_version) else "integration"
+        kind = (
+            "migration"
+            if requires_migration(rule, observed_versions, target_version)
+            else "integration"
+        )
         add(
             rule["rule_id"],
             kind,

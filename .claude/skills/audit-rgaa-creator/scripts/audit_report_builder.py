@@ -830,6 +830,11 @@ def generate_audit_portal(config: dict[str, Any], root: Path) -> dict[str, Any]:
     build = {
         "schema_version": 2,
         "builder": str(BUILDER.relative_to(SKILLS_ROOT)),
+        "active_referentials": [
+            name
+            for name, active in (("rgaa", rgaa_active), ("dsfr", dsfr_active))
+            if active
+        ],
         "builder_sha256": _digest(BUILDER),
         "builder_schema": str(BUILDER_SCHEMA.relative_to(SKILLS_ROOT)),
         "builder_schema_sha256": _digest(BUILDER_SCHEMA),

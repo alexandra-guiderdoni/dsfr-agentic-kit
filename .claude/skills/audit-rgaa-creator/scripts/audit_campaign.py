@@ -47,6 +47,12 @@ from browser_launch import (
 )
 from collection_identity import write_binding
 from engine_coverage import generate_engine_coverage
+from observation_state import (
+    contract_digest,
+    native_capture_options,
+    native_state_observation,
+    reject_unprepared_reports,
+)
 from probe_matrix import (
     VALIDATOR_CRITERION,
     build_probe_plan,
@@ -372,9 +378,14 @@ def detect_ay11_version(ay11: Path) -> str:
             )
         except Exception:
             continue
-        output = (process.stdout or process.stderr or "").strip()
-        if output:
-            return output.splitlines()[0].strip()
+        output = (process.stdout or "").strip()
+        match = re.fullmatch(
+            r"(?:ay11(?: version)?[ :]+)?v?(\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?)",
+            output,
+            re.IGNORECASE,
+        )
+        if process.returncode == 0 and match:
+            return match.group(1)
     return ""
 
 
@@ -549,12 +560,23 @@ def invalidate_downstream_phases(state: dict[str, Any], phase: str) -> list[str]
 
 
 def run_command(
-    argv: list[str], log_path: Path, cwd: Path | None = None, dry_run: bool = False
+    argv: list[str],
+    log_path: Path,
+    cwd: Path | None = None,
+    dry_run: bool = False,
+    private_invariant: bool = False,
 ) -> tuple[int, str, str]:
     log_path.parent.mkdir(parents=True, exist_ok=True)
+    logged_argv = list(argv)
+    if private_invariant:
+        for option in ("--expect", "--expect-selector"):
+            if option in logged_argv:
+                logged_argv[logged_argv.index(option) + 1] = (
+                    "[STATE_INVARIANT_REDACTED]"
+                )
     if dry_run:
         payload = {
-            "command": argv,
+            "command": logged_argv,
             "cwd": str(cwd) if cwd else None,
             "status": "DRY-RUN",
         }
@@ -564,7 +586,7 @@ def run_command(
     write_json(
         log_path,
         {
-            "command": argv,
+            "command": logged_argv,
             "cwd": str(cwd) if cwd else None,
             "exit_code": proc.returncode,
             "stdout": proc.stdout,
@@ -932,16 +954,17 @@ def preflight(
             warnings.extend(ay11_diagnostics)
         if not ay11:
             message = "Exécutable AY11 introuvable"
-            if strict_ay11:
+            if strict_ay11 or expected_version:
                 errors.append(message)
             else:
                 warnings.append(message)
         elif expected_version and not version_gte(ay11_version, expected_version):
             message = f"Version AY11 détectée '{ay11_version}' ; version minimale attendue : {expected_version}"
-            if strict_ay11:
-                errors.append(message)
-            else:
-                warnings.append(message)
+            errors.append(message)
+        elif not ay11_version:
+            warnings.append(
+                "Version AY11 inconnue : aucune métadonnée de version valide ; le SHA du checkout ne démontre pas la version du paquet chargé."
+            )
     roots = [Path(p) for p in config.get("tooling", {}).get("skills_roots", [])]
     for skill in REQUIRED_SKILLS:
         if not any((candidate / skill / "SKILL.md").is_file() for candidate in roots):
@@ -1034,6 +1057,7 @@ def preflight(
         warnings=warnings,
         ay11=str(ay11) if ay11 else None,
         ay11_version=ay11_version or None,
+        ay11_version_status="known" if ay11_version else "unknown",
         ay11_expected_version=expected_version or None,
         cause="BLOQUÉ-INFRA"
         if blocked_infra
@@ -1355,18 +1379,39 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
                     argv.append("--form-interactions")
                 if config.get("browser", {}).get("axe", True):
                     argv.append("--axe")
+                argv.extend(native_capture_options(config, page, root))
+                page_state["capture_request"] = {
+                    "profile": config.get("campaign", {}).get("profile", "rgaa-106"),
+                    "temporal_requested": config.get("browser", {}).get(
+                        "temporal_probes", False
+                    ),
+                    "temporal_cost_note": "Opt-in : session distincte, une dizaine de secondes supplémentaire et garde métier AY11 conservée.",
+                    "state_contract_sha256": contract_digest(page),
+                }
                 code, out, err = run_command(
                     argv,
                     root / f"logs/capture-{pid}-attempt-{attempt:03d}.json",
                     dry_run=args.dry_run,
+                    private_invariant=bool(page.get("state")),
                 )
                 page_state["capture"] = "OK" if code == 0 else "ECHEC"
                 page_state["capture_dir"] = str(out_dir.relative_to(root))
+                manifest = {}
                 if code == 0 and out and not args.dry_run:
                     try:
-                        page_state["capture_manifest"] = json.loads(out)
+                        manifest = json.loads(out)
+                        page_state["capture_manifest"] = manifest
                     except json.JSONDecodeError:
                         page_state["capture_stdout"] = out[-1000:]
+                page_state["capture_state"] = native_state_observation(page, manifest)
+                if (
+                    page.get("state")
+                    and not args.dry_run
+                    and not page_state["capture_state"]["invariant_verified"]
+                ):
+                    code = 1
+                    page_state["capture"] = "ECHEC"
+                    err = "Invariant d'état non vérifié par la capture native AY11."
                 if code:
                     failures.append({"page": pid, "error": err[-500:]})
                 save_state(root, state)
@@ -1386,6 +1431,17 @@ def _run_campaign_unlocked(args: argparse.Namespace) -> int:
             for page in config["sample"]:
                 pid = page["id"]
                 page_state = state.setdefault("pages", {}).setdefault(pid, {})
+                if (
+                    page.get("state")
+                    and page_state.get("capture_state", {}).get("status") != "observed"
+                ):
+                    failures.append(
+                        {
+                            "page": pid,
+                            "error": "État demandé non observé : aucune collecte sur une capture de repli.",
+                        }
+                    )
+                    continue
                 capture_dir = root / page_state.get(
                     "capture_dir", f"captures-ay11/{pid}"
                 )
@@ -3246,6 +3302,7 @@ def generate_reports(config_path: Path) -> None:
     schema_errors = fallback_schema_errors(config, schema)
     if schema_errors:
         raise ValueError("Configuration invalide : " + "; ".join(schema_errors))
+    reject_unprepared_reports(config)
     findings = load_findings(root)
     catalog = load_catalog(root)
     qualifications = (read_json(root / "qualification.json", {}) or {}).get(
